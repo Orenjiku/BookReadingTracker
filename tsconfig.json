@@ -1,0 +1,51 @@
+{
+  "compilerOptions": {
+    /* type-checking */
+    "noFallthroughCasesInSwitch": true,
+    // "noImplicitReturns": true, // check all code paths in a function returns a value
+    "noUnusedLocals": true, // report errors on unused local variables
+    "noUnusedParameters": true, // report errors on unused parameters in functions
+    "strict": true, // enables strict family options (strictBindCallApply, strictFunctionTypes, strictNullChecks, strictPropertyInitialization, useUnknownInCatchVariables, alwaysStrict, noImplicitAny, noImplicitThis)
+
+    /* modules */
+    "baseUrl": "./src", // all module imports with non-relative names are assumed to be relative to the baseUrl
+    "module": "CommonJS", // used for node projects. Converts module import/export to require()/module.export
+    "moduleResolution": "node",
+    "resolveJsonModule": true, // allows importing modules with a '.json' extension, common to NodeJS projects
+    "rootDir": "src", // directory that Typescript compiles files from, outDir maintains same directory structure of rootDir
+    // "typeRoots": ["node_modules/@types", "types"], // location of @type packages to include in compilation relative to tsconfig.json
+
+    /* emit */
+    // "declaration": true, // generate .d.ts (declaration) files, for Typescript to provide intellisense and accurate types for un-typed code
+    // "declarationDir": "./types", // set root directory where the declaration files are emitted
+    // "declarationMap": true, //generates source map for .d.ts files which map back to the original .ts source file
+    "importHelpers": true, //
+    "noEmit": true, // only use Typescript for type-checking and not for compiling, allow snowpack to transform files
+    "outDir": "/dist", // directory for emitted/compiled files (located in build folder when using snowpack)
+    "sourceMap": true, // enables generation of sourcemap files
+
+    /* javascript support */
+    "allowJs": true, // allow js files to be imported inside project, instead of only .ts and .tsx files
+    "checkJs": true, // report errors in js files
+    "allowSyntheticDefaultImports": true, // allows import of modules that don't explicitly specify a default export
+    "esModuleInterop": true, // import non-ES modules as default imports, also enables allowsSyntheticDefaultImports
+    "forceConsistentCasingInFileNames": true, // issues error if a program tries to include a file by a casing different from the casing on disk
+
+    /* backwards compatibility */
+    // "suppressImplicitAnyIndexErrors": true,
+
+    /* language and environment */
+    // "experimentalDecorators": true,
+    "jsx": "preserve",
+    "lib": ["DOM", "ESNext"], // additional APIs to include in project, DOM definitions such as window, document, etc isn't built-in to Typescript
+    "target": "es6",
+
+    /* projects */
+    // "incremental": true, // creates .tsbuildinfo files in same folder as compilation output
+
+    /* output formatting */
+    // "skipLibCheck": true, //skip type checking of declaration files
+  },
+  "include": ["src/**/*"], // default support for .ts, .tsx, and .d.ts, and .js and .jsx if allowJs is set to true
+  "exclude": ["node_modules", "build", "scripts"] // default ["node_modules", "bower_components", "jspm_packages"] and outDir if specified
+}
