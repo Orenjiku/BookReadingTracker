@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import './App.css';
 
 const App = () => {
   // Create the count state.
@@ -13,7 +12,7 @@ const App = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <p>
+        <p className='text-red-800'>
           Page has been open for <code>{count}</code> seconds.
         </p>
       </header>

@@ -1,4 +1,4 @@
-module.exports ={
+module.exports = {
   mount: {
     public: {url: '/', static: true},
     src: {url: '/dist'}
@@ -11,9 +11,13 @@ module.exports ={
     out: 'build'
   },
   plugins: [
-    '@snowpack/plugin-react-refresh',
-    '@snowpack/plugin-dotenv',
-    '@snowpack/plugin-webpack',
+    '@snowpack/plugin-react-refresh', // enables HMR (hot module replacement), allow updates to the browser without page refresh
+    '@snowpack/plugin-dotenv', // enables loading of environmental variables from .env files
+    ['@snowpack/plugin-webpack',
+      {
+        sourceMap: true, // creates sourceMap instead of typescript compiler
+      },
+    ],
     '@snowpack/plugin-typescript', // TS support
     '@snowpack/plugin-postcss', // postcss support
     'snowpack-plugin-svgr', // import SVG as React component
@@ -30,6 +34,6 @@ module.exports ={
     "@app": "./src/",
   },
   packageOptions: {
-    polyfillNode: true,
+    polyfillNode: true, // allows modules dependent on Node.js build-in modules to work in the browser
   },
 }
