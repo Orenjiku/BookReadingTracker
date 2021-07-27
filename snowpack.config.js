@@ -1,14 +1,14 @@
 module.exports = {
   mount: {
     public: {url: '/', static: true},
-    src: {url: '/dist'}
+    src: {url: '/dist'} // builds everything from src directory and emits to `${buildOptions.out}/${url}` directory
   },
   devOptions: {
     tailwindConfig: './tailwind.config.js',
     port: 3000
   },
   buildOptions: {
-    out: 'build'
+    out: 'build' //specifies directory for emitted files, default is 'build'
   },
   plugins: [
     '@snowpack/plugin-react-refresh', // enables HMR (hot module replacement), allow updates to the browser without page refresh

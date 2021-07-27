@@ -1,6 +1,3 @@
-# compiled output
-/dist
-
 # dependencies
 /node_modules
 
@@ -14,4 +11,6 @@
 .DS_Store
 .env
 npm-debug.log
+
+#yarn
 yarn-error.log

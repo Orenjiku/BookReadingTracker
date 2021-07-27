@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     /* type-checking */
-    "noFallthroughCasesInSwitch": true,
+    "noFallthroughCasesInSwitch": true, // report errors for fallthrough cases in switch statement
     // "noImplicitReturns": true, // check all code paths in a function returns a value, can be problematic for debugging
     "noUnusedLocals": true, // report errors on unused local variables
     "noUnusedParameters": true, // report errors on unused parameters in functions
@@ -16,14 +16,15 @@
     // "typeRoots": ["node_modules/@types", "types"], // location of @type packages to include in compilation relative to tsconfig.json
 
     /* emit */
+    /* <-- It seems like declaration files aren't able to be emitted with snowpack, and snowpack doesn't have the option either --> */
     // "declaration": true, // generate .d.ts (declaration) files, for Typescript to provide intellisense and accurate types for un-typed code
     // "declarationDir": "./types", // set root directory where the declaration files are emitted
     // "declarationMap": true, //generates source map for .d.ts files which map back to the original .ts source file
     // "emitDeclarationOnly": true, // only emit d.ts files, no .js files, enabled when using a transpiler other than ts to generate js
-    "importHelpers": true, //
+    // "importHelpers": true,
     "noEmit": true, // only use Typescript for type-checking and not for compiling, allow snowpack to emit files
     // "outDir": "/dist", // directory for emitted/compiled files (not needed for snowpack, since snowpack is emitting the files)
-    // "sourceMap": true, // enables generation of sourcemap files (not needed for snowpack, webpack plugin is handling sourceMap)
+    // "sourceMap": true, // enables generation of sourcemap files (snowpack's webpack plugin is handling sourceMap, see snowpack.config.js)
 
     /* javascript support */
     "allowJs": true, // allow js files to be imported inside project, instead of only .ts and .tsx files
@@ -42,10 +43,10 @@
     // "experimentalDecorators": true,
     "jsx": "preserve",
     "lib": ["DOM", "ESNext"], // additional APIs to include in project, DOM definitions such as window, document, etc isn't built-in to Typescript
-    "target": "es6",
+    "target": "es5",
 
     /* projects */
-    // "incremental": true, // creates .tsbuildinfo files in same folder as compilation output
+    "incremental": true, // Enable incremental compilation by reading/writing information from prior compilations to a file on disk
 
     /* output formatting */
     "skipLibCheck": true, //skip type checking of declaration files
