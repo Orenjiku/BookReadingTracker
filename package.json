@@ -14,7 +14,8 @@
   "scripts": {
     "snowpack-dev": "snowpack dev",
     "snowpack-build": "snowpack build",
-    "start": "nodemon server/index.js",
+    "start-dev": "nodemon server/index.js",
+    "start": "node server/index.js",
     "test": "npx jest",
     "test-watch": "npx jest --watch",
     "test-coverage": "npx jest --coverage"
