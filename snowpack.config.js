@@ -34,6 +34,6 @@ module.exports = {
     "@app": "./src/",
   },
   packageOptions: {
-    polyfillNode: true, // allows modules dependent on Node.js build-in modules to work in the browser
+    polyfillNode: true, // allows modules dependent on nodejs built-in modules to work in the browser such as 'fs', 'path', 'url, etc
   },
 }
