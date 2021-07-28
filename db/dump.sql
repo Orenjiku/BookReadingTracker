@@ -15,18 +15,10 @@ CREATE TABLE book (
   total_pages INT,
   book_description TEXT,
   picture_link VARCHAR,
-  user_profile_id INT,
-  CONSTRAINT fk_user_profile_book
-    FOREIGN KEY (user_profile_id) REFERENCES user_profile (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT ck_book_total_pages CHECK (total_pages > 0)
 );
 
 CREATE TABLE user_profile_book (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_user_profile_book PRIMARY KEY,
-  days_read INT DEFAULT 0,
-  days_total INT DEFAULT 0,
-  is_complete BOOLEAN DEFAULT FALSE,
-  is_reading BOOLEAN DEFAULT FALSE,
   user_profile_id INT,
   book_id INT,
   CONSTRAINT fk_user_profile_user_profile_book
@@ -35,14 +27,25 @@ CREATE TABLE user_profile_book (
     FOREIGN KEY (book_id) REFERENCES book (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE book_read (
+  id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_user_profile_book PRIMARY KEY,
+  days_read INT DEFAULT 0,
+  days_total INT DEFAULT 0,
+  is_complete BOOLEAN DEFAULT FALSE,
+  is_reading BOOLEAN DEFAULT FALSE,
+  user_profile_book_id INT,
+  CONSTRAINT fk_user_profile_book_book_read
+    FOREIGN KEY (user_profile_book_id) REFERENCES user_profile_book (id) ON DELETE CASCADE ON UPDATE CASCADE,
+);
+
 CREATE TABLE read_entry (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT read_entry PRIMARY KEY,
   date_read DATE NOT NULL,
   page_completed INT NOT NULL,
   percentage_completed INT NOT NULL,
-  user_profile_book_id INT,
-  CONSTRAINT fk_user_profile_book_read_entry
-    FOREIGN KEY (user_profile_book_id) REFERENCES user_profile_book (id) ON DELETE CASCADE ON UPDATE CASCADE
+  book_read_id INT,
+  CONSTRAINT fk_book_read_read_entry
+    FOREIGN KEY (book_read_id) REFERENCES book_read (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE author (
@@ -59,3 +62,7 @@ CREATE TABLE book_author (
   CONSTRAINT fk_author_book_author
     FOREIGN KEY (author_id) REFERENCES author (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+INSERT INTO user_profile (username, first_name, last_name, email) VALUES ('orenjiku', 'william', 'chang', 'wdchang86@gmail.com');
+INSERT INTO book (title, title_sort, total_pages) VALUES ('the uriel ventris chronicles: volume one', 'uriel ventris chronicles: volume one, the', 800);
+INSERT INTO user_profile_book (is_complete, book_id, user_profile_id) VALUES (true, SELECT id FROM book WHERE title='the uriel ventris chronicles: volume one', SELECT id FROM user_profile WHERE username='orenjiku');
