@@ -13,8 +13,8 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "snowpack-dev": "snowpack dev",
-    "snowpack-build": "snowpack build",
+    "dev": "snowpack dev",
+    "build": "snowpack build",
     "start-dev": "nodemon server/index.ts",
     "start": "node server/index.ts",
     "test": "npx jest",

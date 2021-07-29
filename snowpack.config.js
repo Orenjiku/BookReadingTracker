@@ -5,7 +5,7 @@ module.exports = {
   },
   devOptions: {
     tailwindConfig: './tailwind.config.js',
-    port: 3000
+    port: 3000 //port dev server runs on
   },
   buildOptions: {
     out: 'build' //specifies directory for emitted files, default is 'build'
@@ -13,11 +13,12 @@ module.exports = {
   plugins: [
     '@snowpack/plugin-react-refresh', // enables HMR (hot module replacement), allow updates to the browser without page refresh
     '@snowpack/plugin-dotenv', // enables loading of environmental variables from .env files
-    ['@snowpack/plugin-webpack',
-      {
-        sourceMap: true, // creates sourceMap instead of typescript compiler
-      },
-    ],
+    '@snowpack/plugin-webpack', // creates js directory in snowpack output build directory, use webpack to bundle for production
+    // ['@snowpack/plugin-webpack',
+    //   {
+    //     sourceMap: true, // creates sourceMap instead of typescript compiler
+    //   },
+    // ],
     '@snowpack/plugin-typescript', // TS support
     '@snowpack/plugin-postcss', // postcss support
     'snowpack-plugin-svgr', // import SVG as React component
