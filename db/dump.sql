@@ -22,7 +22,8 @@ CREATE TABLE book (
   title_sort VARCHAR NOT NULL,
   total_pages INT,
   book_description TEXT,
-  picture_link VARCHAR
+  picture_link VARCHAR,
+  CONSTRAINT ck_book_total_pages CHECK (total_pages > 0)
 );
 
 CREATE INDEX ix_book_title ON book (title);
@@ -54,12 +55,13 @@ CREATE INDEX ix_book_read_reader_book_id ON book_read (reader_book_id);
 
 CREATE TABLE read_entry (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_read_entry PRIMARY KEY,
-  date_read DATE NOT NULL,
+  date_read TIMESTAMP (0) WITH TIME ZONE NOT NULL,
   page_completed INT NOT NULL,
-  percentage_completed INT NOT NULL,
+  percentage_completed DECIMAL NOT NULL,
   book_read_id INT,
   CONSTRAINT fk_book_read_read_entry
-    FOREIGN KEY (book_read_id) REFERENCES book_read (id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (book_read_id) REFERENCES book_read (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT ck_percentage_completed CHECK (percentage_completed >= 0.00 AND percentage_completed <= 100.00)
 );
 
 CREATE INDEX ix_read_entry_book_read_id ON read_entry (book_read_id);

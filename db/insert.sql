@@ -5,8 +5,26 @@
 /* Clears previous tables if they exist */
 TRUNCATE TABLE reader, book, reader_book, book_read, read_entry, book_author, author CASCADE;
 
-/* INSERT USER */
-INSERT INTO reader (username, first_name, last_name, email) VALUES ('orenjiku', 'william', 'chang', 'wdchang86@gmail.com');
+/* Declare reader information to INSERT INTO reader*/
+\set username_1 'orenjiku'
+\set first_name_1 'william'
+\set last_name_1 'chang'
+\set email_1 'wdchang86@gmail.com'
+
+/* INSERT READER */
+INSERT INTO reader (username, first_name, last_name, email) VALUES (:'username_1', :'first_name_1', :'last_name_1', :'email_1');
+
+\set reader_1_id 1 --assumes reader has id 1
+
+/* Declare book information to INSERT INTO book */
+\set book_1_title 'the uriel ventris chronicles: volume two'
+\set book_1_title_sort 'uriel ventris chronicles: volume two, the'
+\set book_2_title 'the uriel ventris chronicles: volume one'
+\set book_2_title_sort 'uriel ventris chronicles: volume one, the'
+\set book_3_title 'cadian honour'
+\set book_4_title 'maledictions: a horror anthology'
+\set book_5_title 'cadia stands'
+\set book_6_title 'honourbound'
 
 /* INSERT BOOKS */
 INSERT INTO book (
@@ -17,8 +35,8 @@ INSERT INTO book (
   picture_link
 )
 VALUES (
-'the uriel ventris chronicles: volume two',
-'uriel ventris chronicles: volume two, the',
+:'book_1_title',
+:'book_1_title_sort',
 848,
 'The second omnibus of stories featuring one of Warhammer 40,000''s most prominent characters, Ultramarine Captain Uriel Ventris.
 
@@ -36,8 +54,8 @@ INSERT INTO book (
   picture_link
 )
 VALUES (
-'the uriel ventris chronicles: volume one',
-'uriel ventris chronicles: volume one, the',
+:'book_2_title',
+:'book_2_title_sort',
 800,
 'The Ultramarines are a byword for loyalty and courage, their martial prowess is legendary and is second only to the God-Emperor. Graham McNeill’s epic trilogy of Ultramarines novels is a masterpiece of non-stop action! Containing the novels Nightbringer, Warriors of Ultramar and Dead Sky, Black Sun, the series follows the adventures of Space Marine Captain Uriel Ventris and the Ultramarines as they battle against the enemies of mankind. From their home world of Macragge, into the dreaded Eye of Terror and beyond, Graham McNeill’s prose rattles like gunfire and brings the Space Marines to life like never before.',
 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1626758004l/58593308.jpg'
@@ -51,8 +69,8 @@ INSERT INTO book (
   picture_link
 )
 VALUES (
-'cadian honour',
-'cadian honour',
+:'book_3_title',
+:'book_3_title',
 496,
 'Sent to the capital world of Potence, Sergeant Minka Lesk and the Cadian 101st discover that though Cadia may have fallen, their duty continues.
 
@@ -70,8 +88,8 @@ INSERT INTO book (
   picture_link
 )
 VALUES (
-'maledictions: a horror anthology',
-'maledictions: a horror anthology',
+:'book_4_title',
+:'book_4_title',
 352,
 'A eclectic collection of gut wrenching tales to spook and scare.
 
@@ -89,8 +107,8 @@ INSERT INTO book (
   picture_link
 )
 VALUES (
-'cadia stands',
-'cadia stands',
+:'book_5_title',
+:'book_5_title',
 320,
 'The brutal war for Cadia is decided, as Lord Castellan Ursarkar Creed and the armies of the Imperium fight to halt the Thirteenth Black Crusade and prevent a calamity on a galactic scale.
 
@@ -106,31 +124,105 @@ INSERT INTO book (
   picture_link
 )
 VALUES (
-'honourbound',
-'honourbound',
+:'book_6_title',
+:'book_6_title',
 496,
 'Uncompromising and fierce, Commissar Severina Raine has always served the Imperium with the utmost distinction. Attached to the Eleventh Antari Rifles, she instills order and courage in the face of utter horror. The Chaos cult, the Sighted, have swept throughout the Bale Stars and a shadow has fallen across its benighted worlds. A great campaign led by the vaunted hero Lord-General Militant Alar Serek is underway to free the system from tyranny and enslavement but the price of victory must be paid in blood. But what secrets do the Sighted harbour, secrets that might cast a light onto Raine’s own troubled past? Only by embracing her duty and staying true to her belief in the Imperium and the commissar’s creed can she hope to survive this crucible, but even then will that be enough?',
 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1545477896l/42789259._SY475_.jpg'
 );
 
 
-\set sample_id 1
-\set sample_book_title 'the uriel ventris chronicles: volumn two'
-
 /* Associates all ids in TABLE book to reader id */
 INSERT INTO reader_book (reader_id, book_id)
-  SELECT :sample_id, book.id
+  SELECT :reader_1_id, book.id
   FROM book;
 
 /* Creates a row for each book of the reader */
 INSERT INTO book_read (reader_book_id)
   SELECT reader_book.id
   FROM reader_book
-  WHERE reader_book.reader_id=:sample_id;
+  WHERE reader_book.reader_id=:reader_1_id;
 
 /* Update book where is_reading = TRUE */
-UPDATE book_read SET is_reading=TRUE
-  WHERE book_read.id=(
-    SELECT id FROM reader_book
-      WHERE reader_book.reader_id=:sample_id AND reader_book.book_id=(SELECT id FROM book WHERE book.title=:sample_book_title)
+UPDATE book_read
+  SET is_reading=TRUE
+    WHERE book_read.id=(
+      SELECT id
+      FROM reader_book
+      WHERE reader_book.reader_id=:reader_1_id
+      AND reader_book.book_id=(
+        SELECT id
+        FROM book
+        WHERE book.title=:'book_1_title')
   );
+
+/* set book ids for each book */
+\set book_1_id 1 --'the uriel ventris chronicles: volume two'
+\set book_2_id 2 --'the uriel ventris chronicles: volume one'
+\set book_3_id 3 --'cadian honour'
+\set book_4_id 4 --'maledictions: a horror anthology'
+\set book_5_id 5 --'cadia stands'
+\set book_6_id 6 --'honourbound'
+
+/* INSERT read dates for books */
+INSERT INTO
+  read_entry (date_read, page_completed, percentage_completed, book_read_id)
+VALUES
+  ('2021-07-27', 495, 58.37, :book_1_id),
+  ('2021-07-26', 447, 52.71, :book_1_id),
+  ('2021-07-25', 401, 47.29, :book_1_id),
+  ('2021-07-24', 359, 42.33, :book_1_id),
+  ('2021-07-23', 301, 35.5, :book_1_id),
+  ('2021-07-22', 243, 28.66, :book_1_id),
+  ('2021-07-21', 165, 19.46, :book_1_id),
+  ('2021-07-20', 51, 6.01, :book_1_id);
+
+INSERT INTO
+  read_entry (date_read, page_completed, percentage_completed, book_read_id)
+VALUES
+  ('2021-07-19', 800, 100, :book_2_id),
+  ('2021-07-19', 709, 88.63, :book_2_id),
+  ('2021-07-18', 607, 75.88, :book_2_id),
+  ('2021-07-17', 537, 67.13, :book_2_id),
+  ('2021-07-16', 395, 49.38, :book_2_id),
+  ('2021-07-15', 297, 37.13, :book_2_id),
+  ('2021-07-14', 161, 20.13, :book_2_id),
+  ('2021-07-13', 101, 12.63, :book_2_id),
+  ('2021-07-12', 53, 6.63, :book_2_id),
+  ('2021-07-12', 0, 0, :book_2_id);
+
+INSERT INTO
+  read_entry (date_read, page_completed, percentage_completed, book_read_id)
+VALUES
+  ('2021-07-11', 496, 100, :book_3_id),
+  ('2021-07-10', 99, 19.96, :book_3_id),
+  ('2021-07-10', 0, 0, :book_3_id);
+
+INSERT INTO
+  read_entry (date_read, page_completed, percentage_completed, book_read_id)
+VALUES
+  ('2021-07-10', 352, 100, :book_4_id),
+  ('2021-07-09', 283, 80.4, :book_4_id),
+  ('2021-07-08', 131, 37.22, :book_4_id),
+  ('2021-07-07', 81, 23.01, :book_4_id),
+  ('2021-07-07', 0, 0, :book_4_id);
+
+INSERT INTO
+  read_entry (date_read, page_completed, percentage_completed, book_read_id)
+VALUES
+  ('2021-07-06', 320, 100, :book_5_id),
+  ('2021-07-05', 115, 35.94, :book_5_id),
+  ('2021-07-05', 0, 0, :book_5_id);
+
+INSERT INTO
+  read_entry (date_read, page_completed, percentage_completed, book_read_id)
+VALUES
+  ('2021-07-04', 496, 100, :book_6_id),
+  ('2021-07-03', 405, 81.65, :book_6_id),
+  ('2021-07-02', 313, 63.1, :book_6_id),
+  ('2021-07-01', 209, 42.14, :book_6_id),
+  ('2021-06-30', 117, 23.59, :book_6_id),
+  ('2021-06-30', 0, 0, :book_6_id);
+
+/* Get only book titles using TABLES reader_book, book */
+-- SELECT book.title FROM reader_book, book WHERE book_id=book.id;
