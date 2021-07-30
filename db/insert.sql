@@ -226,9 +226,11 @@ VALUES
 
 /* ----------------------------------------- INSERT AUTHOR -----------------------------------------*/
 \set book_1_author_1_first_name 'Graham'
+\set book_1_author_1_middle_name ''
 \set book_1_author_1_last_name 'McNeill'
 
 \set book_2_author_1_first_name 'Graham'
+\set book_2_author_1_middle_name ''
 \set book_2_author_1_last_name 'McNeill'
 
 \set book_3_author_1_first_name 'Justin'
@@ -236,37 +238,37 @@ VALUES
 \set book_3_author_1_last_name 'Hill'
 
 \set book_4_author_1_first_name 'Cassandra'
+\set book_4_author_1_middle_name ''
 \set book_4_author_1_last_name 'Khaw'
-
 \set book_4_author_2_first_name 'Richard'
+\set book_4_author_2_middle_name ''
 \set book_4_author_2_last_name 'Strachan'
-
 \set book_4_author_3_first_name 'Graham'
+\set book_4_author_3_middle_name ''
 \set book_4_author_3_last_name 'McNeill'
-
 \set book_4_author_4_first_name 'Lora'
+\set book_4_author_4_middle_name ''
 \set book_4_author_4_last_name 'Gray'
-
 \set book_4_author_5_first_name 'C'
 \set book_4_author_5_middle_name 'L'
 \set book_4_author_5_last_name 'Werner'
-
 \set book_4_author_6_first_name 'Peter'
+\set book_4_author_6_middle_name ''
 \set book_4_author_6_last_name 'McLean'
-
 \set book_4_author_7_first_name 'David'
+\set book_4_author_7_middle_name ''
 \set book_4_author_7_last_name 'Annandale'
-
 \set book_4_author_8_first_name 'Paul'
+\set book_4_author_8_middle_name ''
 \set book_4_author_8_last_name 'Kane'
-
 \set book_4_author_9_first_name 'Josh'
+\set book_4_author_9_middle_name ''
 \set book_4_author_9_last_name 'Reynolds'
-
 \set book_4_author_10_first_name 'J.C.'
+\set book_4_author_10_middle_name ''
 \set book_4_author_10_last_name 'Stearns'
-
 \set book_4_author_11_first_name 'Alec'
+\set book_4_author_11_middle_name ''
 \set book_4_author_11_last_name 'Worley'
 
 \set book_5_author_1_first_name 'Justin'
@@ -274,6 +276,7 @@ VALUES
 \set book_5_author_1_last_name 'Hill'
 
 \set book_6_author_1_first_name 'Rachel'
+\set book_6_author_1_middle_name 'D.'
 \set book_6_author_1_last_name 'Harrison'
 
 INSERT INTO
@@ -312,6 +315,63 @@ VALUES
   (:'book_6_author_1_first_name' || ' ' || :'book_6_author_1_last_name', :'book_6_author_1_first_name', NULL, :'book_6_author_1_last_name')
 ON CONFLICT (full_name)
 DO NOTHING;
+
+
+/* ----------------------------------------- INSERT JOIN TABLE BOOK_AUTHOR -----------------------------------------*/
+CREATE OR REPLACE FUNCTION join_book_author(book_id INT, author_first_name VARCHAR, author_middle_name VARCHAR, author_last_name VARCHAR)
+RETURNS VOID AS $$
+BEGIN
+  INSERT INTO book_author (book_id, author_id)
+  SELECT $1, author.id
+  FROM author
+  WHERE author.id=(
+    SELECT id
+    FROM author AS a
+    WHERE a.first_name=$2 AND (a.middle_name IS NULL OR a.middle_name=$3) AND a.last_name=$4
+  );
+END
+$$ LANGUAGE 'plpgsql';
+
+join_book_author(:book_1_id, :'book_1_author_1_first_name', :'book_1_author_1_middle_name', :'book_1_author_1_last_name');
+
+-- INSERT INTO book_author (book_id, author_id)
+-- SELECT :book_1_id, author.id
+-- FROM author
+-- WHERE author.id=(
+--   SELECT id
+--   FROM author AS a
+--   WHERE a.first_name=:'book_1_author_1_first_name' AND (a.middle_name IS NULL OR a.middle_name=:'book_1_author_1_middle_name') AND a.last_name=:'book_1_author_1_last_name'
+-- );
+
+-- INSERT INTO book_author (book_id, author_id)
+-- SELECT :book_2_id, author.id
+-- FROM author
+-- WHERE author.id=(
+--   SELECT id
+--   FROM author AS a
+--   WHERE a.first_name=:'book_2_author_1_first_name' AND (a.middle_name IS NULL OR a.middle_name=:'book_2_author_1_middle_name') AND a.last_name=:'book_2_author_1_last_name'
+-- );
+
+-- INSERT INTO book_author (book_id, author_id)
+-- SELECT :book_3_id, author.id
+-- FROM author
+-- WHERE author.id=(
+--   SELECT id
+--   FROM author AS a
+--   WHERE a.first_name=:'book_3_author_1_first_name' AND (a.middle_name IS NULL OR a.middle_name=:'book_3_author_1_middle_name') AND a.last_name=:'book_3_author_1_last_name'
+-- );
+
+-- INSERT INTO book_author (book_id, author_id)
+-- SELECT :book_4_id, author.id
+-- FROM author
+-- WHERE author.id=(
+--   SELECT id
+--   FROM author AS a
+--   WHERE (a.first_name=:'book_4_author_1_first_name' AND (a.middle_name IS NULL OR a.middle_name=:'book_4_author_1_middle_name') AND a.last_name=:'book_4_author_1_last_name')
+--   OR
+--   (a.first_name=:'book_4_author_2_first_name' AND (a.middle_name IS NULL OR a.middle_name=:'book_4_author_2_middle_name') AND a.last_name=:'book_4_author_2_last_name')
+-- );
+
 
 /* Get only book titles using TABLES reader_book, book */
 -- SELECT book.title FROM reader_book, book WHERE book_id=book.id;
