@@ -8,7 +8,7 @@
 | 5 | index | ix_{table_name}_{col_name} | ix_reader_username
 
 
-`GET /reading` Retrieves a list of books that are currently being read.
+`GET /books` Retrieves a list of books that are currently being read.
 
 Parameters
 
@@ -31,94 +31,57 @@ Response
 ```JSON
 [
   {
-    "_id": "602b14fd541461fcab3686b5",
-    "roomType_id": "602b118a541461fcab3686ac",
-    "reservation_id": "602b3b5e94bd6e1e4f85decf",
-    "roomType": "Ocean View King Suite",
-    "price": "400.00",
-    "read_entry": [
+    "id": 1,
+    "title": "the uriel ventris chronicles: volume two",
+    "title_sort": "uriel ventris chronicles: volume two, the",
+    "author": [
+      "graham mcneill"
+    ],
+    "total_pages": 848,
+    "book_description": "The second omnibus of stories featuring one of Warhammer 40,000's most prominent characters, Ultramarine Captain Uriel     Ventris.\\n\\nThe Ultramarines are the epitome of a Space Marine Chapter. Warriors without peer, their name is a byword for discipline and honour, and their heroic deeds are legendary. \\n\\nCaptain Uriel Ventris fights to prove his worth and return to the hallowed ranks of the Chapter after his exile to the Eye of Terror. But as the Iron Warriors move against Ultramar, a grim premonition comes to light: Ventris will have a part to play in the coming war... for good or ill. The ongoing story of the Uriel Ventris continues in this omnibus edition, featuring the novels The Killing Ground, Courage and Honour and The Chapter''s Due, as well as several short stories and the classic comic 'Black Bone Road'.",
+    "picture_link": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561287919l/44180905.jpg",
+    "book_read": [
       {
         "id": 1,
-        "date_read": 
-        "page_completed": 
-        "percentage_completed":
-      },
-      {
-        "id
-      },
-      ...
-    ],
-    "roomNumber": "110",
-    "floorNumber": 1,
-    "currentGuests": [
-      {
-        "firstName": "Guest",
-        "lastName": "One",
-        "phone": "123-456-7890",
-        "email": "guestOne@madeup.com"
-      },
-      {
-        "firstName": "Guest",
+        "days_read": 10,
+        "days_total": 10,
+        "is_complete": false,
+        "is_reading": true,
+        "read_entry": [
+          {
+            "id": 1,
+            "date_read": "2021-07-12",
+            "page_completed": "0",
+            "percentage_completed": "0"
+          },
+          {
+            "id": 2,
+            "date_read": "2021-07-13",
+            "page_completed": 53,
+            "percentage_completed": 6.63
+          },
+          {
+            "id": 3,
+            "date_read": "2021-07-14",
+            "page_completed": 101,
+            "percentage_completed": 6.63
+          }
           ...
-      }
-    ],
-    "isOccupied": true,
-    "isUsable": true,
-    "isClean": true,
-    "tasks": [
-      {
-        "_id": "602b29a394bd6e1e4f85deac",
-        "room_id": "602b14fd541461fcab3686b5",
-        "location": "110",
-        "taskTitle": "Clean Room",
-        "taskDescription": "Daily Cleaning",
-        "department": "Housekeeping",
-        "createdAt": "2021-02-14T11:00:00.000Z",
-        "dueBy": "2021-02-14T20:00:00.000Z",
-        "isComplete": true,
-        "isCleaning": true,
-        "completedAt": "2021-02-14T19:00:00.000Z",
-        "employeeCompleted": "Spencer Brook",
-        "employeeCreated": "system",
-        "employeeAssigned": "Spencer Brook",
-        "employeeAssigned_id": "auth0|602c301102061a0069805815",
-        "employeeCompleted_id": "auth0|602c301102061a0069805815",
-        "employeeCreated_id": ""
+        ]
       },
       {
-        "_id": "602b2d4d94bd6e1e4f85deb6",
-        "room_id": "602b14fd541461fcab3686b5",
-        "location": "110",
-        "taskTitle": "Touch up paint",
-        "taskDescription": "Paint is chipping behind headboard, please repaint.",
-        "department": "Maintenance",
         ...
       }
     ]
   },
   {
-    "_id": "602b3db794bd6e1e4f85ded1",
-    "roomType_id": "602b118a541461fcab3686ac",
-    "reservation_id": "",
-    "roomType": "Ocean View King Suite",
-    "price": "400.00",
-    "amenities": [
-      "Ocean View",
-      "TV",
-      "Non-Smoking"
+    "id": 2,
+    "title": "the uriel ventris chronicles: volume one",
+    "title_sort": "uriel ventris chronicles: volume one, the",
+    "author": [
+      "graham mcneill"
     ],
-    "roomNumber": "111",
-    "floorNumber": 1,
-    "currentGuests": [],
-    "isOccupied": false,
-    "isUsable": true,
-    "isClean": true,
-    "tasks": []
-  },
-  {
-    "_id": "602b1f2694bd6e1e4f85de88",
-    "roomType_id": "602b1139541461fcab3686ab",
-    "reservation_id": "",
+    "total_pages": 800,
     ...
   }
 ]

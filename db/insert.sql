@@ -11,7 +11,7 @@ TRUNCATE TABLE reader, book, reader_book, book_read, read_entry, book_author, au
 \set last_name_1 'chang'
 \set email_1 'wdchang86@gmail.com'
 
-/* INSERT READER */
+/* ----------------------------------------- INSERT READER -----------------------------------------*/
 INSERT INTO reader (username, first_name, last_name, email) VALUES (:'username_1', :'first_name_1', :'last_name_1', :'email_1');
 
 \set reader_1_id 1 --assumes reader has id 1
@@ -26,7 +26,7 @@ INSERT INTO reader (username, first_name, last_name, email) VALUES (:'username_1
 \set book_5_title 'cadia stands'
 \set book_6_title 'honourbound'
 
-/* INSERT BOOKS */
+/* ----------------------------------------- INSERT BOOKS -----------------------------------------*/
 INSERT INTO book (
   title,
   title_sort,
@@ -42,7 +42,7 @@ VALUES (
 
 The Ultramarines are the epitome of a Space Marine Chapter. Warriors without peer, their name is a byword for discipline and honour, and their heroic deeds are legendary.
 
-Captain Uriel Ventris fights to prove his worth and return to the hallowed ranks of the Chapter after his exile to the Eye of Terror. But as the Iron Warriors move against Ultramar, a grim premonition comes to light: Ventris will have a part to play in the coming war... for good or ill. The ongoing story of the Uriel Ventris continues in this omnibus edition, featuring the novels The Killing Ground, Courage and Honour and The Chapter''s Due, as well as several short stories and the classic comin ''Black Bone Road''.',
+Captain Uriel Ventris fights to prove his worth and return to the hallowed ranks of the Chapter after his exile to the Eye of Terror. But as the Iron Warriors move against Ultramar, a grim premonition comes to light: Ventris will have a part to play in the coming war... for good or ill. The ongoing story of the Uriel Ventris continues in this omnibus edition, featuring the novels The Killing Ground, Courage and Honour and The Chapter''s Due, as well as several short stories and the classic comic ''Black Bone Road''.',
 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561287919l/44180905.jpg'
 );
 
@@ -164,7 +164,7 @@ UPDATE book_read
 \set book_5_id 5 --'cadia stands'
 \set book_6_id 6 --'honourbound'
 
-/* INSERT read dates for books */
+/* ----------------------------------------- INSERT READ_ENTRY -----------------------------------------*/
 INSERT INTO
   read_entry (date_read, page_completed, percentage_completed, book_read_id)
 VALUES
@@ -223,6 +223,95 @@ VALUES
   ('2021-07-01', 209, 42.14, :book_6_id),
   ('2021-06-30', 117, 23.59, :book_6_id),
   ('2021-06-30', 0, 0, :book_6_id);
+
+/* ----------------------------------------- INSERT AUTHOR -----------------------------------------*/
+\set book_1_author_1_first_name 'Graham'
+\set book_1_author_1_last_name 'McNeill'
+
+\set book_2_author_1_first_name 'Graham'
+\set book_2_author_1_last_name 'McNeill'
+
+\set book_3_author_1_first_name 'Justin'
+\set book_3_author_1_middle_name 'D.'
+\set book_3_author_1_last_name 'Hill'
+
+\set book_4_author_1_first_name 'Cassandra'
+\set book_4_author_1_last_name 'Khaw'
+
+\set book_4_author_2_first_name 'Richard'
+\set book_4_author_2_last_name 'Strachan'
+
+\set book_4_author_3_first_name 'Graham'
+\set book_4_author_3_last_name 'McNeill'
+
+\set book_4_author_4_first_name 'Lora'
+\set book_4_author_4_last_name 'Gray'
+
+\set book_4_author_5_first_name 'C'
+\set book_4_author_5_middle_name 'L'
+\set book_4_author_5_last_name 'Werner'
+
+\set book_4_author_6_first_name 'Peter'
+\set book_4_author_6_last_name 'McLean'
+
+\set book_4_author_7_first_name 'David'
+\set book_4_author_7_last_name 'Annandale'
+
+\set book_4_author_8_first_name 'Paul'
+\set book_4_author_8_last_name 'Kane'
+
+\set book_4_author_9_first_name 'Josh'
+\set book_4_author_9_last_name 'Reynolds'
+
+\set book_4_author_10_first_name 'J.C.'
+\set book_4_author_10_last_name 'Stearns'
+
+\set book_4_author_11_first_name 'Alec'
+\set book_4_author_11_last_name 'Worley'
+
+\set book_5_author_1_first_name 'Justin'
+\set book_5_author_1_middle_name 'D.'
+\set book_5_author_1_last_name 'Hill'
+
+\set book_6_author_1_first_name 'Rachel'
+\set book_6_author_1_last_name 'Harrison'
+
+INSERT INTO
+  author (full_name, first_name, middle_name, last_name)
+VALUES
+  (:'book_1_author_1_first_name' || ' ' || :'book_1_author_1_last_name', :'book_1_author_1_first_name', NULL, :'book_1_author_1_last_name'),
+  (:'book_2_author_1_first_name' || ' ' || :'book_2_author_1_last_name', :'book_2_author_1_first_name', NULL, :'book_2_author_1_last_name'),
+  (
+    :'book_3_author_1_first_name' || ' ' || :'book_3_author_1_middle_name' || ' ' || :'book_3_author_1_last_name',
+    :'book_3_author_1_first_name',
+    :'book_3_author_1_middle_name',
+    :'book_3_author_1_last_name'
+  ),
+  (:'book_4_author_1_first_name' || ' ' || :'book_4_author_1_last_name', :'book_4_author_1_first_name', NULL, :'book_4_author_1_last_name'),
+  (:'book_4_author_2_first_name' || ' ' || :'book_4_author_2_last_name', :'book_4_author_2_first_name', NULL, :'book_4_author_2_last_name'),
+  (:'book_4_author_3_first_name' || ' ' || :'book_4_author_3_last_name', :'book_4_author_3_first_name', NULL, :'book_4_author_3_last_name'),
+  (:'book_4_author_4_first_name' || ' ' || :'book_4_author_4_last_name', :'book_4_author_4_first_name', NULL, :'book_4_author_4_last_name'),
+  (
+    :'book_4_author_5_first_name' || ' ' || :'book_4_author_5_middle_name' || ' ' || :'book_4_author_5_last_name',
+    :'book_4_author_5_first_name',
+    :'book_4_author_5_middle_name',
+    :'book_4_author_5_last_name'
+  ),
+  (:'book_4_author_6_first_name' || ' ' || :'book_4_author_6_last_name', :'book_4_author_6_first_name', NULL, :'book_4_author_6_last_name'),
+  (:'book_4_author_7_first_name' || ' ' || :'book_4_author_7_last_name', :'book_4_author_7_first_name', NULL, :'book_4_author_7_last_name'),
+  (:'book_4_author_8_first_name' || ' ' || :'book_4_author_8_last_name', :'book_4_author_8_first_name', NULL, :'book_4_author_8_last_name'),
+  (:'book_4_author_9_first_name' || ' ' || :'book_4_author_9_last_name', :'book_4_author_9_first_name', NULL, :'book_4_author_9_last_name'),
+  (:'book_4_author_10_first_name' || ' ' || :'book_4_author_10_last_name', :'book_4_author_10_first_name', NULL, :'book_4_author_10_last_name'),
+  (:'book_4_author_11_first_name' || ' ' || :'book_4_author_11_last_name', :'book_4_author_11_first_name', NULL, :'book_4_author_11_last_name'),
+  (
+    :'book_5_author_1_first_name' || ' ' || :'book_5_author_1_middle_name' || ' ' || :'book_5_author_1_last_name',
+    :'book_5_author_1_first_name',
+    :'book_5_author_1_middle_name',
+    :'book_5_author_1_last_name'
+  ),
+  (:'book_6_author_1_first_name' || ' ' || :'book_6_author_1_last_name', :'book_6_author_1_first_name', NULL, :'book_6_author_1_last_name')
+ON CONFLICT (full_name)
+DO NOTHING;
 
 /* Get only book titles using TABLES reader_book, book */
 -- SELECT book.title FROM reader_book, book WHERE book_id=book.id;

@@ -68,7 +68,10 @@ CREATE INDEX ix_read_entry_book_read_id ON read_entry (book_read_id);
 
 CREATE TABLE author (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_author PRIMARY KEY,
-  author_name VARCHAR CONSTRAINT uq_author_author_name UNIQUE NOT NULL
+  full_name VARCHAR CONSTRAINT uq_author_full_name UNIQUE NOT NULL,
+  first_name VARCHAR NOT NULL,
+  middle_name VARCHAR,
+  last_name VARCHAR NOT NULL
 );
 
 CREATE TABLE book_author (
