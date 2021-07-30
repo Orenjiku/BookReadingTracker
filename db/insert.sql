@@ -279,6 +279,7 @@ VALUES
 \set book_6_author_1_middle_name 'D.'
 \set book_6_author_1_last_name 'Harrison'
 
+
 INSERT INTO
   author (full_name, first_name, middle_name, last_name)
 VALUES
@@ -330,36 +331,12 @@ BEGIN
     WHERE a.first_name=$2 AND (a.middle_name IS NULL OR a.middle_name=$3) AND a.last_name=$4
   );
 END
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
-join_book_author(:book_1_id, :'book_1_author_1_first_name', :'book_1_author_1_middle_name', :'book_1_author_1_last_name');
+SELECT join_book_author(:book_1_id, :'book_1_author_1_first_name', :'book_1_author_1_middle_name', :'book_1_author_1_last_name');
+SELECT join_book_author(:book_2_id, :'book_2_author_1_first_name', :'book_2_author_1_middle_name', :'book_2_author_1_last_name');
+SELECT join_book_author(:book_3_id, :'book_3_author_1_first_name', :'book_3_author_1_middle_name', :'book_3_author_1_last_name');
 
--- INSERT INTO book_author (book_id, author_id)
--- SELECT :book_1_id, author.id
--- FROM author
--- WHERE author.id=(
---   SELECT id
---   FROM author AS a
---   WHERE a.first_name=:'book_1_author_1_first_name' AND (a.middle_name IS NULL OR a.middle_name=:'book_1_author_1_middle_name') AND a.last_name=:'book_1_author_1_last_name'
--- );
-
--- INSERT INTO book_author (book_id, author_id)
--- SELECT :book_2_id, author.id
--- FROM author
--- WHERE author.id=(
---   SELECT id
---   FROM author AS a
---   WHERE a.first_name=:'book_2_author_1_first_name' AND (a.middle_name IS NULL OR a.middle_name=:'book_2_author_1_middle_name') AND a.last_name=:'book_2_author_1_last_name'
--- );
-
--- INSERT INTO book_author (book_id, author_id)
--- SELECT :book_3_id, author.id
--- FROM author
--- WHERE author.id=(
---   SELECT id
---   FROM author AS a
---   WHERE a.first_name=:'book_3_author_1_first_name' AND (a.middle_name IS NULL OR a.middle_name=:'book_3_author_1_middle_name') AND a.last_name=:'book_3_author_1_last_name'
--- );
 
 -- INSERT INTO book_author (book_id, author_id)
 -- SELECT :book_4_id, author.id
