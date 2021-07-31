@@ -70,7 +70,7 @@ CREATE TABLE author (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_author PRIMARY KEY,
   full_name VARCHAR CONSTRAINT uq_author_full_name UNIQUE NOT NULL,
   first_name VARCHAR NOT NULL,
-  middle_name VARCHAR,
+  middle_name VARCHAR DEFAULT '',
   last_name VARCHAR NOT NULL
 );
 

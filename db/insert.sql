@@ -165,6 +165,14 @@ UPDATE book_read
 \set book_6_id 6 --'honourbound'
 
 /* ----------------------------------------- INSERT READ_ENTRY -----------------------------------------*/
+CREATE OR REPLACE FUNCTION insert_read_entry(arg_date_rate TIMESTAMP, arg_page_completed INT, arg_percentage_complated INT, book_read_id INT)
+RETURNS VOID AS $$
+BEGIN
+  INSERT INTO read_entry (date_read, page_completed, percentage_completed, book_read_id)
+  VALUES ($1, $2, $3, $4)
+END
+$$ LANGUAGE plpgsql
+
 INSERT INTO
   read_entry (date_read, page_completed, percentage_completed, book_read_id)
 VALUES
@@ -225,101 +233,107 @@ VALUES
   ('2021-06-30', 0, 0, :book_6_id);
 
 /* ----------------------------------------- INSERT AUTHOR -----------------------------------------*/
+CREATE OR REPLACE FUNCTION insert_author(
+  arg_full_name VARCHAR,
+  arg_first_name VARCHAR,
+  arg_last_name VARCHAR,
+  arg_middle_name VARCHAR DEFAULT NULL
+)
+RETURNS VOID AS $$
+BEGIN
+  INSERT INTO
+    author (full_name, first_name, last_name, middle_name)
+  VALUES
+    ($1, $2, $3, $4)
+  ON CONFLICT (full_name)
+    DO NOTHING;
+END $$ LANGUAGE plpgsql;
+
 \set book_1_author_1_first_name 'Graham'
-\set book_1_author_1_middle_name ''
 \set book_1_author_1_last_name 'McNeill'
+\set book_1_author_1_full_name 'Graham McNeill'
 
 \set book_2_author_1_first_name 'Graham'
-\set book_2_author_1_middle_name ''
 \set book_2_author_1_last_name 'McNeill'
+\set book_2_author_1_full_name 'Graham McNeill'
 
 \set book_3_author_1_first_name 'Justin'
 \set book_3_author_1_middle_name 'D.'
 \set book_3_author_1_last_name 'Hill'
+\set book_3_author_1_full_name 'Justin D. Hill'
 
 \set book_4_author_1_first_name 'Cassandra'
-\set book_4_author_1_middle_name ''
 \set book_4_author_1_last_name 'Khaw'
+\set book_4_author_1_full_name 'Cassandra Khaw'
 \set book_4_author_2_first_name 'Richard'
-\set book_4_author_2_middle_name ''
 \set book_4_author_2_last_name 'Strachan'
+\set book_4_author_2_full_name 'Richard Strachan'
 \set book_4_author_3_first_name 'Graham'
-\set book_4_author_3_middle_name ''
 \set book_4_author_3_last_name 'McNeill'
+\set book_4_author_3_full_name 'Graham McNeill'
 \set book_4_author_4_first_name 'Lora'
-\set book_4_author_4_middle_name ''
 \set book_4_author_4_last_name 'Gray'
+\set book_4_author_4_full_name 'Lora Gray'
 \set book_4_author_5_first_name 'C'
 \set book_4_author_5_middle_name 'L'
 \set book_4_author_5_last_name 'Werner'
+\set book_4_author_5_full_name 'C L Werner'
 \set book_4_author_6_first_name 'Peter'
-\set book_4_author_6_middle_name ''
 \set book_4_author_6_last_name 'McLean'
+\set book_4_author_6_full_name 'Peter McLean'
 \set book_4_author_7_first_name 'David'
-\set book_4_author_7_middle_name ''
 \set book_4_author_7_last_name 'Annandale'
+\set book_4_author_7_full_name 'David Annandale'
 \set book_4_author_8_first_name 'Paul'
-\set book_4_author_8_middle_name ''
 \set book_4_author_8_last_name 'Kane'
+\set book_4_author_8_full_name 'Paul Kane'
 \set book_4_author_9_first_name 'Josh'
-\set book_4_author_9_middle_name ''
 \set book_4_author_9_last_name 'Reynolds'
+\set book_4_author_9_full_name 'Josh Reynolds'
 \set book_4_author_10_first_name 'J.C.'
-\set book_4_author_10_middle_name ''
 \set book_4_author_10_last_name 'Stearns'
+\set book_4_author_10_full_name 'J.C. Stearns'
 \set book_4_author_11_first_name 'Alec'
-\set book_4_author_11_middle_name ''
 \set book_4_author_11_last_name 'Worley'
+\set book_4_author_11_full_name 'Alec Worley'
 
 \set book_5_author_1_first_name 'Justin'
 \set book_5_author_1_middle_name 'D.'
 \set book_5_author_1_last_name 'Hill'
+\set book_5_author_1_full_name 'Justin D. Hill'
 
 \set book_6_author_1_first_name 'Rachel'
 \set book_6_author_1_middle_name 'D.'
 \set book_6_author_1_last_name 'Harrison'
+\set book_6_author_1_full_name 'Rachel D. Harrison'
 
+SELECT insert_author(:'book_1_author_1_full_name', :'book_1_author_1_first_name', :'book_1_author_1_last_name');
 
-INSERT INTO
-  author (full_name, first_name, middle_name, last_name)
-VALUES
-  (:'book_1_author_1_first_name' || ' ' || :'book_1_author_1_last_name', :'book_1_author_1_first_name', NULL, :'book_1_author_1_last_name'),
-  (:'book_2_author_1_first_name' || ' ' || :'book_2_author_1_last_name', :'book_2_author_1_first_name', NULL, :'book_2_author_1_last_name'),
-  (
-    :'book_3_author_1_first_name' || ' ' || :'book_3_author_1_middle_name' || ' ' || :'book_3_author_1_last_name',
-    :'book_3_author_1_first_name',
-    :'book_3_author_1_middle_name',
-    :'book_3_author_1_last_name'
-  ),
-  (:'book_4_author_1_first_name' || ' ' || :'book_4_author_1_last_name', :'book_4_author_1_first_name', NULL, :'book_4_author_1_last_name'),
-  (:'book_4_author_2_first_name' || ' ' || :'book_4_author_2_last_name', :'book_4_author_2_first_name', NULL, :'book_4_author_2_last_name'),
-  (:'book_4_author_3_first_name' || ' ' || :'book_4_author_3_last_name', :'book_4_author_3_first_name', NULL, :'book_4_author_3_last_name'),
-  (:'book_4_author_4_first_name' || ' ' || :'book_4_author_4_last_name', :'book_4_author_4_first_name', NULL, :'book_4_author_4_last_name'),
-  (
-    :'book_4_author_5_first_name' || ' ' || :'book_4_author_5_middle_name' || ' ' || :'book_4_author_5_last_name',
-    :'book_4_author_5_first_name',
-    :'book_4_author_5_middle_name',
-    :'book_4_author_5_last_name'
-  ),
-  (:'book_4_author_6_first_name' || ' ' || :'book_4_author_6_last_name', :'book_4_author_6_first_name', NULL, :'book_4_author_6_last_name'),
-  (:'book_4_author_7_first_name' || ' ' || :'book_4_author_7_last_name', :'book_4_author_7_first_name', NULL, :'book_4_author_7_last_name'),
-  (:'book_4_author_8_first_name' || ' ' || :'book_4_author_8_last_name', :'book_4_author_8_first_name', NULL, :'book_4_author_8_last_name'),
-  (:'book_4_author_9_first_name' || ' ' || :'book_4_author_9_last_name', :'book_4_author_9_first_name', NULL, :'book_4_author_9_last_name'),
-  (:'book_4_author_10_first_name' || ' ' || :'book_4_author_10_last_name', :'book_4_author_10_first_name', NULL, :'book_4_author_10_last_name'),
-  (:'book_4_author_11_first_name' || ' ' || :'book_4_author_11_last_name', :'book_4_author_11_first_name', NULL, :'book_4_author_11_last_name'),
-  (
-    :'book_5_author_1_first_name' || ' ' || :'book_5_author_1_middle_name' || ' ' || :'book_5_author_1_last_name',
-    :'book_5_author_1_first_name',
-    :'book_5_author_1_middle_name',
-    :'book_5_author_1_last_name'
-  ),
-  (:'book_6_author_1_first_name' || ' ' || :'book_6_author_1_last_name', :'book_6_author_1_first_name', NULL, :'book_6_author_1_last_name')
-ON CONFLICT (full_name)
-DO NOTHING;
+SELECT insert_author(:'book_2_author_1_full_name', :'book_2_author_1_first_name', :'book_2_author_1_last_name');
 
+SELECT insert_author(:'book_3_author_1_full_name', :'book_3_author_1_first_name', :'book_3_author_1_last_name', :'book_3_author_1_middle_name');
+
+SELECT insert_author(:'book_4_author_1_full_name', :'book_4_author_1_first_name', :'book_4_author_1_last_name');
+SELECT insert_author(:'book_4_author_2_full_name', :'book_4_author_2_first_name', :'book_4_author_2_last_name');
+SELECT insert_author(:'book_4_author_3_full_name', :'book_4_author_3_first_name', :'book_4_author_3_last_name');
+SELECT insert_author(:'book_4_author_4_full_name', :'book_4_author_4_first_name', :'book_4_author_4_last_name');
+SELECT insert_author(:'book_4_author_5_full_name', :'book_4_author_5_first_name', :'book_4_author_5_last_name', :'book_4_author_5_middle_name');
+SELECT insert_author(:'book_4_author_6_full_name', :'book_4_author_6_first_name', :'book_4_author_6_last_name');
+SELECT insert_author(:'book_4_author_7_full_name', :'book_4_author_7_first_name', :'book_4_author_7_last_name');
+SELECT insert_author(:'book_4_author_8_full_name', :'book_4_author_8_first_name', :'book_4_author_8_last_name');
+SELECT insert_author(:'book_4_author_9_full_name', :'book_4_author_9_first_name', :'book_4_author_9_last_name');
+SELECT insert_author(:'book_4_author_10_full_name', :'book_4_author_10_first_name', :'book_4_author_10_last_name');
+SELECT insert_author(:'book_4_author_11_full_name', :'book_4_author_11_first_name', :'book_4_author_11_last_name');
+
+SELECT insert_author(:'book_5_author_1_full_name', :'book_5_author_1_first_name', :'book_5_author_1_last_name', :'book_5_author_1_middle_name');
+
+SELECT insert_author(:'book_6_author_1_full_name', :'book_6_author_1_first_name', :'book_6_author_1_last_name', :'book_6_author_1_middle_name');
 
 /* ----------------------------------------- INSERT JOIN TABLE BOOK_AUTHOR -----------------------------------------*/
-CREATE OR REPLACE FUNCTION join_book_author(book_id INT, author_first_name VARCHAR, author_middle_name VARCHAR, author_last_name VARCHAR)
+CREATE OR REPLACE FUNCTION join_book_author(
+  arg_book_id INT,
+  arg_author_full_name VARCHAR
+)
 RETURNS VOID AS $$
 BEGIN
   INSERT INTO book_author (book_id, author_id)
@@ -328,27 +342,28 @@ BEGIN
   WHERE author.id=(
     SELECT id
     FROM author AS a
-    WHERE a.first_name=$2 AND (a.middle_name IS NULL OR a.middle_name=$3) AND a.last_name=$4
+    WHERE a.full_name=$2
   );
-END
-$$ LANGUAGE plpgsql;
+END $$ LANGUAGE plpgsql;
 
-SELECT join_book_author(:book_1_id, :'book_1_author_1_first_name', :'book_1_author_1_middle_name', :'book_1_author_1_last_name');
-SELECT join_book_author(:book_2_id, :'book_2_author_1_first_name', :'book_2_author_1_middle_name', :'book_2_author_1_last_name');
-SELECT join_book_author(:book_3_id, :'book_3_author_1_first_name', :'book_3_author_1_middle_name', :'book_3_author_1_last_name');
+SELECT join_book_author(:book_1_id, :'book_1_author_1_full_name');
 
+SELECT join_book_author(:book_2_id, :'book_2_author_1_full_name');
 
--- INSERT INTO book_author (book_id, author_id)
--- SELECT :book_4_id, author.id
--- FROM author
--- WHERE author.id=(
---   SELECT id
---   FROM author AS a
---   WHERE (a.first_name=:'book_4_author_1_first_name' AND (a.middle_name IS NULL OR a.middle_name=:'book_4_author_1_middle_name') AND a.last_name=:'book_4_author_1_last_name')
---   OR
---   (a.first_name=:'book_4_author_2_first_name' AND (a.middle_name IS NULL OR a.middle_name=:'book_4_author_2_middle_name') AND a.last_name=:'book_4_author_2_last_name')
--- );
+SELECT join_book_author(:book_3_id, :'book_3_author_1_full_name');
 
+SELECT join_book_author(:book_4_id, :'book_4_author_1_full_name');
+SELECT join_book_author(:book_4_id, :'book_4_author_2_full_name');
+SELECT join_book_author(:book_4_id, :'book_4_author_3_full_name');
+SELECT join_book_author(:book_4_id, :'book_4_author_4_full_name');
+SELECT join_book_author(:book_4_id, :'book_4_author_5_full_name');
+SELECT join_book_author(:book_4_id, :'book_4_author_6_full_name');
+SELECT join_book_author(:book_4_id, :'book_4_author_7_full_name');
+SELECT join_book_author(:book_4_id, :'book_4_author_8_full_name');
+SELECT join_book_author(:book_4_id, :'book_4_author_9_full_name');
+SELECT join_book_author(:book_4_id, :'book_4_author_10_full_name');
+SELECT join_book_author(:book_4_id, :'book_4_author_11_full_name');
 
-/* Get only book titles using TABLES reader_book, book */
--- SELECT book.title FROM reader_book, book WHERE book_id=book.id;
+SELECT join_book_author(:book_5_id, :'book_5_author_1_full_name');
+
+SELECT join_book_author(:book_6_id, :'book_6_author_1_full_name');
