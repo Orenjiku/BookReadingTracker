@@ -165,72 +165,58 @@ UPDATE book_read
 \set book_6_id 6 --'honourbound'
 
 /* ----------------------------------------- INSERT READ_ENTRY -----------------------------------------*/
-CREATE OR REPLACE FUNCTION insert_read_entry(arg_date_rate TIMESTAMP, arg_page_completed INT, arg_percentage_complated INT, book_read_id INT)
+CREATE OR REPLACE FUNCTION insert_read_entry(
+  arg_date_rate TIMESTAMP,
+  arg_page_completed INT,
+  arg_percentage_complated DECIMAL,
+  book_read_id INT
+)
 RETURNS VOID AS $$
 BEGIN
   INSERT INTO read_entry (date_read, page_completed, percentage_completed, book_read_id)
-  VALUES ($1, $2, $3, $4)
-END
-$$ LANGUAGE plpgsql
+  VALUES ($1, $2, $3, $4);
+END $$ LANGUAGE plpgsql;
 
-INSERT INTO
-  read_entry (date_read, page_completed, percentage_completed, book_read_id)
-VALUES
-  ('2021-07-27', 495, 58.37, :book_1_id),
-  ('2021-07-26', 447, 52.71, :book_1_id),
-  ('2021-07-25', 401, 47.29, :book_1_id),
-  ('2021-07-24', 359, 42.33, :book_1_id),
-  ('2021-07-23', 301, 35.5, :book_1_id),
-  ('2021-07-22', 243, 28.66, :book_1_id),
-  ('2021-07-21', 165, 19.46, :book_1_id),
-  ('2021-07-20', 51, 6.01, :book_1_id);
+SELECT insert_read_entry('2021-07-27', 495, 58.37, :book_1_id);
+SELECT insert_read_entry('2021-07-26', 447, 52.71, :book_1_id);
+SELECT insert_read_entry('2021-07-25', 401, 47.29, :book_1_id);
+SELECT insert_read_entry('2021-07-24', 359, 42.33, :book_1_id);
+SELECT insert_read_entry('2021-07-23', 301, 35.5, :book_1_id);
+SELECT insert_read_entry('2021-07-22', 243, 28.66, :book_1_id);
+SELECT insert_read_entry('2021-07-21', 165, 19.46, :book_1_id);
+SELECT insert_read_entry('2021-07-20', 51, 6.01, :book_1_id);
 
-INSERT INTO
-  read_entry (date_read, page_completed, percentage_completed, book_read_id)
-VALUES
-  ('2021-07-19', 800, 100, :book_2_id),
-  ('2021-07-19', 709, 88.63, :book_2_id),
-  ('2021-07-18', 607, 75.88, :book_2_id),
-  ('2021-07-17', 537, 67.13, :book_2_id),
-  ('2021-07-16', 395, 49.38, :book_2_id),
-  ('2021-07-15', 297, 37.13, :book_2_id),
-  ('2021-07-14', 161, 20.13, :book_2_id),
-  ('2021-07-13', 101, 12.63, :book_2_id),
-  ('2021-07-12', 53, 6.63, :book_2_id),
-  ('2021-07-12', 0, 0, :book_2_id);
+SELECT insert_read_entry('2021-07-19', 800, 100, :book_2_id);
+SELECT insert_read_entry('2021-07-19', 709, 88.63, :book_2_id);
+SELECT insert_read_entry('2021-07-18', 607, 75.88, :book_2_id);
+SELECT insert_read_entry('2021-07-17', 537, 67.13, :book_2_id);
+SELECT insert_read_entry('2021-07-16', 395, 49.38, :book_2_id);
+SELECT insert_read_entry('2021-07-15', 297, 37.13, :book_2_id);
+SELECT insert_read_entry('2021-07-14', 161, 20.13, :book_2_id);
+SELECT insert_read_entry('2021-07-13', 101, 12.63, :book_2_id);
+SELECT insert_read_entry('2021-07-12', 53, 6.63, :book_2_id);
+SELECT insert_read_entry('2021-07-12', 0, 0, :book_2_id);
 
-INSERT INTO
-  read_entry (date_read, page_completed, percentage_completed, book_read_id)
-VALUES
-  ('2021-07-11', 496, 100, :book_3_id),
-  ('2021-07-10', 99, 19.96, :book_3_id),
-  ('2021-07-10', 0, 0, :book_3_id);
+SELECT insert_read_entry('2021-07-11', 496, 100, :book_3_id);
+SELECT insert_read_entry('2021-07-10', 99, 19.96, :book_3_id);
+SELECT insert_read_entry('2021-07-10', 0, 0, :book_3_id);
 
-INSERT INTO
-  read_entry (date_read, page_completed, percentage_completed, book_read_id)
-VALUES
-  ('2021-07-10', 352, 100, :book_4_id),
-  ('2021-07-09', 283, 80.4, :book_4_id),
-  ('2021-07-08', 131, 37.22, :book_4_id),
-  ('2021-07-07', 81, 23.01, :book_4_id),
-  ('2021-07-07', 0, 0, :book_4_id);
+SELECT insert_read_entry('2021-07-10', 352, 100, :book_4_id);
+SELECT insert_read_entry('2021-07-09', 283, 80.4, :book_4_id);
+SELECT insert_read_entry('2021-07-08', 131, 37.22, :book_4_id);
+SELECT insert_read_entry('2021-07-07', 81, 23.01, :book_4_id);
+SELECT insert_read_entry('2021-07-07', 0, 0, :book_4_id);
 
-INSERT INTO
-  read_entry (date_read, page_completed, percentage_completed, book_read_id)
-VALUES
-  ('2021-07-06', 320, 100, :book_5_id),
-  ('2021-07-05', 115, 35.94, :book_5_id),
-  ('2021-07-05', 0, 0, :book_5_id);
+SELECT insert_read_entry('2021-07-06', 320, 100, :book_5_id);
+SELECT insert_read_entry('2021-07-05', 115, 35.94, :book_5_id);
+SELECT insert_read_entry('2021-07-05', 0, 0, :book_5_id);
 
-INSERT INTO
-  read_entry (date_read, page_completed, percentage_completed, book_read_id)
-VALUES
-  ('2021-07-04', 496, 100, :book_6_id),
-  ('2021-07-03', 405, 81.65, :book_6_id),
-  ('2021-07-02', 313, 63.1, :book_6_id),
-  ('2021-07-01', 209, 42.14, :book_6_id),
-  ('2021-06-30', 117, 23.59, :book_6_id),
-  ('2021-06-30', 0, 0, :book_6_id);
+SELECT insert_read_entry('2021-07-04', 496, 100, :book_6_id);
+SELECT insert_read_entry('2021-07-03', 405, 81.65, :book_6_id);
+SELECT insert_read_entry('2021-07-02', 313, 63.1, :book_6_id);
+SELECT insert_read_entry('2021-07-01', 209, 42.14, :book_6_id);
+SELECT insert_read_entry('2021-06-30', 117, 23.59, :book_6_id);
+SELECT insert_read_entry('2021-06-30', 0, 0, :book_6_id);
 
 /* ----------------------------------------- INSERT AUTHOR -----------------------------------------*/
 CREATE OR REPLACE FUNCTION insert_author(
