@@ -1,11 +1,11 @@
-/* ----------------------------------------- USE DATABASE my_db ----------------------------------------- */
+/* --------------------------------------------- USE DATABASE my_db --------------------------------------------- */
 \set my_db test
 \c :my_db
 
-/* ----------------------------------------- CLEAR EXISTING TABLES ----------------------------------------- */
+/* --------------------------------------------- CLEAR EXISTING TABLES --------------------------------------------- */
 TRUNCATE TABLE reader, book, reader_book, book_read, read_entry, book_author, author CASCADE;
 
-/* ----------------------------------------- INSERT READER ----------------------------------------- */
+/* --------------------------------------------- INSERT READER --------------------------------------------- */
 -- FUNCTION insert_reader
 CREATE OR REPLACE FUNCTION insert_reader(arg_username VARCHAR, arg_first_name VARCHAR, arg_last_name VARCHAR, email VARCHAR)
 RETURNS VOID AS $$
@@ -24,7 +24,7 @@ END $$ LANGUAGE plpgsql;
 SELECT insert_reader(:'username_1', :'first_name_1', :'last_name_1', :'email_1');
 
 
-/* ----------------------------------------- INSERT BOOKS ----------------------------------------- */
+/* --------------------------------------------- INSERT BOOKS --------------------------------------------- */
 -- FUNCTION insert_book
 CREATE OR REPLACE FUNCTION insert_book(
   arg_title VARCHAR,
@@ -120,7 +120,7 @@ SELECT insert_book(:'book_10_title', :'book_10_title_sort', :'book_10_total_page
 SELECT insert_book(:'book_11_title', :'book_11_title_sort', :'book_11_total_pages', :'book_11_book_description', :'book_11_picture_link');
 
 
-/* ----------------------------------------- INSERT JOIN reader_book ----------------------------------------- */
+/* --------------------------------------------- INSERT JOIN reader_book --------------------------------------------- */
 -- FUNCTION get_reader_id
 CREATE OR REPLACE FUNCTION get_reader_id(arg_username VARCHAR)
 RETURNS INT AS $$
@@ -160,7 +160,7 @@ SELECT join_reader_book(:'username_1', :'book_10_title');
 SELECT join_reader_book(:'username_1', :'book_11_title');
 
 
-/* ----------------------------------------- INSERT book_read ----------------------------------------- */
+/* --------------------------------------------- INSERT book_read --------------------------------------------- */
 -- FUNCTION get_reader_book_id
 CREATE OR REPLACE FUNCTION get_reader_book_id(arg_username VARCHAR, arg_book_title VARCHAR)
 RETURNS INT AS $$
@@ -196,7 +196,7 @@ SELECT insert_book_read(:'username_1', :'book_10_title');
 SELECT insert_book_read(:'username_1', :'book_11_title');
 
 
-/* ----------------------------------------- UPDATE book_read_is_reading ----------------------------------------- */
+/* --------------------------------------------- UPDATE book_read_is_reading --------------------------------------------- */
 -- UPDATE book_read so is_reading = TRUE */
 CREATE OR REPLACE FUNCTION update_book_read_is_reading(arg_username VARCHAR, arg_book_title VARCHAR)
 RETURNS VOID AS $$
@@ -216,7 +216,7 @@ END $$ LANGUAGE plpgsql;
 SELECT update_book_read_is_reading(:'username_1', :'book_1_title');
 
 
-/* ----------------------------------------- INSERT READ_ENTRY -----------------------------------------*/
+/* --------------------------------------------- INSERT READ_ENTRY --------------------------------------------- */
 -- FUNCTION get_book_read_id
 CREATE OR REPLACE FUNCTION get_book_read_id(arg_book_title VARCHAR)
 RETURNS INT AS $$
@@ -239,7 +239,7 @@ BEGIN
   VALUES ($1, $2, $3, var_book_read_id);
 END $$ LANGUAGE plpgsql;
 
--- INSERT read_entry data\
+-- INSERT read_entry data
 SELECT insert_read_entry('2021-05-29', 0, 0, :'book_1_title');
 SELECT insert_read_entry('2021-05-29', 69, 16.59, :'book_1_title');
 SELECT insert_read_entry('2021-05-30', 191, 45.91, :'book_1_title');
@@ -325,7 +325,7 @@ SELECT insert_read_entry('2021-07-26', 447, 52.71, :'book_11_title');
 SELECT insert_read_entry('2021-07-27', 495, 58.37, :'book_11_title');
 
 
-/* ----------------------------------------- INSERT AUTHOR -----------------------------------------*/
+/* --------------------------------------------- INSERT AUTHOR --------------------------------------------- */
 -- FUNCTION insert_author
 CREATE OR REPLACE FUNCTION insert_author(arg_full_name VARCHAR, arg_first_name VARCHAR, arg_last_name VARCHAR, arg_middle_name VARCHAR DEFAULT NULL)
 RETURNS VOID AS $$
@@ -454,7 +454,7 @@ SELECT insert_author(:'book_10_author_1_full_name', :'book_10_author_1_first_nam
 SELECT insert_author(:'book_11_author_1_full_name', :'book_11_author_1_first_name', :'book_11_author_1_last_name');
 
 
-/* ----------------------------------------- INSERT JOIN TABLE BOOK_AUTHOR -----------------------------------------*/
+/* --------------------------------------------- INSERT JOIN TABLE BOOK_AUTHOR --------------------------------------------- */
 -- FUNCTION get_author_id
 CREATE OR REPLACE FUNCTION get_author_id(arg_author_full_name VARCHAR)
 RETURNS INT AS $$
