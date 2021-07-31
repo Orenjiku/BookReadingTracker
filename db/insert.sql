@@ -1,8 +1,8 @@
-/* change database name with {test} below */
+/* ----------------------------------------- USE database ----------------------------------------- */
 \set my_db test
 \c :my_db
 
-/* Clears previous tables if they exist */
+/* ----------------------------------------- CLEAR EXISTING TABLES ----------------------------------------- */
 TRUNCATE TABLE reader, book, reader_book, book_read, read_entry, book_author, author CASCADE;
 
 
@@ -87,45 +87,99 @@ SELECT insert_book(:'book_6_title', :'book_6_title_sort', :'book_6_total_pages',
 
 
 /* ----------------------------------------- INSERT JOIN reader_book ----------------------------------------- */
-\set reader_1_id 1
-/* Associates all ids in TABLE book to reader id */
-INSERT INTO reader_book (reader_id, book_id)
-  SELECT :reader_1_id, book.id
-  FROM book;
-
-/* Creates a row for each book of the reader */
-INSERT INTO book_read (reader_book_id)
-  SELECT reader_book.id
-  FROM reader_book
-  WHERE reader_book.reader_id=:reader_1_id;
-
-/* Update book where is_reading = TRUE */
-CREATE OR REPLACE FUNCTION update_book_is_reading(arg_reader_id INT, arg_book_title VARCHAR)
-RETURNS VOID AS $$
+-- FUNCTION get_reader_id
+CREATE OR REPLACE FUNCTION get_reader_id(arg_reader_username VARCHAR)
+RETURNS INT AS $$
 BEGIN
-  UPDATE book_read
-    SET is_reading=TRUE
-      WHERE book_read.id=(
-        SELECT id
-        FROM reader_book AS r
-        WHERE r.reader_id=$1 AND r.book_id=(
-          SELECT id
-          FROM book AS b
-          WHERE b.title=$2
-        )
-      );
+  RETURN (SELECT reader.id FROM reader WHERE reader.username=$1);
 END $$ LANGUAGE plpgsql;
 
-SELECT update_book_is_reading(:reader_1_id, :'book_1_title');
+-- FUNCTION get_book_id
+CREATE OR REPLACE FUNCTION get_book_id(arg_book_title VARCHAR)
+RETURNS INT AS $$
+BEGIN
+  RETURN (SELECT id FROM book WHERE title=$1);
+END $$ LANGUAGE plpgsql;
 
--- /* ----------------------------------------- FIND book_read_id FROM book_title -----------------------------------------*/
+-- FUNCTION join_reader_book
+CREATE OR REPLACE FUNCTION join_reader_book(arg_reader_username VARCHAR, arg_book_title VARCHAR)
+RETURNS VOID AS $$
+DECLARE
+  var_reader_id INT = get_reader_id($1);
+  var_book_id INT = get_book_id($2);
+BEGIN
+  INSERT INTO reader_book (reader_id, book_id)
+  VALUES (var_reader_id, var_book_id);
+END $$ LANGUAGE plpgsql;
+
+-- INSERT relations between user and book
+SELECT join_reader_book(:'username_1', :'book_1_title');
+SELECT join_reader_book(:'username_1', :'book_2_title');
+SELECT join_reader_book(:'username_1', :'book_3_title');
+SELECT join_reader_book(:'username_1', :'book_4_title');
+SELECT join_reader_book(:'username_1', :'book_5_title');
+SELECT join_reader_book(:'username_1', :'book_6_title');
+
+
+/* ----------------------------------------- INSERT book_read ----------------------------------------- */
+-- FUNCTION get_reader_book_id
+CREATE OR REPLACE FUNCTION get_reader_book_id(arg_username VARCHAR, arg_book_title VARCHAR)
+RETURNS INT AS $$
+BEGIN
+  RETURN (
+    SELECT r.id FROM reader_book AS r
+    WHERE r.reader_id=(SELECT get_reader_id($1))
+    AND r.book_id=(SELECT get_book_id($2))
+  );
+END $$ LANGUAGE plpgsql;
+
+-- FUNCTION insert_book_read
+CREATE OR REPLACE FUNCTION insert_book_read(arg_username VARCHAR, arg_book_title VARCHAR)
+RETURNS VOID AS $$
+DECLARE
+  var_reader_book_id INT = get_reader_book_id($1, $2);
+BEGIN
+  INSERT INTO book_read (reader_book_id)
+  VALUES (var_reader_book_id);
+END $$ LANGUAGE plpgsql;
+
+-- INSERT relational data to match read data with a user and a book
+SELECT insert_book_read(:'username_1', :'book_1_title');
+SELECT insert_book_read(:'username_1', :'book_2_title');
+SELECT insert_book_read(:'username_1', :'book_3_title');
+SELECT insert_book_read(:'username_1', :'book_4_title');
+SELECT insert_book_read(:'username_1', :'book_5_title');
+SELECT insert_book_read(:'username_1', :'book_6_title');
+
+-- /* Update book where is_reading = TRUE */
+-- CREATE OR REPLACE FUNCTION update_book_is_reading(arg_reader_id INT, arg_book_title VARCHAR)
+-- RETURNS VOID AS $$
+-- BEGIN
+--   UPDATE book_read
+--     SET is_reading=TRUE
+--       WHERE book_read.id=(
+--         SELECT id
+--         FROM reader_book AS r
+--         WHERE r.reader_id=$1 AND r.book_id=(
+--           SELECT id
+--           FROM book AS b
+--           WHERE b.title=$2
+--         )
+--       );
+-- END $$ LANGUAGE plpgsql;
+
+-- SELECT update_book_is_reading(:reader_1_id, :'book_1_title');
+
+
+-- /* ----------------------------------------- INSERT READ_ENTRY -----------------------------------------*/
+-- -- FUNCTION get_book_read_id
 -- CREATE OR REPLACE FUNCTION get_book_read_id(arg_book_title VARCHAR)
 -- RETURNS INT AS $$
 -- BEGIN
 --   RETURN (SELECT id FROM book WHERE title=$1);
 -- END $$ LANGUAGE plpgsql;
 
--- /* ----------------------------------------- INSERT READ_ENTRY -----------------------------------------*/
+-- -- FUNCTION insert_read_entry
 -- CREATE OR REPLACE FUNCTION insert_read_entry(
 --   arg_date_rate TIMESTAMP,
 --   arg_page_completed INT,
@@ -140,6 +194,7 @@ SELECT update_book_is_reading(:reader_1_id, :'book_1_title');
 --   VALUES ($1, $2, $3, var_book_read_id);
 -- END $$ LANGUAGE plpgsql;
 
+-- -- INSERT read_entry data
 -- SELECT insert_read_entry('2021-07-27', 495, 58.37, :'book_1_title');
 -- SELECT insert_read_entry('2021-07-26', 447, 52.71, :'book_1_title');
 -- SELECT insert_read_entry('2021-07-25', 401, 47.29, :'book_1_title');
@@ -274,13 +329,6 @@ SELECT update_book_is_reading(:reader_1_id, :'book_1_title');
 -- SELECT insert_author(:'book_6_author_1_full_name', :'book_6_author_1_first_name', :'book_6_author_1_last_name', :'book_6_author_1_middle_name');
 
 -- /* ----------------------------------------- INSERT JOIN TABLE BOOK_AUTHOR -----------------------------------------*/
--- /* ------ GET book.id FROM book by book.title ------ */
--- CREATE OR REPLACE FUNCTION get_book_id(arg_book_title VARCHAR)
--- RETURNS INT AS $$
--- BEGIN
---   RETURN (SELECT id FROM book WHERE title=$1);
--- END $$ LANGUAGE plpgsql;
-
 -- /* ------ INSERT book_author ------ */
 -- CREATE OR REPLACE FUNCTION join_book_author(
 --   arg_book_title VARCHAR,
