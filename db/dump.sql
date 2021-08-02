@@ -21,7 +21,7 @@ CREATE TABLE book (
   title VARCHAR CONSTRAINT uq_book_title UNIQUE NOT NULL,
   title_sort VARCHAR NOT NULL,
   total_pages INT,
-  book_description TEXT,
+  blurb TEXT,
   picture_link VARCHAR,
   CONSTRAINT ck_book_total_pages CHECK (total_pages > 0)
 );

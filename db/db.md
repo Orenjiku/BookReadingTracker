@@ -32,13 +32,13 @@ Response
 [
   {
     "id": 1,
-    "title": "the uriel ventris chronicles: volume two",
-    "title_sort": "uriel ventris chronicles: volume two, the",
+    "title": "The Uriel Ventris Chronicles: Volume Two",
+    "title_sort": "Uriel Ventris Chronicles: Volume Two, The",
     "author": [
-      "graham mcneill"
+      "Graham McNeill"
     ],
     "total_pages": 848,
-    "book_description": "The second omnibus of stories featuring one of Warhammer 40,000's most prominent characters, Ultramarine Captain Uriel     Ventris.\\n\\nThe Ultramarines are the epitome of a Space Marine Chapter. Warriors without peer, their name is a byword for discipline and honour, and their heroic deeds are legendary. \\n\\nCaptain Uriel Ventris fights to prove his worth and return to the hallowed ranks of the Chapter after his exile to the Eye of Terror. But as the Iron Warriors move against Ultramar, a grim premonition comes to light: Ventris will have a part to play in the coming war... for good or ill. The ongoing story of the Uriel Ventris continues in this omnibus edition, featuring the novels The Killing Ground, Courage and Honour and The Chapter''s Due, as well as several short stories and the classic comic 'Black Bone Road'.",
+    "book_description": "The second omnibus of stories featuring one of Warhammer 40,000's most prominent characters, Ultramarine Captain Uriel     Ventris.\\n\\nThe Ultramarines are the epitome of a Space Marine Chapter. Warriors without peer, their name is a byword for discipline and honour, and their heroic deeds are legendary.\\n\\nCaptain Uriel Ventris fights to prove his worth and return to the hallowed ranks of the Chapter after his exile to the Eye of Terror. But as the Iron Warriors move against Ultramar, a grim premonition comes to light: Ventris will have a part to play in the coming war... for good or ill. The ongoing story of the Uriel Ventris continues in this omnibus edition, featuring the novels The Killing Ground, Courage and Honour and The Chapter''s Due, as well as several short stories and the classic comic 'Black Bone Road'.",
     "picture_link": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561287919l/44180905.jpg",
     "book_read": [
       {
@@ -65,7 +65,7 @@ Response
             "date_read": "2021-07-14",
             "page_completed": 101,
             "percentage_completed": 6.63
-          }
+          },
           ...
         ]
       },
