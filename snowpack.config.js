@@ -5,7 +5,7 @@ module.exports = {
   },
   devOptions: {
     tailwindConfig: './tailwind.config.js',
-    port: 3000 //port dev server runs on
+    port: 8080 //port dev server runs on, default: 8080
   },
   buildOptions: {
     out: 'build' //specifies directory for emitted files, default is 'build'

@@ -1,0 +1,31 @@
+// {
+//   "exclude": ["node_modules"],
+//   "compilerOptions": {
+//     "baseUrl": "./server",
+//     "module": "ESNext",
+//     "esModuleInterop": true,
+//     "target": "ES5",
+//     "moduleResolution": "node",
+//     "sourceMap": true,
+//     "outDir": "dist",
+//     "noEmit": false,
+//   },
+// }
+
+{
+  "compilerOptions": {
+    "strict": true, // enables strict family options (strictBindCallApply, strictFunctionTypes, strictNullChecks, strictPropertyInitialization, useUnknownInCatchVariables, alwaysStrict, noImplicitAny, noImplicitThis)
+    "baseUrl": "./server", // all module imports with non-relative names are assumed to be relative to the baseUrl
+    "module": "commonjs", // used for node projects. Converts module import/export to require()/module.export
+    "moduleResolution": "node", //Default: "node" for --module commonjs
+    "resolveJsonModule": true, // allows importing modules with a '.json' extension, common to NodeJS projects
+    "noEmit": false, // only use Typescript for type-checking and not for compiling, allow snowpack to emit files
+    "outDir": "/dist", // directory for emitted/compiled files (not needed for snowpack, since snowpack is emitting the files)
+    "sourceMap": true, // enables generation of sourcemap files (snowpack's webpack plugin is handling sourceMap, see snowpack.config.js)
+    "esModuleInterop": true, // import non-ES modules as default imports, also enables allowsSyntheticDefaultImports
+    "isolatedModules": true, // more strict checking for errors that per-file transpilers like 'esbuild' would crash
+    "lib": ["ESNext"], // additional APIs to include in project, DOM definitions such as window, document, etc isn't built-in to Typescript
+    "target": "es5",
+  },
+  "exclude": ["node_modules", "build", "scripts"] // default ["node_modules", "bower_components", "jspm_packages"] and outDir if specified
+}

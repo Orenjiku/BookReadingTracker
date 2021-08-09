@@ -1,4 +1,4 @@
-/* psql -h hostname -U username -f {SQL script file name}*/
+/* CLI Command to run script: psql -h {hostname} -U {username} -f {file_name.sql}*/
 
 /* change database name with {test} below */
 \set my_db test
@@ -39,12 +39,13 @@ CREATE TABLE reader_book (
 );
 
 CREATE INDEX ix_reader_book_reader_id ON reader_book (reader_id);
+CREATE INDEX ix_reader_book_book_id ON reader_book (book_id);
 
 CREATE TABLE book_read (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_book_read PRIMARY KEY,
   days_read INT DEFAULT 0,
   days_total INT DEFAULT 0,
-  is_complete BOOLEAN DEFAULT FALSE,
+  is_finished BOOLEAN DEFAULT FALSE,
   is_reading BOOLEAN DEFAULT FALSE,
   reader_book_id INT,
   CONSTRAINT fk_reader_book_book_read
@@ -56,12 +57,13 @@ CREATE INDEX ix_book_read_reader_book_id ON book_read (reader_book_id);
 CREATE TABLE read_entry (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_read_entry PRIMARY KEY,
   date_read TIMESTAMP (0) WITH TIME ZONE NOT NULL,
-  page_completed INT NOT NULL,
-  percentage_completed DECIMAL NOT NULL,
+  pages_read INT NOT NULL,
+  current_page INT NOT NULL,
+  current_percent DECIMAL NOT NULL,
   book_read_id INT,
   CONSTRAINT fk_book_read_read_entry
     FOREIGN KEY (book_read_id) REFERENCES book_read (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT ck_percentage_completed CHECK (percentage_completed >= 0.00 AND percentage_completed <= 100.00)
+  CONSTRAINT ck_current_percent CHECK (current_percent >= 0.00 AND current_percent <= 100.00)
 );
 
 CREATE INDEX ix_read_entry_book_read_id ON read_entry (book_read_id);
@@ -83,3 +85,6 @@ CREATE TABLE book_author (
   CONSTRAINT fk_author_book_author
     FOREIGN KEY (author_id) REFERENCES author (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE INDEX ix_book_author_book_id ON book_author (book_id);
+CREATE INDEX ix_book_author_author_id ON book_author (author_id);
