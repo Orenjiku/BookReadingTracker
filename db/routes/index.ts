@@ -1,7 +1,7 @@
 import controller from './controller';
-import express from 'express';
+import { Router } from 'express';
 
-const router = express.Router();
+const router = Router();
 
 router.get('/:id/currently_reading', controller.getCurrentlyReading);
 router.get('/:id/finished_reading', controller.getFinishedReading);

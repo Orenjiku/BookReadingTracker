@@ -17,7 +17,7 @@
     "snowpack-dev": "snowpack dev",
     "build": "snowpack build",
     "node-dev": "ts-node-dev --respawn --pretty --transpile-only server/index.ts",
-    "start": "set NODE_ENV=production && ts-node --project tsconfig.server.json server/index.ts",
+    "start": "ts-node --project tsconfig.server.json server/index.ts",
     "test": "npx jest",
     "test-watch": "npx jest --watch",
     "test-coverage": "npx jest --coverage"

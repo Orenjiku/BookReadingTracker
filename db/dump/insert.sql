@@ -1,9 +1,3 @@
-/* CLI Command to run script: psql -h {hostname} -U {username} -f {file_name.sql}*/
-
-/* --------------------------------------------- USE DATABASE my_db --------------------------------------------- */
-\set my_db test
-\c :my_db
-
 /* --------------------------------------------- CLEAR EXISTING TABLES --------------------------------------------- */
 TRUNCATE TABLE reader, book, reader_book, book_read, read_entry, book_author, author CASCADE;
 

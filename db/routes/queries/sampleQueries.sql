@@ -31,7 +31,7 @@ FROM   (
                                                                                              re.current_percent
                                                                                     FROM     read_entry AS re
                                                                                     WHERE    re.book_read_id = br.id
-                                                                                    ORDER BY re.date_read DESC ) AS read_entry_agg)
+                                                                                    ORDER BY re.date_read DESC, re. current_page DESC ) AS read_entry_agg)
                                                     WHERE    rb.book_id = b.id
                                                     ORDER BY br.id DESC ) AS book_read_agg)
                   FROM       book_read   AS br

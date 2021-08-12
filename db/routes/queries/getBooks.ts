@@ -30,7 +30,7 @@ const getBooks = (reader_id: string, is_reading: boolean, is_finished: boolean) 
                                                                                                  re.current_percent
                                                                                         FROM     read_entry AS re
                                                                                         WHERE    re.book_read_id = br.id
-                                                                                        ORDER BY re.date_read DESC ) AS read_entry_agg)
+                                                                                        ORDER BY re.date_read DESC, re. current_page DESC) AS read_entry_agg)
                                                         WHERE    rb.book_id = b.id
                                                         ORDER BY br.id DESC ) AS book_read_agg)
                       FROM       book_read   AS br
@@ -42,7 +42,7 @@ const getBooks = (reader_id: string, is_reading: boolean, is_finished: boolean) 
                       AND        br.is_finished IS ${is_finished.toString()}
                       AND        rb.reader_id = ${reader_id}
                       ORDER BY   b.title_sort) AS books_agg;
-                      `
+    `
     )
 }
 
