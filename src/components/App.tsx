@@ -1,6 +1,5 @@
-import React, { useState, useEffect} from 'react';
-import Book from './interfaces/book.interface';
-import ReadEntry from './interfaces/readEntry.interface';
+import React, { useState, useEffect } from 'react';
+import { Book, ReadEntry } from '../interfaces/interface';
 
 const App = (): JSX.Element => {
   const [currentlyReading, setCurrentlyReading] = useState<Book[]>([]);
@@ -34,7 +33,7 @@ const App = (): JSX.Element => {
   return (
     <div>
       {currentlyReading.map(book =>
-        <div>{book.title}</div>
+        <img src={book.picture_link}/>
       )}
       {dailyReads.map(read =>
         <div>{read.date_read}</div>
