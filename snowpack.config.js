@@ -13,15 +13,16 @@ module.exports = {
   plugins: [
     '@snowpack/plugin-react-refresh', // enables HMR (hot module replacement), allow updates to the browser without page refresh
     '@snowpack/plugin-dotenv', // enables loading of environmental variables from .env files
-    '@snowpack/plugin-webpack', // creates js directory in snowpack output build directory, use webpack to bundle for production
-    // ['@snowpack/plugin-webpack',
-    //   {
-    //     sourceMap: true, // creates sourceMap instead of typescript compiler
-    //   },
-    // ],
+    // '@snowpack/plugin-webpack', // creates js directory in snowpack output build directory, use webpack to bundle for production
+    ['@snowpack/plugin-webpack',
+      {
+        sourceMap: true, // creates sourceMap instead of typescript compiler
+      },
+    ],
     '@snowpack/plugin-typescript', // TS support
     '@snowpack/plugin-postcss', // postcss support
     'snowpack-plugin-svgr', // import SVG as React component
+    'snowpack-plugin-relative-css-urls',
   ],
   /* for local SPA fallback routing support, more below */
   routes: [

@@ -10,7 +10,9 @@
     "pg": "^8.6.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-icons": "^4.2.0",
     "react-scripts": "4.0.3",
+    "tailwind-scrollbar-hide": "^1.0.3",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
@@ -76,6 +78,7 @@
     "postcss-cli": "^8.3.1",
     "serve": "^12.0.0",
     "snowpack": "^3.7.1",
+    "snowpack-plugin-relative-css-urls": "^1.2.0",
     "snowpack-plugin-svgr": "^0.1.2",
     "tailwindcss": "^2.2.4",
     "ts-node": "^10.1.0",

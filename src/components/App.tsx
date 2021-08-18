@@ -1,43 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import { Book, ReadEntry } from '../interfaces/interface';
+// import { Book, ReadEntry } from '../interfaces/interface';
+import { BookITF } from '../interfaces/interface';
+import Card from './Card';
 
 const App = (): JSX.Element => {
-  const [currentlyReading, setCurrentlyReading] = useState<Book[]>([]);
-  const [dailyReads, setDailyReads] = useState<ReadEntry[]>([]);
+  // const [currentlyReading, setCurrentlyReading] = useState<Book[]>([]);
+  const [finishedReading, setFinishedReading] = useState<BookITF[]>([]);
+  // const [dailyReads, setDailyReads] = useState<ReadEntry[]>([]);
 
   useEffect(() => {
-    getCurrentlyReading();
-    getDailyReads();
+    // getDailyReads();
+    // getCurrentlyReading();
+    getFinishedReading();
   }, []);
 
-  const getCurrentlyReading = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/1/currently_reading');
-      const result = await response.json();
-      setCurrentlyReading(result);
-    } catch(err) {
-      console.log(err);
-    }
-  }
+  // const getDailyReads = async () => {
+  //   try {
+  //     const response = await fetch('http://localhost:3000/1/daily_reads');
+  //     const result = await response.json();
+  //     setDailyReads(result);
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // }
 
-  const getDailyReads = async () => {
+  // const getCurrentlyReading = async () => {
+  //   try {
+  //     const response = await fetch('http://localhost:3000/1/currently_reading');
+  //     const result = await response.json();
+  //     setCurrentlyReading(result);
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // }
+
+  const getFinishedReading = async () => {
     try {
-      const response = await fetch('http://localhost:3000/1/daily_reads');
+      const response = await fetch('http://localhost:3000/1/finished_reading');
       const result = await response.json();
-      setDailyReads(result);
+      setFinishedReading(result);
     } catch(err) {
       console.log(err);
     }
   }
 
   return (
-    <div>
-      {currentlyReading.map(book =>
-        <img src={book.picture_link}/>
-      )}
-      {dailyReads.map(read =>
-        <div>{read.date_read}</div>
-      )}
+    <div className='bg-blueGray-300 flex flex-wrap'>
+      {finishedReading.map((book) => {
+        return <Card key={`${book.b_id}`} book={book} />
+      })}
     </div>
   )
 };

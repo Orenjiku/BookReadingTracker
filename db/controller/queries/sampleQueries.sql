@@ -27,6 +27,7 @@ FROM   (
                                                                     FROM   (
                                                                                     SELECT   re.id AS re_id,
                                                                                              re.date_read,
+                                                                                             re.pages_read,
                                                                                              re.current_page,
                                                                                              re.current_percent
                                                                                     FROM     read_entry AS re

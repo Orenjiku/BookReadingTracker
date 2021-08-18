@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Snowpack won't include referenced font files in CSS */
+/* Added node-module snowpack-plugin-relative-css-urls to package.json dev-dependencies */
+@layer components {
+  @font-face {
+    font-family: 'AdventPro-200';
+    font-weight: 200;
+    src: url('./fonts/AdventPro-ExtraLight.ttf') format('truetype');
+  }
+  @font-face {
+    font-family: 'AdventPro-400';
+    font-weight: 400;
+    src: url('./fonts/AdventPro-Regular.ttf') format('truetype');
+  }
+  @font-face {
+    font-family: 'Charm';
+    src: url('./fonts/Charm-Regular.ttf') format('truetype');
+  }
+  @font-face {
+    font-family: 'Sorts Mill Goudy';
+    src: url('./fonts/SortsMillGoudy-Regular.ttf') format('truetype');
+  }
+};

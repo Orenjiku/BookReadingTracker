@@ -157,6 +157,18 @@ $$ LANGUAGE plpgsql;
 \set book_12_blurb 'The Iron Warriors are Chaos Space Marines with unrivalled expertise in the art of siege warfare. With great batteries of artillery and all the favours of the Ruinous Powers at their command, there is no fortress in the galaxy that can stand against them for long.\\n\\nThis omnibus follows the schemes of the embittered Warsmith Honsou in his struggles against the hated Space Marines of the Imperium. Drawing upon characters and events from author Graham McNeill’s popular Ultramarines series and for the first time in a single publication, Storm of Iron and the novella Iron Warrior are gathered along with short stories The Enemy of My Enemy, The Heraclitus Effect and The Skull Harvest.'
 \set book_12_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1625358426l/58481729.jpg'
 
+\set book_13_title 'The Swords of Calth'
+\set book_13_title_sort 'Swords of Calth, The'
+\set book_13_total_pages 258
+\set book_13_blurb 'A Uriel Ventris novel\\n\\Uriel Ventris returns! Newly ascended to the ranks of the Primaris Space Marines, Ventris leads the Ultramarines Fourth Company – the famed Swords of Calth – to war against the ancient necrons. Old enemies arise, as Ventris'' past and present collide in brutal battle.\\n\\nREAD IT BECAUSE\\nOne of Black Library''s longest-running series continues – and the hero''s been given a new lease of life as a Primaris Space Marine. Discover how Ventris adapts to his new life even as his past comes back to haunt him.\\n\\nTHE STORY\\nUriel Ventris, newly ascended to the ranks of the Primaris, leads warriors of the Fourth Company from the Indomitus Crusade of Roboute Guilliman to a world on the frontiers of Ultramar. Once a battleground against the orks, Sycorax is now under furious assault from an enemy of ancient times – the necrons. The Ultramarines have faced these baleful xenos before, but Uriel senses the hand of a foe from his past at work on Sycorax, a tally unfinished and a debt to the Imperium finally come due.\\n\\nTrapped deep in a devastated city, Uriel leads the Swords of Calth into battle, and must adapt to his new incarnation as one of the Primaris – a challenge that will test his soul as much as it will test him as a warrior.'
+\set book_13_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1628695156l/58749658._SY475_.jpg'
+
+\set book_14_title 'Warden of the Blade'
+\set book_14_title_sort 'Warden of the Blade'
+\set book_14_total_pages 320
+\set book_14_blurb 'The noble Castellan Crowe of the Grey Knights Chapter must wield the cursed Blade of Antwyr, an indestructable weapon imbued with evil daemonic power.\\n\\nCastellan Crowe, Brotherhood Champion of the Purifier order of the Grey Knights, bears a heavy burden – to be the warden of the dread Blade of Antwyr. Its malevolent voice is forever in his head, trying to crack his resolve, urging him to unleash a power he must never use. The toll is terrible – how long before the incorruptible Crowe is at last defeated? Under the command of Castellan Gavallan, Crowe and his brother Purifiers bring purging flame to a daemonic incursion that threatens to consume the world of Sandava I. However, what awaits them there is more insidious and more powerful than they imagine, and they must reckon too with the machinations of the Blade, as it seeks to destroy its guardian and drown the galaxy in blood.'
+\set book_14_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1497084986l/34466775._SY475_.jpg'
+
 -- INSERT data using FUNCTION insert_book and DECLARED book variables as arguments
 SELECT insert_book(:'book_1_title', :'book_1_title_sort', :'book_1_total_pages', :'book_1_blurb', :'book_1_picture_link');
 SELECT insert_book(:'book_2_title', :'book_2_title_sort', :'book_2_total_pages', :'book_2_blurb', :'book_2_picture_link');
@@ -170,6 +182,8 @@ SELECT insert_book(:'book_9_title', :'book_9_title_sort', :'book_9_total_pages',
 SELECT insert_book(:'book_10_title', :'book_10_title_sort', :'book_10_total_pages', :'book_10_blurb', :'book_10_picture_link');
 SELECT insert_book(:'book_11_title', :'book_11_title_sort', :'book_11_total_pages', :'book_11_blurb', :'book_11_picture_link');
 SELECT insert_book(:'book_12_title', :'book_12_title_sort', :'book_12_total_pages', :'book_12_blurb', :'book_12_picture_link');
+SELECT insert_book(:'book_13_title', :'book_13_title_sort', :'book_13_total_pages', :'book_13_blurb', :'book_13_picture_link');
+SELECT insert_book(:'book_14_title', :'book_14_title_sort', :'book_14_total_pages', :'book_14_blurb', :'book_14_picture_link');
 
 
 /* --------------------------------------------- INSERT reader_book (JOIN TABLE) --------------------------------------------- */
@@ -198,6 +212,8 @@ SELECT join_reader_book(:'username_1', :'book_9_title');
 SELECT join_reader_book(:'username_1', :'book_10_title');
 SELECT join_reader_book(:'username_1', :'book_11_title');
 SELECT join_reader_book(:'username_1', :'book_12_title');
+SELECT join_reader_book(:'username_1', :'book_13_title');
+SELECT join_reader_book(:'username_1', :'book_14_title');
 
 
 /* --------------------------------------------- INSERT book_read --------------------------------------------- */
@@ -225,13 +241,15 @@ SELECT insert_book_read(:'username_1', :'book_9_title');
 SELECT insert_book_read(:'username_1', :'book_10_title');
 SELECT insert_book_read(:'username_1', :'book_11_title');
 SELECT insert_book_read(:'username_1', :'book_12_title');
+SELECT insert_book_read(:'username_1', :'book_13_title');
+SELECT insert_book_read(:'username_1', :'book_14_title');
 
 
 /* --------------------------------------------- INSERT read_entry --------------------------------------------- */
 -- FUNCTION insert_read_entry
 CREATE OR REPLACE FUNCTION insert_read_entry(
   arg_date_read TIMESTAMP,
-  pages_read INT,
+  arg_pages_read INT,
   arg_current_page INT,
   arg_current_percent DECIMAL,
   arg_book_title VARCHAR
@@ -329,6 +347,9 @@ SELECT insert_read_entry('2021-07-24', 58, 359, 42.33, :'book_11_title');
 SELECT insert_read_entry('2021-07-25', 42, 401, 47.29, :'book_11_title');
 SELECT insert_read_entry('2021-07-26', 46, 447, 52.71, :'book_11_title');
 SELECT insert_read_entry('2021-07-27', 48, 495, 58.37, :'book_11_title');
+SELECT insert_read_entry('2021-08-06', 104, 599, 70.64, :'book_11_title');
+SELECT insert_read_entry('2021-08-07', 118, 717, 84.55, :'book_11_title');
+SELECT insert_read_entry('2021-08-08', 131, 848, 100, :'book_11_title');
 
 SELECT insert_read_entry('2021-07-28', 0, 0, 0, :'book_12_title');
 SELECT insert_read_entry('2021-07-28', 49, 49, 7.12, :'book_12_title');
@@ -339,6 +360,19 @@ SELECT insert_read_entry('2021-08-01', 60, 361, 52.47, :'book_12_title');
 SELECT insert_read_entry('2021-08-02', 30, 391, 56.83, :'book_12_title');
 SELECT insert_read_entry('2021-08-03', 42, 433, 62.94, :'book_12_title');
 SELECT insert_read_entry('2021-08-04', 42, 475, 69.04, :'book_12_title');
+SELECT insert_read_entry('2021-08-05', 100, 575, 83.58, :'book_12_title');
+SELECT insert_read_entry('2021-08-08', 113, 688, 100, :'book_12_title');
+
+SELECT insert_read_entry('2021-08-08', 0, 0, 0, :'book_13_title');
+SELECT insert_read_entry('2021-08-09', 45, 45, 17.44, :'book_13_title');
+SELECT insert_read_entry('2021-08-10', 74, 119, 46.12, :'book_13_title');
+SELECT insert_read_entry('2021-08-11', 72, 191, 74.03, :'book_13_title');
+SELECT insert_read_entry('2021-08-11', 67, 258, 100, :'book_13_title');
+
+SELECT insert_read_entry('2021-08-04', 0, 0, 0, :'book_14_title');
+SELECT insert_read_entry('2021-08-04', 41, 41, 12.81, :'book_14_title');
+SELECT insert_read_entry('2021-08-05', 92, 133, 41.56, :'book_14_title');
+
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
 -- FUNCTION insert_author
@@ -437,6 +471,14 @@ $$ LANGUAGE plpgsql;
 \set book_12_author_1_first_name 'Graham'
 \set book_12_author_1_last_name 'McNeill'
 \set book_12_author_1_full_name 'Graham McNeill'
+-- book 13 author
+\set book_13_author_1_first_name 'Graham'
+\set book_13_author_1_last_name 'McNeill'
+\set book_13_author_1_full_name 'Graham McNeill'
+-- book 14 author
+\set book_14_author_1_first_name 'David'
+\set book_14_author_1_last_name 'Annandale'
+\set book_14_author_1_full_name 'David Annandale'
 
 -- INSERT author using FUNCTION insert_author and DECLARED author variables as arguments, CHECK UNIQUE full_name (middle_name argument is optional)
 -- book 1 author
@@ -473,6 +515,10 @@ SELECT insert_author(:'book_10_author_1_full_name', :'book_10_author_1_first_nam
 SELECT insert_author(:'book_11_author_1_full_name', :'book_11_author_1_first_name', :'book_11_author_1_last_name');
 -- book 12 author
 SELECT insert_author(:'book_12_author_1_full_name', :'book_12_author_1_first_name', :'book_12_author_1_last_name');
+-- book 13 author
+SELECT insert_author(:'book_13_author_1_full_name', :'book_13_author_1_first_name', :'book_13_author_1_last_name');
+-- book 14 author
+SELECT insert_author(:'book_14_author_1_full_name', :'book_14_author_1_first_name', :'book_14_author_1_last_name');
 
 
 /* --------------------------------------------- INSERT book_author (JOIN TABLE) --------------------------------------------- */
@@ -523,6 +569,10 @@ SELECT join_book_author(:'book_10_title', :'book_10_author_1_full_name');
 SELECT join_book_author(:'book_11_title', :'book_11_author_1_full_name');
 -- book 12 author
 SELECT join_book_author(:'book_12_title', :'book_12_author_1_full_name');
+-- book 13 author
+SELECT join_book_author(:'book_13_title', :'book_13_author_1_full_name');
+-- book 14 author
+SELECT join_book_author(:'book_14_title', :'book_14_author_1_full_name');
 
 
 /* --------------------------------------------- UPDATE is_reading and is_finished --------------------------------------------- */
@@ -530,6 +580,8 @@ SELECT join_book_author(:'book_12_title', :'book_12_author_1_full_name');
 CREATE OR REPLACE FUNCTION update_book_read(
   arg_username VARCHAR,
   arg_book_title VARCHAR,
+  arg_days_read INT,
+  arg_days_total INT,
   arg_is_reading BOOLEAN,
   arg_is_finished BOOLEAN
 )
@@ -539,7 +591,7 @@ DECLARE
   var_book_id INT = get_book_id($2);
 BEGIN
   UPDATE book_read
-  SET is_finished=$3, is_reading=$4
+  SET days_read=$3, days_total=$4, is_finished=$5, is_reading=$6
     WHERE book_read.id=(
       SELECT id
       FROM reader_book AS r
@@ -549,19 +601,21 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- UPDATE book_read.is_finished to true
-SELECT update_book_read(:'username_1', :'book_1_title', TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_2_title', TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_3_title', TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_4_title', TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_5_title', TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_6_title', TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_7_title', TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_8_title', TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_9_title', TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_10_title', TRUE, FALSE);
+SELECT update_book_read(:'username_1', :'book_1_title', 5, 5, TRUE, FALSE);
+SELECT update_book_read(:'username_1', :'book_2_title', 6, 6, TRUE, FALSE);
+SELECT update_book_read(:'username_1', :'book_3_title', 6, 6, TRUE, FALSE);
+SELECT update_book_read(:'username_1', :'book_4_title', 14, 14, TRUE, FALSE);
+SELECT update_book_read(:'username_1', :'book_5_title', 3, 4, TRUE, FALSE);
+SELECT update_book_read(:'username_1', :'book_6_title', 5, 5, TRUE, FALSE);
+SELECT update_book_read(:'username_1', :'book_7_title', 2, 2, TRUE, FALSE);
+SELECT update_book_read(:'username_1', :'book_8_title', 4, 4, TRUE, FALSE);
+SELECT update_book_read(:'username_1', :'book_9_title', 2, 2, TRUE, FALSE);
+SELECT update_book_read(:'username_1', :'book_10_title', 8, 8,  TRUE, FALSE);
+SELECT update_book_read(:'username_1', :'book_11_title', 11, 20, TRUE, FALSE);
+SELECT update_book_read(:'username_1', :'book_12_title', 10, 12, TRUE, FALSE);
+SELECT update_book_read(:'username_1', :'book_13_title', 4, 4, TRUE, FALSE);
 -- UPDATE book_read.is_reading to true
-SELECT update_book_read(:'username_1', :'book_11_title', FALSE, TRUE);
-SELECT update_book_read(:'username_1', :'book_12_title', FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_14_title', 2, 2, FALSE, TRUE);
 
 
 /* --------------------------------------------- DROP functions --------------------------------------------- */
