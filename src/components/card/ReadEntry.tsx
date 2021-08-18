@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReadEntryITF } from '../interfaces/interface';
+import { ReadEntryITF } from '../../interfaces/interface';
 import ProgressBar from './ProgressBar';
 
 interface ReadEntryPropsITF {

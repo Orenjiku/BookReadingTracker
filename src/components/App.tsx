@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import { Book, ReadEntry } from '../interfaces/interface';
 import { BookITF } from '../interfaces/interface';
-import Card from './Card';
+import Card from './card/Card';
 
 const App = (): JSX.Element => {
   // const [currentlyReading, setCurrentlyReading] = useState<Book[]>([]);
