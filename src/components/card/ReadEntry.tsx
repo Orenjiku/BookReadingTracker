@@ -4,14 +4,17 @@ import ProgressBar from './ProgressBar';
 
 interface ReadEntryPropsITF {
   readEntry: ReadEntryITF;
-  totalPages: number;
 }
 
-const ReadEntry = ({ readEntry, totalPages }: ReadEntryPropsITF) => {
+const ReadEntry = ({ readEntry }: ReadEntryPropsITF) => {
   return (
-    <div className='flex h-4 my-0.5'>
-      <div className='mr-2 text-xs font-SortsMillGoudy-400'>{new Date(readEntry.date_read).toLocaleDateString()}</div>
-      <ProgressBar pagesRead={readEntry.pages_read} currentPage={readEntry.current_page} currentPercent={readEntry.current_percent} totalPages={totalPages} />
+    <div className='px-1'>
+      <div className='relative flex h-4 my-0.5 text-xs '>
+        <div className='mr-2 font-SortsMillGoudy-400'>{new Date(readEntry.date_read).toLocaleDateString()}</div>
+        <div className='absolute flex w-full justify-center'>{`${readEntry.current_percent.toFixed(0)}%`}</div>
+        <div className='flex w-full h-full justify-end text-black text-green-300'>{`+${readEntry.pages_read} pgs`}</div>
+      </div>
+      <ProgressBar currentPercent={readEntry.current_percent} />
     </div>
   )
 }

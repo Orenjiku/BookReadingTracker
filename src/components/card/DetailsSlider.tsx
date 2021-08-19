@@ -30,7 +30,7 @@ const DetailsSlider = ({ readDetails }: DetailsSliderPropsITF) => {
       </div>
       <div className='absolute flex bottom-0 w-full justify-center mb-1.5'>
         {readDetails.map((_, i) => {
-          return (i === current) ? <BsCircleFill size={7} fill='#3B82F6' style={{opacity: 0.5}} className='mx-0.5' /> : <BsCircle size={7} className='mx-0.5' />
+          return (i === current) ? <BsCircleFill key={`BsCircleFill-${i}`} size={7} fill='#3B82F6' style={{opacity: 0.5}} className='mx-0.5' /> : <BsCircle key={`BsCircle-${i}`} size={7} className='mx-0.5' />
         })}
         </div>
     </div>

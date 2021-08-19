@@ -20,7 +20,7 @@ const Card = ({ book }: { book: BookITF }) => {
   ];
 
   return (
-    <div style={{width: '370px', height: '370px'}} className='bg-orange-400 grid grid-cols-2 grid-rows-20 mb-10 rounded-2xl shadow-xl'>
+    <div style={{width: '370px', height: '370px'}} className='bg-blueGray-400 grid grid-cols-2 grid-rows-20 mb-10 rounded-2xl shadow-xl'>
       <CardHeader title={book.title} author={book.author}/>
       <BookImage pictureLink={book.picture_link} />
       <DetailsSlider readDetails={ readDetails } />
