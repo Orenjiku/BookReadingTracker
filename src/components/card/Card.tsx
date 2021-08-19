@@ -4,6 +4,9 @@ import CardHeader from './CardHeader';
 import BookImage from './BookImage';
 import DetailsSlider from './DetailsSlider';
 import BookRead from './BookRead';
+import tw, { styled, css } from 'twin.macro';
+
+const Button = tw.button`text-purple-500`
 
 const Card = ({ book }: { book: BookITF }) => {
   const totalDays = book.book_read.reduce((acc, cur) => acc + cur.days_total, 0);
@@ -26,10 +29,11 @@ const Card = ({ book }: { book: BookITF }) => {
       <DetailsSlider readDetails={ readDetails } />
       <div className='row-start-10 row-end-17 col-start-2 col-end-3 font-SortsMillGoudy-400'>
         {book.book_read.map(bookRead => {
-            return <BookRead key={bookRead.br_id} bookRead={bookRead} totalPages={book.total_pages}/>
+            return <BookRead key={bookRead.br_id} bookRead={bookRead} />
           })
         }
       </div>
+      <Button>Edit</Button>
     </div>
   )
 }

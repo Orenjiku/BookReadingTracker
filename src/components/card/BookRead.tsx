@@ -6,10 +6,9 @@ import ReadEntry from './ReadEntry';
 
 interface BookReadPropsITF {
   bookRead: BookReadITF;
-  totalPages: number;
 }
 
-const BookRead = ({ bookRead, totalPages } : BookReadPropsITF) => {
+const BookRead = ({ bookRead } : BookReadPropsITF) => {
 
   const verticalRef = useRef(null);
   const {refYOverflowing, refYScrollBegin, refYScrollEnd} = useOverflow(verticalRef);
@@ -27,7 +26,7 @@ const BookRead = ({ bookRead, totalPages } : BookReadPropsITF) => {
             <div>Haven't started</div>
             :
             bookRead.read_entry.map(readEntry => {
-              return <ReadEntry key={readEntry.re_id} readEntry={readEntry} totalPages={totalPages} />
+              return <ReadEntry key={readEntry.re_id} readEntry={readEntry} />
             })
           }
         </div>

@@ -22,7 +22,8 @@ module.exports = {
     '@snowpack/plugin-typescript', // TS support
     '@snowpack/plugin-postcss', // postcss support
     'snowpack-plugin-svgr', // import SVG as React component
-    'snowpack-plugin-relative-css-urls',
+    'snowpack-plugin-relative-css-urls', //allows @font-face url reference for new fonts
+    '@snowpack/plugin-babel', //plugin used in this project specifically for twin.macro
   ],
   /* for local SPA fallback routing support, more below */
   routes: [
@@ -31,11 +32,11 @@ module.exports = {
   testOptions: {
     files: ['src/**/*.test.*']
   },
-  /* optional, if you want to use alias when importing */
   alias: {
-    "@app": "./src/",
+    "@app": "./src/",  /* optional, if you want to use alias when importing */
   },
   packageOptions: {
     polyfillNode: true, // allows modules dependent on nodejs built-in modules to work in the browser such as 'fs', 'path', 'url, etc
+    knownEntrypoints: ['styled-components'], // specific for twin.macro
   },
 }
