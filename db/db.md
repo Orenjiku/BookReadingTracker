@@ -3,7 +3,7 @@
 ## Table of Contents
 1. [PostgreSQL DB Table Constraints Naming Convention](#postgresql-db-table-constraints-naming-convention)
 2. [PostgreSQL Database Dump Guide](#postgresql-database-dump-guide)
-3. [Database API Response](#database-api-response)
+3. [Database API Request & Response](#database-api-request-&-response)
 ---
 
 ## **PostgreSQL DB Table Constraints Naming Convention**
@@ -127,7 +127,7 @@
     ~~~~
 ---
 
-## **Database API Response**
+## **Database API Request & Response**
 
 `GET /:id/currently_reading` <br />
 Retrieves a list of books that are currently being read.
