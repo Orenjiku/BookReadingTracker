@@ -4,7 +4,7 @@ import CardHeader from './CardHeader';
 import BookImage from './BookImage';
 import DetailsSlider from './DetailsSlider';
 import BookRead from './BookRead';
-import tw, { styled, css } from 'twin.macro';
+import tw from 'twin.macro';
 
 const Button = tw.button`text-purple-500`
 
@@ -13,13 +13,19 @@ const Card = ({ book }: { book: BookITF }) => {
   const totalDaysRead = book.book_read.reduce((acc, cur) => acc + cur.days_read, 0);
   const avgDailyRead = Math.round(book.total_pages / totalDaysRead);
   const timesRead = book.book_read.length;
+  const dailyPagesRead = book.book_read.reduce((acc: number[], cur): number[] => {
+    const pagesRead = cur.read_entry ? cur.read_entry.map(readEntry => readEntry.pages_read): [];
+    return [...acc, ...pagesRead];
+  }, []);
+  const maxDailyRead = Math.max(...dailyPagesRead);
 
   const readDetails = [
     {key: 'Total Pages', value: book.total_pages},
     {key: 'Avg Daily Read', value: avgDailyRead},
+    {key: 'Max Daily Read', value: maxDailyRead},
     {key: 'Total Days', value: totalDays},
     {key: 'Total Days Read', value: totalDaysRead},
-    {key: 'Times Read', value: timesRead}
+    {key: 'Times Read', value: timesRead},
   ];
 
   return (
