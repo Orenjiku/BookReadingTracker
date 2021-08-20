@@ -1,13 +1,12 @@
 # Database Markdown
 
 ## Table of Contents
-1. [Constraints Naming Convention](#constraints-naming-convention)
+1. [PostgreSQL DB Table Constraints Naming Convention](#postgresql-db-table-constraints-naming-convention)
 2. [PostgreSQL Database Dump Guide](#postgresql-database-dump-guide)
 3. [Database API Response](#database-api-response)
 ---
-<br>
 
-## **Constraints Naming Convention**
+## **PostgreSQL DB Table Constraints Naming Convention**
 | Num | Constraint | Template | Example |
 | --- | ---------- | -------- | ------- |
 | 1 | primary key | pk_{table_name} | pk_reader |
@@ -16,11 +15,9 @@
 | 4 | check | ck_{table_name}_{col_name} | ck_book_total_pages |
 | 5 | index | ix_{table_name}_{col_name} | ix_reader_username |
 ---
-<br>
 
 ## **PostgreSQL Database Dump Guide**
 #### **_Note:_** Replace { type } with specified values.
-<br>
 
 ### Go to dump.sql file:
 1. Enter name for database.
@@ -36,10 +33,10 @@
 
     **_Reminder:_** Wrap string in quotes  
     ~~~~sql
-    \set username_1 {'username'}
-    \set first_name_1 {'first_name'}
-    \set last_name_1 {'last_name'}
-    \set email_1 {'email'}
+    \set username_1 {username}
+    \set first_name_1 {first_name}
+    \set last_name_1 {last_name}
+    \set email_1 {email}
     ~~~~
 
 2.  Insert reader using variables defined in previous step.
@@ -54,11 +51,11 @@
     | ----- | ---------- | ----------- | ----- | ------------ |
     | string | string | string | string | string | string |
      ~~~~sql
-     \set book_{number}_title {'title'}
-     \set book_{number}_title_sort {'title_sort'}
-     \set book_{number}_total_pages {'total_pages'}
-     \set book_{number}_blurb {'blurb'}
-     \set book_{number}_picture_link {'picture_link'}
+     \set book_{number}_title {title}
+     \set book_{number}_title_sort {title_sort}
+     \set book_{number}_total_pages {total_pages}
+     \set book_{number}_blurb {blurb}
+     \set book_{number}_picture_link {picture_link}
      ~~~~
 
 4.  INSERT book using variables defined in previous step.  
@@ -99,10 +96,10 @@
     **_Note:_** middle_name is optional.
     **_Reminder_** Change { number } to a number.
     ~~~~sql
-    \set book_{number}_author_{number}_first_name {'first_name'}
-    \set book_{number}_author_{number}_middle_name {'middle_name'}
-    \set book_{number}_author_{number}_last_name {'last_name'}
-    \set book_{number}_author_{number}_full_name {'full_name'}
+    \set book_{number}_author_{number}_first_name {first_name}
+    \set book_{number}_author_{number}_middle_name {middle_name}
+    \set book_{number}_author_{number}_last_name {last_name}
+    \set book_{number}_author_{number}_full_name {full_name}
     ~~~~
 
 9.  INSERT author(s) using variables defined in previous step.  
@@ -129,10 +126,8 @@
     SELECT update_book_read(:'username_1', :'book_{number}_title', {days_read}, {days_total}, {is_reading}, {is_finished});
     ~~~~
 ---
-<br>
 
 ## **Database API Response**
-<br>
 
 `GET /:id/currently_reading` <br />
 Retrieves a list of books that are currently being read.
@@ -150,58 +145,55 @@ Retrieves a list of books that are currently being read.
 ```JSON
 [
   {
-    "b_id": 11,
-    "title": "The Uriel Ventris Chronicles: Volume Two",
+    "b_id": 15,
+    "title": "Deathwatch",
     "author": [
-      "Graham McNeill"
+      "Steve Parker"
     ],
-    "total_pages": 848,
-    "blurb": "The second omnibus of stories featuring one of Warhammer 40,000's most prominent characters, Ultramarine Captain Uriel Ventris.\n\nThe Ultramarines are the epitome of a Space Marine Chapter. Warriors without peer, their name is a byword for discipline and honour, and their heroic deeds are legendary.\n\nCaptain Uriel Ventris fights to prove his worth and return to the hallowed ranks of the Chapter after his exile to the Eye of Terror. But as the Iron Warriors move against Ultramar, a grim premonition comes to light: Ventris will have a part to play in the coming war... for good or ill. The ongoing story of the Uriel Ventris continues in this omnibus edition, featuring the novels The Killing Ground, Courage and Honour and The Chapter's Due, as well as several short stories and the classic comic 'Black Bone Road'.",
-    "picture_link": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561287919l/44180905.jpg",
+    "total_pages": 512,
+    "blurb":  "Action packed novel featuring the galaxies foremost alien hunting taskforce, the Deathwatch. Led by Librarian Karras, the elite alien-hunting Talon Squad must penetrate a genestealer lair and put the abominations to the flame or face the consequences of an entire planet's extinction.//n//nGathered from the many Chapters of Space Marines, the Deathwatch are elite, charged with defending the Imperium of Man from aliens. Six Space Marines, strangers from different words, make up Talon Squad. On 31-Caro, a new terror has emerged, a murderous shadow that stalks the dark, and only the Deathwatch can stop it. Under the direction of a mysterious Inquisitor Lord known only as Sigma, they must cleanse this planet or die in the attempt.",
+    "picture_link": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561288604l/52357292._SX318_SY475_.jpg",
     "book_read": [
       {
-        "br_id": 11,
-        "days_read": 11,
-        "days_total": 20,
+        "br_id": 15,
+        "days_read": 6,
+        "days_total": 6,
         "read_entry": [
           {
-            "re_id": 76,
-            "date_read": "2021-08-08T00:00:00-04:00",
-            "pages_read": 131,
-            "current_page": 848,
-            "current_percent": 100
+            "re_id": 104,
+            "date_read": "2021-08-19T00:00:00-04:00",
+            "pages_read": 52,
+            "current_page": 329,
+            "current_percent": 64.26
           },
           {
-            "re_id": 75,
-            "date_read": "2021-08-07T00:00:00-04:00",
-            "pages_read": 118,
-            "current_page": 717,
-            "current_percent": 84.55
+            "re_id": 103,
+            "date_read": "2021-08-18T00:00:00-04:00",
+            "pages_read": 54,
+            "current_page": 277,
+            "current_percent": 54.1
           },
           {
-            "re_id": 74,
-            "date_read": "2021-08-06T00:00:00-04:00",
-            "pages_read": 104,
-            "current_page": 599,
-            "current_percent": 70.64
+            "re_id": 102,
+            "date_read": "2021-08-17T00:00:00-04:00",
+            "pages_read": 56,
+            "current_page": 223,
+            "current_percent": 42.55
           },
-          {
-            "re_id": 73,
-            "date_read": "2021-07-27T23:30:00:-04:00",
-            "current_page": 495,
-            "current_percent": 58.37
-          },
-          ...
+            ...
         ]
       },
       {
-        "br_id": 10,
-        "days_read": 16,
-        "days_total": 16,
+        "br_id": 12,
+        "days_read": 8,
+        "days_total": 10,
         "read_entry": [
           {
-            "re_id": 27,
-            ...
+            "re_id": 86,
+            "date_read": "2021-07-11T00:00:00-04:00",
+            "pages_read": 132,
+            "current_page": 100,
+            "current_percent": 100
           },
           ...
         ]
@@ -209,22 +201,12 @@ Retrieves a list of books that are currently being read.
     ]
   },
   {
-    "b_id": 8,
-    "title": "Maledictions: A Horror Anthology",
+    "b_id": 14,
+    "title": "Warden of the Blade",
     "author": [
-      "Cassandra Khaw",
-      "Richard Strachan",
-      "Graham McNeill",
-      "lora Gray",
-      "C L Werner",
-      "Peter McLean",
       "David Annandale",
-      "Paul Kane",
-      "Josh Reynolds",
-      "J.C. Stearns",
-      "Alec Worley"
     ],
-    "total_pages": 352,
+    "total_pages": 320,
     ...
   },
   ...
@@ -232,7 +214,8 @@ Retrieves a list of books that are currently being read.
 ```
 
 `GET /:id/finished_reading` <br />
-Retrieves a list of books that reader has finished reading.
+Retrieves a list of books that reader has finished reading.  
+**_Note:_** Same response shape as GET currently_reading above.
 
 ### Parameters
 
@@ -263,7 +246,33 @@ Retrieves a list of books that reader has finished reading.
       "Alec Worley"
     ],
     "total_pages": 352,
-    ...
+    "blurb": "A eclectic collection of gut wrenching tales to spook and scare.\n\nHorror is no stranger to the worlds of Warhammer. Its very fabric is infested with the arcane, the strange and the downright terrifying. From the cold, vastness of the 41st millenium to the creeping evil at large in the Mortal Realms, this anthology of short stories explores the sinister side of Warhammer in a way it never has been before. Psychological torment, visceral horrors, harrowing tales of the supernatural and the nightmares buried within, this collection brings together some of the best horror writing from the Black Library.\n\nFeaturing stories from Graham McNeill, Cassandra Khaw, Alec Worley, David Annandale and more.",
+    "picture_link": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1548642309l/40744548.jpg",
+    "book_read": [
+      {
+        "br_id": 8,
+        "days_read": 4,
+        "days_total": 4,
+        "read_entry": [
+          {
+            "re_id": 51,
+            "date_read": "2021-07-10T00:00:00-04:00",
+            "pages_read": 69,
+            "current_page": 352,
+            "current_percent": 100
+          },
+          {
+            "re_id": 50,
+            "date_read": "2021-07-09T00:00:00-04:00",
+            "pages_read": 152,
+            "current_page": 283,
+            "current_percent": 80.4
+          },
+          ...
+        ]
+      },
+      ...
+    ]
   },
   {
     "b_id": 2,
@@ -272,42 +281,8 @@ Retrieves a list of books that reader has finished reading.
       "Dan Abnett"
     ],
     "total_pages": 416,
-    "blurb": "Summary provided on the back cover of the book",
-    "picture_link": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1427161165l/23492350.jpg",
-    "book_read": [
-      {
-        "br_id": 2,
-        "days_read": 7,
-        "days_total": 7,
-        "read_entry": [
-          {
-            "re_id": 13,
-            "date_read": "2021-06-07T00:00:00-04:00",
-            "current_page": 416,
-            "current_percent": 100
-          },
-          {
-            "re_id": 12,
-            "date_read": "2021-06-06T00:00:00-04:00",
-            "current_page": 357,
-            "current_percent": 54.09
-          },
-          {
-            "re_id": 11,
-            "date_read": "2021-06-05T00:00:00-04:00",
-            "current_page": 177,
-            "current_percent": 42.55
-          },
-          ...
-        ]
-      },
-      {
-        "br_id": 1
-        ...
-      }
-    ]
-  },
-  ...
+    ...
+  }
 ]
 ```
 
