@@ -11,7 +11,6 @@ const Button = tw.button`
   text-sm
   bg-blueGray-500
   bg-opacity-50
-  border-red-500
   border
   rounded
   w-max
@@ -43,7 +42,7 @@ const Card = ({ book }: { book: BookITF }) => {
   ];
 
   return (
-    <div style={{width: '370px', height: '370px'}} className='bg-blueGray-400 grid grid-cols-2 grid-rows-20 mb-10 rounded-2xl shadow-xl'>
+    <div style={{minWidth: '370px', maxWidth: '370px', minHeight: '370px', maxHeight: '370px'}} className='bg-blueGray-400 grid grid-cols-2 grid-rows-20 mb-10 rounded-2xl shadow-xl'>
       <CardHeader title={book.title} author={book.author}/>
       <BookImage pictureLink={book.picture_link} />
       <DetailsSlider readDetails={ readDetails } />
@@ -57,7 +56,7 @@ const Card = ({ book }: { book: BookITF }) => {
         <Button>Edit</Button>
         <Button>Update Progress</Button>
       </div>
-      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center bg-blueGray-700 rounded-b-2xl font-Charm-400 text-trueGray-50 text-2xl'>
+      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center bg-blueGray-700 rounded-b-2xl font-Charm-400 text-trueGray-50 text-2xl cursor-default'>
         Completed!
       </div>
     </div>
