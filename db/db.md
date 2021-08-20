@@ -46,7 +46,7 @@
 
 3.  Set book variables used for insert_book function in next step.  
     **_Note:_** Use same { number } for all related variables related to the book.  
-      _Example_: book_1_title, book_1_title_sort, book_1_total_pages
+      _Example_: \set book_1_title 'Name book here'
     | title | title_sort | total_pages | blurb | picture_link |
     | ----- | ---------- | ----------- | ----- | ------------ |
     | string | string | string | string | string | string |
