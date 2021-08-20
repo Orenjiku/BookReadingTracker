@@ -618,7 +618,7 @@ DECLARE
   var_book_id INT = get_book_id($2);
 BEGIN
   UPDATE book_read
-  SET days_read=$3, days_total=$4, is_finished=$5, is_reading=$6
+  SET days_read=$3, days_total=$4, is_reading=$5, is_finished=$6
     WHERE book_read.id=(
       SELECT id
       FROM reader_book AS r
@@ -628,22 +628,22 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- UPDATE book_read.is_finished to true
-SELECT update_book_read(:'username_1', :'book_1_title', 5, 5, TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_2_title', 6, 6, TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_3_title', 6, 6, TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_4_title', 14, 14, TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_5_title', 3, 4, TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_6_title', 5, 5, TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_7_title', 2, 2, TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_8_title', 4, 4, TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_9_title', 2, 2, TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_10_title', 8, 8,  TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_11_title', 11, 20, TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_12_title', 10, 12, TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_13_title', 4, 4, TRUE, FALSE);
-SELECT update_book_read(:'username_1', :'book_14_title', 4, 4, TRUE, FALSE);
+SELECT update_book_read(:'username_1', :'book_1_title', 5, 5, FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_2_title', 6, 6, FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_3_title', 6, 6, FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_4_title', 14, 14, FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_5_title', 3, 4, FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_6_title', 5, 5, FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_7_title', 2, 2, FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_8_title', 4, 4, FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_9_title', 2, 2, FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_10_title', 8, 8,  FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_11_title', 11, 20, FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_12_title', 10, 12, FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_13_title', 4, 4, FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_14_title', 4, 4, FALSE, TRUE);
 -- UPDATE book_read.is_reading to true
-SELECT update_book_read(:'username_1', :'book_15_title', 6, 6, FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_15_title', 6, 6, TRUE, FALSE);
 
 
 /* --------------------------------------------- DROP functions --------------------------------------------- */
