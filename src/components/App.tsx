@@ -45,7 +45,7 @@ const App = (): JSX.Element => {
   }
 
   return (
-    <div className='bg-blueGray-300 flex flex-wrap'>
+    <div className='bg-blueGray-500 flex flex-wrap'>
       {finishedReading.map((book) => {
         return <Card key={`${book.b_id}`} book={book} />
       })}

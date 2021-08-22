@@ -15,7 +15,7 @@ const BookRead = ({ bookRead } : BookReadPropsITF) => {
 
   return (
     <div id='view' className='relative h-full overflow-y-hidden'>
-      <div ref={verticalScrollRef} className='h-full overflow-y-scroll border border-red-100 scrollbar-hide'>
+      <div ref={verticalScrollRef} className='h-full overflow-y-scroll border scrollbar-hide'>
         <div className='flex justify-between font-Charm-400'>
           <p className='text-sm'>Days Read: {bookRead.days_read}</p>
           <p className='text-sm'>Days Total: {bookRead.days_total}</p>
@@ -33,7 +33,7 @@ const BookRead = ({ bookRead } : BookReadPropsITF) => {
       </div>
       {refYOverflowing && !refYScrollBegin && <BsChevronUp className='absolute flex w-full top-0 justify-center' />}
       {refYOverflowing && !refYScrollEnd && <BsChevronDown className='absolute flex w-full bottom-0 justify-center' />}
-      </div>
+    </div>
   )
 }
 

@@ -8,11 +8,11 @@ interface ReadEntryPropsITF {
 
 const ReadEntry = ({ readEntry }: ReadEntryPropsITF) => {
   return (
-    <div className='px-1'>
-      <div className='relative flex h-4 my-0.5 text-xs '>
-        <div className='mr-2 font-SortsMillGoudy-400'>{new Date(readEntry.date_read).toLocaleDateString()}</div>
+    <div className='px-1 mb-0.5'>
+      <div className='relative flex justify-between px-0.5 font-SortsMillGoudy-400 text-xs text-trueGray-900'>
+        <div>{new Date(readEntry.date_read).toLocaleDateString()}</div>
+        <div className='text-green-600'>{`+${readEntry.pages_read} pgs`}</div>
         <div className='absolute flex w-full justify-center'>{`${readEntry.current_percent.toFixed(0)}%`}</div>
-        <div className='flex w-full h-full justify-end text-black text-green-300'>{`+${readEntry.pages_read} pgs`}</div>
       </div>
       <ProgressBar currentPercent={readEntry.current_percent} />
     </div>

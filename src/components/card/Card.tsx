@@ -9,8 +9,6 @@ import tw from 'twin.macro';
 const Button = tw.button`
   font-AdventPro-200
   text-sm
-  bg-blueGray-500
-  bg-opacity-50
   border
   rounded
   w-max
@@ -42,7 +40,7 @@ const Card = ({ book }: { book: BookITF }) => {
   ];
 
   return (
-    <div style={{minWidth: '370px', maxWidth: '370px', minHeight: '370px', maxHeight: '370px'}} className='bg-blueGray-400 grid grid-cols-2 grid-rows-20 mb-10 rounded-2xl shadow-xl'>
+    <div style={{minWidth: '370px', maxWidth: '370px', minHeight: '370px', maxHeight: '370px'}} className='grid grid-cols-2 grid-rows-20 rounded-2xl shadow-xl mx-5 mb-10 bg-blueGray-200'>
       <CardHeader title={book.title} author={book.author}/>
       <BookImage pictureLink={book.picture_link} />
       <DetailsSlider readDetails={ readDetails } />
@@ -53,10 +51,10 @@ const Card = ({ book }: { book: BookITF }) => {
         }
       </div>
       <div className='col-start-2 col-end-3 row-start-17 row-end-19 flex justify-center items-center bg-trueGray-50'>
-        <Button>Edit</Button>
-        <Button>Update Progress</Button>
+        <Button className='bg-blueGray-300 text-trueGray-900'>Edit</Button>
+        <Button className='bg-blueGray-300 text-trueGray-900'>Update Progress</Button>
       </div>
-      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center bg-blueGray-700 rounded-b-2xl font-Charm-400 text-trueGray-50 text-2xl cursor-default'>
+      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center rounded-b-2xl font-Charm-400 text-2xl cursor-default text-trueGray-900'>
         Completed!
       </div>
     </div>
