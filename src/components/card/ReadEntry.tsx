@@ -2,6 +2,7 @@ import React from 'react';
 import { ReadEntryITF } from '../../interfaces/interface';
 import ProgressBar from './ProgressBar';
 import { BsTrash } from 'react-icons/bs';
+import { CSSTransition } from 'react-transition-group';
 // import {styled} from 'twin.macro';
 // import { Trash } from '@styled-icons/bootstrap/Trash';
 
@@ -23,10 +24,13 @@ const ReadEntry = ({ readEntry, handleDeleteReadEntry, isUpdateProgress }: ReadE
         </div>
         <ProgressBar currentPercent={readEntry.current_percent} />
       </div>
-
-      {isUpdateProgress &&
+      <CSSTransition in={isUpdateProgress} timeout={300} classNames='trash' unmountOnExit>
         <BsTrash size={13} className='fill-current text-red-700 mr-0.5 cursor-pointer' onClick={() => handleDeleteReadEntry(readEntry.re_id)}/>
-      }
+      </CSSTransition>
+
+      {/* {isUpdateProgress &&
+        <BsTrash size={13} className='fill-current text-red-700 mr-0.5 cursor-pointer' onClick={() => handleDeleteReadEntry(readEntry.re_id)}/>
+      } */}
 
     </div>
   )
