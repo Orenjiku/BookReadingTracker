@@ -3,7 +3,7 @@ import { BookITF } from '../../interfaces/interface';
 import CardHeader from './CardHeader';
 import BookImage from './BookImage';
 import DetailsSlider from './DetailsSlider';
-import BookRead from './BookRead';
+import BookReadView from './BookReadView';
 import tw from 'twin.macro';
 
 const Button = tw.button`
@@ -44,17 +44,12 @@ const Card = ({ book }: { book: BookITF }) => {
       <CardHeader title={book.title} author={book.author}/>
       <BookImage pictureLink={book.picture_link} />
       <DetailsSlider readDetails={ readDetails } />
-      <div className='row-start-10 row-end-17 col-start-2 col-end-3 font-SortsMillGoudy-400'>
-        {book.book_read.map(bookRead => {
-            return <BookRead key={bookRead.br_id} bookRead={bookRead} />
-          })
-        }
-      </div>
+      <BookReadView bookRead={book.book_read} />
       <div className='col-start-2 col-end-3 row-start-17 row-end-19 flex justify-center items-center bg-trueGray-50'>
         <Button className='bg-blueGray-300 text-trueGray-900'>Edit</Button>
         <Button className='bg-blueGray-300 text-trueGray-900'>Update Progress</Button>
       </div>
-      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center rounded-b-2xl font-Charm-400 text-2xl cursor-default text-trueGray-900'>
+      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center rounded-b-2xl font-Charm-400 text-2xl cursor-default text-sky-900'>
         Completed!
       </div>
     </div>
