@@ -21,7 +21,7 @@ module.exports = {
     ],
     '@snowpack/plugin-typescript', // TS support
     '@snowpack/plugin-postcss', // postcss support
-    'snowpack-plugin-svgr', // import SVG as React component
+    // 'snowpack-plugin-svgr', // import SVG as React component
     'snowpack-plugin-relative-css-urls', //allows @font-face url reference for new fonts
     '@snowpack/plugin-babel', //plugin used in this project specifically for twin.macro
   ],

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BookITF } from '../../interfaces/interface';
 import CardHeader from './CardHeader';
 import BookImage from './BookImage';
@@ -21,6 +21,13 @@ const Button = tw.button`
 `
 
 const Card = ({ book }: { book: BookITF }) => {
+
+  const [isUpdateProgress, setIsUpdateProgress] = useState<boolean>(false);
+
+  const handleUpdateProgress = () => {
+    setIsUpdateProgress(!isUpdateProgress);
+  }
+
   const totalDays = book.book_read.reduce((acc, cur) => acc + cur.days_total, 0);
   const totalDaysRead = book.book_read.reduce((acc, cur) => acc + cur.days_read, 0);
 
@@ -41,17 +48,21 @@ const Card = ({ book }: { book: BookITF }) => {
 
   return (
     <div style={{minWidth: '370px', maxWidth: '370px', minHeight: '370px', maxHeight: '370px'}} className='grid grid-cols-2 grid-rows-20 rounded-2xl shadow-xl mx-5 mb-10 bg-blueGray-200'>
+
       <CardHeader title={book.title} author={book.author}/>
       <BookImage pictureLink={book.picture_link} />
       <DetailsSlider readDetails={ readDetails } />
-      <BookReadView bookRead={book.book_read} />
+      <BookReadView bookRead={book.book_read} isUpdateProgress={isUpdateProgress} />
+
       <div className='col-start-2 col-end-3 row-start-17 row-end-19 flex justify-center items-center bg-trueGray-50'>
         <Button className='bg-blueGray-300 text-trueGray-900'>Edit</Button>
-        <Button className='bg-blueGray-300 text-trueGray-900'>Update Progress</Button>
+        <Button className='bg-blueGray-300 text-trueGray-900' onClick={handleUpdateProgress}>Update Progress</Button>
       </div>
-      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center rounded-b-2xl font-Charm-400 text-2xl cursor-default text-sky-900'>
+
+      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center rounded-b-2xl font-Charm-400 text-2xl cursor-default text-trueGray-900'>
         Completed!
       </div>
+
     </div>
   )
 }

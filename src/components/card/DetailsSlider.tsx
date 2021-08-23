@@ -36,7 +36,7 @@ const DetailsSlider = ({ readDetails }: DetailsSliderPropsITF) => {
         {readDetails.map((_, i) => {
           return (i === current) ? <BsCircleFill key={`BsCircleFill-${i}`} size={7} className='mx-0.5 fill-current text-coolGray-50' /> : <BsCircle key={`BsCircle-${i}`} size={7} className='mx-0.5' />
         })}
-        </div>
+      </div>
 
     </div>
   )
