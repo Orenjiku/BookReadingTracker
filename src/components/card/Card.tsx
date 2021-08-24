@@ -52,7 +52,7 @@ const Card = ({ book }: { book: BookITF }) => {
       <CardHeader title={book.title} author={book.author}/>
       <BookImage pictureLink={book.picture_link} />
       <DetailsSlider readDetails={readDetails} isUpdating={isUpdating} />
-      <BookReadView bookRead={book.book_read} isUpdating={isUpdating} />
+      <BookReadView bookReadList={book.book_read} isUpdating={isUpdating} />
 
       <div className='col-start-2 col-end-3 row-start-17 row-end-19 flex justify-center items-center bg-trueGray-50'>
         <Button className='bg-blueGray-300 text-trueGray-900'>Edit</Button>

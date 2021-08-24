@@ -11,6 +11,18 @@ interface ReadEntryPropsITF {
   isUpdating: boolean;
 }
 
+const EntryInfo = styled.div<{entryDate: string; pagesRead: number;}>`
+  ${tw`relative flex justify-center w-full px-0.5 font-SortsMillGoudy-400 text-xs text-trueGray-900`};
+  &::before {
+    ${tw`absolute left-0`};
+    content: '${({entryDate }) => entryDate }';
+  };
+  &::after {
+    ${tw`absolute right-0 text-green-600`};
+    content: '${({ pagesRead }) => `+${pagesRead}pgs`}';
+  };
+`
+
 const slideDuration = 600;
 const StyledTrash = styled(Trash)`
   ${tw`fill-current text-red-600 mr-0.5 cursor-pointer`};
@@ -32,11 +44,9 @@ const ReadEntry = ({ readEntry, handleDeleteReadEntry, isUpdating }: ReadEntryPr
     <div className='flex items-center'>
 
       <div className='px-1 mb-0.5 w-full'>
-        <div className='relative flex justify-between px-0.5 font-SortsMillGoudy-400 text-xs text-trueGray-900'>
-          <div>{new Date(readEntry.date_read).toLocaleDateString()}</div>
-          <div className='text-green-600'>{`+${readEntry.pages_read} pgs`}</div>
-          <div className='absolute flex w-full justify-center'>{`${readEntry.current_percent.toFixed(0)}%`}</div>
-        </div>
+        <EntryInfo entryDate={new Date(readEntry.date_read).toLocaleDateString()} pagesRead={readEntry.pages_read}>
+          {`${readEntry.current_percent.toFixed(0)}%`}
+        </EntryInfo>
         <ProgressBar currentPercent={readEntry.current_percent} />
       </div>
 
