@@ -12,13 +12,13 @@ interface BookReadPropsITF {
 const BookRead = ({ bookRead, isUpdating } : BookReadPropsITF) => {
   const [readEntryList, setReadEntryList] = useState<ReadEntryITF[]>(bookRead.read_entry!)
 
+  const verticalScrollRef = useRef(null);
+  const {refYOverflowing, refYScrollBegin, refYScrollEnd} = useOverflow(verticalScrollRef);
+
   const handleDeleteReadEntry = (readEntryId: number) => {
     //add fetch function to delete from database then update after transaction completed
     setReadEntryList(readEntryList.filter(readEntry => readEntry.re_id !== readEntryId));
   }
-
-  const verticalScrollRef = useRef(null);
-  const {refYOverflowing, refYScrollBegin, refYScrollEnd} = useOverflow(verticalScrollRef);
 
   return (
     <div id='view' className='relative h-full overflow-y-hidden'>
@@ -27,16 +27,13 @@ const BookRead = ({ bookRead, isUpdating } : BookReadPropsITF) => {
           <p className='text-sm'>Days Read: {bookRead.days_read}</p>
           <p className='text-sm'>Days Total: {bookRead.days_total}</p>
         </div>
-        <div>
-          {
-            readEntryList === undefined ?
-            <div>Haven't started</div>
-            :
-            readEntryList.map(readEntry => {
-              return <ReadEntry key={readEntry.re_id} readEntry={readEntry} handleDeleteReadEntry={handleDeleteReadEntry} isUpdating={isUpdating} />
-            })
-          }
-        </div>
+        {readEntryList === undefined ?
+          <div>Haven't started</div>
+          :
+          readEntryList.map(readEntry => {
+            return <ReadEntry key={readEntry.re_id} readEntry={readEntry} handleDeleteReadEntry={handleDeleteReadEntry} isUpdating={isUpdating} />
+          })
+        }
       </div>
       {!refYScrollBegin && <BsChevronUp className='absolute flex w-full top-0 justify-center' />}
       {!refYScrollEnd && refYOverflowing && <BsChevronDown className='absolute flex w-full bottom-0 justify-center' />}

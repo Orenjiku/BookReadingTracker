@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 import { BsCircle, BsCircleFill } from 'react-icons/bs';
-import tw, { styled } from 'twin.macro';
+import tw, { styled, css} from 'twin.macro';
 
 interface DetailsSliderPropsITF {
   isUpdating: boolean;
@@ -11,21 +11,13 @@ interface DetailsSliderPropsITF {
   }[];
 }
 
-interface ChevronPropsITF {
-  left?: boolean;
-  right?: boolean;
-}
-
-const ChevronContainer = styled.div<ChevronPropsITF>`
-  ${tw`absolute`};
-  ${tw`h-full`};
-  ${tw`w-1/2`};
-  ${tw`z-50`};
-  left: ${({ left }) => left && 0};
-  right: ${({ right }) => right && 0};
+const ChevronContainer = styled.div<{left?: boolean; right?: boolean;}>`
+  ${tw`absolute h-full w-1/2 z-50`};
+  ${({ left }) => left && css`left: 0;`};
+  ${({ right }) => right && css`right: 0;`};
 `
 
-const DetailsSlider = ({ readDetails, isUpdating }: DetailsSliderPropsITF) => {
+const DetailsSlider = ({ readDetails }: DetailsSliderPropsITF) => {
   const [current, setCurrent] = useState<number>(0);
 
   const length = readDetails.length

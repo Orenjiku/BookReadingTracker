@@ -11,7 +11,7 @@ const useOverflow = (ref: RefObject<HTMLElement>): RefYITF => {
     const [refYScrollBegin, setRefYScrollBegin] = useState(true);
     const [refYScrollEnd, setRefYScrollEnd] = useState(false);
 
-    useEffect((): any => {
+    useEffect(() => {
       if (!ref.current) return
       const isYOverflowing = ref.current.scrollHeight > ref.current.clientHeight;
 
@@ -25,8 +25,8 @@ const useOverflow = (ref: RefObject<HTMLElement>): RefYITF => {
 
       ref.current.addEventListener('scroll', handleScroll);
 
-      return (): void => ref.current?.removeEventListener('scroll', handleScroll);
-    }, [])
+      return () => ref.current?.removeEventListener('scroll', handleScroll);
+    }, [ref?.current?.scrollHeight])
 
     return {refYOverflowing, refYScrollBegin, refYScrollEnd};
 }

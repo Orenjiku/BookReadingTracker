@@ -11,20 +11,19 @@ interface ReadEntryPropsITF {
   isUpdating: boolean;
 }
 
+const slideDuration = 600;
 const StyledTrash = styled(Trash)`
-  fill: ${tw`fill-current text-red-600`};
-  ${tw`mr-0.5`};
-  ${tw`cursor-pointer`};
-  &.slide-enter {
+  ${tw`fill-current text-red-600 mr-0.5 cursor-pointer`};
+  &.trashSlide-enter {
     transform: translateX(105%);
   };
-  &.slide-enter-active {
+  &.trashSlide-enter-active {
     transform: translateX(0%);
-    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform ${slideDuration}ms cubic-bezier(0.22, 1, 0.36, 1);
   };
-  &.slide-exit-active {
+  &.trashSlide-exit-active {
     transform: translateX(105%);
-    transition: transform 600ms cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    transition: transform ${slideDuration}ms cubic-bezier(0.68, -0.6, 0.32, 1.6);
   };
 `
 
@@ -41,7 +40,7 @@ const ReadEntry = ({ readEntry, handleDeleteReadEntry, isUpdating }: ReadEntryPr
         <ProgressBar currentPercent={readEntry.current_percent} />
       </div>
 
-      <CSSTransition in={isUpdating} timeout={600} classNames='slide' unmountOnExit>
+      <CSSTransition in={isUpdating} timeout={slideDuration} classNames='trashSlide' unmountOnExit>
         <StyledTrash size={13} onClick={() => handleDeleteReadEntry(readEntry.re_id)} />
       </CSSTransition>
 
