@@ -6,10 +6,10 @@ import ReadEntry from './ReadEntry';
 
 interface BookReadPropsITF {
   bookRead: BookReadITF;
-  isUpdateProgress: boolean;
+  isUpdating: boolean;
 }
 
-const BookRead = ({ bookRead, isUpdateProgress } : BookReadPropsITF) => {
+const BookRead = ({ bookRead, isUpdating } : BookReadPropsITF) => {
   const [readEntryList, setReadEntryList] = useState<ReadEntryITF[]>(bookRead.read_entry!)
 
   const handleDeleteReadEntry = (readEntryId: number) => {
@@ -29,11 +29,11 @@ const BookRead = ({ bookRead, isUpdateProgress } : BookReadPropsITF) => {
         </div>
         <div>
           {
-            bookRead.read_entry === undefined ?
+            readEntryList === undefined ?
             <div>Haven't started</div>
             :
             readEntryList.map(readEntry => {
-              return <ReadEntry key={readEntry.re_id} readEntry={readEntry} handleDeleteReadEntry={handleDeleteReadEntry} isUpdateProgress={isUpdateProgress} />
+              return <ReadEntry key={readEntry.re_id} readEntry={readEntry} handleDeleteReadEntry={handleDeleteReadEntry} isUpdating={isUpdating} />
             })
           }
         </div>

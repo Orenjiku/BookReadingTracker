@@ -22,10 +22,10 @@ const Button = tw.button`
 
 const Card = ({ book }: { book: BookITF }) => {
 
-  const [isUpdateProgress, setIsUpdateProgress] = useState<boolean>(false);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   const handleUpdateProgress = () => {
-    setIsUpdateProgress(!isUpdateProgress);
+    setIsUpdating(isUpdating => !isUpdating);
   }
 
   const totalDays = book.book_read.reduce((acc, cur) => acc + cur.days_total, 0);
@@ -51,8 +51,8 @@ const Card = ({ book }: { book: BookITF }) => {
 
       <CardHeader title={book.title} author={book.author}/>
       <BookImage pictureLink={book.picture_link} />
-      <DetailsSlider readDetails={ readDetails } />
-      <BookReadView bookRead={book.book_read} isUpdateProgress={isUpdateProgress} />
+      <DetailsSlider readDetails={readDetails} isUpdating={isUpdating} />
+      <BookReadView bookRead={book.book_read} isUpdating={isUpdating} />
 
       <div className='col-start-2 col-end-3 row-start-17 row-end-19 flex justify-center items-center bg-trueGray-50'>
         <Button className='bg-blueGray-300 text-trueGray-900'>Edit</Button>
