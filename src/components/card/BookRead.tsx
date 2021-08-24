@@ -31,7 +31,7 @@ const BookRead = ({ bookRead, isUpdating } : BookReadPropsITF) => {
           <div>Haven't started</div>
           :
           readEntryList.map(readEntry => {
-            return <ReadEntry key={readEntry.re_id} readEntry={readEntry} handleDeleteReadEntry={handleDeleteReadEntry} isUpdating={isUpdating} />
+            return <ReadEntry key={readEntry.re_id} readEntry={readEntry} isUpdating={isUpdating} handleDeleteReadEntry={handleDeleteReadEntry} />
           })
         }
       </div>

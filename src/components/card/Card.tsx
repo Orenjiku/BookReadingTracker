@@ -7,17 +7,7 @@ import BookReadView from './BookReadView';
 import tw from 'twin.macro';
 
 const Button = tw.button`
-  font-AdventPro-200
-  text-sm
-  border
-  rounded
-  w-max
-  h-6
-  px-1.5
-  mx-1
-  flex
-  justify-center
-  items-center
+  font-AdventPro-200 text-sm border rounded w-max h-6 px-1.5 mx-1 flex justify-center items-center
 `
 
 const Card = ({ book }: { book: BookITF }) => {

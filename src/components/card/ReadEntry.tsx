@@ -7,19 +7,19 @@ import ProgressBar from './ProgressBar';
 
 interface ReadEntryPropsITF {
   readEntry: ReadEntryITF;
-  handleDeleteReadEntry: Function;
   isUpdating: boolean;
+  handleDeleteReadEntry: Function;
 }
 
-const EntryInfo = styled.div<{entryDate: string; pagesRead: number;}>`
+const EntryBar = styled.div<{before: string; after: number;}>`
   ${tw`relative flex justify-center w-full px-0.5 font-SortsMillGoudy-400 text-xs text-trueGray-900`};
   &::before {
     ${tw`absolute left-0`};
-    content: '${({entryDate }) => entryDate }';
+    content: '${({ before }) => before}';
   };
   &::after {
     ${tw`absolute right-0 text-green-600`};
-    content: '${({ pagesRead }) => `+${pagesRead}pgs`}';
+    content: '${({ after }) => `+${after}pgs`}';
   };
 `
 
@@ -39,14 +39,15 @@ const StyledTrash = styled(Trash)`
   };
 `
 
-const ReadEntry = ({ readEntry, handleDeleteReadEntry, isUpdating }: ReadEntryPropsITF) => {
+const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPropsITF) => {
+  const entryDate = new Date(readEntry.date_read).toLocaleDateString();
+  const pagesRead = readEntry.pages_read;
+  const currentPercent = readEntry.current_percent.toFixed(0);
   return (
     <div className='flex items-center'>
 
       <div className='px-1 mb-0.5 w-full'>
-        <EntryInfo entryDate={new Date(readEntry.date_read).toLocaleDateString()} pagesRead={readEntry.pages_read}>
-          {`${readEntry.current_percent.toFixed(0)}%`}
-        </EntryInfo>
+        <EntryBar before={entryDate} after={pagesRead}>{`${currentPercent}%`}</EntryBar>
         <ProgressBar currentPercent={readEntry.current_percent} />
       </div>
 
