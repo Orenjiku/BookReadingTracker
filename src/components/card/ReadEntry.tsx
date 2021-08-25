@@ -20,7 +20,7 @@ const ReadEntryContainer = styled.div`
 `
 
 const EntryBar = styled.div<{before: string; after: number;}>`
-  ${tw`relative flex justify-center w-full px-0.5 font-SortsMillGoudy-400 text-xs text-trueGray-900`};
+  ${tw`relative flex justify-center w-full px-0.5 text-xs text-trueGray-900 font-SortsMillGoudy-400`};
   &::before {
     ${tw`absolute left-0`};
     content: '${({ before }) => before}';
