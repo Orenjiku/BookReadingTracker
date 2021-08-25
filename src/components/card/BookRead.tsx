@@ -3,9 +3,7 @@ import { BookReadITF, ReadEntryITF } from '../../interfaces/interface';
 import useOverflow from '../../hooks/useOverflow';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import ReadEntry from './ReadEntry';
-// import { styled } from 'twin.macro';
 import {TransitionGroup, CSSTransition} from 'react-transition-group';
-// import {TransitionGroup} from 'react-transition-group';
 
 interface BookReadPropsITF {
   bookRead: BookReadITF;
@@ -30,8 +28,8 @@ const BookRead = ({ bookRead, isUpdating } : BookReadPropsITF) => {
           <p className='text-sm'>Days Read: {bookRead.days_read}</p>
           <p className='text-sm'>Days Total: {bookRead.days_total}</p>
         </div>
-        {readEntryList === undefined ?
-          <div>Haven't started</div>
+        {readEntryList === undefined || readEntryList.length === 0 ?
+          <div className='flex w-full justify-center items-center font-Charm-400'>Haven't started</div>
           :
           <TransitionGroup>
             {readEntryList.map(readEntry => (
