@@ -3,6 +3,7 @@ import { BookReadITF, ReadEntryITF } from '../../interfaces/interface';
 import useOverflow from '../../hooks/useOverflow';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import ReadEntry from './ReadEntry';
+import {TransitionGroup, CSSTransition} from 'react-transition-group';
 
 interface BookReadPropsITF {
   bookRead: BookReadITF;
@@ -30,9 +31,13 @@ const BookRead = ({ bookRead, isUpdating } : BookReadPropsITF) => {
         {readEntryList === undefined ?
           <div>Haven't started</div>
           :
-          readEntryList.map(readEntry => {
-            return <ReadEntry key={readEntry.re_id} readEntry={readEntry} isUpdating={isUpdating} handleDeleteReadEntry={handleDeleteReadEntry} />
-          })
+          <TransitionGroup>
+            {readEntryList.map(readEntry => (
+              <CSSTransition key={`csst${readEntry.re_id}`} timeout={600} classNames='entry'>
+                <ReadEntry key={readEntry.re_id} readEntry={readEntry} isUpdating={isUpdating} handleDeleteReadEntry={handleDeleteReadEntry} />
+              </CSSTransition>
+            ))}
+          </TransitionGroup>
         }
       </div>
       {!refYScrollBegin && <BsChevronUp className='absolute flex w-full top-0 justify-center' />}

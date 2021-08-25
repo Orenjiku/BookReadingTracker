@@ -19,7 +19,7 @@ const EntryBar = styled.div<{before: string; after: number;}>`
   };
   &::after {
     ${tw`absolute right-0 text-green-600`};
-    content: '${({ after }) => `+${after}pgs`}';
+    content: '${({ after }) => `+${after} pgs`}';
   };
 `
 

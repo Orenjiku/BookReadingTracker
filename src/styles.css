@@ -24,3 +24,8 @@
     src: url('./fonts/SortsMillGoudy-Regular.ttf') format('truetype');
   }
 };
+
+.entry-exit-active {
+  opacity: 0;
+  transition: opacity 700ms ease-out;
+}
