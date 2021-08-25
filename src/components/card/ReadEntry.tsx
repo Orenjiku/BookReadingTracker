@@ -11,6 +11,14 @@ interface ReadEntryPropsITF {
   handleDeleteReadEntry: Function;
 }
 
+const ReadEntryContainer = styled.div`
+  ${tw`flex items-center`};
+  &.entry-exit-active {
+    opacity: 0;
+    transition: opacity 600ms ease-out;
+  }
+`
+
 const EntryBar = styled.div<{before: string; after: number;}>`
   ${tw`relative flex justify-center w-full px-0.5 font-SortsMillGoudy-400 text-xs text-trueGray-900`};
   &::before {
@@ -44,18 +52,15 @@ const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPr
   const pagesRead = readEntry.pages_read;
   const currentPercent = readEntry.current_percent.toFixed(0);
   return (
-    <div className='flex items-center'>
-
+    <ReadEntryContainer>
       <div className='px-1 mb-0.5 w-full'>
         <EntryBar before={entryDate} after={pagesRead}>{`${currentPercent}%`}</EntryBar>
         <ProgressBar currentPercent={readEntry.current_percent} />
       </div>
-
       <CSSTransition in={isUpdating} timeout={slideDuration} classNames='trashSlide' unmountOnExit>
         <StyledTrash size={13} onClick={() => handleDeleteReadEntry(readEntry.re_id)} />
       </CSSTransition>
-
-    </div>
+    </ReadEntryContainer>
   )
 }
 
