@@ -13,7 +13,7 @@ interface DetailsSliderPropsITF {
 }
 
 const ChevronContainer = styled.div<{left?: boolean; right?: boolean;}>`
-  ${tw`absolute h-full w-1/6 cursor-pointer z-50 transition duration-300 ease-in-out`};
+  ${tw`absolute h-full w-1/6 cursor-pointer transition duration-300 ease-in`};
   &:hover {
     ${tw`bg-trueGray-50 opacity-40 transition duration-500 ease-in-out`};
   };
@@ -39,12 +39,10 @@ const DetailsSlider = ({ readDetails }: DetailsSliderPropsITF) => {
   const prevSlide = () => setCurrent((current + length - 1 ) % length);
 
   return (
-    <div className='relative flex row-start-4 row-end-10 col-start-2 col-end-3 align-middle text-sm font-SortsMillGoudy-400'>
+    <div className='relative row-start-4 row-end-10 col-start-2 col-end-3 flex justify-center items-center text-sm font-SortsMillGoudy-400 bg-blueGray-300'>
 
-      <div className='relative flex h-full w-full justify-center items-center bg-blueGray-300'>
-        <div className='absolute text-7.5xl text-coolGray-50'>{readDetails[current].value}</div>
-        <div className='absolute font-AdventPro-400 text-2xl text-trueGray-900'>{readDetails[current].key}</div>
-      </div>
+      <div className='absolute text-7.5xl text-coolGray-50'>{readDetails[current].value}</div>
+      <div className='absolute font-AdventPro-400 text-2xl text-trueGray-900'>{readDetails[current].key}</div>
 
       <ChevronContainer left onClick={prevSlide}>
         <BsChevronLeft className='absolute h-full left-0' />
