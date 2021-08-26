@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
-// import { BsCircle, BsCircleFill } from 'react-icons/bs';
 import { BsCircleFill } from 'react-icons/bs';
 import tw, { styled, css } from 'twin.macro';
 
-interface DetailsSliderPropsITF {
+interface DetailsViewITF {
   isUpdating: boolean;
   readDetails: {
     key:string;
@@ -15,7 +14,7 @@ interface DetailsSliderPropsITF {
 const ChevronContainer = styled.div<{left?: boolean; right?: boolean;}>`
   ${tw`absolute h-full w-1/6 cursor-pointer transition duration-300 ease-in`};
   &:hover {
-    ${tw`bg-trueGray-50 opacity-40 transition duration-500 ease-in-out`};
+    ${tw`bg-trueGray-50 bg-opacity-40 transition duration-500 ease-in-out`};
   };
   ${({ left }) => left && css`left: 0;`};
   ${({ right }) => right && css`right: 0;`};
@@ -31,7 +30,7 @@ const StyledBsCircleFill = styled(BsCircleFill)<{selected?: boolean}>`
   `}
   `
 
-const DetailsSlider = ({ readDetails }: DetailsSliderPropsITF) => {
+const DetailsView = ({ readDetails }: DetailsViewITF) => {
   const [current, setCurrent] = useState<number>(0);
 
   const length = readDetails.length
@@ -63,4 +62,4 @@ const DetailsSlider = ({ readDetails }: DetailsSliderPropsITF) => {
   )
 }
 
-export default DetailsSlider;
+export default DetailsView;

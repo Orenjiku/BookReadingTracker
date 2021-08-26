@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BookITF } from '../../interfaces/interface';
 import CardHeader from './CardHeader';
 import BookImage from './BookImage';
-import DetailsSlider from './DetailsSlider';
+import DetailsView from './DetailsView';
 import BookReadView from './BookReadView';
 import tw, { styled } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
@@ -68,7 +68,7 @@ const Card = ({ book }: { book: BookITF }) => {
 
       <CardHeader title={book.title} author={book.author}/>
       <BookImage pictureLink={book.picture_link} />
-      <DetailsSlider readDetails={readDetails} isUpdating={isUpdating} />
+      <DetailsView readDetails={readDetails} isUpdating={isUpdating} />
       <BookReadView bookReadList={book.book_read} isUpdating={isUpdating} />
 
       <div className='col-start-2 col-end-3 row-start-17 row-end-19 flex justify-center items-center bg-trueGray-50'>
@@ -83,7 +83,7 @@ const Card = ({ book }: { book: BookITF }) => {
       <CSSTransition in={isShowingDetails} timeout={800} classNames='blurbSlide' unmountOnExit>
         <BlurbContainer img={book.picture_link}>
           <ArrowFromLeft size={25} className='absolute top-0 left-0 cursor-pointer fill-current text-coolGray-50' onClick={handleShowDetails}/>
-          <div className='bg-trueGray-50 h-4/6 z-10 overflow-y-scroll bg-opacity-40 whitespace-pre-wrap'>{book.blurb}</div>
+          <div className='bg-trueGray-50 h-4/6 w-5/6 z-10 overflow-y-scroll bg-opacity-60 p-3 whitespace-pre-wrap font-Helvetica text-xs rounded-tl-xl'>{book.blurb}</div>
         </BlurbContainer>
       </CSSTransition>
 
