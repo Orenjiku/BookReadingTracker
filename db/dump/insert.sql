@@ -94,25 +94,25 @@ $$ LANGUAGE plpgsql;
 \set book_2_title 'Malleus'
 \set book_2_title_sort 'Malleus'
 \set book_2_total_pages 416
-\set book_2_blurb 'Part two of the epic Eisenhorn trilogy returns.\\n\\nA century after his recovery of the alien Necroteuch, Gregor Eisenhorn is one of the Imperial Inquisition’s most celebrated agents. But when a face from his past returns to haunt him, and he is implicated in a great tragedy that devastates the world of Thracian Primaris, Eisenhorn’s universe crumbles around him. The daemon Cherubael is back, and seeks to bring the inquisitor to ruin – either by his death, or by turning him to the service of the Dark Gods.'
+\set book_2_blurb 'Part two of the epic Eisenhorn trilogy returns. \n\nA century after his recovery of the alien Necroteuch, Gregor Eisenhorn is one of the Imperial Inquisition’s most celebrated agents. But when a face from his past returns to haunt him, and he is implicated in a great tragedy that devastates the world of Thracian Primaris, Eisenhorn’s universe crumbles around him. The daemon Cherubael is back, and seeks to bring the inquisitor to ruin – either by his death, or by turning him to the service of the Dark Gods.'
 \set book_2_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1427161165l/23492350.jpg'
 
 \set book_3_title 'Hereticus'
 \set book_3_title_sort 'Hereticus'
 \set book_3_total_pages 416
-\set book_3_blurb 'Part three of the epic Eisenhorn trilogy returns.\\n\\nHunted by his former allies as a radical and enemy of the Imperium, Inquisitor Gregor Eisenhorn must fight to prove that he remains loyal as he tracks down a dangerous heretic whom the Inquisition believes dead – the dread former Inquisitor Quixos. As he grows more desperate for victory, Eisenhorn uses ever darker means to achieve his goals – but how far can he go using the weapons of the enemy until he becomes that very enemy – and no different to the traitor he hunts?'
+\set book_3_blurb 'Part three of the epic Eisenhorn trilogy returns. \n\nHunted by his former allies as a radical and enemy of the Imperium, Inquisitor Gregor Eisenhorn must fight to prove that he remains loyal as he tracks down a dangerous heretic whom the Inquisition believes dead – the dread former Inquisitor Quixos. As he grows more desperate for victory, Eisenhorn uses ever darker means to achieve his goals – but how far can he go using the weapons of the enemy until he becomes that very enemy – and no different to the traitor he hunts?'
 \set book_3_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1430084067l/23492348.jpg'
 
 \set book_4_title 'Ravenor: The Omnibus'
 \set book_4_title_sort 'Ravenor: The Omnibus'
 \set book_4_total_pages 880
-\set book_4_blurb 'Inquisitor Ravenor and his followers investigate a daemonic conspiracy that stretches across space and time in three classic novels by Dan Abnett.\\n\\nIn the war-torn future of the 41st millennium, the Inquisition fights a secret war against the darkest enemies of mankind – the alien, the heretic and the daemon. The three stories in this omnibus tell the tale of Inquisitor Gideon Ravenor and his lethal band of operatives, whose investigations take them from the heart of the Scarus Sector to the wildest regions of space beyond, and even through time itself. Wherever they go, and whatever dangers they face, they will never give up until their mission succeeds.\\n\\nContains the novels Ravenor, Ravenor Returned and Ravenor Regue, plus three short stories.'
+\set book_4_blurb 'Inquisitor Ravenor and his followers investigate a daemonic conspiracy that stretches across space and time in three classic novels by Dan Abnett. \n\nIn the war-torn future of the 41st millennium, the Inquisition fights a secret war against the darkest enemies of mankind – the alien, the heretic and the daemon. The three stories in this omnibus tell the tale of Inquisitor Gideon Ravenor and his lethal band of operatives, whose investigations take them from the heart of the Scarus Sector to the wildest regions of space beyond, and even through time itself. Wherever they go, and whatever dangers they face, they will never give up until their mission succeeds. \n\nContains the novels Ravenor, Ravenor Returned and Ravenor Regue, plus three short stories.'
 \set book_4_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1545478110l/42641133._SY475_.jpg'
 
 \set book_5_title 'The Magos'
 \set book_5_title_sort 'Magos, The'
 \set book_5_total_pages 720
-\set book_5_blurb 'Inquisitor Eisenhorn returns in a stunning new novel that pits him against his oldest foe, forcing him to finally confront the growing darkness within his own soul.\\n\\nInquisitor Gregor Eisenhorn has spent his life stalking the darkest and most dangerous corners of the galaxy in pursuit of heresy and Chaos, but how long can a man walk that path without succumbing to the lure of the warp? Pursuing heretics in the remote worlds of the Imperium, Eisenhorn must confront the truth about himself. Is he still a champion of the Throne? Or has he been seduced by the very evil that he hunts? The Magos is the brand new, full-length fourth novel in the hugely popular Eisenhorn series. This paperback edition also includes the definitive casebook of Gregor Eisenhorn, collecting together all twelve of Dan Abnett’s Inquisition short stories, several of which have never been in print before. These additional stories have been compiled by the author to act as an essential prologue to this long-awaited new novel, while also serving as an indispensable companion to the original Eisenhorn trilogy.'
+\set book_5_blurb 'Inquisitor Eisenhorn returns in a stunning new novel that pits him against his oldest foe, forcing him to finally confront the growing darkness within his own soul. \n\nInquisitor Gregor Eisenhorn has spent his life stalking the darkest and most dangerous corners of the galaxy in pursuit of heresy and Chaos, but how long can a man walk that path without succumbing to the lure of the warp? Pursuing heretics in the remote worlds of the Imperium, Eisenhorn must confront the truth about himself. Is he still a champion of the Throne? Or has he been seduced by the very evil that he hunts? The Magos is the brand new, full-length fourth novel in the hugely popular Eisenhorn series. This paperback edition also includes the definitive casebook of Gregor Eisenhorn, collecting together all twelve of Dan Abnett’s Inquisition short stories, several of which have never been in print before. These additional stories have been compiled by the author to act as an essential prologue to this long-awaited new novel, while also serving as an indispensable companion to the original Eisenhorn trilogy.'
 \set book_5_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1506373817l/36304173._SY475_.jpg'
 
 \set book_6_title 'Honourbound'
@@ -124,19 +124,19 @@ $$ LANGUAGE plpgsql;
 \set book_7_title 'Cadia Stands'
 \set book_7_title_sort 'Cadia Stands'
 \set book_7_total_pages 320
-\set book_7_blurb 'The brutal war for Cadia is decided, as Lord Castellan Ursarkar Creed and the armies of the Imperium fight to halt the Thirteenth Black Crusade and prevent a calamity on a galactic scale.\\n\\nUnder almost constant besiegement by the daemonic hosts pouring from the Eye of Terror, Cadia stands as a bulwark against tyranny and death. Its fortresses and armies have held back the hordes of Chaos for centuries, but that grim defiance is about to reach its end. As Abaddon’s Thirteenth Black Crusade batters Cadia’s defences and the armies of the Imperium flock to reinforce this crucial world, a terrible ritual long in the making comes to fruition, and the delicate balance of this brutal war shifts… From the darkness, a hero rises to lead the beleaguered defenders, Lord Castellan Ursarkar Creed, but even with the armoured might of the Astra Militarum and the strength of the Adeptus Astartes at his side, it may not be enough to avert disaster and prevent the fall of Cadia. While Creed lives, there is hope. While there is breath in the body of a single defender, Cadia Stands… but for how much longer?'
+\set book_7_blurb 'The brutal war for Cadia is decided, as Lord Castellan Ursarkar Creed and the armies of the Imperium fight to halt the Thirteenth Black Crusade and prevent a calamity on a galactic scale. \n\nUnder almost constant besiegement by the daemonic hosts pouring from the Eye of Terror, Cadia stands as a bulwark against tyranny and death. Its fortresses and armies have held back the hordes of Chaos for centuries, but that grim defiance is about to reach its end. As Abaddon’s Thirteenth Black Crusade batters Cadia’s defences and the armies of the Imperium flock to reinforce this crucial world, a terrible ritual long in the making comes to fruition, and the delicate balance of this brutal war shifts… From the darkness, a hero rises to lead the beleaguered defenders, Lord Castellan Ursarkar Creed, but even with the armoured might of the Astra Militarum and the strength of the Adeptus Astartes at his side, it may not be enough to avert disaster and prevent the fall of Cadia. While Creed lives, there is hope. While there is breath in the body of a single defender, Cadia Stands… but for how much longer?'
 \set book_7_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1497083669l/35297654._SY475_.jpg'
 
 \set book_8_title 'Maledictions: A Horror Anthology'
 \set book_8_title_sort 'Maledictions: A Horror Anthology'
 \set book_8_total_pages 352
-\set book_8_blurb 'A eclectic collection of gut wrenching tales to spook and scare.\\n\\nHorror is no stranger to the worlds of Warhammer. Its very fabric is infested with the arcane, the strange and the downright terrifying. From the cold, vastness of the 41st millenium to the creeping evil at large in the Mortal Realms, this anthology of short stories explores the sinister side of Warhammer in a way it never has been before. Psychological torment, visceral horrors, harrowing tales of the supernatural and the nightmares buried within, this collection brings together some of the best horror writing from the Black Library.\\n\\nFeaturing stories from Graham McNeill, Cassandra Khaw, Alec Worley, David Annandale and more.'
+\set book_8_blurb 'A eclectic collection of gut wrenching tales to spook and scare. \n\nHorror is no stranger to the worlds of Warhammer. Its very fabric is infested with the arcane, the strange and the downright terrifying. From the cold, vastness of the 41st millenium to the creeping evil at large in the Mortal Realms, this anthology of short stories explores the sinister side of Warhammer in a way it never has been before. Psychological torment, visceral horrors, harrowing tales of the supernatural and the nightmares buried within, this collection brings together some of the best horror writing from the Black Library. \n\nFeaturing stories from Graham McNeill, Cassandra Khaw, Alec Worley, David Annandale and more.'
 \set book_8_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1548642309l/40744548.jpg'
 
 \set book_9_title 'Cadian Honour'
 \set book_9_title_sort 'Cadian Honour'
 \set book_9_total_pages 496
-\set book_9_blurb 'Sent to the capital world of Potence, Sergeant Minka Lesk and the Cadian 101st discover that though Cadia may have fallen, their duty continues.\\n\\nFor ten thousand years, Cadia stood as a bastion against the daemonic tide spewing forth from the Eye of Terror. But now the Fortress World lies in ruins, its armies decimated in the wake of Abaddon the Despoiler and his Thirteenth Black Crusade. Those who survived, though haunted by the loss of their beloved homeworld, remain bloodied and unbarred, fighting ruthlessly in the Emperor’s name.\\n\\nAmongst them is the indomitable Sergeant Minka Lesk. Sent to the capital world of Potence, Lesk and the Cadian 101st company soon discover that a rot runs through the very heart of the seemingly peaceful world. Lesk knows she must excise this taint of Chaos, for it is not only her life and those of her company at stake, but also the honour of Cadia itself.'
+\set book_9_blurb 'Sent to the capital world of Potence, Sergeant Minka Lesk and the Cadian 101st discover that though Cadia may have fallen, their duty continues. \n\nFor ten thousand years, Cadia stood as a bastion against the daemonic tide spewing forth from the Eye of Terror. But now the Fortress World lies in ruins, its armies decimated in the wake of Abaddon the Despoiler and his Thirteenth Black Crusade. Those who survived, though haunted by the loss of their beloved homeworld, remain bloodied and unbarred, fighting ruthlessly in the Emperor’s name. \n\nAmongst them is the indomitable Sergeant Minka Lesk. Sent to the capital world of Potence, Lesk and the Cadian 101st company soon discover that a rot runs through the very heart of the seemingly peaceful world. Lesk knows she must excise this taint of Chaos, for it is not only her life and those of her company at stake, but also the honour of Cadia itself.'
 \set book_9_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1552227521l/44180913.jpg'
 
 \set book_10_title 'The Uriel Ventris Chronicles: Volume One'
@@ -148,31 +148,31 @@ $$ LANGUAGE plpgsql;
 \set book_11_title 'The Uriel Ventris Chronicles: Volume Two'
 \set book_11_title_sort 'The Uriel Ventris Chronicles: Volume Two, The'
 \set book_11_total_pages 848
-\set book_11_blurb 'The second omnibus of stories featuring one of Warhammer 40,000''s most prominent characters, Ultramarine Captain Uriel Ventris.\\n\\nThe Ultramarines are the epitome of a Space Marine Chapter. Warriors without peer, their name is a byword for discipline and honour, and their heroic deeds are legendary.\\n\\nCaptain Uriel Ventris fights to prove his worth and return to the hallowed ranks of the Chapter after his exile to the Eye of Terror. But as the Iron Warriors move against Ultramar, a grim premonition comes to light: Ventris will have a part to play in the coming war... for good or ill. The ongoing story of the Uriel Ventris continues in this omnibus edition, featuring the novels The Killing Ground, Courage and Honour and The Chapter''s Due, as well as several short stories and the classic comic ''Black Bone Road''.'
+\set book_11_blurb 'The second omnibus of stories featuring one of Warhammer 40,000''s most prominent characters, Ultramarine Captain Uriel Ventris. \n\nThe Ultramarines are the epitome of a Space Marine Chapter. Warriors without peer, their name is a byword for discipline and honour, and their heroic deeds are legendary. \n\nCaptain Uriel Ventris fights to prove his worth and return to the hallowed ranks of the Chapter after his exile to the Eye of Terror. But as the Iron Warriors move against Ultramar, a grim premonition comes to light: Ventris will have a part to play in the coming war... for good or ill. The ongoing story of the Uriel Ventris continues in this omnibus edition, featuring the novels The Killing Ground, Courage and Honour and The Chapter''s Due, as well as several short stories and the classic comic ''Black Bone Road''.'
 \set book_11_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561287919l/44180905.jpg'
 
 \set book_12_title 'Iron Warriors: The Omnibus'
 \set book_12_title_sort 'Iron Warriors: The Omnibus'
 \set book_12_total_pages 688
-\set book_12_blurb 'The Iron Warriors are Chaos Space Marines with unrivalled expertise in the art of siege warfare. With great batteries of artillery and all the favours of the Ruinous Powers at their command, there is no fortress in the galaxy that can stand against them for long.\\n\\nThis omnibus follows the schemes of the embittered Warsmith Honsou in his struggles against the hated Space Marines of the Imperium. Drawing upon characters and events from author Graham McNeill’s popular Ultramarines series and for the first time in a single publication, Storm of Iron and the novella Iron Warrior are gathered along with short stories The Enemy of My Enemy, The Heraclitus Effect and The Skull Harvest.'
+\set book_12_blurb 'The Iron Warriors are Chaos Space Marines with unrivalled expertise in the art of siege warfare. With great batteries of artillery and all the favours of the Ruinous Powers at their command, there is no fortress in the galaxy that can stand against them for long. \n\nThis omnibus follows the schemes of the embittered Warsmith Honsou in his struggles against the hated Space Marines of the Imperium. Drawing upon characters and events from author Graham McNeill’s popular Ultramarines series and for the first time in a single publication, Storm of Iron and the novella Iron Warrior are gathered along with short stories The Enemy of My Enemy, The Heraclitus Effect and The Skull Harvest.'
 \set book_12_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1625358426l/58481729.jpg'
 
 \set book_13_title 'The Swords of Calth'
 \set book_13_title_sort 'Swords of Calth, The'
 \set book_13_total_pages 258
-\set book_13_blurb 'A Uriel Ventris novel\\n\\Uriel Ventris returns! Newly ascended to the ranks of the Primaris Space Marines, Ventris leads the Ultramarines Fourth Company – the famed Swords of Calth – to war against the ancient necrons. Old enemies arise, as Ventris'' past and present collide in brutal battle.\\n\\nREAD IT BECAUSE\\nOne of Black Library''s longest-running series continues – and the hero''s been given a new lease of life as a Primaris Space Marine. Discover how Ventris adapts to his new life even as his past comes back to haunt him.\\n\\nTHE STORY\\nUriel Ventris, newly ascended to the ranks of the Primaris, leads warriors of the Fourth Company from the Indomitus Crusade of Roboute Guilliman to a world on the frontiers of Ultramar. Once a battleground against the orks, Sycorax is now under furious assault from an enemy of ancient times – the necrons. The Ultramarines have faced these baleful xenos before, but Uriel senses the hand of a foe from his past at work on Sycorax, a tally unfinished and a debt to the Imperium finally come due.\\n\\nTrapped deep in a devastated city, Uriel leads the Swords of Calth into battle, and must adapt to his new incarnation as one of the Primaris – a challenge that will test his soul as much as it will test him as a warrior.'
+\set book_13_blurb 'A Uriel Ventris novel \n\nUriel Ventris returns! Newly ascended to the ranks of the Primaris Space Marines, Ventris leads the Ultramarines Fourth Company – the famed Swords of Calth – to war against the ancient necrons. Old enemies arise, as Ventris'' past and present collide in brutal battle. \n\nREAD IT BECAUSE \nOne of Black Library''s longest-running series continues – and the hero''s been given a new lease of life as a Primaris Space Marine. Discover how Ventris adapts to his new life even as his past comes back to haunt him. \n\nTHE STORY \nUriel Ventris, newly ascended to the ranks of the Primaris, leads warriors of the Fourth Company from the Indomitus Crusade of Roboute Guilliman to a world on the frontiers of Ultramar. Once a battleground against the orks, Sycorax is now under furious assault from an enemy of ancient times – the necrons. The Ultramarines have faced these baleful xenos before, but Uriel senses the hand of a foe from his past at work on Sycorax, a tally unfinished and a debt to the Imperium finally come due. \n\nTrapped deep in a devastated city, Uriel leads the Swords of Calth into battle, and must adapt to his new incarnation as one of the Primaris – a challenge that will test his soul as much as it will test him as a warrior.'
 \set book_13_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1628695156l/58749658._SY475_.jpg'
 
 \set book_14_title 'Warden of the Blade'
 \set book_14_title_sort 'Warden of the Blade'
 \set book_14_total_pages 320
-\set book_14_blurb 'The noble Castellan Crowe of the Grey Knights Chapter must wield the cursed Blade of Antwyr, an indestructable weapon imbued with evil daemonic power.\\n\\nCastellan Crowe, Brotherhood Champion of the Purifier order of the Grey Knights, bears a heavy burden – to be the warden of the dread Blade of Antwyr. Its malevolent voice is forever in his head, trying to crack his resolve, urging him to unleash a power he must never use. The toll is terrible – how long before the incorruptible Crowe is at last defeated? Under the command of Castellan Gavallan, Crowe and his brother Purifiers bring purging flame to a daemonic incursion that threatens to consume the world of Sandava I. However, what awaits them there is more insidious and more powerful than they imagine, and they must reckon too with the machinations of the Blade, as it seeks to destroy its guardian and drown the galaxy in blood.'
+\set book_14_blurb 'The noble Castellan Crowe of the Grey Knights Chapter must wield the cursed Blade of Antwyr, an indestructable weapon imbued with evil daemonic power. \n\nCastellan Crowe, Brotherhood Champion of the Purifier order of the Grey Knights, bears a heavy burden – to be the warden of the dread Blade of Antwyr. Its malevolent voice is forever in his head, trying to crack his resolve, urging him to unleash a power he must never use. The toll is terrible – how long before the incorruptible Crowe is at last defeated? Under the command of Castellan Gavallan, Crowe and his brother Purifiers bring purging flame to a daemonic incursion that threatens to consume the world of Sandava I. However, what awaits them there is more insidious and more powerful than they imagine, and they must reckon too with the machinations of the Blade, as it seeks to destroy its guardian and drown the galaxy in blood.'
 \set book_14_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1497084986l/34466775._SY475_.jpg'
 
 \set book_15_title 'Deathwatch'
 \set book_15_title_sort 'Deathwatch'
 \set book_15_total_pages 512
-\set book_15_blurb 'Action packed novel featuring the galaxies foremost alien hunting taskforce, the Deathwatch. Led by Librarian Karras, the elite alien-hunting Talon Squad must penetrate a genestealer lair and put the abominations to the flame or face the consequences of an entire planet''s extinction.//n//nGathered from the many Chapters of Space Marines, the Deathwatch are elite, charged with defending the Imperium of Man from aliens. Six Space Marines, strangers from different words, make up Talon Squad. On 31-Caro, a new terror has emerged, a murderous shadow that stalks the dark, and only the Deathwatch can stop it. Under the direction of a mysterious Inquisitor Lord known only as Sigma, they must cleanse this planet or die in the attempt.'
+\set book_15_blurb 'Action packed novel featuring the galaxies foremost alien hunting taskforce, the Deathwatch. Led by Librarian Karras, the elite alien-hunting Talon Squad must penetrate a genestealer lair and put the abominations to the flame or face the consequences of an entire planet''s extinction. \n\nGathered from the many Chapters of Space Marines, the Deathwatch are elite, charged with defending the Imperium of Man from aliens. Six Space Marines, strangers from different words, make up Talon Squad. On 31-Caro, a new terror has emerged, a murderous shadow that stalks the dark, and only the Deathwatch can stop it. Under the direction of a mysterious Inquisitor Lord known only as Sigma, they must cleanse this planet or die in the attempt.'
 \set book_15_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561288604l/52357292._SX318_SY475_.jpg'
 
 -- INSERT book using previously declared variables
@@ -273,14 +273,14 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- INSERT read_entry data
-SELECT insert_read_entry('2021-05-29', 0, 0, 0, :'book_1_title');
+-- SELECT insert_read_entry('2021-05-29', 0, 0, 0, :'book_1_title');
 SELECT insert_read_entry('2021-05-29', 69, 69, 16.59, :'book_1_title');
 SELECT insert_read_entry('2021-05-30', 122, 191, 45.91, :'book_1_title');
 SELECT insert_read_entry('2021-05-31', 58, 249, 59.86, :'book_1_title');
 SELECT insert_read_entry('2021-06-01', 104, 353, 84.86, :'book_1_title');
 SELECT insert_read_entry('2021-06-02', 63, 416, 100, :'book_1_title');
 
-SELECT insert_read_entry('2021-06-02', 0, 0, 0, :'book_2_title');
+-- SELECT insert_read_entry('2021-06-02', 0, 0, 0, :'book_2_title');
 SELECT insert_read_entry('2021-06-02', 41, 41, 9.86, :'book_2_title');
 SELECT insert_read_entry('2021-06-03', 30, 71, 17.07, :'book_2_title');
 SELECT insert_read_entry('2021-06-04', 36, 107, 25.72, :'book_2_title');
@@ -288,7 +288,7 @@ SELECT insert_read_entry('2021-06-05', 70, 177, 42.55, :'book_2_title');
 SELECT insert_read_entry('2021-06-06', 180, 357, 54.09, :'book_2_title');
 SELECT insert_read_entry('2021-06-07', 59, 416, 100, :'book_2_title');
 
-SELECT insert_read_entry('2021-06-07', 0, 0, 0, :'book_3_title');
+-- SELECT insert_read_entry('2021-06-07', 0, 0, 0, :'book_3_title');
 SELECT insert_read_entry('2021-06-07', 43, 43, 10.34, :'book_3_title');
 SELECT insert_read_entry('2021-06-08', 54, 97, 23.32, :'book_3_title');
 SELECT insert_read_entry('2021-06-09', 80, 177, 42.55, :'book_3_title');
@@ -296,7 +296,7 @@ SELECT insert_read_entry('2021-06-10', 48, 225, 54.09, :'book_3_title');
 SELECT insert_read_entry('2021-06-11', 42, 267, 64.18, :'book_3_title');
 SELECT insert_read_entry('2021-06-12', 149, 416, 100, :'book_3_title');
 
-SELECT insert_read_entry('2021-06-13', 0, 0, 0, :'book_4_title');
+-- SELECT insert_read_entry('2021-06-13', 0, 0, 0, :'book_4_title');
 SELECT insert_read_entry('2021-06-13', 78, 78, 8.86, :'book_4_title');
 SELECT insert_read_entry('2021-06-14', 38, 116, 13.18, :'book_4_title');
 SELECT insert_read_entry('2021-06-16', 37, 153, 17.39, :'book_4_title');
@@ -309,34 +309,34 @@ SELECT insert_read_entry('2021-06-24', 125, 528, 60, :'book_4_title');
 SELECT insert_read_entry('2021-06-25', 139, 667, 76.93, :'book_4_title');
 SELECT insert_read_entry('2021-06-26', 213, 880, 100, :'book_4_title');
 
-SELECT insert_read_entry('2021-06-26', 0, 0, 0, :'book_5_title');
+-- SELECT insert_read_entry('2021-06-26', 0, 0, 0, :'book_5_title');
 SELECT insert_read_entry('2021-06-27', 210, 210, 29.17, :'book_5_title');
 SELECT insert_read_entry('2021-06-28', 102, 312, 43.33, :'book_5_title');
 SELECT insert_read_entry('2021-06-29', 339, 651, 90.42, :'book_5_title');
 SELECT insert_read_entry('2021-06-29', 69, 720, 100, :'book_5_title');
 
-SELECT insert_read_entry('2021-06-30', 0, 0, 0, :'book_6_title');
+-- SELECT insert_read_entry('2021-06-30', 0, 0, 0, :'book_6_title');
 SELECT insert_read_entry('2021-06-30', 117, 117, 23.59, :'book_6_title');
 SELECT insert_read_entry('2021-07-01', 92, 209, 42.14, :'book_6_title');
 SELECT insert_read_entry('2021-07-02', 104, 313, 63.1, :'book_6_title');
 SELECT insert_read_entry('2021-07-03', 92, 405, 81.65, :'book_6_title');
 SELECT insert_read_entry('2021-07-04', 91, 496, 100, :'book_6_title');
 
-SELECT insert_read_entry('2021-07-05', 0, 0, 0, :'book_7_title');
+-- SELECT insert_read_entry('2021-07-05', 0, 0, 0, :'book_7_title');
 SELECT insert_read_entry('2021-07-05', 115, 115, 35.94, :'book_7_title');
 SELECT insert_read_entry('2021-07-06', 205, 320, 100, :'book_7_title');
 
-SELECT insert_read_entry('2021-07-07', 0, 0, 0, :'book_8_title');
+-- SELECT insert_read_entry('2021-07-07', 0, 0, 0, :'book_8_title');
 SELECT insert_read_entry('2021-07-07', 81, 81, 23.01, :'book_8_title');
 SELECT insert_read_entry('2021-07-08', 50, 131, 37.22, :'book_8_title');
 SELECT insert_read_entry('2021-07-09', 152, 283, 80.4, :'book_8_title');
 SELECT insert_read_entry('2021-07-10', 69, 352, 100, :'book_8_title');
 
-SELECT insert_read_entry('2021-07-10', 0, 0, 0, :'book_9_title');
+-- SELECT insert_read_entry('2021-07-10', 0, 0, 0, :'book_9_title');
 SELECT insert_read_entry('2021-07-10', 99, 99, 19.96, :'book_9_title');
 SELECT insert_read_entry('2021-07-11', 397, 496, 100, :'book_9_title');
 
-SELECT insert_read_entry('2021-07-12', 0, 0, 0, :'book_10_title');
+-- SELECT insert_read_entry('2021-07-12', 0, 0, 0, :'book_10_title');
 SELECT insert_read_entry('2021-07-12', 53, 53, 6.63, :'book_10_title');
 SELECT insert_read_entry('2021-07-13', 48, 101, 12.63, :'book_10_title');
 SELECT insert_read_entry('2021-07-14', 60, 161, 20.13, :'book_10_title');
@@ -347,7 +347,7 @@ SELECT insert_read_entry('2021-07-18', 70, 607, 75.88, :'book_10_title');
 SELECT insert_read_entry('2021-07-19', 102, 709, 88.63, :'book_10_title');
 SELECT insert_read_entry('2021-07-19', 91, 800, 100, :'book_10_title');
 
-SELECT insert_read_entry('2021-07-20', 0, 0, 0, :'book_11_title');
+-- SELECT insert_read_entry('2021-07-20', 0, 0, 0, :'book_11_title');
 SELECT insert_read_entry('2021-07-20', 51, 51, 6.01, :'book_11_title');
 SELECT insert_read_entry('2021-07-21', 114, 165, 19.46, :'book_11_title');
 SELECT insert_read_entry('2021-07-22', 78, 243, 28.66, :'book_11_title');
@@ -360,7 +360,7 @@ SELECT insert_read_entry('2021-08-06', 104, 599, 70.64, :'book_11_title');
 SELECT insert_read_entry('2021-08-07', 118, 717, 84.55, :'book_11_title');
 SELECT insert_read_entry('2021-08-08', 131, 848, 100, :'book_11_title');
 
-SELECT insert_read_entry('2021-07-28', 0, 0, 0, :'book_12_title');
+-- SELECT insert_read_entry('2021-07-28', 0, 0, 0, :'book_12_title');
 SELECT insert_read_entry('2021-07-28', 49, 49, 7.12, :'book_12_title');
 SELECT insert_read_entry('2021-07-29', 112, 161, 23.4, :'book_12_title');
 SELECT insert_read_entry('2021-07-30', 54, 215, 31.25, :'book_12_title');
@@ -372,26 +372,26 @@ SELECT insert_read_entry('2021-08-04', 42, 475, 69.04, :'book_12_title');
 SELECT insert_read_entry('2021-08-05', 100, 575, 83.58, :'book_12_title');
 SELECT insert_read_entry('2021-08-08', 113, 688, 100, :'book_12_title');
 
-SELECT insert_read_entry('2021-08-08', 0, 0, 0, :'book_13_title');
+-- SELECT insert_read_entry('2021-08-08', 0, 0, 0, :'book_13_title');
 SELECT insert_read_entry('2021-08-08', 45, 45, 17.44, :'book_13_title');
 SELECT insert_read_entry('2021-08-09', 74, 119, 46.12, :'book_13_title');
 SELECT insert_read_entry('2021-08-10', 72, 191, 74.03, :'book_13_title');
 SELECT insert_read_entry('2021-08-11', 67, 258, 100, :'book_13_title');
 
-SELECT insert_read_entry('2021-08-11', 0, 0, 0, :'book_14_title');
+-- SELECT insert_read_entry('2021-08-11', 0, 0, 0, :'book_14_title');
 SELECT insert_read_entry('2021-08-11', 41, 41, 12.81, :'book_14_title');
 SELECT insert_read_entry('2021-08-12', 92, 133, 41.56, :'book_14_title');
 SELECT insert_read_entry('2021-08-13', 123, 256, 80.94, :'book_14_title');
 SELECT insert_read_entry('2021-08-14', 64, 320, 100, :'book_14_title');
 
-SELECT insert_read_entry('2021-08-14', 0, 0, 0, :'book_15_title');
+-- SELECT insert_read_entry('2021-08-14', 0, 0, 0, :'book_15_title');
 SELECT insert_read_entry('2021-08-14', 55, 55, 10.74, :'book_15_title');
 SELECT insert_read_entry('2021-08-15', 58, 113, 22.07, :'book_15_title');
 SELECT insert_read_entry('2021-08-16', 54, 167, 32.62, :'book_15_title');
 SELECT insert_read_entry('2021-08-17', 56, 223, 42.55, :'book_15_title');
 SELECT insert_read_entry('2021-08-18', 54, 277, 54.1, :'book_15_title');
 SELECT insert_read_entry('2021-08-19', 52, 329, 64.26, :'book_15_title');
-SELECT insert_read_entry('2021-08-19', 183, 512, 100, :'book_15_title');
+SELECT insert_read_entry('2021-08-20', 183, 512, 100, :'book_15_title');
 
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
