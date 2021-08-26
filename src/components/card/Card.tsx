@@ -6,7 +6,7 @@ import DetailsView from './DetailsView';
 import BookReadView from './BookReadView';
 import tw, { styled } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
-import { ArrowFromLeft } from '@styled-icons/boxicons-regular/ArrowFromLeft';
+// import { ArrowFromLeft } from '@styled-icons/boxicons-regular/ArrowFromLeft';
 
 const Button = tw.button`
   font-AdventPro-200 text-sm border rounded w-max h-6 px-1.5 mx-1 flex justify-center items-center
@@ -66,13 +66,12 @@ const Card = ({ book }: { book: BookITF }) => {
   return (
     <div style={{minWidth: '370px', maxWidth: '370px', minHeight: '370px', maxHeight: '370px'}} className='grid grid-cols-2 grid-rows-20 rounded-2xl shadow-xl mx-5 mb-10 bg-blueGray-200 select-none overflow-hidden'>
 
-      <CardHeader title={book.title} author={book.author}/>
+      <CardHeader title={book.title} author={book.author} isShowingDetails={isShowingDetails} handleShowDetails={handleShowDetails} />
       <BookImage pictureLink={book.picture_link} />
       <DetailsView readDetails={readDetails} isUpdating={isUpdating} />
       <BookReadView bookReadList={book.book_read} isUpdating={isUpdating} />
 
       <div className='col-start-2 col-end-3 row-start-17 row-end-19 flex justify-center items-center bg-trueGray-50'>
-        <Button className='bg-blueGray-300 text-trueGray-900' onClick={handleShowDetails}>Details</Button>
         <Button className='bg-blueGray-300 text-trueGray-900' onClick={handleUpdateProgress}>Update Progress</Button>
       </div>
 
@@ -82,7 +81,6 @@ const Card = ({ book }: { book: BookITF }) => {
 
       <CSSTransition in={isShowingDetails} timeout={800} classNames='blurbSlide' unmountOnExit>
         <BlurbContainer img={book.picture_link}>
-          <ArrowFromLeft size={25} className='absolute top-0 left-0 cursor-pointer fill-current text-coolGray-50' onClick={handleShowDetails}/>
           <div className='bg-trueGray-50 h-4/6 w-5/6 z-10 overflow-y-scroll bg-opacity-60 p-3 whitespace-pre-wrap font-Helvetica text-xs rounded-tl-xl'>{book.blurb}</div>
         </BlurbContainer>
       </CSSTransition>
