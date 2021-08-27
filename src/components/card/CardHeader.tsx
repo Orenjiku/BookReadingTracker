@@ -38,7 +38,7 @@ const AnimatedLeftArrow = styled(LeftArrow)`
 
 const CardHeader = ({title, author, isShowingDetails, handleShowDetails}: CardHeaderPropsITF) => {
   return (
-    <div className='relative col-start-1 col-end-3 row-start-1 row-end-4 px-6 rounded-t-2xl'>
+    <div className='relative col-start-1 col-end-3 row-start-1 row-end-4 pl-6 pr-1 rounded-t-2xl'>
 
       <div className='flex items-center'>
         <CSSTransition in={isShowingDetails} timeout={800} classNames='arrowRotate'>
