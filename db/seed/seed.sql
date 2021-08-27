@@ -1,4 +1,4 @@
-/* CLI Command to run script: psql -h {hostname} -U {username} -f dump.sql */
+/* CLI Command to run script: psql -h {hostname} -U {username} -f seed.sql */
 
 /* --------------------------------------------- CREATE DATABASE --------------------------------------------- */
 \set my_db test

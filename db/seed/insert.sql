@@ -175,6 +175,12 @@ $$ LANGUAGE plpgsql;
 \set book_15_blurb 'Action packed novel featuring the galaxies foremost alien hunting taskforce, the Deathwatch. Led by Librarian Karras, the elite alien-hunting Talon Squad must penetrate a genestealer lair and put the abominations to the flame or face the consequences of an entire planet''s extinction. \n\nGathered from the many Chapters of Space Marines, the Deathwatch are elite, charged with defending the Imperium of Man from aliens. Six Space Marines, strangers from different words, make up Talon Squad. On 31-Caro, a new terror has emerged, a murderous shadow that stalks the dark, and only the Deathwatch can stop it. Under the direction of a mysterious Inquisitor Lord known only as Sigma, they must cleanse this planet or die in the attempt.'
 \set book_15_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561288604l/52357292._SX318_SY475_.jpg'
 
+\set book_16_title 'The Carrion Throne'
+\set book_16_title_sort 'Carrion Throne, The'
+\set book_16_total_pages 384
+\set book_16_blurb 'Inquisitor Erasmus Crowl and his acolyte Spinoza follow the trail of a shadowy conspiracy on Holy Terra itself, the capital world of the Imperium. \n\nIn the hellish sprawl of Imperial Terra, Ordo Hereticus Inquisitor Erasmus Crowl serves as a stalwart and vigilant protector, for even the Throneworld is not immune to the predations of its enemies. In the course of his Emperor-sworn duty, Crowl becomes embroiled in a dark conspiracy, one that leads all the way to the halls of the Imperial Palace. As he plunges deeper into the shadowy underbelly of the many palace districts, his investigation attracts the attention of hidden forces, and soon he and his acolyte Spinoza are being hunted – by heretics, xenos, servants of the Dark Powers, or perhaps even rival elements of the Inquisition itself. Soon they discover a terrible truth, one that if allowed to get out could undermine the very fabric of the Imperium itself.'
+\set book_16_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1507457967l/36373739._SY475_.jpg'
+
 -- INSERT book using previously declared variables
 SELECT insert_book(:'book_1_title', :'book_1_title_sort', :'book_1_total_pages', :'book_1_blurb', :'book_1_picture_link');
 SELECT insert_book(:'book_2_title', :'book_2_title_sort', :'book_2_total_pages', :'book_2_blurb', :'book_2_picture_link');
@@ -191,6 +197,7 @@ SELECT insert_book(:'book_12_title', :'book_12_title_sort', :'book_12_total_page
 SELECT insert_book(:'book_13_title', :'book_13_title_sort', :'book_13_total_pages', :'book_13_blurb', :'book_13_picture_link');
 SELECT insert_book(:'book_14_title', :'book_14_title_sort', :'book_14_total_pages', :'book_14_blurb', :'book_14_picture_link');
 SELECT insert_book(:'book_15_title', :'book_15_title_sort', :'book_15_total_pages', :'book_15_blurb', :'book_15_picture_link');
+SELECT insert_book(:'book_16_title', :'book_16_title_sort', :'book_16_total_pages', :'book_16_blurb', :'book_16_picture_link');
 
 
 /* --------------------------------------------- INSERT reader_book (JOIN TABLE) --------------------------------------------- */
@@ -222,6 +229,7 @@ SELECT join_reader_book(:'username_1', :'book_12_title');
 SELECT join_reader_book(:'username_1', :'book_13_title');
 SELECT join_reader_book(:'username_1', :'book_14_title');
 SELECT join_reader_book(:'username_1', :'book_15_title');
+SELECT join_reader_book(:'username_1', :'book_16_title');
 
 
 /* --------------------------------------------- INSERT book_read --------------------------------------------- */
@@ -252,6 +260,7 @@ SELECT insert_book_read(:'username_1', :'book_12_title');
 SELECT insert_book_read(:'username_1', :'book_13_title');
 SELECT insert_book_read(:'username_1', :'book_14_title');
 SELECT insert_book_read(:'username_1', :'book_15_title');
+SELECT insert_book_read(:'username_1', :'book_16_title');
 
 
 /* --------------------------------------------- INSERT read_entry --------------------------------------------- */
@@ -393,6 +402,14 @@ SELECT insert_read_entry('2021-08-18', 54, 277, 54.1, :'book_15_title');
 SELECT insert_read_entry('2021-08-19', 52, 329, 64.26, :'book_15_title');
 SELECT insert_read_entry('2021-08-20', 183, 512, 100, :'book_15_title');
 
+-- SELECT insert_read_entry('2021-08-21', 0, 0, 0, :'book_16_title');
+SELECT insert_read_entry('2021-08-21', 55, 55, 14.32, :'book_16_title');
+SELECT insert_read_entry('2021-08-22', 58, 113, 29.43, :'book_16_title');
+SELECT insert_read_entry('2021-08-23', 50, 163, 42.45, :'book_16_title');
+SELECT insert_read_entry('2021-08-24', 52, 215, 55.99, :'book_16_title');
+SELECT insert_read_entry('2021-08-25', 56, 271, 70.57, :'book_16_title');
+SELECT insert_read_entry('2021-08-26', 113, 384, 100, :'book_16_title');
+
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
 -- FUNCTION insert_author
@@ -503,6 +520,10 @@ $$ LANGUAGE plpgsql;
 \set book_15_author_1_first_name 'Steve'
 \set book_15_author_1_last_name 'Parker'
 \set book_15_author_1_full_name 'Steve Parker'
+-- book 16 author
+\set book_16_author_1_first_name 'Chris'
+\set book_16_author_1_last_name 'Wraight'
+\set book_16_author_1_full_name 'Chris Wraight'
 
 -- INSERT author using FUNCTION insert_author and DECLARED author variables as arguments, CHECK UNIQUE full_name (middle_name argument is optional)
 -- book 1 author
@@ -545,6 +566,8 @@ SELECT insert_author(:'book_13_author_1_full_name', :'book_13_author_1_first_nam
 SELECT insert_author(:'book_14_author_1_full_name', :'book_14_author_1_first_name', :'book_14_author_1_last_name');
 -- book 15 author
 SELECT insert_author(:'book_15_author_1_full_name', :'book_15_author_1_first_name', :'book_15_author_1_last_name');
+-- book 16 author
+SELECT insert_author(:'book_16_author_1_full_name', :'book_16_author_1_first_name', :'book_16_author_1_last_name');
 
 
 /* --------------------------------------------- INSERT book_author (JOIN TABLE) --------------------------------------------- */
@@ -601,6 +624,8 @@ SELECT join_book_author(:'book_13_title', :'book_13_author_1_full_name');
 SELECT join_book_author(:'book_14_title', :'book_14_author_1_full_name');
 -- book 15 author
 SELECT join_book_author(:'book_15_title', :'book_15_author_1_full_name');
+-- book 16 author
+SELECT join_book_author(:'book_16_title', :'book_16_author_1_full_name');
 
 
 /* --------------------------------------------- UPDATE is_reading and is_finished --------------------------------------------- */
@@ -644,6 +669,7 @@ SELECT update_book_read(:'username_1', :'book_12_title', 10, 12, FALSE, TRUE);
 SELECT update_book_read(:'username_1', :'book_13_title', 4, 4, FALSE, TRUE);
 SELECT update_book_read(:'username_1', :'book_14_title', 4, 4, FALSE, TRUE);
 SELECT update_book_read(:'username_1', :'book_15_title', 6, 6, FALSE, TRUE);
+SELECT update_book_read(:'username_1', :'book_16_title', 6, 6, FALSE, TRUE);
 -- UPDATE book_read.is_reading to true
 
 
