@@ -10,21 +10,29 @@ interface CardHeaderPropsITF {
   handleShowDetails: Function;
 }
 
-const StyledLeftArrow = styled(LeftArrow)`
-    ${tw`fill-current text-sky-900 cursor-pointer`};
+const AnimatedLeftArrow = styled(LeftArrow)`
+  ${tw`fill-current text-sky-900 cursor-pointer`};
+  min-width: 20px;
+  min-height: 20px;
+  width: 20px;
+  height: 20px;
   &.arrowRotate-enter-active {
+    ${tw`text-red-500`}
     transform: rotate(-180deg);
-    transition: transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: all 800ms cubic-bezier(0.22, 1, 0.36, 1);
   };
   &.arrowRotate-enter-done {
+    ${tw`text-red-500`}
     transform: rotate(180deg);
   };
   &.arrowRotate-exit {
-    transform: rotate(180deg);
+    ${tw`text-red-500`}
+    transform: rotate(-180deg);
   }
   &.arrowRotate-exit-active {
+    ${tw`text-sky-900`}
     transform: rotate(0deg);
-    transition: transform 800ms cubic-bezier(0.5, 0, 0.75, 0);
+    transition: all 800ms cubic-bezier(0.5, 0, 0.75, 0);
   };
 `
 
@@ -34,7 +42,7 @@ const CardHeader = ({title, author, isShowingDetails, handleShowDetails}: CardHe
 
       <div className='flex items-center'>
         <CSSTransition in={isShowingDetails} timeout={800} classNames='arrowRotate'>
-          <StyledLeftArrow size={18} onClick={() => handleShowDetails()} />
+          <AnimatedLeftArrow onClick={() => handleShowDetails()} />
         </CSSTransition>
         <div className='ml-2 font-AdventPro-200 text-2xl text-trueGray-900 truncate'>{title}</div>
       </div>
