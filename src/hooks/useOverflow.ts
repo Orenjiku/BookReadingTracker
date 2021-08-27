@@ -19,7 +19,7 @@ const useOverflow = (ref: RefObject<HTMLElement>): RefYITF => {
 
       const handleScroll = (): void => {
         const offsetBottom = ref?.current?.scrollHeight! - ref?.current?.clientHeight!;
-        (ref?.current?.scrollTop! >= offsetBottom && refYScrollEnd === false) ? setRefYScrollEnd(true) : setRefYScrollEnd(false);
+        (ref?.current?.scrollTop! > offsetBottom && refYScrollEnd === false) ? setRefYScrollEnd(true) : setRefYScrollEnd(false);
         (ref?.current?.scrollTop === 0) ? setRefYScrollBegin(true) : setRefYScrollBegin(false);
       }
 
