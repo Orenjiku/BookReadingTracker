@@ -6,14 +6,13 @@ import DetailsView from './DetailsView';
 import BookReadView from './BookReadView';
 import tw, { styled } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
-// import { ArrowFromLeft } from '@styled-icons/boxicons-regular/ArrowFromLeft';
 
 const Button = tw.button`
   font-AdventPro-200 text-sm border rounded w-max h-6 px-1.5 mx-1 flex justify-center items-center
 `
 
 const BlurbContainer = styled.div<{img?: string;}>`
-  ${tw`relative col-start-1 col-end-3 row-start-4 row-end-19 flex justify-center items-center rounded-tl-2xl bg-trueGray-100 overflow-hidden`};
+  ${tw`relative col-start-1 col-end-3 row-start-4 row-end-19 flex justify-center items-center rounded-tl-2xl bg-trueGray-100 overflow-hidden z-20`};
   &::before {
     content: '';
     background: url('${({ img }) => img}');
@@ -75,13 +74,15 @@ const Card = ({ book }: { book: BookITF }) => {
         <Button className='bg-blueGray-300 text-trueGray-900' onClick={handleUpdateProgress}>Update Progress</Button>
       </div>
 
-      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center rounded-b-2xl font-Charm-400 text-2xl text-trueGray-900'>
+      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center rounded-b-2xl font-Charm-400 text-2xl text-trueGray-900 bg-blueGray-300'>
         Completed!
       </div>
 
       <CSSTransition in={isShowingDetails} timeout={800} classNames='blurbSlide' unmountOnExit>
         <BlurbContainer img={book.picture_link}>
-          <div className='bg-trueGray-50 h-4/6 w-5/6 z-10 overflow-y-scroll bg-opacity-60 p-3 whitespace-pre-wrap font-Helvetica text-xs rounded-tl-xl'>{book.blurb}</div>
+          <div className='bg-trueGray-50 h-4/6 w-5/6 z-10 overflow-y-scroll bg-opacity-60 p-3 whitespace-pre-wrap font-Helvetica text-xs rounded-tl-xl'>
+            {book.blurb}
+          </div>
         </BlurbContainer>
       </CSSTransition>
 
