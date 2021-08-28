@@ -9,7 +9,7 @@ interface BookReadViewPropsITF {
 
 const BookReadView = ({ bookReadList, isUpdating }: BookReadViewPropsITF) => {
   return (
-    <div className='row-start-10 row-end-17 col-start-2 col-end-3 font-SortsMillGoudy-400'>
+    <div className='row-start-10 row-end-19 col-start-2 col-end-3 font-SortsMillGoudy-400'>
       {bookReadList.map(bookRead => (
         <BookRead key={bookRead.br_id} bookRead={bookRead} isUpdating={isUpdating} />
       ))}
