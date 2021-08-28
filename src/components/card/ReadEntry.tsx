@@ -17,11 +17,11 @@ const Button = styled.button`
 `
 
 const ReadEntryContainer = styled.div`
-  &.entryRemoval-exit {
+  &.readEntryDelete-exit {
     opacity: 1;
     max-height: 50px;
   };
-  &.entryRemoval-exit-active {
+  &.readEntryDelete-exit-active {
     opacity: 0;
     max-height: 0;
     transition: opacity 200ms ease-out, max-height 600ms ease-out;
@@ -71,16 +71,16 @@ const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPr
 
   const handleEntrySelect = () => isUpdating && setIsEntrySelected(isEntrySelected => !isEntrySelected);
 
-  let interval: ReturnType<typeof setTimeout>;
+  let timeout: ReturnType<typeof setTimeout>;
 
   const handleMouseDown = (readEntryId: number) => {
-    interval = setTimeout(() => {
+    timeout = setTimeout(() => {
       handleDeleteReadEntry(readEntryId);
     }, 1000);
   };
 
   const handleMouseUp = () => {
-    clearTimeout(interval);
+    clearTimeout(timeout);
   }
 
   return (
@@ -88,13 +88,13 @@ const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPr
 
       <div className={`relative px-1 pb-0.5 bg-blueGray-200 ${isUpdating && 'cursor-pointer hover:bg-blueGray-300'}`} {...(isUpdating && {onClick: handleEntrySelect})}>
         <EntryBar before={entryDate} after={pagesRead}>{`${currentPercent}%`}</EntryBar>
-        <ProgressBar currentPercent={readEntry.current_percent} />
+        <ProgressBar isUpdating={isUpdating} currentPercent={readEntry.current_percent} />
       </div>
 
       <CSSTransition in={isUpdating && isEntrySelected} timeout={300} classNames='trashSlide' unmountOnExit>
         <TrashContainer>
           <Button onMouseDown={() => handleMouseDown(readEntry.re_id)} onMouseUp={() => handleMouseUp()}>
-            <p className='mr-2'>Remove</p>
+            <p className='mr-2'>Hold for 1 second</p>
             <Trash size={13} />
           </Button>
         </TrashContainer>

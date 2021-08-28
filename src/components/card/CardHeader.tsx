@@ -2,6 +2,7 @@ import React from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 import { LeftArrow } from '@styled-icons/boxicons-regular/LeftArrow';
+import { Edit } from '@styled-icons/boxicons-regular/Edit';
 
 interface CardHeaderPropsITF {
   title: string;
@@ -38,10 +39,32 @@ const AnimatedLeftArrow = styled(LeftArrow)`
   };
 `
 
-const Button = styled.button<{ isUpdating?: boolean }>`
-  ${tw`font-AdventPro-200 text-sm border rounded w-max h-6 px-1.5 mx-1 flex justify-center items-center`}
-  ${({ isUpdating }) => isUpdating && css`${tw`bg-red-200`}`}
+const StyledEdit = styled(Edit)<{ isUpdating?: boolean}>`
+  ${tw`fill-current text-sky-900`}
+  &:hover {
+    ${tw`cursor-pointer`}
+  }
+  ${({ isUpdating }) => isUpdating && css`
+    ${tw`fill-current text-red-500`}
+
+    animation: bounce 1s infinite;
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(-10%);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+      }
+      50% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      }
+    }
+  `}
 `
+
+// const Button = styled.button<{ isUpdating?: boolean }>`
+//   ${tw`font-AdventPro-200 text-sm border rounded w-max h-6 px-1.5 mx-1 flex justify-center items-center`}
+//   ${({ isUpdating }) => isUpdating && css`${tw`bg-red-200`}`}
+// `
 
 const CardHeader = ({title, author, isShowingDetails, isUpdating, handleShowDetails, handleUpdateProgress}: CardHeaderPropsITF) => {
   return (
@@ -52,7 +75,8 @@ const CardHeader = ({title, author, isShowingDetails, isUpdating, handleShowDeta
           <AnimatedLeftArrow onClick={() => handleShowDetails()} />
         </CSSTransition>
         <div className='ml-2 font-AdventPro-200 text-2xl text-trueGray-900 truncate'>{title}</div>
-        <Button isUpdating={isUpdating} className='bg-blueGray-300 text-trueGray-900' onClick={() => handleUpdateProgress()}>Update Progress</Button>
+        <StyledEdit isUpdating={isUpdating} size={20} onClick={() => handleUpdateProgress()} />
+        {/* <Button isUpdating={isUpdating} className='bg-blueGray-300 text-trueGray-900' onClick={() => handleUpdateProgress()}>Update Progress</Button> */}
       </div>
 
       <div className='absolute top-8 left-0 w-10 h-0.5 bg-sky-900'></div>
