@@ -11,6 +11,18 @@ interface ReadEntryPropsITF {
   handleDeleteReadEntry: Function;
 }
 
+const ReadEntryAnimation = styled.div`
+  &.readEntryAnimate-exit {
+    opacity: 1;
+    max-height: 50px;
+  };
+  &.readEntryAnimate-exit-active {
+    opacity: 0;
+    max-height: 0;
+    transition: opacity 200ms ease-out, max-height 600ms ease-out;
+  };
+`
+
 const Button = styled.button<{isMouseDown: boolean}>`
   ${tw`font-AdventPro-200 text-sm border rounded px-1.5 mx-1 flex justify-center items-center bg-red-300 text-trueGray-50`};
   height: 26px;
@@ -26,18 +38,6 @@ const Button = styled.button<{isMouseDown: boolean}>`
       }
     }
   `}
-`
-
-const ReadEntryContainer = styled.div`
-  &.readEntryDelete-exit {
-    opacity: 1;
-    max-height: 50px;
-  };
-  &.readEntryDelete-exit-active {
-    opacity: 0;
-    max-height: 0;
-    transition: opacity 200ms ease-out, max-height 600ms ease-out;
-  };
 `
 
 const EntryBar = styled.div<{before: string; after: number;}>`
@@ -73,7 +73,6 @@ const TrashContainer = styled.div`
 const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPropsITF) => {
   const [isEntrySelected, setIsEntrySelected] = useState<boolean>(false);
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
-  const [isMouseUp, setIsMouseUp] = useState<boolean>(false);
 
 
   const entryDate = new Date(readEntry.date_read).toLocaleDateString();
@@ -95,25 +94,22 @@ const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPr
         setIsMouseDown(false);
         clearTimeout(timeout);
       }, 1000);
-    }
-    if (isMouseUp) {
+    } else {
       clearTimeout(timeout);
     }
-  }, [isMouseDown, isMouseUp]);
+  }, [isMouseDown]);
 
   const handleMouseDown = () => {
     setIsMouseDown(true);
-    setIsMouseUp(false);
   };
 
   const handleMouseUp = () => {
     clearTimeout(timeout);
     setIsMouseDown(false);
-    setIsMouseUp(true);
   }
 
   return (
-    <ReadEntryContainer>
+    <ReadEntryAnimation>
 
       <div className={`relative px-1 pb-0.5 bg-blueGray-200 ${isUpdating && 'cursor-pointer hover:bg-blueGray-300'}`} {...(isUpdating && {onClick: handleEntrySelect})}>
         <EntryBar before={entryDate} after={pagesRead}>{`${currentPercent}%`}</EntryBar>
@@ -129,7 +125,7 @@ const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPr
         </TrashContainer>
       </CSSTransition>
 
-    </ReadEntryContainer>
+    </ReadEntryAnimation>
   )
 }
 
