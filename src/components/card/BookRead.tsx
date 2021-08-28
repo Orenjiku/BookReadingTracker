@@ -28,17 +28,15 @@ const BookRead = ({ bookRead, isUpdating } : BookReadPropsITF) => {
           <p className='text-sm'>Days Read: {bookRead.days_read}</p>
           <p className='text-sm'>Days Total: {bookRead.days_total}</p>
         </div>
-        {readEntryList === undefined || readEntryList.length === 0 ?
-          <div className='flex w-full justify-center items-center font-Charm-400'>Haven't started</div>
-          :
-          <TransitionGroup>
-            {readEntryList.map(readEntry => (
-              <CSSTransition key={`csst${readEntry.re_id}`} timeout={600} classNames='entry'>
-                <ReadEntry key={readEntry.re_id} readEntry={readEntry} isUpdating={isUpdating} handleDeleteReadEntry={handleDeleteReadEntry} />
-              </CSSTransition>
-            ))}
-          </TransitionGroup>
-        }
+
+        <TransitionGroup component={null}>
+          {readEntryList.map(readEntry => (
+            <CSSTransition key={`cssT-${readEntry.re_id}`} timeout={600} classNames='entry'>
+              <ReadEntry key={readEntry.re_id} readEntry={readEntry} isUpdating={isUpdating} handleDeleteReadEntry={handleDeleteReadEntry} />
+            </CSSTransition>
+          ))}
+        </TransitionGroup>
+
       </div>
       {!refYScrollBegin && <BsChevronUp className='absolute flex w-full top-0 justify-center' />}
       {!refYScrollEnd && refYOverflowing && <BsChevronDown className='absolute flex w-full bottom-0 justify-center' />}
