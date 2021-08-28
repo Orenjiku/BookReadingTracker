@@ -32,7 +32,7 @@ const BookRead = ({ bookRead, isUpdating } : BookReadPropsITF) => {
         <TransitionGroup component={null}>
           {readEntryList.map(readEntry => (
             <CSSTransition key={`cssT-${readEntry.re_id}`} timeout={600} classNames='readEntryDelete'>
-              <ReadEntry key={readEntry.re_id} readEntry={readEntry} isUpdating={isUpdating} handleDeleteReadEntry={handleDeleteReadEntry} />
+              <ReadEntry key={readEntry.re_id} readEntry={readEntry} isUpdating={isUpdating} handleDeleteReadEntry={() => handleDeleteReadEntry(readEntry.re_id)} />
             </CSSTransition>
           ))}
         </TransitionGroup>

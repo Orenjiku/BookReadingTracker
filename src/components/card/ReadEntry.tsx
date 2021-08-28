@@ -14,6 +14,7 @@ interface ReadEntryPropsITF {
 const Button = styled.button<{isMouseDown: boolean}>`
   ${tw`font-AdventPro-200 text-sm border rounded px-1.5 mx-1 flex justify-center items-center bg-red-300 text-trueGray-50`};
   height: 26px;
+  transition: all 1s linear;
   ${({ isMouseDown }) => isMouseDown && css`
     animation: fill 1s linear;
     @keyframes fill {
@@ -21,7 +22,7 @@ const Button = styled.button<{isMouseDown: boolean}>`
         ${tw`bg-red-300`}
       }
       100% {
-        ${tw`bg-blue-500`}
+        ${tw`bg-red-500`}
       }
     }
   `}
