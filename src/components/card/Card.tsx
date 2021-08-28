@@ -7,9 +7,10 @@ import BookReadView from './BookReadView';
 import tw, { styled } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 
-const Button = tw.button`
-  font-AdventPro-200 text-sm border rounded w-max h-6 px-1.5 mx-1 flex justify-center items-center
-`
+// const Button = styled.button<{ isUpdating?: boolean }>`
+//   ${tw`font-AdventPro-200 text-sm border rounded w-max h-6 px-1.5 mx-1 flex justify-center items-center`}
+//   ${({ isUpdating }) => isUpdating && css`${tw`bg-red-200`}`}
+// `
 
 const BlurbContainer = styled.div<{img?: string;}>`
   ${tw`relative col-start-1 col-end-3 row-start-4 row-end-19 flex justify-center items-center rounded-tl-2xl bg-trueGray-100 overflow-hidden z-20`};
@@ -65,14 +66,14 @@ const Card = ({ book }: { book: BookITF }) => {
   return (
     <div style={{minWidth: '370px', maxWidth: '370px', minHeight: '370px', maxHeight: '370px'}} className='grid grid-cols-2 grid-rows-20 rounded-2xl shadow-xl mx-5 mb-10 bg-blueGray-200 select-none overflow-hidden'>
 
-      <CardHeader title={book.title} author={book.author} isShowingDetails={isShowingDetails} handleShowDetails={handleShowDetails} />
+      <CardHeader title={book.title} author={book.author} isShowingDetails={isShowingDetails} isUpdating={isUpdating} handleShowDetails={handleShowDetails} handleUpdateProgress={handleUpdateProgress} />
       <BookImage pictureLink={book.picture_link} />
       <DetailsView readDetails={readDetails} isUpdating={isUpdating} />
       <BookReadView bookReadList={book.book_read} isUpdating={isUpdating} />
 
-      <div className='col-start-2 col-end-3 row-start-17 row-end-19 flex justify-center items-center bg-trueGray-50'>
-        <Button className='bg-blueGray-300 text-trueGray-900' onClick={handleUpdateProgress}>Update Progress</Button>
-      </div>
+      {/* <div className='col-start-2 col-end-3 row-start-17 row-end-19 flex justify-center items-center bg-trueGray-50'>
+        <Button isUpdating={isUpdating} className='bg-blueGray-300 text-trueGray-900' onClick={handleUpdateProgress}>Update Progress</Button>
+      </div> */}
 
       <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center rounded-b-2xl font-Charm-400 text-2xl text-trueGray-900 bg-blueGray-300'>
         Completed!
