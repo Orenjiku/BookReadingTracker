@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import tw, {styled, css} from 'twin.macro';
+import tw, {styled } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 import { ReadEntryITF } from '../../interfaces/interface';
 import { Trash } from '@styled-icons/bootstrap/Trash';
@@ -17,11 +17,11 @@ const Button = styled.button`
 `
 
 const ReadEntryContainer = styled.div`
-  &.entry-exit {
+  &.entryRemoval-exit {
     opacity: 1;
     max-height: 50px;
   };
-  &.entry-exit-active {
+  &.entryRemoval-exit-active {
     opacity: 0;
     max-height: 0;
     transition: opacity 200ms ease-out, max-height 600ms ease-out;
@@ -71,17 +71,29 @@ const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPr
 
   const handleEntrySelect = () => isUpdating && setIsEntrySelected(isEntrySelected => !isEntrySelected);
 
+  let interval: ReturnType<typeof setTimeout>;
+
+  const handleMouseDown = (readEntryId: number) => {
+    interval = setTimeout(() => {
+      handleDeleteReadEntry(readEntryId);
+    }, 1000);
+  };
+
+  const handleMouseUp = () => {
+    clearTimeout(interval);
+  }
+
   return (
     <ReadEntryContainer>
 
-      <div className='relative px-1 pb-0.5 bg-blueGray-200' {...(isUpdating && {onClick: handleEntrySelect, style: {cursor: 'pointer'}})}>
+      <div className={`relative px-1 pb-0.5 bg-blueGray-200 ${isUpdating && 'cursor-pointer hover:bg-blueGray-300'}`} {...(isUpdating && {onClick: handleEntrySelect})}>
         <EntryBar before={entryDate} after={pagesRead}>{`${currentPercent}%`}</EntryBar>
         <ProgressBar currentPercent={readEntry.current_percent} />
       </div>
 
       <CSSTransition in={isUpdating && isEntrySelected} timeout={300} classNames='trashSlide' unmountOnExit>
         <TrashContainer>
-          <Button onClick={() => handleDeleteReadEntry(readEntry.re_id)}>
+          <Button onMouseDown={() => handleMouseDown(readEntry.re_id)} onMouseUp={() => handleMouseUp()}>
             <p className='mr-2'>Remove</p>
             <Trash size={13} />
           </Button>
