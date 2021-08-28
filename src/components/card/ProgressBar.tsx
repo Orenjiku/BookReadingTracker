@@ -8,7 +8,7 @@ const InnerBar = styled.div<{ isUpdating: boolean, currentPercent: number }>`
   ${({ isUpdating }) => isUpdating && css`
     ${tw`bg-red-400`};
     transition: all 600ms ease-out;
-    animation: pulse 2s ease-out infinite;
+    animation: pulse 3s ease-out infinite;
     @keyframes pulse {
       0%, 100% {
         opacity: 1;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import tw, {styled } from 'twin.macro';
+import tw, {styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 import { ReadEntryITF } from '../../interfaces/interface';
 import { Trash } from '@styled-icons/bootstrap/Trash';
@@ -11,9 +11,20 @@ interface ReadEntryPropsITF {
   handleDeleteReadEntry: Function;
 }
 
-const Button = styled.button`
-  ${tw`font-AdventPro-200 text-sm border rounded px-1.5 mx-1 flex justify-center items-center bg-red-500 text-coolGray-50`};
+const Button = styled.button<{isMouseDown: boolean}>`
+  ${tw`font-AdventPro-200 text-sm border rounded px-1.5 mx-1 flex justify-center items-center bg-red-300 text-trueGray-50`};
   height: 26px;
+  ${({ isMouseDown }) => isMouseDown && css`
+    animation: fill 1s linear;
+    @keyframes fill {
+      0% {
+        ${tw`bg-red-300`}
+      }
+      100% {
+        ${tw`bg-blue-500`}
+      }
+    }
+  `}
 `
 
 const ReadEntryContainer = styled.div`
@@ -60,6 +71,9 @@ const TrashContainer = styled.div`
 
 const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPropsITF) => {
   const [isEntrySelected, setIsEntrySelected] = useState<boolean>(false);
+  const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
+  const [isMouseUp, setIsMouseUp] = useState<boolean>(false);
+
 
   const entryDate = new Date(readEntry.date_read).toLocaleDateString();
   const pagesRead = readEntry.pages_read;
@@ -73,14 +87,28 @@ const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPr
 
   let timeout: ReturnType<typeof setTimeout>;
 
-  const handleMouseDown = (readEntryId: number) => {
-    timeout = setTimeout(() => {
-      handleDeleteReadEntry(readEntryId);
-    }, 1000);
+  useEffect(() => {
+    if (isMouseDown) {
+      timeout = setTimeout(() => {
+        handleDeleteReadEntry(readEntry.re_id);
+        setIsMouseDown(false);
+        clearTimeout(timeout);
+      }, 1000);
+    }
+    if (isMouseUp) {
+      clearTimeout(timeout);
+    }
+  }, [isMouseDown, isMouseUp]);
+
+  const handleMouseDown = () => {
+    setIsMouseDown(true);
+    setIsMouseUp(false);
   };
 
   const handleMouseUp = () => {
     clearTimeout(timeout);
+    setIsMouseDown(false);
+    setIsMouseUp(true);
   }
 
   return (
@@ -93,7 +121,7 @@ const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPr
 
       <CSSTransition in={isUpdating && isEntrySelected} timeout={300} classNames='trashSlide' unmountOnExit>
         <TrashContainer>
-          <Button onMouseDown={() => handleMouseDown(readEntry.re_id)} onMouseUp={() => handleMouseUp()}>
+          <Button isMouseDown={isMouseDown} onMouseDown={() => handleMouseDown()} onMouseUp={() => handleMouseUp()}>
             <p className='mr-2'>Hold for 1 second</p>
             <Trash size={13} />
           </Button>
