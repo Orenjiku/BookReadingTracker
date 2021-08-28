@@ -1,5 +1,5 @@
-import React from 'react';
-import tw, {styled} from 'twin.macro';
+import React, { useState, useEffect } from 'react';
+import tw, {styled, css} from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 import { ReadEntryITF } from '../../interfaces/interface';
 import { Trash } from '@styled-icons/bootstrap/Trash';
@@ -11,16 +11,25 @@ interface ReadEntryPropsITF {
   handleDeleteReadEntry: Function;
 }
 
+const Button = styled.button`
+  ${tw`font-AdventPro-200 text-sm border rounded px-1.5 mx-1 flex justify-center items-center bg-red-500 text-coolGray-50`};
+  height: 26px;
+`
+
 const ReadEntryContainer = styled.div`
-  ${tw`flex items-center`};
+  &.entry-exit {
+    opacity: 1;
+    max-height: 50px;
+  };
   &.entry-exit-active {
     opacity: 0;
-    transition: opacity 600ms ease-out;
-  }
+    max-height: 0;
+    transition: opacity 200ms ease-out, max-height 600ms ease-out;
+  };
 `
 
 const EntryBar = styled.div<{before: string; after: number;}>`
-  ${tw`relative flex justify-center w-full px-0.5 text-xs text-trueGray-900 font-SortsMillGoudy-400`};
+  ${tw`relative flex justify-center px-0.5 text-xs text-trueGray-900 font-SortsMillGoudy-400`};
   &::before {
     ${tw`absolute left-0`};
     content: '${({ before }) => before}';
@@ -31,35 +40,54 @@ const EntryBar = styled.div<{before: string; after: number;}>`
   };
 `
 
-const slideDuration = 600;
-const StyledTrash = styled(Trash)`
-  ${tw`fill-current text-red-600 mr-0.5 cursor-pointer`};
+const TrashContainer = styled.div`
+  ${tw`flex justify-center items-end p-0 m-0`};
   &.trashSlide-enter {
-    transform: translateX(105%);
+    max-height: 0;
   };
   &.trashSlide-enter-active {
-    transform: translateX(0%);
-    transition: transform ${slideDuration}ms cubic-bezier(0.22, 1, 0.36, 1);
+    max-height: 26px;
+    transition: max-height 300ms ease-out;
   };
+  &.trashSlide-exit {
+    max-height: 26px;
+  }
   &.trashSlide-exit-active {
-    transform: translateX(105%);
-    transition: transform ${slideDuration}ms cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    max-height: 0;
+    transition: max-height 300ms ease-out;
   };
 `
 
 const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPropsITF) => {
+  const [isEntrySelected, setIsEntrySelected] = useState<boolean>(false);
+
   const entryDate = new Date(readEntry.date_read).toLocaleDateString();
   const pagesRead = readEntry.pages_read;
   const currentPercent = readEntry.current_percent.toFixed(0);
+
+  useEffect(() => {
+    !isUpdating && setIsEntrySelected(false);
+  }, [isUpdating])
+
+  const handleEntrySelect = () => isUpdating && setIsEntrySelected(isEntrySelected => !isEntrySelected);
+
   return (
     <ReadEntryContainer>
-      <div className='px-1 mb-0.5 w-full'>
+
+      <div className='relative px-1 pb-0.5 bg-blueGray-200' {...(isUpdating && {onClick: handleEntrySelect, style: {cursor: 'pointer'}})}>
         <EntryBar before={entryDate} after={pagesRead}>{`${currentPercent}%`}</EntryBar>
         <ProgressBar currentPercent={readEntry.current_percent} />
       </div>
-      <CSSTransition in={isUpdating} timeout={slideDuration} classNames='trashSlide' unmountOnExit>
-        <StyledTrash size={13} onClick={() => handleDeleteReadEntry(readEntry.re_id)} />
+
+      <CSSTransition in={isUpdating && isEntrySelected} timeout={300} classNames='trashSlide' unmountOnExit>
+        <TrashContainer>
+          <Button onClick={() => handleDeleteReadEntry(readEntry.re_id)}>
+            <p className='mr-2'>Remove</p>
+            <Trash size={13} />
+          </Button>
+        </TrashContainer>
       </CSSTransition>
+
     </ReadEntryContainer>
   )
 }
