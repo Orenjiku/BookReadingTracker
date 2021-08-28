@@ -1,5 +1,5 @@
 import React from 'react';
-import tw, { styled } from 'twin.macro';
+import tw, { styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 import { LeftArrow } from '@styled-icons/boxicons-regular/LeftArrow';
 
@@ -7,7 +7,9 @@ interface CardHeaderPropsITF {
   title: string;
   author: string[];
   isShowingDetails: boolean;
+  isUpdating: boolean;
   handleShowDetails: Function;
+  handleUpdateProgress: Function;
 }
 
 const AnimatedLeftArrow = styled(LeftArrow)`
@@ -36,7 +38,12 @@ const AnimatedLeftArrow = styled(LeftArrow)`
   };
 `
 
-const CardHeader = ({title, author, isShowingDetails, handleShowDetails}: CardHeaderPropsITF) => {
+const Button = styled.button<{ isUpdating?: boolean }>`
+  ${tw`font-AdventPro-200 text-sm border rounded w-max h-6 px-1.5 mx-1 flex justify-center items-center`}
+  ${({ isUpdating }) => isUpdating && css`${tw`bg-red-200`}`}
+`
+
+const CardHeader = ({title, author, isShowingDetails, isUpdating, handleShowDetails, handleUpdateProgress}: CardHeaderPropsITF) => {
   return (
     <div className='relative col-start-1 col-end-3 row-start-1 row-end-4 pl-6 pr-1 rounded-t-2xl'>
 
@@ -45,6 +52,7 @@ const CardHeader = ({title, author, isShowingDetails, handleShowDetails}: CardHe
           <AnimatedLeftArrow onClick={() => handleShowDetails()} />
         </CSSTransition>
         <div className='ml-2 font-AdventPro-200 text-2xl text-trueGray-900 truncate'>{title}</div>
+        <Button isUpdating={isUpdating} className='bg-blueGray-300 text-trueGray-900' onClick={() => handleUpdateProgress()}>Update Progress</Button>
       </div>
 
       <div className='absolute top-8 left-0 w-10 h-0.5 bg-sky-900'></div>
