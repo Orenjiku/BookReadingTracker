@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import tw, {styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 import { ReadEntryITF } from '../../interfaces/interface';
@@ -10,18 +10,6 @@ interface ReadEntryPropsITF {
   isUpdating: boolean;
   handleDeleteReadEntry: Function;
 }
-
-const ReadEntryAnimation = styled.div`
-  &.readEntryAnimate-exit {
-    opacity: 1;
-    max-height: 50px;
-  };
-  &.readEntryAnimate-exit-active {
-    opacity: 0;
-    max-height: 0;
-    transition: opacity 200ms ease-out, max-height 600ms ease-out;
-  };
-`
 
 const Button = styled.button<{isMouseDown: boolean}>`
   ${tw`font-AdventPro-200 text-sm border rounded px-1.5 mx-1 flex justify-center items-center bg-red-300 text-trueGray-50`};
@@ -73,7 +61,7 @@ const TrashContainer = styled.div`
 const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPropsITF) => {
   const [isEntrySelected, setIsEntrySelected] = useState<boolean>(false);
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
-
+  const readEntryRef = useRef(null);
 
   const entryDate = new Date(readEntry.date_read).toLocaleDateString();
   const pagesRead = readEntry.pages_read;
@@ -109,15 +97,15 @@ const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPr
   }
 
   return (
-    <ReadEntryAnimation>
+    <div>
 
       <div className={`relative px-1 pb-0.5 bg-blueGray-200 ${isUpdating && 'cursor-pointer hover:bg-blueGray-300'}`} {...(isUpdating && {onClick: handleEntrySelect})}>
         <EntryBar before={entryDate} after={pagesRead}>{`${currentPercent}%`}</EntryBar>
         <ProgressBar isUpdating={isUpdating} currentPercent={readEntry.current_percent} />
       </div>
 
-      <CSSTransition in={isUpdating && isEntrySelected} timeout={300} classNames='trashSlide' unmountOnExit>
-        <TrashContainer>
+      <CSSTransition in={isUpdating && isEntrySelected} timeout={300} classNames='trashSlide' nodeRef={readEntryRef} unmountOnExit>
+        <TrashContainer ref={readEntryRef}>
           <Button isMouseDown={isMouseDown} onMouseDown={() => handleMouseDown()} onMouseUp={() => handleMouseUp()}>
             <p className='mr-2'>Hold for 1 second</p>
             <Trash size={13} />
@@ -125,7 +113,7 @@ const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPr
         </TrashContainer>
       </CSSTransition>
 
-    </ReadEntryAnimation>
+    </div>
   )
 }
 

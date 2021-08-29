@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 import { BsCircleFill } from 'react-icons/bs';
 import tw, { styled, css } from 'twin.macro';
-// import { CSSTransition } from 'react-transition-group';
 
 interface DetailsViewITF {
   readDetails: {
@@ -11,7 +10,7 @@ interface DetailsViewITF {
   }[];
 }
 
-const ChevronContainer = styled.div<{left?: boolean; right?: boolean;}>`
+const AnimatedChevronContainer = styled.div<{left?: boolean; right?: boolean;}>`
   ${tw`absolute h-full w-1/6 cursor-pointer transition duration-300 ease-in`};
   &:hover {
     ${tw`bg-trueGray-50 bg-opacity-40 transition duration-500 ease-in-out`};
@@ -20,7 +19,7 @@ const ChevronContainer = styled.div<{left?: boolean; right?: boolean;}>`
   ${({ right }) => right && css`right: 0;`};
 `
 
-const StyledBsCircleFill = styled(BsCircleFill)<{selected?: boolean}>`
+const AnimatedBsCircleFill = styled(BsCircleFill)<{selected?: boolean}>`
   ${tw`mx-0.5 fill-current text-coolGray-50 cursor-pointer`};
   ${({ selected }) => selected && css`${tw`fill-current text-teal-600`}`};
   ${({ selected }) => !selected && css`
@@ -43,18 +42,18 @@ const DetailsView = ({ readDetails }: DetailsViewITF) => {
       <div className='absolute text-7.5xl text-coolGray-50'>{readDetails[current].value}</div>
       <div className='absolute font-AdventPro-400 text-2xl text-trueGray-900'>{readDetails[current].key}</div>
 
-      <ChevronContainer left onClick={prevSlide}>
+      <AnimatedChevronContainer left onClick={prevSlide}>
         <BsChevronLeft className='absolute h-full left-0' />
-      </ChevronContainer>
-      <ChevronContainer right onClick={nextSlide}>
+      </AnimatedChevronContainer>
+      <AnimatedChevronContainer right onClick={nextSlide}>
         <BsChevronRight className='absolute h-full right-0' />
-      </ChevronContainer>
+      </AnimatedChevronContainer>
 
       <div className='absolute flex bottom-0 w-full justify-center mb-1.5'>
         {readDetails.map((_, i) => (
           (i === current)
-          ? <StyledBsCircleFill selected key={`BsCircleFill-${i}`} size={7} />
-          : <StyledBsCircleFill key={`BsCircleFill-${i}`} size={7} onClick={() => setCurrent(i)} />
+          ? <AnimatedBsCircleFill selected key={`BsCircleFill-${i}`} size={7} />
+          : <AnimatedBsCircleFill key={`BsCircleFill-${i}`} size={7} onClick={() => setCurrent(i)} />
         ))}
       </div>
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { BookITF } from '../../interfaces/interface';
 import CardHeader from './CardHeader';
 import BookImage from './BookImage';
@@ -31,6 +31,8 @@ const Card = ({ book }: { book: BookITF }) => {
 
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isShowingDetails, setIsShowingDetails] = useState<boolean>(false);
+
+  const cardRef = useRef(null);
 
   const handleUpdateProgress = () => {
     setIsUpdating(isUpdating => !isUpdating);
@@ -70,8 +72,8 @@ const Card = ({ book }: { book: BookITF }) => {
         Completed!
       </div>
 
-      <CSSTransition in={isShowingDetails} timeout={800} classNames='blurbSlide' unmountOnExit>
-        <BlurbContainer img={book.picture_link}>
+      <CSSTransition in={isShowingDetails} timeout={800} classNames='blurbSlide' nodeRef={cardRef} unmountOnExit>
+        <BlurbContainer ref={cardRef} img={book.picture_link}>
           <div className='bg-trueGray-50 h-4/6 w-5/6 z-10 overflow-y-scroll bg-opacity-60 p-3 whitespace-pre-wrap font-Helvetica text-xs rounded-tl-xl'>
             {book.blurb}
           </div>
