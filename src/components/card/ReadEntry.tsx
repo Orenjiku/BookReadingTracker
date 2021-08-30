@@ -11,13 +11,13 @@ interface ReadEntryPropsITF {
   handleDeleteReadEntry: Function;
 }
 
-const Button = styled.button<{isMouseDown: boolean}>`
-  ${tw`font-AdventPro-200 text-sm border rounded px-1.5 mx-1 flex justify-center items-center bg-red-300 text-trueGray-50`};
+const StyledAnimatedButton = styled.button<{isMouseDown: boolean}>`
+  ${tw`flex justify-center items-center px-1.5 mx-1 rounded bg-red-300 text-trueGray-50 text-sm font-AdventPro-200 `};
   height: 26px;
   transition: all 1s linear;
   ${({ isMouseDown }) => isMouseDown && css`
-    animation: fill 1s linear;
-    @keyframes fill {
+    animation: color 1s linear;
+    @keyframes color {
       0% {
         ${tw`bg-red-300`}
       }
@@ -29,7 +29,7 @@ const Button = styled.button<{isMouseDown: boolean}>`
 `
 
 const EntryBar = styled.div<{before: string; after: number;}>`
-  ${tw`relative flex justify-center px-0.5 text-xs text-trueGray-900 font-SortsMillGoudy-400`};
+  ${tw`relative flex justify-center px-0.5 text-trueGray-900 text-xs  font-SortsMillGoudy-400`};
   &::before {
     ${tw`absolute left-0`};
     content: '${({ before }) => before}';
@@ -106,10 +106,10 @@ const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPr
 
       <CSSTransition in={isUpdating && isEntrySelected} timeout={300} classNames='trashSlide' nodeRef={readEntryRef} unmountOnExit>
         <TrashContainer ref={readEntryRef}>
-          <Button isMouseDown={isMouseDown} onMouseDown={() => handleMouseDown()} onMouseUp={() => handleMouseUp()}>
+          <StyledAnimatedButton isMouseDown={isMouseDown} onMouseDown={() => handleMouseDown()} onMouseUp={() => handleMouseUp()}>
             <p className='mr-2'>Hold for 1 second</p>
             <Trash size={13} />
-          </Button>
+          </StyledAnimatedButton>
         </TrashContainer>
       </CSSTransition>
 
