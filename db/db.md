@@ -2,7 +2,7 @@
 
 ## Table of Contents
 1. [PostgreSQL DB Table Constraints Naming Convention](#postgresql-db-table-constraints-naming-convention)
-2. [PostgreSQL Database Dump Guide](#postgresql-database-dump-guide)
+2. [PostgreSQL Database Seed Guide](#postgresql-database-seed-guide)
 3. [Database API Request & Response](#database-api-request-&-response)
 ---
 
@@ -16,10 +16,10 @@
 | 5 | index | ix_{table_name}_{col_name} | ix_reader_username |
 ---
 
-## **PostgreSQL Database Dump Guide**
+## **PostgreSQL Database Seed Guide**
 #### **_Note:_** Replace { type } with specified values.
 
-### Go to dump.sql file:
+### Go to seed.sql file:
 1. Enter name for database.
     ~~~~sql
     \set my_db {string}
