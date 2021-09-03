@@ -16,11 +16,13 @@ const getBooks = (reader_id: string, is_reading: boolean, is_finished: boolean) 
                                  b.blurb,
                                  b.picture_link,
                                  (
-                                        SELECT json_agg(row_to_json(book_read_agg)) AS book_read
+                                        SELECT json_agg(row_to_json(reader_book_agg)) AS reader_book
                                         FROM   (
-                                                        SELECT   br.id AS br_id,
-                                                                 br.days_read,
-                                                                 br.days_total,
+                                                        SELECT   rb.id AS rb_id,
+                                                                 rb.days_read,
+                                                                 rb.days_total,
+                                                                 rb.is_reading,
+                                                                 rb.is_finished,
                                                                  (
                                                                         SELECT json_agg(row_to_json(read_entry_agg)) AS read_entry
                                                                         FROM   (
@@ -30,18 +32,18 @@ const getBooks = (reader_id: string, is_reading: boolean, is_finished: boolean) 
                                                                                                  re.current_page,
                                                                                                  re.current_percent
                                                                                         FROM     read_entry AS re
-                                                                                        WHERE    re.book_read_id = br.id
-                                                                                        ORDER BY re.date_read DESC, re. current_page DESC) AS read_entry_agg)
+                                                                                        WHERE    re.reader_book_id = rb.id
+                                                                                        ORDER BY re.date_read DESC, re.current_page DESC) AS read_entry_agg)
                                                         WHERE    rb.book_id = b.id
-                                                        ORDER BY br.id DESC ) AS book_read_agg)
-                      FROM       book_read   AS br
+                                                        ORDER BY rb.id DESC ) AS reader_book_agg)
+                      FROM       reader AS r
                       INNER JOIN reader_book AS rb
-                      ON         br.reader_book_id = rb.id
+                      ON         r.id = rb.reader_id
                       INNER JOIN book AS b
                       ON         rb.book_id = b.id
-                      WHERE      br.is_reading IS ${is_reading.toString()}
-                      AND        br.is_finished IS ${is_finished.toString()}
-                      AND        rb.reader_id = ${reader_id}
+                      WHERE      r.id = ${reader_id}
+                      AND        rb.is_reading IS ${is_reading.toString()}
+                      AND        rb.is_finished IS ${is_finished.toString()}
                       ORDER BY   b.title_sort) AS books_agg;
     `
     )

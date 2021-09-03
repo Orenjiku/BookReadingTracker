@@ -1,13 +1,13 @@
 import React, { useState, useRef } from 'react';
-import { BookReadITF, ReadEntryITF } from '../../interfaces/interface';
+import { ReaderBookITF, ReadEntryITF } from '../../interfaces/interface';
 import useOverflow from '../../hooks/useOverflow';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import ReadEntry from './ReadEntry';
 import {TransitionGroup, CSSTransition} from 'react-transition-group';
 import tw, { styled } from 'twin.macro';
 
-interface BookReadPropsITF {
-  bookRead: BookReadITF;
+interface ReaderBookPropsITF {
+  readerBook: ReaderBookITF;
   isUpdating: boolean;
 }
 
@@ -26,8 +26,8 @@ const StyledAnimatedReadEntryContainer = styled.div`
   };
 `
 
-const BookRead = ({ bookRead, isUpdating } : BookReadPropsITF) => {
-  const [readEntryList, setReadEntryList] = useState<ReadEntryITF[]>(bookRead.read_entry!)
+const ReaderBook = ({ readerBook, isUpdating } : ReaderBookPropsITF) => {
+  const [readEntryList, setReadEntryList] = useState<ReadEntryITF[]>(readerBook.read_entry!)
 
   const verticalScrollRef = useRef(null);
   const {refYOverflowing, refYScrollBegin, refYScrollEnd} = useOverflow(verticalScrollRef);
@@ -43,8 +43,8 @@ const BookRead = ({ bookRead, isUpdating } : BookReadPropsITF) => {
     <div className='relative h-full overflow-y-hidden'>
       <div ref={verticalScrollRef} className='h-full overflow-y-scroll border scrollbar-hide'>
         <div className='flex justify-around font-Charm-400'>
-          <p className='text-sm'>Days Read: {bookRead.days_read}</p>
-          <p className='text-sm'>Days Total: {bookRead.days_total}</p>
+          <p className='text-sm'>Days Read: {readerBook.days_read}</p>
+          <p className='text-sm'>Days Total: {readerBook.days_total}</p>
         </div>
 
         <TransitionGroup component={null}>
@@ -64,4 +64,4 @@ const BookRead = ({ bookRead, isUpdating } : BookReadPropsITF) => {
   )
 }
 
-export default BookRead;
+export default ReaderBook;

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Input from './Input';
-import Button from './Button';
+// import Button from './Button';
 
 const Form = () => {
   const [nameInput, setNameInput] = useState('');
@@ -16,8 +16,8 @@ const Form = () => {
         placeholder='Enter you name'
         value={nameInput}
       />
-    <Button value='Submit' processing={false} />
-    <Button value='Submit' processing={true} />
+    {/* <Button value='Submit' processing={false} />
+    <Button value='Submit' processing={true} /> */}
     </form>
   )
 }

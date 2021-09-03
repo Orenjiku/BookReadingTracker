@@ -6,10 +6,12 @@ export interface ReadEntryITF {
   current_percent: number;
 }
 
-export interface BookReadITF {
-  br_id: number;
+export interface ReaderBookITF {
+  rb_id: number;
   days_read: number;
   days_total: number;
+  is_reading: boolean;
+  is_finished: boolean;
   read_entry?: ReadEntryITF[];
 }
 
@@ -20,5 +22,5 @@ export interface BookITF {
   total_pages: number;
   blurb: string;
   picture_link: string;
-  book_read: BookReadITF[];
+  reader_book: ReaderBookITF[];
 }

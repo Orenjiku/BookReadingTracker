@@ -3,7 +3,7 @@ import { BookITF } from '../../interfaces/interface';
 import CardHeader from './CardHeader';
 import BookImage from './BookImage';
 import DetailsView from './DetailsView';
-import BookReadView from './BookReadView';
+import ReaderBookView from './ReaderBookView';
 import tw, { styled } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 
@@ -42,10 +42,10 @@ const Card = ({ book }: { book: BookITF }) => {
     setIsShowingDetails(isShowingDetails => !isShowingDetails);
   }
 
-  const totalDays = book.book_read.reduce((acc, cur) => acc + cur.days_total, 0);
-  const totalDaysRead = book.book_read.reduce((acc, cur) => acc + cur.days_read, 0);
+  const totalDays = book.reader_book.reduce((acc, cur) => acc + cur.days_total, 0);
+  const totalDaysRead = book.reader_book.reduce((acc, cur) => acc + cur.days_read, 0);
 
-  const dailyPagesRead = book.book_read.reduce((acc: number[], cur): number[] => {
+  const dailyPagesRead = book.reader_book.reduce((acc: number[], cur): number[] => {
     const pagesRead = cur.read_entry ? cur.read_entry.map(readEntry => readEntry.pages_read): [];
     return [...acc, ...pagesRead];
   }, []);
@@ -57,7 +57,7 @@ const Card = ({ book }: { book: BookITF }) => {
     {key: 'Max Daily Read', value: maxDailyRead},
     {key: 'Total Days', value: totalDays},
     {key: 'Total Days Read', value: totalDaysRead},
-    {key: 'Times Read', value: book.book_read.length},
+    {key: 'Times Read', value: book.reader_book.length},
   ];
 
   return (
@@ -66,7 +66,7 @@ const Card = ({ book }: { book: BookITF }) => {
       <CardHeader title={book.title} author={book.author} isShowingDetails={isShowingDetails} isUpdating={isUpdating} handleShowDetails={handleShowDetails} handleUpdateProgress={handleUpdateProgress} />
       <BookImage pictureLink={book.picture_link} />
       <DetailsView readDetails={readDetails} />
-      <BookReadView bookReadList={book.book_read} isUpdating={isUpdating} />
+      <ReaderBookView readerBookList={book.reader_book} isUpdating={isUpdating} />
 
       <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center rounded-b-2xl font-Charm-400 text-2xl text-trueGray-900 bg-blueGray-300'>
         Completed!

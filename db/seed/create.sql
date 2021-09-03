@@ -23,6 +23,10 @@ CREATE INDEX ix_book_title ON book (title);
 
 CREATE TABLE reader_book (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_reader_book PRIMARY KEY,
+  days_read INT DEFAULT 0,
+  days_total INT DEFAULT 0,
+  is_reading BOOLEAN DEFAULT FALSE,
+  is_finished BOOLEAN DEFAULT FALSE,
   reader_id INT,
   book_id INT,
   CONSTRAINT fk_reader_reader_book
@@ -34,32 +38,19 @@ CREATE TABLE reader_book (
 CREATE INDEX ix_reader_book_reader_id ON reader_book (reader_id);
 CREATE INDEX ix_reader_book_book_id ON reader_book (book_id);
 
-CREATE TABLE book_read (
-  id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_book_read PRIMARY KEY,
-  days_read INT DEFAULT 0,
-  days_total INT DEFAULT 0,
-  is_finished BOOLEAN DEFAULT FALSE,
-  is_reading BOOLEAN DEFAULT FALSE,
-  reader_book_id INT,
-  CONSTRAINT fk_reader_book_book_read
-    FOREIGN KEY (reader_book_id) REFERENCES reader_book (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE INDEX ix_book_read_reader_book_id ON book_read (reader_book_id);
-
 CREATE TABLE read_entry (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_read_entry PRIMARY KEY,
   date_read TIMESTAMP (0) WITH TIME ZONE NOT NULL,
   pages_read INT NOT NULL,
   current_page INT NOT NULL,
   current_percent DECIMAL NOT NULL,
-  book_read_id INT,
-  CONSTRAINT fk_book_read_read_entry
-    FOREIGN KEY (book_read_id) REFERENCES book_read (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  reader_book_id INT,
+  CONSTRAINT fk_reader_book_read_entry
+    FOREIGN KEY (reader_book_id) REFERENCES reader_book (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT ck_current_percent CHECK (current_percent >= 0.00 AND current_percent <= 100.00)
 );
 
-CREATE INDEX ix_read_entry_book_read_id ON read_entry (book_read_id);
+CREATE INDEX ix_read_entry_reader_book_id ON read_entry (reader_book_id);
 
 CREATE TABLE author (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_author PRIMARY KEY,
