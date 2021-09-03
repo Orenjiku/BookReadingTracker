@@ -3,47 +3,49 @@
 /* -------------------------------------------------- getBooks -------------------------------------------------- */
 -- Variables: br.is_reading IS TRUE, br.is_finished IS FALSE, rb.reader_id = 1
 SELECT json_agg(row_to_json(books_agg)) AS books
-FROM   (
-                  SELECT     b.id AS b_id,
-                             b.title,
-                             (
-                                        SELECT     array_agg(full_name) AS author
-                                        FROM       author               AS a
-                                        INNER JOIN book_author          AS ba
-                                        ON         a.id = ba.author_id
-                                        WHERE      ba.book_id = b.id
-                                        GROUP BY   b.id ),
-                             b.total_pages,
-                             b.blurb,
-                             b.picture_link,
-                             (
-                                    SELECT json_agg(row_to_json(book_read_agg)) AS book_read
-                                    FROM   (
-                                                    SELECT   br.id AS br_id,
-                                                             br.days_read,
-                                                             br.days_total,
-                                                             (
-                                                                    SELECT json_agg(row_to_json(read_entry_agg)) AS read_entry
-                                                                    FROM   (
-                                                                                    SELECT   re.id AS re_id,
-                                                                                             re.date_read,
-                                                                                             re.pages_read,
-                                                                                             re.current_page,
-                                                                                             re.current_percent
-                                                                                    FROM     read_entry AS re
-                                                                                    WHERE    re.book_read_id = br.id
-                                                                                    ORDER BY re.date_read DESC, re. current_page DESC ) AS read_entry_agg)
-                                                    WHERE    rb.book_id = b.id
-                                                    ORDER BY br.id DESC ) AS book_read_agg)
-                  FROM       book_read   AS br
-                  INNER JOIN reader_book AS rb
-                  ON         br.reader_book_id = rb.id
-                  INNER JOIN book AS b
-                  ON         rb.book_id = b.id
-                  WHERE      br.is_reading IS TRUE
-                  AND        br.is_finished IS FALSE
-                  AND        rb.reader_id = 1
-                  ORDER BY   b.title_sort) AS books_agg;
+    FROM   (
+                      SELECT     b.id AS b_id,
+                                 b.title,
+                                 (
+                                            SELECT     array_agg(full_name) AS author
+                                            FROM       author               AS a
+                                            INNER JOIN book_author          AS ba
+                                            ON         a.id = ba.author_id
+                                            WHERE      ba.book_id = b.id
+                                            GROUP BY   b.id ),
+                                 b.total_pages,
+                                 b.blurb,
+                                 b.picture_link,
+                                 (
+                                        SELECT json_agg(row_to_json(reader_book_agg)) AS reader_book
+                                        FROM   (
+                                                        SELECT   rb.id AS rb_id,
+                                                                 rb.days_read,
+                                                                 rb.days_total,
+                                                                 rb.is_reading,
+                                                                 rb.is_finished,
+                                                                 (
+                                                                        SELECT json_agg(row_to_json(read_entry_agg)) AS read_entry
+                                                                        FROM   (
+                                                                                        SELECT   re.id AS re_id,
+                                                                                                 re.date_read,
+                                                                                                 re.pages_read,
+                                                                                                 re.current_page,
+                                                                                                 re.current_percent
+                                                                                        FROM     read_entry AS re
+                                                                                        WHERE    re.reader_book_id = rb.id
+                                                                                        ORDER BY re.date_read DESC, re.current_page DESC) AS read_entry_agg)
+                                                        WHERE    rb.book_id = b.id
+                                                        ORDER BY rb.id DESC ) AS reader_book_agg)
+                      FROM       reader AS r
+                      INNER JOIN reader_book AS rb
+                      ON         r.id = rb.reader_id
+                      INNER JOIN book AS b
+                      ON         rb.book_id = b.id
+                      WHERE      r.id = 1
+                      AND        rb.is_reading IS FALSE
+                      AND        rb.is_finished IS TRUE
+                      ORDER BY   b.title_sort) AS books_agg;
 
 
 /* -------------------------------------------------- getDailyReadsBooks -------------------------------------------------- */
@@ -120,47 +122,3 @@ WHERE t.date_read > (
 );
 
 
-SELECT json_agg(row_to_json(books_agg)) AS books
-    FROM   (
-                      SELECT     b.id AS b_id,
-                                 b.title,
-                                 (
-                                            SELECT     array_agg(full_name) AS author
-                                            FROM       author               AS a
-                                            INNER JOIN book_author          AS ba
-                                            ON         a.id = ba.author_id
-                                            WHERE      ba.book_id = b.id
-                                            GROUP BY   b.id ),
-                                 b.total_pages,
-                                 b.blurb,
-                                 b.picture_link,
-                                 (
-                                        SELECT json_agg(row_to_json(reader_book_agg)) AS reader_book
-                                        FROM   (
-                                                        SELECT   rb.id AS rb_id,
-                                                                 rb.days_read,
-                                                                 rb.days_total,
-                                                                 rb.is_reading,
-                                                                 rb.is_finished,
-                                                                 (
-                                                                        SELECT json_agg(row_to_json(read_entry_agg)) AS read_entry
-                                                                        FROM   (
-                                                                                        SELECT   re.id AS re_id,
-                                                                                                 re.date_read,
-                                                                                                 re.pages_read,
-                                                                                                 re.current_page,
-                                                                                                 re.current_percent
-                                                                                        FROM     read_entry AS re
-                                                                                        WHERE    re.reader_book_id = rb.id
-                                                                                        ORDER BY re.date_read DESC, re.current_page DESC) AS read_entry_agg)
-                                                        WHERE    rb.book_id = b.id
-                                                        ORDER BY rb.id DESC ) AS reader_book_agg)
-                      FROM       reader AS r
-                      INNER JOIN reader_book AS rb
-                      ON         r.id = rb.reader_id
-                      INNER JOIN book AS b
-                      ON         rb.book_id = b.id
-                      WHERE      r.id = 1
-                      AND        rb.is_reading IS FALSE
-                      AND        rb.is_finished IS TRUE
-                      ORDER BY   b.title_sort) AS books_agg;
