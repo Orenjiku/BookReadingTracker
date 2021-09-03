@@ -64,7 +64,7 @@ const Card = ({ book }: { book: BookITF }) => {
     <div style={{minWidth: '370px', maxWidth: '370px', minHeight: '370px', maxHeight: '370px'}} className='grid grid-cols-2 grid-rows-20 rounded-2xl shadow-xl mx-5 mb-10 bg-blueGray-200 select-none overflow-hidden'>
 
       <CardHeader title={book.title} author={book.author} isShowingDetails={isShowingDetails} isUpdating={isUpdating} handleShowDetails={handleShowDetails} handleUpdateProgress={handleUpdateProgress} />
-      <BookImage pictureLink={book.picture_link} />
+      <BookImage pictureLink={book.picture_link} isUpdating={isUpdating}/>
       <DetailsView readDetails={readDetails} />
       <ReaderBookView readerBookList={book.reader_book} isUpdating={isUpdating} />
 
