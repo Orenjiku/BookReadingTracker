@@ -29,7 +29,7 @@ const StyledAnimatedButton = styled.button<{isMouseDown: boolean}>`
 `
 
 const EntryBar = styled.div<{before: string; after: number;}>`
-  ${tw`relative flex justify-center px-0.5 text-trueGray-900 text-xs  font-SortsMillGoudy-400`};
+  ${tw`relative flex justify-center px-0.5 text-trueGray-900 text-xs font-SortsMillGoudy-400`};
   &::before {
     ${tw`absolute left-0`};
     content: '${({ before }) => before}';

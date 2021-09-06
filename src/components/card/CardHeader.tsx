@@ -69,11 +69,11 @@ const StyledEdit = styled(Edit)<{ isUpdating?: boolean}>`
 const CardHeader = ({title, author, isShowingDetails, isUpdating, handleShowDetails, handleUpdateProgress}: CardHeaderPropsITF) => {
   const cardHeaderRef = useRef(null);
   return (
-    <div className='relative col-start-1 col-end-3 row-start-1 row-end-4 pl-6 pr-1 rounded-t-2xl'>
+    <div className='relative col-start-1 col-end-3 row-start-1 row-end-4 pl-6 pr-1'>
 
       <div className='flex items-center'>
         <CSSTransition in={isShowingDetails} timeout={800} classNames='arrowRotate' nodeRef={cardHeaderRef}>
-          <AnimatedLeftArrow ref={cardHeaderRef} onClick={() => handleShowDetails()} />
+          <AnimatedLeftArrow ref={cardHeaderRef} onClick={() => {!isUpdating && handleShowDetails()}} />
         </CSSTransition>
         <div className='ml-2 font-AdventPro-200 text-2xl text-trueGray-900 truncate'>{title}</div>
         <StyledEdit isUpdating={isUpdating} size={20} onClick={() => handleUpdateProgress()} />
