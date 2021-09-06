@@ -13,6 +13,9 @@ SELECT json_agg(row_to_json(books_agg)) AS books
                                             ON         a.id = ba.author_id
                                             WHERE      ba.book_id = b.id
                                             GROUP BY   b.id ),
+                                 b.published_date,
+                                 b.published_date_edition,
+                                 b.book_format,
                                  b.total_pages,
                                  b.blurb,
                                  b.picture_link,

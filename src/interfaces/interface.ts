@@ -19,6 +19,9 @@ export interface BookITF {
   b_id: number;
   title: string;
   author: string[];
+  published_date: string;
+  published_date_edition: string;
+  book_format: string;
   total_pages: number;
   blurb: string;
   picture_link: string;
