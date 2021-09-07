@@ -233,6 +233,15 @@ $$ LANGUAGE plpgsql;
 \set book_17_blurb 'Book 2 in the Vaults of Terra mini-series. Discover what happens when Chaos comes to the Throneworld itself for the first time in ten millennia..... \n\nInquisitor Erasmus Crowl has discovered a terrible plot, its roots firmly planted in the very highest levels of Terra. Pursuing it is fraught with risk, but Crowl’s sense of duty compels him to persevere. He and his acolyte Spinoza run down their leads in secret, knowing that their every move invites danger, but even as they begin to reveal the truth, a greater peril is unfolding in the skies – the Great Rift is becoming manifest. During the madness that threatens to tear Terra asunder, Crowl’s Inquisitorial base of operations comes under attack and is badly ravaged. As his world begins to unravel and a new, bloody age dawns, can Crowl stay true to his course and expose the horror that lies at the heart of the Hollow Mountain?'
 \set book_17_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1563199563l/51086449._SX318_SY475_.jpg'
 
+\set book_18_title 'Kingsblade'
+\set book_18_title_sort 'Kingsblade'
+\set book_18_published_date '2017/02/01'
+\set book_18_published_date_edition '2017/08/22'
+\set book_18_book_format 'Paperback'
+\set book_18_total_pages 368
+\set book_18_blurb 'Imperial Knight Titans clash as an internecine war ravages the Knights of Adrastapol. \n\nThe Knight Houses of Adrastapol are both noble and righteous, and when the Imperial world of Donatos falls to the heresy of the Word Bearers, they are foremost in the vanguard to retake it. Led by High King Tolwyn Draconis, the Knights are peerless in battle and strike deep into the enemy’s ranks. But the war soon turns when a terrible tragedy strikes, casting the Imperial campaign into anarchy. As desperation grows, unblooded Knights Errant Danial and Luk must quickly learn the ways of war to prevent an unholy ritual, or Donatos will be lost and all the noble Houses of Adrastapol with it.'
+\set book_18_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1478803265l/32902466.jpg'
+
 -- INSERT book using previously declared variables
 SELECT insert_book(:'book_1_title', :'book_1_title_sort', :'book_1_published_date', :'book_1_published_date_edition', :'book_1_book_format', :'book_1_total_pages', :'book_1_blurb', :'book_1_picture_link');
 SELECT insert_book(:'book_2_title', :'book_2_title_sort', :'book_2_published_date', :'book_2_published_date_edition', :'book_2_book_format', :'book_2_total_pages', :'book_2_blurb', :'book_2_picture_link');
@@ -251,6 +260,7 @@ SELECT insert_book(:'book_14_title', :'book_14_title_sort', :'book_14_published_
 SELECT insert_book(:'book_15_title', :'book_15_title_sort', :'book_15_published_date', :'book_15_published_date_edition', :'book_15_book_format', :'book_15_total_pages', :'book_15_blurb', :'book_15_picture_link');
 SELECT insert_book(:'book_16_title', :'book_16_title_sort', :'book_16_published_date', :'book_16_published_date_edition', :'book_16_book_format', :'book_16_total_pages', :'book_16_blurb', :'book_16_picture_link');
 SELECT insert_book(:'book_17_title', :'book_17_title_sort', :'book_17_published_date', :'book_17_published_date_edition', :'book_17_book_format', :'book_17_total_pages', :'book_17_blurb', :'book_17_picture_link');
+SELECT insert_book(:'book_18_title', :'book_18_title_sort', :'book_18_published_date', :'book_18_published_date_edition', :'book_18_book_format', :'book_18_total_pages', :'book_18_blurb', :'book_18_picture_link');
 
 
 /* --------------------------------------------------- INSERT reader_book --------------------------------------------------- */
@@ -284,6 +294,7 @@ SELECT insert_reader_book(:'username_1', :'book_14_title');
 SELECT insert_reader_book(:'username_1', :'book_15_title');
 SELECT insert_reader_book(:'username_1', :'book_16_title');
 SELECT insert_reader_book(:'username_1', :'book_17_title');
+SELECT insert_reader_book(:'username_1', :'book_18_title');
 
 
 /* --------------------------------------------- INSERT read_entry --------------------------------------------- */
@@ -318,7 +329,7 @@ SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-02', 41, 41, 9
 SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-03', 30, 71, 17.07);
 SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-04', 36, 107, 25.72);
 SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-05', 70, 177, 42.55);
-SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-06', 180, 357, 54.09);
+SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-06', 180, 357, 85.82);
 SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-07', 59, 416, 100);
 
 -- INSERT book_3
@@ -442,6 +453,13 @@ SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-08-30', 58, 223,
 SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-08-31', 56, 279, 79.26);
 SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-09-01', 73, 352, 100);
 
+-- INSERT book_18
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-08-27', 55, 55, 14.95);
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-08-28', 54, 109, 29.62);
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-08-29', 56, 165, 44.84);
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-08-30', 56, 221, 60.05);
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-01', 147, 368, 100);
+
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
 -- FUNCTION insert_author
@@ -560,6 +578,10 @@ $$ LANGUAGE plpgsql;
 \set book_17_author_1_first_name 'Chris'
 \set book_17_author_1_last_name 'Wraight'
 \set book_17_author_1_full_name 'Chris Wraight'
+-- book 18 author
+\set book_18_author_1_first_name 'Andy'
+\set book_18_author_1_last_name 'Clark'
+\set book_18_author_1_full_name 'Andy Clark'
 
 -- INSERT author using FUNCTION insert_author and DECLARED author variables as arguments, CHECK UNIQUE full_name (middle_name argument is optional)
 -- book 1 author
@@ -606,6 +628,8 @@ SELECT insert_author(:'book_15_author_1_full_name', :'book_15_author_1_first_nam
 SELECT insert_author(:'book_16_author_1_full_name', :'book_16_author_1_first_name', :'book_16_author_1_last_name');
 -- book 17 author
 SELECT insert_author(:'book_17_author_1_full_name', :'book_17_author_1_first_name', :'book_17_author_1_last_name');
+-- book 18 author
+SELECT insert_author(:'book_18_author_1_full_name', :'book_18_author_1_first_name', :'book_18_author_1_last_name');
 
 
 /* --------------------------------------------- INSERT book_author (JOIN TABLE) --------------------------------------------- */
@@ -666,6 +690,8 @@ SELECT join_book_author(:'book_15_title', :'book_15_author_1_full_name');
 SELECT join_book_author(:'book_16_title', :'book_16_author_1_full_name');
 -- book 17 author
 SELECT join_book_author(:'book_17_title', :'book_17_author_1_full_name');
+-- book 18 author
+SELECT join_book_author(:'book_18_title', :'book_18_author_1_full_name');
 
 
 /* --------------------------------------------- UPDATE is_reading and is_finished --------------------------------------------- */
@@ -711,6 +737,7 @@ SELECT update_reader_book(:'username_1', :'book_14_title', 4, 4, FALSE, TRUE);
 SELECT update_reader_book(:'username_1', :'book_15_title', 6, 6, FALSE, TRUE);
 SELECT update_reader_book(:'username_1', :'book_16_title', 6, 6, FALSE, TRUE);
 SELECT update_reader_book(:'username_1', :'book_17_title', 6, 6, FALSE, TRUE);
+SELECT update_reader_book(:'username_1', :'book_18_title', 5, 5, FALSE, TRUE);
 -- UPDATE reader_book.is_reading to true
 
 

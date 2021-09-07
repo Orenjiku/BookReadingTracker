@@ -3,7 +3,7 @@
 ## Table of Contents
 1. [PostgreSQL DB Table Constraints Naming Convention](#postgresql-db-table-constraints-naming-convention)
 2. [PostgreSQL Database Seed Guide](#postgresql-database-seed-guide)
-3. [Database API Request & Response](#database-api-request-&-response)
+3. [Database API Request & Response](#database-api-request-response)
 ---
 
 ## **PostgreSQL DB Table Constraints Naming Convention**
@@ -48,12 +48,15 @@
 3.  Set book variables used for insert_book function in next step.  
     **_Note:_** Use same { number } for all related variables related to the book.  
       _Example_: \set book_1_title 'Name book here'
-    | title | title_sort | total_pages | blurb | picture_link |
-    | ----- | ---------- | ----------- | ----- | ------------ |
-    | string | string | string | string | string | string |
+    | title | title_sort | published_date | published_date_edition | book_format | total_pages | blurb | picture_link |
+    | ----- | ---------- | -------------- | ---------------------- | ----------- | ----------- | ----- | ------------ |
+    | string | string | string | string | string | string | string | string | string |
      ~~~~sql
      \set book_{number}_title {title}
      \set book_{number}_title_sort {title_sort}
+     \set book_{number}_published_date {published_date}
+     \set book_{number}_published_date_edition {published_date_edition}
+     \set book_{number}_book_format {book_format}
      \set book_{number}_total_pages {total_pages}
      \set book_{number}_blurb {blurb}
      \set book_{number}_picture_link {picture_link}
@@ -62,7 +65,7 @@
 4.  INSERT book using variables defined in previous step.  
     **_Reminder:_** Change { number } in variable to corresponding book
     ~~~~sql
-    SELECT insert_book(:'book_{number}_title', :'book_{number}_title_sort', :'book_{number}_total_pages', :'book_{number}_blurb', :'book_{number}_picture_link');
+    SELECT insert_book(:'book_{number}_title', :'book_{number}_title_sort', :'book_{number}_published_date', :'book_{number}_published_date_edition', :'book_{number}_book_format', :'book_{number}_total_pages', :'book_{number}_blurb', :'book_{number}_picture_link');
     ~~~~
 
 5.  INSERT reader_book  
@@ -121,11 +124,11 @@
     ~~~~
 ---
 
-## **Database API Request & Response**
+## **Database API Request Response**
 
 `GET /:id/currently_reading` <br />
 Retrieves a list of books that are currently being read.
-**_Note:_** Every reread of a book is a new row in reader_book. See rb_id: 15 and rb_id: 12 below.
+**_Note:_** Every reread of a book is a new row in reader_book table. See example below: rb_id: 15 and rb_id: 12.
 
 ### Parameters
 
@@ -145,6 +148,9 @@ Retrieves a list of books that are currently being read.
     "author": [
       "Steve Parker"
     ],
+    "published_date": "2013-04-11",
+    "published_date_edition": "2019-10-15",
+    "book_format": "Paperback"
     "total_pages": 512,
     "blurb":  "Action packed novel featuring the galaxies foremost alien hunting taskforce, the Deathwatch. Led by Librarian Karras, the elite alien-hunting Talon Squad must penetrate a genestealer lair and put the abominations to the flame or face the consequences of an entire planet's extinction.//n//nGathered from the many Chapters of Space Marines, the Deathwatch are elite, charged with defending the Imperium of Man from aliens. Six Space Marines, strangers from different words, make up Talon Squad. On 31-Caro, a new terror has emerged, a murderous shadow that stalks the dark, and only the Deathwatch can stop it. Under the direction of a mysterious Inquisitor Lord known only as Sigma, they must cleanse this planet or die in the attempt.",
     "picture_link": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561288604l/52357292._SX318_SY475_.jpg",
@@ -205,6 +211,9 @@ Retrieves a list of books that are currently being read.
     "author": [
       "David Annandale",
     ],
+    "published_date": "2016-11-12",
+    "published_date_edition": "2018-01-23",
+    "book_format": "Paperback"
     "total_pages": 320,
     ...
   },
@@ -244,6 +253,9 @@ Retrieves a list of books that reader has finished reading.
       "J.C. Stearns",
       "Alec Worley"
     ],
+    "published_date": "2019-03-30",
+    "published_date_edition": "2019-04-02",
+    "book_format": "Paperback",
     "total_pages": 352,
     "blurb": "A eclectic collection of gut wrenching tales to spook and scare.\n\nHorror is no stranger to the worlds of Warhammer. Its very fabric is infested with the arcane, the strange and the downright terrifying. From the cold, vastness of the 41st millenium to the creeping evil at large in the Mortal Realms, this anthology of short stories explores the sinister side of Warhammer in a way it never has been before. Psychological torment, visceral horrors, harrowing tales of the supernatural and the nightmares buried within, this collection brings together some of the best horror writing from the Black Library.\n\nFeaturing stories from Graham McNeill, Cassandra Khaw, Alec Worley, David Annandale and more.",
     "picture_link": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1548642309l/40744548.jpg",
@@ -281,6 +293,9 @@ Retrieves a list of books that reader has finished reading.
     "author": [
       "Dan Abnett"
     ],
+    "published_date": "2001-12-27",
+    "published_date_edition": "2015-08-11",
+    "book_format": "Paperback",
     "total_pages": 416,
     ...
   }
