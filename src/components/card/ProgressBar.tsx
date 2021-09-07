@@ -2,18 +2,18 @@ import React from 'react';
 import tw, { styled, css } from 'twin.macro';
 
 const InnerBar = styled.div<{ isUpdating: boolean, currentPercent: number }>`
-  ${tw`h-1/2 rounded-sm bg-teal-500`};
+  ${tw`h-1/2 rounded-sm bg-teal-500`}
+  ${tw`transition-colors duration-500 ease-out`};
   width: ${({ currentPercent }) => `${currentPercent}%`};
-  transition: all 600ms ease-out;
   ${({ isUpdating }) => isUpdating && css`
-    ${tw`bg-red-400`};
-    transition: all 600ms ease-out;
+    ${tw`bg-red-400`}
+    ${tw`transition-colors duration-500 ease-out`};
   `};
 `
 
 const ProgressBar = ({currentPercent, isUpdating}: {currentPercent: number, isUpdating: boolean}) => {
   return (
-    <div className='flex items-center h-2 w-full rounded-sm bg-coolGray-50'>
+    <div className='h-2 w-full flex items-center rounded-sm bg-coolGray-50'>
       <InnerBar currentPercent={currentPercent} isUpdating={isUpdating} />
     </div>
   )
