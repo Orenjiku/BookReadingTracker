@@ -13,7 +13,7 @@ const InnerBar = styled.div<{ isUpdating: boolean, currentPercent: number }>`
 
 const ProgressBar = ({currentPercent, isUpdating}: {currentPercent: number, isUpdating: boolean}) => {
   return (
-    <div className='h-2 w-full flex items-center rounded-sm bg-coolGray-50'>
+    <div className='h-2 w-full rounded-sm flex items-center bg-coolGray-50'>
       <InnerBar currentPercent={currentPercent} isUpdating={isUpdating} />
     </div>
   )
