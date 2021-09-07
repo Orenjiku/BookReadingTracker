@@ -14,11 +14,8 @@ interface CardHeaderPropsITF {
 }
 
 const AnimatedLeftArrow = styled(LeftArrow)`
-  ${tw`fill-current text-sky-900 cursor-pointer`};
-  min-width: 20px;
-  min-height: 20px;
-  width: 20px;
-  height: 20px;
+  ${tw`min-w-min cursor-pointer`}
+  ${tw`fill-current text-sky-900`};
   &.arrowRotate-enter-active {
     ${tw`text-red-500`}
     transform: rotate(-180deg);
@@ -40,10 +37,7 @@ const AnimatedLeftArrow = styled(LeftArrow)`
 `
 
 const StyledEdit = styled(Edit)<{ isUpdating?: boolean}>`
-  ${tw`fill-current text-sky-900`}
-  &:hover {
-    ${tw`cursor-pointer`}
-  }
+  ${tw`fill-current text-sky-900 cursor-pointer`}
   ${({ isUpdating }) => isUpdating && css`
     ${tw`fill-current text-red-500`}
 
@@ -61,11 +55,6 @@ const StyledEdit = styled(Edit)<{ isUpdating?: boolean}>`
   `}
 `
 
-// const Button = styled.button<{ isUpdating?: boolean }>`
-//   ${tw`font-AdventPro-200 text-sm border rounded w-max h-6 px-1.5 mx-1 flex justify-center items-center`}
-//   ${({ isUpdating }) => isUpdating && css`${tw`bg-red-200`}`}
-// `
-
 const CardHeader = ({title, author, isShowingDetails, isUpdating, handleShowDetails, handleUpdateProgress}: CardHeaderPropsITF) => {
   const cardHeaderRef = useRef(null);
   return (
@@ -73,15 +62,14 @@ const CardHeader = ({title, author, isShowingDetails, isUpdating, handleShowDeta
 
       <div className='flex items-center'>
         <CSSTransition in={isShowingDetails} timeout={800} classNames='arrowRotate' nodeRef={cardHeaderRef}>
-          <AnimatedLeftArrow ref={cardHeaderRef} onClick={() => {!isUpdating && handleShowDetails()}} />
+          <AnimatedLeftArrow size={20} ref={cardHeaderRef} onClick={() => {!isUpdating && handleShowDetails()}} />
         </CSSTransition>
-        <div className='ml-2 font-AdventPro-200 text-2xl text-trueGray-900 truncate'>{title}</div>
-        <StyledEdit isUpdating={isUpdating} size={20} onClick={() => handleUpdateProgress()} />
-        {/* <Button isUpdating={isUpdating} className='bg-blueGray-300 text-trueGray-900' onClick={() => handleUpdateProgress()}>Update Progress</Button> */}
+        <div className='ml-2 text-trueGray-900 font-AdventPro-200 text-2xl truncate'>{title}</div>
+        <StyledEdit size={20} isUpdating={isUpdating} onClick={() => handleUpdateProgress()} />
       </div>
 
       <div className='absolute top-8 left-0 w-10 h-0.5 bg-sky-900'></div>
-      <div className='flex w-full justify-end font-Charm-400 text-trueGray-900 pr-2 truncate'>{author.join(', ')}</div>
+      <div className='w-full flex justify-end pr-2 text-trueGray-900 font-Charm-400 truncate'>{author.join(', ')}</div>
 
     </div>
     )
