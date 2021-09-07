@@ -7,7 +7,7 @@ import ProgressBar from './ProgressBar';
 
 interface ReadEntryPropsITF {
   readEntry: ReadEntryITF;
-  isUpdating: boolean;
+  isEditing: boolean;
   handleDeleteReadEntry: Function;
 }
 
@@ -52,7 +52,7 @@ const DeleteButton = styled.button<{isMouseDown: boolean}>`
   `}
 `
 
-const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPropsITF) => {
+const ReadEntry = ({ readEntry, isEditing, handleDeleteReadEntry }: ReadEntryPropsITF) => {
   const [ isEntrySelected, setIsEntrySelected ] = useState<boolean>(false);
   const [ isMouseDown, setIsMouseDown ] = useState<boolean>(false);
 
@@ -61,7 +61,7 @@ const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPr
   const currentPercent = Number(readEntry.current_percent.toFixed(0));
   let deleteTimeout: ReturnType<typeof setTimeout>;
 
-  const handleEntrySelect = () => isUpdating && setIsEntrySelected(isEntrySelected => !isEntrySelected);
+  const handleEntrySelect = () => isEditing && setIsEntrySelected(isEntrySelected => !isEntrySelected);
   const handleMouseDown = () => setIsMouseDown(true);
   const handleMouseUp = () => {
     clearTimeout(deleteTimeout);
@@ -69,8 +69,8 @@ const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPr
   };
 
   useEffect(() => {
-    !isUpdating && setIsEntrySelected(false);
-  }, [isUpdating])
+    !isEditing && setIsEntrySelected(false);
+  }, [isEditing])
 
   useEffect(() => {
     if (isMouseDown) {
@@ -84,12 +84,12 @@ const ReadEntry = ({ readEntry, isUpdating, handleDeleteReadEntry }: ReadEntryPr
   return (
     <div>
 
-      <div className={`relative px-1 pb-0.5 bg-blueGray-200 ${isUpdating && 'cursor-pointer hover:bg-blueGray-300'}`} {...(isUpdating && {onClick: handleEntrySelect})}>
+      <div className={`relative px-1 pb-0.5 bg-blueGray-200 ${isEditing && 'cursor-pointer hover:bg-blueGray-300'}`} {...(isEditing && {onClick: handleEntrySelect})}>
         <EntryBar before={entryDate} after={readEntry.pages_read}>{`${currentPercent}%`}</EntryBar>
-        <ProgressBar isUpdating={isUpdating} currentPercent={currentPercent} />
+        <ProgressBar isEditing={isEditing} currentPercent={currentPercent} />
       </div>
 
-      <CSSTransition in={isUpdating && isEntrySelected} timeout={300} classNames='slide' nodeRef={readEntryRef} unmountOnExit>
+      <CSSTransition in={isEditing && isEntrySelected} timeout={300} classNames='slide' nodeRef={readEntryRef} unmountOnExit>
         <DeleteContainer ref={readEntryRef}>
           <DeleteButton isMouseDown={isMouseDown} onMouseDown={() => handleMouseDown()} onMouseUp={() => handleMouseUp()}>
             <p className='mr-2'>Hold for 1 second</p>

@@ -21,7 +21,7 @@ const StyledAnimatedReadEntryContainer = styled.div`
   };
 `
 
-const ReaderBook = ({ readerBook, isUpdating } : { readerBook: ReaderBookITF; isUpdating: boolean }) => {
+const ReaderBook = ({ readerBook, isEditing } : { readerBook: ReaderBookITF; isEditing: boolean }) => {
   const [readEntryList, setReadEntryList] = useState<ReadEntryITF[]>(readerBook.read_entry!)
 
   const verticalScrollRef = useRef(null);
@@ -46,7 +46,7 @@ const ReaderBook = ({ readerBook, isUpdating } : { readerBook: ReaderBookITF; is
           {readEntryList.map(readEntry => (
             <CSSTransition key={`cssT-${readEntry.re_id}`} timeout={500} classNames='readEntryAnimate' /* nodeRef={bookReadRef} */ >
               <StyledAnimatedReadEntryContainer>
-                <ReadEntry key={readEntry.re_id} readEntry={readEntry} isUpdating={isUpdating} handleDeleteReadEntry={handleDeleteReadEntry}/>
+                <ReadEntry key={readEntry.re_id} readEntry={readEntry} isEditing={isEditing} handleDeleteReadEntry={handleDeleteReadEntry}/>
               </StyledAnimatedReadEntryContainer>
             </CSSTransition>
           ))}

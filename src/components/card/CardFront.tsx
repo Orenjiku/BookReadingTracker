@@ -8,7 +8,8 @@ import tw, { styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 
 const CardFrontContainer = styled.div<{isFlipped: boolean}>`
-  ${tw`absolute h-full w-full grid grid-cols-2 grid-rows-20 rounded-2xl shadow-xl bg-blueGray-200 overflow-hidden select-none`};
+  ${tw`absolute h-full w-full rounded-2xl grid grid-cols-2 grid-rows-20`};
+  ${tw`bg-blueGray-200 overflow-hidden select-none`};
   backface-visibility: hidden;
   transform: perspective(1200px) rotateY(0deg);
   transition: transform 600ms linear;
@@ -17,41 +18,38 @@ const CardFrontContainer = styled.div<{isFlipped: boolean}>`
   `}
 `
 
-
-const BlurbContainer = styled.div<{img?: string;}>`
-  ${tw`relative col-start-1 col-end-3 row-start-4 row-end-19 flex justify-center items-center rounded-tl-2xl bg-trueGray-100 overflow-hidden`};
+const SlideContainer = styled.div<{src?: string;}>`
+  ${tw`relative col-start-1 col-end-3 row-start-4 row-end-19 rounded-tl-2xl flex justify-center items-center`};
+  ${tw`bg-trueGray-100 overflow-hidden`};
   &::before {
     content: '';
-    background: url('${({ img }) => img}');
-    ${tw`absolute w-full h-full bg-cover bg-center bg-no-repeat filter blur`};
+    background: url('${({ src }) => src}');
+    ${tw`absolute w-full h-full`}
+    ${tw`bg-cover bg-center bg-no-repeat filter blur`};
   }
-  &.blurbSlide-enter {
-    transform: translateX(105%);
+  &.slide-enter {
+    transform: translateX(100%);
   };
-  &.blurbSlide-enter-active {
+  &.slide-enter-active {
     transform: translateX(0%);
     transition: transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
   };
-  &.blurbSlide-exit-active {
-    transform: translateX(105%);
+  &.slide-exit-active {
+    transform: translateX(100%);
     transition: transform 800ms cubic-bezier(0.5, 0, 0.75, 0);
   };
 `
 
 const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: boolean; handleFlip: Function }) => {
 
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
-  const [isShowingDetails, setIsShowingDetails] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isShowingSlide, setIsShowingSlide] = useState<boolean>(false);
 
   const cardRef = useRef(null);
 
-  const handleUpdateProgress = () => {
-    setIsUpdating(isUpdating => !isUpdating);
-  }
+  const handleEdit = () => setIsEditing(isEditing => !isEditing);
 
-  const handleShowDetails = () => {
-    setIsShowingDetails(isShowingDetails => !isShowingDetails);
-  }
+  const handleShowSlide = () => setIsShowingSlide(isShowingSlide => !isShowingSlide);
 
   const totalDays = book.reader_book.reduce((acc, cur) => acc + cur.days_total, 0);
   const totalDaysRead = book.reader_book.reduce((acc, cur) => acc + cur.days_read, 0);
@@ -74,21 +72,21 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
   return (
     <CardFrontContainer isFlipped={isFlipped}>
 
-      <CardHeader title={book.title} author={book.author} isShowingDetails={isShowingDetails} isUpdating={isUpdating} handleShowDetails={handleShowDetails} handleUpdateProgress={handleUpdateProgress} />
-      <BookImage pictureLink={book.picture_link} isUpdating={isUpdating} handleFlip={handleFlip}/>
+      <CardHeader title={book.title} author={book.author} isShowingSlide={isShowingSlide} isEditing={isEditing} handleShowSlide={handleShowSlide} handleEdit={handleEdit} />
+      <BookImage pictureLink={book.picture_link} isEditing={isEditing} handleFlip={handleFlip}/>
       <DetailsView readDetails={readDetails} />
-      <ReaderBookView readerBookList={book.reader_book} isUpdating={isUpdating} />
+      <ReaderBookView readerBookList={book.reader_book} isEditing={isEditing} />
 
-      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center font-Charm-400 text-2xl text-trueGray-900 bg-blueGray-300'>
+      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center bg-blueGray-300 text-trueGray-900 text-2xl font-Charm-400'>
         Completed!
       </div>
 
-      <CSSTransition in={isShowingDetails} timeout={800} classNames='blurbSlide' nodeRef={cardRef} unmountOnExit>
-        <BlurbContainer ref={cardRef} img={book.picture_link}>
-          <div className='bg-trueGray-50 h-4/6 w-5/6 z-10 overflow-y-scroll bg-opacity-60 p-3 whitespace-pre-wrap font-Helvetica text-xs rounded-tl-2xl'>
+      <CSSTransition in={isShowingSlide} timeout={800} classNames='slide' nodeRef={cardRef} unmountOnExit>
+        <SlideContainer ref={cardRef} src={book.picture_link}>
+          <div className='z-10 h-4/5 w-11/12 p-4 rounded-tl-2xl overflow-y-scroll whitespace-pre-wrap select-text bg-trueGray-50 bg-opacity-60 text-xs font-Helvetica'>
             {book.blurb}
           </div>
-        </BlurbContainer>
+        </SlideContainer>
       </CSSTransition>
 
     </CardFrontContainer>

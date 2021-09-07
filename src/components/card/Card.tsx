@@ -5,7 +5,7 @@ import { BookITF } from '../../interfaces/interface';
 import tw, { styled } from 'twin.macro';
 
 const CardContainer = styled.div`
-  ${tw`relative grid place-content-center mx-5 mb-10 rounded-2xl`};
+  ${tw`relative m-5`};
   --card-size: 370px;
   min-width: var(--card-size);
   max-width: var(--card-size);
@@ -17,9 +17,7 @@ const CardContainer = styled.div`
 const Card = ({ book }: { book: BookITF }) => {
   const [ isFlipped, setIsFlipped ] = useState<boolean>(false);
 
-  const handleFlip = () => {
-    setIsFlipped(isFlipped => !isFlipped);
-  }
+  const handleFlip = () => setIsFlipped(isFlipped => !isFlipped);
 
   return (
     <CardContainer>
