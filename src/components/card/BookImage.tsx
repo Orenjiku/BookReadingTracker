@@ -11,7 +11,7 @@ interface BookImagePropsITF {
 const EditBookButton = styled.button<{isUpdating: boolean}>`
   ${tw`h-8 w-24 flex justify-center items-center rounded`};
   ${tw`bg-blueGray-300 bg-opacity-40 text-trueGray-50 font-Charm-400`};
-  ${tw`filter backdrop-filter backdrop-blur`};
+  ${tw`backdrop-filter backdrop-blur`};
   ${tw`transition-colors duration-300 ease-linear`};
   &:hover {
     ${tw`bg-blueGray-400 bg-opacity-40`};
