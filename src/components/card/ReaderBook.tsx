@@ -6,27 +6,22 @@ import ReadEntry from './ReadEntry';
 import {TransitionGroup, CSSTransition} from 'react-transition-group';
 import tw, { styled } from 'twin.macro';
 
-interface ReaderBookPropsITF {
-  readerBook: ReaderBookITF;
-  isUpdating: boolean;
-}
-
 const StyledAnimatedReadEntryContainer = styled.div`
   :last-child {
     ${tw`mb-2`}
   }
   &.readEntryAnimate-exit {
     opacity: 1;
-    max-height: 50px;
+    max-height: 52px;
   };
   &.readEntryAnimate-exit-active {
     opacity: 0;
     max-height: 0;
-    transition: opacity 200ms ease-out, max-height 600ms ease-out;
+    transition: opacity 200ms ease-out, max-height 500ms ease-out;
   };
 `
 
-const ReaderBook = ({ readerBook, isUpdating } : ReaderBookPropsITF) => {
+const ReaderBook = ({ readerBook, isUpdating } : { readerBook: ReaderBookITF; isUpdating: boolean }) => {
   const [readEntryList, setReadEntryList] = useState<ReadEntryITF[]>(readerBook.read_entry!)
 
   const verticalScrollRef = useRef(null);
@@ -41,7 +36,7 @@ const ReaderBook = ({ readerBook, isUpdating } : ReaderBookPropsITF) => {
   // const bookReadRef = useRef(null);
   return (
     <div className='relative h-full overflow-y-hidden'>
-      <div ref={verticalScrollRef} className='h-full overflow-y-scroll border scrollbar-hide'>
+      <div ref={verticalScrollRef} className='h-full overflow-y-scroll scrollbar-hide'>
         <div className='flex justify-around font-Charm-400'>
           <p className='text-sm'>Days Read: {readerBook.days_read}</p>
           <p className='text-sm'>Days Total: {readerBook.days_total}</p>
@@ -49,7 +44,7 @@ const ReaderBook = ({ readerBook, isUpdating } : ReaderBookPropsITF) => {
 
         <TransitionGroup component={null}>
           {readEntryList.map(readEntry => (
-            <CSSTransition key={`cssT-${readEntry.re_id}`} timeout={600} classNames='readEntryAnimate' /* nodeRef={bookReadRef} */ >
+            <CSSTransition key={`cssT-${readEntry.re_id}`} timeout={500} classNames='readEntryAnimate' /* nodeRef={bookReadRef} */ >
               <StyledAnimatedReadEntryContainer>
                 <ReadEntry key={readEntry.re_id} readEntry={readEntry} isUpdating={isUpdating} handleDeleteReadEntry={handleDeleteReadEntry}/>
               </StyledAnimatedReadEntryContainer>
@@ -58,8 +53,8 @@ const ReaderBook = ({ readerBook, isUpdating } : ReaderBookPropsITF) => {
         </TransitionGroup>
 
       </div>
-      {!refYScrollBegin && <BsChevronUp className='absolute flex w-full top-0 justify-center' />}
-      {!refYScrollEnd && refYOverflowing && <BsChevronDown className='absolute flex w-full bottom-0 justify-center' />}
+      {!refYScrollBegin && <BsChevronUp className='absolute w-full top-0' />}
+      {!refYScrollEnd && refYOverflowing && <BsChevronDown className='absolute w-full bottom-0' />}
     </div>
   )
 }
