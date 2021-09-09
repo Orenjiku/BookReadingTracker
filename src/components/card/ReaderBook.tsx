@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
+import tw, { styled } from 'twin.macro';
+import {TransitionGroup, CSSTransition} from 'react-transition-group';
 import { ReaderBookITF, ReadEntryITF } from '../../interfaces/interface';
+import ReadEntry from './ReadEntry';
 import useOverflow from '../../hooks/useOverflow';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
-import ReadEntry from './ReadEntry';
-import {TransitionGroup, CSSTransition} from 'react-transition-group';
-import tw, { styled } from 'twin.macro';
 
 const StyledReadEntryContainer = styled.div`
   :last-child {
