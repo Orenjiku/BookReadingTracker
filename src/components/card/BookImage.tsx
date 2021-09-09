@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import tw, { styled } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 
@@ -29,9 +29,10 @@ const EditBookButton = styled.button<{isEditing: boolean}>`
 `
 
 const BookImage = ({ pictureLink, isEditing, handleFlip }: BookImagePropsITF) => {
+  const bookImageRef = useRef(null);
   return (
     <div className='col-start-1 col-end-2 row-start-4 row-end-19 rounded-tl-2xl grid place-content-center bg-cover overflow-hidden' style={{backgroundImage: `url(${pictureLink})`}}>
-      <CSSTransition in={isEditing} timeout={500} classNames='fade' unmountOnExit>
+      <CSSTransition in={isEditing} timeout={500} classNames='fade' nodeRef={bookImageRef} unmountOnExit>
         <EditBookButton isEditing={isEditing} onClick={() => handleFlip()}>Edit Book</EditBookButton>
       </CSSTransition>
     </div>
