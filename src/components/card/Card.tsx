@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import tw, { styled } from 'twin.macro';
+import { BookITF } from '../../interfaces/interface';
 import CardFront from './CardFront';
 import CardBack from './CardBack';
-import { BookITF } from '../../interfaces/interface';
-import tw, { styled } from 'twin.macro';
 
 const CardContainer = styled.div`
   ${tw`relative m-5`};
