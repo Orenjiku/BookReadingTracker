@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
+import tw, { styled, css } from 'twin.macro';
+import { CSSTransition } from 'react-transition-group';
 import { BookITF } from '../../interfaces/interface';
 import CardHeader from './CardHeader';
 import BookImage from './BookImage';
 import DetailsView from './DetailsView';
 import ReaderBookView from './ReaderBookView';
-import tw, { styled, css } from 'twin.macro';
-import { CSSTransition } from 'react-transition-group';
 
 const CardFrontContainer = styled.div<{isFlipped: boolean}>`
   ${tw`absolute h-full w-full rounded-2xl grid grid-cols-2 grid-rows-20`};
@@ -45,15 +45,13 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isShowingSlide, setIsShowingSlide] = useState<boolean>(false);
 
-  const cardRef = useRef(null);
+  const cardFrontRef = useRef(null);
 
   const handleEdit = () => setIsEditing(isEditing => !isEditing);
-
   const handleShowSlide = () => setIsShowingSlide(isShowingSlide => !isShowingSlide);
 
   const totalDays = book.reader_book.reduce((acc, cur) => acc + cur.days_total, 0);
   const totalDaysRead = book.reader_book.reduce((acc, cur) => acc + cur.days_read, 0);
-
   const dailyPagesRead = book.reader_book.reduce((acc: number[], cur): number[] => {
     const pagesRead = cur.read_entry ? cur.read_entry.map(readEntry => readEntry.pages_read): [];
     return [...acc, ...pagesRead];
@@ -81,8 +79,8 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
         Completed!
       </div>
 
-      <CSSTransition in={isShowingSlide} timeout={800} classNames='slide' nodeRef={cardRef} unmountOnExit>
-        <SlideContainer ref={cardRef} src={book.picture_link}>
+      <CSSTransition in={isShowingSlide} timeout={800} classNames='slide' nodeRef={cardFrontRef} unmountOnExit>
+        <SlideContainer ref={cardFrontRef} src={book.picture_link}>
           <div className='z-10 h-4/5 w-11/12 p-4 rounded-tl-2xl overflow-y-scroll whitespace-pre-wrap select-text bg-trueGray-50 bg-opacity-60 text-xs font-Helvetica'>
             {book.blurb}
           </div>
