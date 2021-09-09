@@ -6,7 +6,7 @@ import ReadEntry from './ReadEntry';
 import {TransitionGroup, CSSTransition} from 'react-transition-group';
 import tw, { styled } from 'twin.macro';
 
-const StyledAnimatedReadEntryContainer = styled.div`
+const StyledReadEntryContainer = styled.div`
   :last-child {
     ${tw`mb-2`}
   }
@@ -24,6 +24,7 @@ const StyledAnimatedReadEntryContainer = styled.div`
 const ReaderBook = ({ readerBook, isEditing } : { readerBook: ReaderBookITF; isEditing: boolean }) => {
   const [readEntryList, setReadEntryList] = useState<ReadEntryITF[]>(readerBook.read_entry!)
 
+  // const bookReadRef = useRef(null);
   const verticalScrollRef = useRef(null);
   const {refYOverflowing, refYScrollBegin, refYScrollEnd} = useOverflow(verticalScrollRef);
 
@@ -32,8 +33,6 @@ const ReaderBook = ({ readerBook, isEditing } : { readerBook: ReaderBookITF; isE
     setReadEntryList(readEntryList.filter(readEntry => readEntry.re_id !== readEntryId));
   }
 
-  //Warning: findDOMNode is deprecated in StrictMode caused by CSSTransitionGroup unable to map nodeRef to a list of components. Adding nodeRef to TransitionGroup prevents CSSTransition animations on the listed components, but will clear the warning in console if desired for test purposes.
-  // const bookReadRef = useRef(null);
   return (
     <div className='relative h-full overflow-y-hidden'>
       <div ref={verticalScrollRef} className='h-full overflow-y-scroll scrollbar-hide'>
@@ -45,9 +44,9 @@ const ReaderBook = ({ readerBook, isEditing } : { readerBook: ReaderBookITF; isE
         <TransitionGroup component={null}>
           {readEntryList.map(readEntry => (
             <CSSTransition key={`cssT-${readEntry.re_id}`} timeout={500} classNames='readEntryAnimate' /* nodeRef={bookReadRef} */ >
-              <StyledAnimatedReadEntryContainer>
+              <StyledReadEntryContainer /* ref={bookReadRef} */>
                 <ReadEntry key={readEntry.re_id} readEntry={readEntry} isEditing={isEditing} handleDeleteReadEntry={handleDeleteReadEntry}/>
-              </StyledAnimatedReadEntryContainer>
+              </StyledReadEntryContainer>
             </CSSTransition>
           ))}
         </TransitionGroup>
