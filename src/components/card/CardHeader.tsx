@@ -13,7 +13,7 @@ interface CardHeaderPropsITF {
   handleEdit: Function;
 }
 
-const AnimatedLeftArrow = styled(LeftArrow)`
+const StyledLeftArrow = styled(LeftArrow)`
   ${tw`min-w-min cursor-pointer`}
   ${tw`fill-current text-sky-900`};
   &.arrowRotate-enter-active {
@@ -37,7 +37,7 @@ const AnimatedLeftArrow = styled(LeftArrow)`
 `
 
 const StyledEdit = styled(Edit)<{isEditing?: boolean}>`
-  ${tw`fill-current text-sky-900 cursor-pointer`}
+  ${tw`min-w-min fill-current text-sky-900 cursor-pointer`}
   ${({ isEditing }) => isEditing && css`
     ${tw`fill-current text-red-500`}
 
@@ -62,7 +62,7 @@ const CardHeader = ({title, author, isShowingSlide, isEditing, handleShowSlide, 
 
       <div className='flex items-center'>
         <CSSTransition in={isShowingSlide} timeout={800} classNames='arrowRotate' nodeRef={cardHeaderRef}>
-          <AnimatedLeftArrow size={20} ref={cardHeaderRef} onClick={() => {!isEditing && handleShowSlide()}} />
+          <StyledLeftArrow size={20} ref={cardHeaderRef} onClick={() => {!isEditing && handleShowSlide()}} />
         </CSSTransition>
         <div className='ml-2 text-trueGray-900 text-2xl font-AdventPro-200 truncate'>{title}</div>
         <StyledEdit size={20} isEditing={isEditing} onClick={() => handleEdit()} />
