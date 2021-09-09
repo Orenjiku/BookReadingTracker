@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import tw, {styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 import { ReadEntryITF } from '../../interfaces/interface';
-import { Trash } from '@styled-icons/bootstrap/Trash';
 import ProgressBar from './ProgressBar';
+import { Trash } from '@styled-icons/bootstrap/Trash';
 
 interface ReadEntryPropsITF {
   readEntry: ReadEntryITF;
@@ -90,7 +90,7 @@ const ReadEntry = ({ readEntry, isEditing, handleDeleteReadEntry }: ReadEntryPro
       </div>
 
       <CSSTransition in={isEditing && isEntrySelected} timeout={300} classNames='slide' nodeRef={readEntryRef} unmountOnExit>
-        <DeleteContainer>
+        <DeleteContainer ref={readEntryRef}>
           <DeleteButton isMouseDown={isMouseDown} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
             <p className='mr-2'>Hold for 1 second</p>
             <Trash size={13} />
