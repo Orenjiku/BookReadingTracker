@@ -84,14 +84,14 @@ const ReadEntry = ({ readEntry, isEditing, handleDeleteReadEntry }: ReadEntryPro
   return (
     <div>
 
-      <div className={`relative px-1 pb-0.5 bg-blueGray-200 ${isEditing && 'cursor-pointer hover:bg-blueGray-300'}`} {...(isEditing && {onClick: handleEntrySelect})}>
+      <div className={`relative px-1 pb-0.5 bg-blueGray-200 ${isEditing && 'cursor-pointer hover:bg-blueGray-300'}`} onClick={handleEntrySelect}>
         <EntryBar before={entryDate} after={readEntry.pages_read}>{`${currentPercent}%`}</EntryBar>
         <ProgressBar isEditing={isEditing} currentPercent={currentPercent} />
       </div>
 
       <CSSTransition in={isEditing && isEntrySelected} timeout={300} classNames='slide' nodeRef={readEntryRef} unmountOnExit>
-        <DeleteContainer ref={readEntryRef}>
-          <DeleteButton isMouseDown={isMouseDown} onMouseDown={() => handleMouseDown()} onMouseUp={() => handleMouseUp()}>
+        <DeleteContainer>
+          <DeleteButton isMouseDown={isMouseDown} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
             <p className='mr-2'>Hold for 1 second</p>
             <Trash size={13} />
           </DeleteButton>
