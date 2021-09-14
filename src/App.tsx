@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 // import { Book, ReadEntry } from '../interfaces/interface';
 import { BookITF } from './interfaces/interface';
 import Card from './components/card/Card';
-import image from './assets/scott-webb-UjupleczBOY-unsplash.jpg'
+// import image from './assets/scott-webb-UjupleczBOY-unsplash.jpg';
+import image from './assets/pawel-czerwinski-Qiy4hr18aGs-unsplash.jpg';
 
 const App = () => {
   const [finishedReading, setFinishedReading] = useState<BookITF[]>([]);

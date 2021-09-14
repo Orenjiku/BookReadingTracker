@@ -33,10 +33,11 @@ module.exports = {
         'AdventPro-200': 'AdventPro-200',
         'AdventPro-400': 'AdventPro-400',
         'Charm-400': 'Charm',
-        'SortsMillGoudy-400': 'Sorts Mill Goudy'
-      },
-      fontSize: {
-        '7.5xl': '5.5rem'
+        'SortsMillGoudy-400': 'Sorts Mill Goudy',
+        'MerriweatherItalic-300': 'MerriweatherItalic',
+        'MerriweatherLight-300': 'MerriweatherLight',
+        'Merriweather-400': 'Merriweather',
+        'AllertaStencil-400': 'AllertaStencil',
       },
       gridTemplateRows: {
         '20': 'repeat(20, minmax(0, 1fr))',
@@ -72,6 +73,9 @@ module.exports = {
         '19': '19',
         '20': '20',
         '21': '21',
+      },
+      textColor: {
+        'transparent': 'transparent'
       }
     },
   },

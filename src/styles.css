@@ -23,4 +23,20 @@
     font-family: 'Sorts Mill Goudy';
     src: url('./fonts/SortsMillGoudy-Regular.ttf') format('truetype');
   }
+  @font-face {
+    font-family: 'MerriweatherItalic';
+    src: url('./fonts/Merriweather-LightItalic.ttf') format('truetype');
+  }
+  @font-face {
+    font-family: 'MerriweatherLight';
+    src: url('./fonts/Merriweather-Light.ttf') format('truetype');
+  }
+  @font-face {
+    font-family: 'Merriweather';
+    src: url('./fonts/Merriweather-Regular.ttf') format('truetype');
+  }
+  @font-face {
+    font-family: 'AllertaStencil';
+    src: url('./fonts/AllertaStencil-Regular.ttf') format('truetype');
+  }
 };

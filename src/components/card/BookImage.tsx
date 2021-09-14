@@ -9,7 +9,7 @@ interface BookImagePropsITF {
 }
 
 const EditBookButton = styled.button<{isEditing: boolean}>`
-  ${tw`h-8 w-24 rounded flex justify-center items-center`};
+  ${tw`h-8 w-24 rounded border border-coolGray-50 flex justify-center items-center`};
   ${tw`bg-blueGray-300 bg-opacity-40 text-trueGray-50 font-Charm-400`};
   ${tw`backdrop-filter backdrop-blur`};
   ${tw`transition-colors duration-300 ease-linear`};

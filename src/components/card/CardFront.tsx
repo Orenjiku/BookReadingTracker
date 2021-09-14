@@ -9,13 +9,19 @@ import ReaderBookView from './ReaderBookView';
 
 const CardFrontContainer = styled.div<{isFlipped: boolean}>`
   ${tw`absolute h-full w-full rounded-2xl grid grid-cols-2 grid-rows-20`};
-  ${tw`bg-blueGray-200 overflow-hidden select-none`};
+  ${tw`bg-blueGray-200 bg-opacity-10 backdrop-filter backdrop-blur-sm`};
+  ${tw`border-t border-l border-r border-blueGray-50 rounded-2xl shadow-xl`}
+  ${tw`overflow-hidden select-none`};
+  &::before {
+    content: '';
+    ${tw`absolute top-0 left-0 w-full h-2.5 bg-gradient-to-b from-blueGray-100`};
+  };
   backface-visibility: hidden;
   transform: perspective(1200px) rotateY(0deg);
   transition: transform 600ms linear;
   ${({ isFlipped }) => isFlipped && css`
     transform: perspective(1200px) rotateY(-180deg);
-  `}
+  `};
 `
 
 const SlideContainer = styled.div<{src?: string;}>`
@@ -75,7 +81,7 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
       <DetailsView readDetails={readDetails} />
       <ReaderBookView readerBookList={book.reader_book} isEditing={isEditing} />
 
-      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center bg-blueGray-300 text-trueGray-900 text-2xl font-Charm-400'>
+      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center text-trueGray-900 text-2xl font-Charm-400'>
         Completed!
       </div>
 

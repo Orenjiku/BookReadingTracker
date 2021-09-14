@@ -9,7 +9,7 @@ import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 const StyledReadEntryContainer = styled.div`
   :last-child {
     ${tw`mb-2`}
-  }
+  };
   &.readEntryAnimate-exit {
     opacity: 1;
     max-height: 52px;

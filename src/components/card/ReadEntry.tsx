@@ -25,7 +25,7 @@ const EntryBar = styled.div<{before: string; after: number;}>`
 `
 
 const DeleteContainer = styled.div`
-  ${tw`flex justify-center items-end p-0 mb-0`};
+  ${tw`flex justify-center items-end p-0 mb-0 overflow-y-hidden`};
   &.slide-enter {
     max-height: 0;
   };
@@ -35,6 +35,7 @@ const DeleteContainer = styled.div`
   };
   &.slide-exit {
     max-height: 26px;
+    opacity: 1;
   }
   &.slide-exit-active {
     max-height: 0;
@@ -84,7 +85,7 @@ const ReadEntry = ({ readEntry, isEditing, handleDeleteReadEntry }: ReadEntryPro
   return (
     <div>
 
-      <div className={`relative px-1 pb-0.5 bg-blueGray-200 ${isEditing && 'cursor-pointer hover:bg-blueGray-300'}`} onClick={handleEntrySelect}>
+      <div className={`relative px-1 pb-0.5 ${isEditing && 'cursor-pointer hover:bg-blueGray-300 hover:bg-opacity-50'}`} onClick={handleEntrySelect}>
         <EntryBar before={entryDate} after={readEntry.pages_read}>{`${currentPercent}%`}</EntryBar>
         <ProgressBar isEditing={isEditing} currentPercent={currentPercent} />
       </div>
