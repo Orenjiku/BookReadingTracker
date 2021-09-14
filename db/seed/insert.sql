@@ -242,6 +242,15 @@ $$ LANGUAGE plpgsql;
 \set book_18_blurb 'Imperial Knight Titans clash as an internecine war ravages the Knights of Adrastapol. \n\nThe Knight Houses of Adrastapol are both noble and righteous, and when the Imperial world of Donatos falls to the heresy of the Word Bearers, they are foremost in the vanguard to retake it. Led by High King Tolwyn Draconis, the Knights are peerless in battle and strike deep into the enemy’s ranks. But the war soon turns when a terrible tragedy strikes, casting the Imperial campaign into anarchy. As desperation grows, unblooded Knights Errant Danial and Luk must quickly learn the ways of war to prevent an unholy ritual, or Donatos will be lost and all the noble Houses of Adrastapol with it.'
 \set book_18_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1478803265l/32902466.jpg'
 
+\set book_19_title 'Blood Angels - The Complete Rafen Omnibus'
+\set book_19_title_sort 'Blood Angels - The Complete Rafen Omnibus'
+\set book_19_published_date '2019/01/19'
+\set book_19_published_date_edition '2019/01/19'
+\set book_19_book_format 'Paperback'
+\set book_19_total_pages 828
+\set book_19_blurb 'This omnibus edition collects together for the first time the four Blood Angels novels of author James Swallow and includes several bonus short stories. The full story of Blood Angels Brother Rafen. From humble battle-brother to war-hardened sergeant, Rafen survives civil war, Chaos plots and the calling of destiny in four novels by James Swallow. \n\nIn this epic tale of brotherhood and darkness, the Blood Angels face strife from within when Brother Arkio claims to be a reincarnation of Sanguinius, the Blood Angels’ spiritual father. His message is clear: follow me or die. With no other choice, his brother Rafen kneels before this prophet of the Blood and swears an oath of devotion. But in his heart, Rafen knows that Arkio cannot be allowed to lead the Chapter into darkness. A reckoning is coming, one that they will not both survive. \nAs the ashes settle on the devastating by civil war, the Blood Angels face a dire crisis and must call together their Successor Chapters or face extinction. But the sons of Sanguinius have many enemies, and this audacious scheme to rebuild their ranks comes under threat by the machinations of the arch-traitor Fabius Bile.'
+\set book_19_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1587322079l/53208413.jpg'
+
 -- INSERT book using previously declared variables
 SELECT insert_book(:'book_1_title', :'book_1_title_sort', :'book_1_published_date', :'book_1_published_date_edition', :'book_1_book_format', :'book_1_total_pages', :'book_1_blurb', :'book_1_picture_link');
 SELECT insert_book(:'book_2_title', :'book_2_title_sort', :'book_2_published_date', :'book_2_published_date_edition', :'book_2_book_format', :'book_2_total_pages', :'book_2_blurb', :'book_2_picture_link');
@@ -261,6 +270,7 @@ SELECT insert_book(:'book_15_title', :'book_15_title_sort', :'book_15_published_
 SELECT insert_book(:'book_16_title', :'book_16_title_sort', :'book_16_published_date', :'book_16_published_date_edition', :'book_16_book_format', :'book_16_total_pages', :'book_16_blurb', :'book_16_picture_link');
 SELECT insert_book(:'book_17_title', :'book_17_title_sort', :'book_17_published_date', :'book_17_published_date_edition', :'book_17_book_format', :'book_17_total_pages', :'book_17_blurb', :'book_17_picture_link');
 SELECT insert_book(:'book_18_title', :'book_18_title_sort', :'book_18_published_date', :'book_18_published_date_edition', :'book_18_book_format', :'book_18_total_pages', :'book_18_blurb', :'book_18_picture_link');
+SELECT insert_book(:'book_19_title', :'book_19_title_sort', :'book_19_published_date', :'book_19_published_date_edition', :'book_19_book_format', :'book_19_total_pages', :'book_19_blurb', :'book_19_picture_link');
 
 
 /* --------------------------------------------------- INSERT reader_book --------------------------------------------------- */
@@ -295,6 +305,7 @@ SELECT insert_reader_book(:'username_1', :'book_15_title');
 SELECT insert_reader_book(:'username_1', :'book_16_title');
 SELECT insert_reader_book(:'username_1', :'book_17_title');
 SELECT insert_reader_book(:'username_1', :'book_18_title');
+SELECT insert_reader_book(:'username_1', :'book_19_title');
 
 
 /* --------------------------------------------- INSERT read_entry --------------------------------------------- */
@@ -454,11 +465,20 @@ SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-08-31', 56, 279,
 SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-09-01', 73, 352, 100);
 
 -- INSERT book_18
-SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-08-27', 55, 55, 14.95);
-SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-08-28', 54, 109, 29.62);
-SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-08-29', 56, 165, 44.84);
-SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-08-30', 56, 221, 60.05);
-SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-01', 147, 368, 100);
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-02', 55, 55, 14.95);
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-03', 54, 109, 29.62);
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-04', 56, 165, 44.84);
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-05', 56, 221, 60.05);
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-06', 147, 368, 100);
+
+-- INSERT book_19
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-07', 41, 41, 4.95);
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-08', 36, 77, 9.3);
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-09', 46, 123, 14.86);
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-10', 36, 159, 19.2);
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-11', 52, 211, 25.48);
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-12', 48, 259, 31.28);
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-13', 60, 319, 38.53);
 
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
@@ -582,6 +602,10 @@ $$ LANGUAGE plpgsql;
 \set book_18_author_1_first_name 'Andy'
 \set book_18_author_1_last_name 'Clark'
 \set book_18_author_1_full_name 'Andy Clark'
+-- book 19 author
+\set book_19_author_1_first_name 'James'
+\set book_19_author_1_last_name 'Swallow'
+\set book_19_author_1_full_name 'James Swallow'
 
 -- INSERT author using FUNCTION insert_author and DECLARED author variables as arguments, CHECK UNIQUE full_name (middle_name argument is optional)
 -- book 1 author
@@ -630,6 +654,8 @@ SELECT insert_author(:'book_16_author_1_full_name', :'book_16_author_1_first_nam
 SELECT insert_author(:'book_17_author_1_full_name', :'book_17_author_1_first_name', :'book_17_author_1_last_name');
 -- book 18 author
 SELECT insert_author(:'book_18_author_1_full_name', :'book_18_author_1_first_name', :'book_18_author_1_last_name');
+-- book 19 author
+SELECT insert_author(:'book_19_author_1_full_name', :'book_19_author_1_first_name', :'book_19_author_1_last_name');
 
 
 /* --------------------------------------------- INSERT book_author (JOIN TABLE) --------------------------------------------- */
@@ -692,6 +718,8 @@ SELECT join_book_author(:'book_16_title', :'book_16_author_1_full_name');
 SELECT join_book_author(:'book_17_title', :'book_17_author_1_full_name');
 -- book 18 author
 SELECT join_book_author(:'book_18_title', :'book_18_author_1_full_name');
+-- book 18 author
+SELECT join_book_author(:'book_19_title', :'book_19_author_1_full_name');
 
 
 /* --------------------------------------------- UPDATE is_reading and is_finished --------------------------------------------- */
@@ -739,6 +767,7 @@ SELECT update_reader_book(:'username_1', :'book_16_title', 6, 6, FALSE, TRUE);
 SELECT update_reader_book(:'username_1', :'book_17_title', 6, 6, FALSE, TRUE);
 SELECT update_reader_book(:'username_1', :'book_18_title', 5, 5, FALSE, TRUE);
 -- UPDATE reader_book.is_reading to true
+SELECT update_reader_book(:'username_1', :'book_19_title', 7, 7, TRUE, FALSE);
 
 
 /* --------------------------------------------- DROP functions --------------------------------------------- */
