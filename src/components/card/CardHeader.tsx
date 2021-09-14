@@ -1,6 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import tw, { styled, css } from 'twin.macro';
-import useXOverflow from '../../hooks/useXOverflow'
+import useXOverflow from '../../hooks/useXOverflow';
+import useLeftPosition from '../../hooks/useLeftPosition';
 import { CSSTransition } from 'react-transition-group';
 import { LeftArrow } from '@styled-icons/boxicons-regular/LeftArrow';
 import { Edit } from '@styled-icons/boxicons-regular/Edit';
@@ -37,8 +38,9 @@ const StyledLeftArrow = styled(LeftArrow)`
   };
 `
 
-const Title = styled.p<{isTitleOverflow: boolean; titleOffsetRight: number}>`
-  ${tw`max-w-min font-AllertaStencil-400 whitespace-nowrap truncate text-blueGray-200 opacity-50`};
+const Title = styled.p<{isTitleOverflow: boolean; titleOffsetRight: number; showEllipsis: boolean}>`
+  ${tw`max-w-min font-AllertaStencil-400 whitespace-nowrap text-blueGray-200 opacity-50`};
+  ${({ showEllipsis }) => showEllipsis && css`${tw`truncate`}`};
   font-size: 1.625rem;
   letter-spacing: -1.5px;
   text-shadow: 0px -1px 0 white, 0px -1px 1px white, 0px 1px 0 black, 0px 1px 2px black;
@@ -97,11 +99,23 @@ const Author = styled.p<{isAuthorOverflow: boolean; authorOffsetRight: number}>`
 `
 
 const CardHeader = ({title, author, isShowingSlide, isEditing, handleShowSlide, handleEdit}: CardHeaderPropsITF) => {
+
   const cardHeaderRef = useRef(null);
-  const titleRef = useRef(null);
-  const authorRef = useRef(null);
+  const titleRef = useRef<HTMLParagraphElement>(null);
+  const authorRef = useRef<HTMLParagraphElement>(null);
+
   const { isRefXOverflowing: isTitleOverflow, refOffsetRight: titleOffsetRight } = useXOverflow(titleRef);
   const { isRefXOverflowing: isAuthorOverflow, refOffsetRight: authorOffsetRight } = useXOverflow(authorRef);
+
+  const { leftPosition } = useLeftPosition(titleRef);
+  const [ showEllipsis, setShowEllipsis ] = useState<boolean>(false);
+
+  const handleEllipsis = () => {
+      if (!titleRef.current) return;
+      if (titleRef.current.getBoundingClientRect().left === leftPosition) {
+        setShowEllipsis(true);
+      }
+  }
 
   return (
     <div className='relative col-start-1 col-end-3 row-start-1 row-end-4'>
@@ -111,7 +125,7 @@ const CardHeader = ({title, author, isShowingSlide, isEditing, handleShowSlide, 
           <StyledLeftArrow size={24} ref={cardHeaderRef} onClick={() => {!isEditing && handleShowSlide()}} />
         </CSSTransition>
         <div className='ml-2 mr-5 w-full overflow-hidden'>
-          <Title ref={titleRef} isTitleOverflow={isTitleOverflow} titleOffsetRight={titleOffsetRight}>{title}</Title>
+          <Title ref={titleRef} isTitleOverflow={isTitleOverflow} titleOffsetRight={titleOffsetRight} onMouseOver={() => setShowEllipsis(false)} onTransitionEnd={handleEllipsis} showEllipsis={showEllipsis}>{title}</Title>
         </div>
       </div>
 

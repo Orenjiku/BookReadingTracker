@@ -14,7 +14,7 @@ const App = () => {
 
   const getFinishedReading = async () => {
     try {
-      const response = await fetch('http://localhost:3000/1/finished_reading');
+      const response = await fetch('http://localhost:3000/1/currently_reading');
       const result = await response.json();
       setFinishedReading(result);
     } catch(err) {
