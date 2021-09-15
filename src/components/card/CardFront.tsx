@@ -10,7 +10,7 @@ import ReaderBookView from './ReaderBookView';
 const CardFrontContainer = styled.div<{isFlipped: boolean}>`
   ${tw`absolute h-full w-full rounded-2xl grid grid-cols-2 grid-rows-20`};
   ${tw`bg-blueGray-200 bg-opacity-10 backdrop-filter backdrop-blur-sm`};
-  ${tw`border-t border-l border-r border-blueGray-50 rounded-2xl shadow-xl`}
+  ${tw`border-t border-l border-r border-blueGray-50 rounded-2xl shadow-xl`};
   ${tw`overflow-hidden select-none`};
   &::before {
     content: '';
