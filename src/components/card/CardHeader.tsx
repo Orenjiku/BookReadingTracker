@@ -89,7 +89,7 @@ const Author = styled.p<AuthorITF>`
 `
 
 const StyledEdit = styled(Edit)<{isEditing?: boolean}>`
-  ${tw`min-w-min fill-current text-blueGray-200 text-opacity-90 cursor-pointer`};
+  ${tw`absolute right-1 top-2 min-w-min fill-current text-blueGray-200 text-opacity-90 cursor-pointer`};
   --button-up: drop-shadow(0px 1px 0.5px gray);
   filter: var(--button-up);
   &:hover {
@@ -106,10 +106,11 @@ const StyledEdit = styled(Edit)<{isEditing?: boolean}>`
     --light-effect: drop-shadow(0 0 7px #fff)
                     drop-shadow(0 0 10px #fff)
                     drop-shadow(0 0 21px #fff)
-                    drop-shadow(0 0 28px red)
-                    drop-shadow(0 0 42px red)
-                    drop-shadow(0 0 50px #fff)
-                    drop-shadow(0 0 64px red);
+                    drop-shadow(0 0 42px #0fa)
+                    drop-shadow(0 0 82px #0fa)
+                    drop-shadow(0 0 92px #0fa)
+                    drop-shadow(0 0 102px #0fa)
+                    drop-shadow(0 0 151px #0fa);
     animation: blink 1s ease-out forwards;
     @keyframes blink {
       0%, 20%, 40% {
@@ -161,7 +162,8 @@ const CardHeader = ({title, author, isShowingSlide, isEditing, handleShowSlide, 
   }
 
   return (
-    <div className='relative col-start-1 col-end-3 row-start-1 row-end-4'>
+    <div className='relative col-start-1 col-end-3 row-start-1 row-end-4 rounded-t-2xl overflow-hidden'>
+        <StyledEdit size={22} isEditing={isEditing} onClick={() => handleEdit()} />
 
       <div className='flex items-center justify-start pl-2 -mb-1.5'>
         <CSSTransition in={isShowingSlide} timeout={800} classNames='arrowRotate' nodeRef={cardHeaderRef}>
@@ -172,8 +174,7 @@ const CardHeader = ({title, author, isShowingSlide, isEditing, handleShowSlide, 
         </div>
       </div>
 
-      <div className='relative ml-2 mr-5 flex justify-between overflow-hidden'>
-        <StyledEdit size={22} isEditing={isEditing} onClick={() => handleEdit()} />
+      <div className='relative ml-2 mr-5 flex justify-end'>
         <div className='ml-16 overflow-hidden'>
           <Author ref={bookAuthorRef} isAuthorOverflow={isAuthorOverflow} authorOffsetRight={authorOffsetRight} onClick={() => handleClick('author')} isAuthorTranslatingLeft={isAuthorTranslatingLeft} onTransitionEnd={() => handleEllipsis('author')} isAuthorEllipsis={isAuthorEllipsis} {...(isAuthorOverflow && {title: authors})}>{authors}</Author>
         </div>
