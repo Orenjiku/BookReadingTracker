@@ -17,7 +17,7 @@ const useXOverflow = (ref: RefObject<HTMLElement>): RefXITF => {
           setRefOffsetRight(ref.current.scrollWidth - ref.current.clientWidth);
         }
       }, 1000);
-      return () => {clearTimeout(delayTiming)};
+      return () => { clearTimeout(delayTiming) };
     }, [ref]);
 
     return {isRefXOverflowing, refOffsetRight};
