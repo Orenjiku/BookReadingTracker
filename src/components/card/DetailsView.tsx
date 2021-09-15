@@ -46,7 +46,7 @@ const ViewContainer = styled.div`
 `
 
 const ValueContainer = styled.div<{value: number}>`
-  ${tw`absolute h-full top-5 text-coolGray-50 text-6xl font-MerriweatherItalic-300`};
+  ${tw`absolute top-5 text-coolGray-50 text-6xl font-MerriweatherItalic-300`};
   transform-style: preserve-3d;
   &:hover {
     animation: turn 3000ms linear infinite;
@@ -105,7 +105,7 @@ const StyledChevronContainer = styled.div<{left?: boolean; right?: boolean;}>`
   `
 
   const StyledBsCircleFill = styled(BsCircleFill)<{selected: boolean}>`
-    ${tw`mx-0.5 fill-current text-coolGray-500 cursor-pointer`};
+    ${tw`mx-0.5 fill-current text-coolGray-500`};
     --neon-light-center: #f9fafb;
     --neon-light-color: #0d9488;
     --light-effect: drop-shadow(0 0 4px var(--neon-light-center))
@@ -117,12 +117,14 @@ const StyledChevronContainer = styled.div<{left?: boolean; right?: boolean;}>`
       ? css`
         color: var(--neon-light-center);
         filter: var(--light-effect);
+        mix-blend-mode: lighten;
       `
       : css`
         &:hover {
-          ${tw`animate-pulse`};
+          ${tw`cursor-pointer animate-pulse`};
           color: var(--neon-light-center);
           filter: var(--light-effect);
+          mix-blend-mode: lighten;
         }
       `
     }
