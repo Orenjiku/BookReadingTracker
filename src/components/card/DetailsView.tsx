@@ -74,12 +74,23 @@ const ValueContainer = styled.div<{value: number}>`
 `
 
 const StyledBsCircleFill = styled(BsCircleFill)<{selected: boolean}>`
-  ${tw`mx-0.5 fill-current text-coolGray-50 cursor-pointer`};
+  ${tw`mx-0.5 fill-current text-coolGray-500 cursor-pointer`};
+  --neon-light-color: #0D9488;
+  --light-effect: drop-shadow(0 0 4px #fff)
+                  drop-shadow(0 0 6px #fff)
+                  drop-shadow(0px 0px 8px var(--neon-light-color))
+                  drop-shadow(0px 0px 8px var(--neon-light-color));
   ${({ selected }) => selected
-    ? css`${tw`fill-current text-teal-600`}`
-    : css`&:hover {
-      ${tw`fill-current text-teal-600 animate-pulse`};
-    }`
+    ? css`
+      ${tw`fill-current text-coolGray-50`};
+      filter: var(--light-effect);
+    `
+    : css`
+      &:hover {
+        ${tw`fill-current text-coolGray-50 animate-pulse`};
+        filter: var(--light-effect);
+      }
+    `
   }
 `
 
@@ -134,12 +145,6 @@ const DetailsView = ({ readDetails }: { readDetails: Array<{ key:string; value:n
         </CSSTransition>
       </TransitionGroup>
 
-      <div className='absolute bottom-0 w-full mb-1.5 flex justify-center'>
-        {readDetails.map((_, i) => (
-          <StyledBsCircleFill key={`BsCircleFill-${i}`} size={7} selected={i === currIdx} {...(i !== currIdx && {onClick: () => setCurrIdx(i)})}/>
-        ))}
-      </div>
-
       <div className='absolute h-full w-full flex justify-between'>
         <div className='h-full w-1/3 flex items-center overflow-hidden'>
           <BsChevronLeft className='absolute left-0 stroke-current stroke-1 text-coolGray-50'/>
@@ -149,6 +154,12 @@ const DetailsView = ({ readDetails }: { readDetails: Array<{ key:string; value:n
           <BsChevronRight className='absolute right-0 stroke-current stroke-1 text-coolGray-50' />
           <StyledChevronContainer right onClick={() => nextSlide()} />
         </div>
+      </div>
+
+      <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-1.5 flex'>
+        {readDetails.map((_, i) => (
+          <StyledBsCircleFill key={`BsCircleFill-${i}`} size={7} selected={i === currIdx} {...(i !== currIdx && {onClick: () => setCurrIdx(i)})}/>
+        ))}
       </div>
 
     </div>
