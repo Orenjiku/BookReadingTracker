@@ -73,10 +73,6 @@ const ValueContainer = styled.div<{value: number}>`
   }
 `
 
-const KeyContainer = styled.div`
-  ${tw`absolute text-trueGray-50 text-xl font-AdventPro-400`};
-`
-
 const StyledBsCircleFill = styled(BsCircleFill)<{selected: boolean}>`
   ${tw`mx-0.5 fill-current text-coolGray-50 cursor-pointer`};
   ${({ selected }) => selected
@@ -88,18 +84,30 @@ const StyledBsCircleFill = styled(BsCircleFill)<{selected: boolean}>`
 `
 
 const StyledChevronContainer = styled.div<{left?: boolean; right?: boolean;}>`
-  ${tw`absolute h-full w-3/12 bg-coolGray-300 bg-opacity-0 cursor-pointer`};
-  ${tw`transition-opacity duration-300 ease-in`};
+  ${tw`relative h-full cursor-pointer`};
+  min-width: 200%;
+  --translateXTiming: 300ms;
+  transition: transform var(--translateXTiming) ease-in-out;
   ${({ left }) => left && css`
-    ${tw`left-0 flex items-center justify-start`};
+    transform: translateX(-50%);
+    &::before {
+      content: '';
+      ${tw`absolute h-full w-1/2 bg-gradient-to-r from-coolGray-300 opacity-50`};
+    }
     &:hover {
-      ${tw`bg-opacity-100 bg-gradient-to-r from-coolGray-300 transition-opacity duration-300 ease-in-out`};
+      transform: translateX(0%);
+      transition: transform var(--translateXTiming) ease-in-out;
     };
   `};
   ${({ right }) => right && css`
-    ${tw`right-0 flex items-center justify-end`}
+    transform: translateX(0%);
+    &::before {
+      content: '';
+      ${tw`absolute right-0 h-full w-1/2 bg-gradient-to-l from-coolGray-300 opacity-50`};
+    }
     &:hover {
-      ${tw`bg-opacity-100 bg-gradient-to-l from-coolGray-300 transition-all duration-300 ease-in-out`};
+      transform: translateX(-50%);
+      transition: transform var(--translateXTiming) ease-in-out;
     };
   `};
 `
@@ -121,7 +129,7 @@ const DetailsView = ({ readDetails }: { readDetails: Array<{ key:string; value:n
         <CSSTransition timeout={200} key={`ReadDetails-${currIdx}`} /* nodeRef={detailsViewRef} */>
           <ViewContainer /* ref={detailsViewRef} */>
             <ValueContainer value={readDetails[currIdx].value}>{readDetails[currIdx].value}</ValueContainer>
-            <KeyContainer>{readDetails[currIdx].key}</KeyContainer>
+            <div className='absolute text-trueGray-50 text-xl font-AdventPro-400'>{readDetails[currIdx].key}</div>
           </ViewContainer>
         </CSSTransition>
       </TransitionGroup>
@@ -132,8 +140,16 @@ const DetailsView = ({ readDetails }: { readDetails: Array<{ key:string; value:n
         ))}
       </div>
 
-      <StyledChevronContainer left onClick={() => prevSlide()}><BsChevronLeft /></StyledChevronContainer>
-      <StyledChevronContainer right onClick={() => nextSlide()}><BsChevronRight /></StyledChevronContainer>
+      <div className='absolute h-full w-full flex justify-between'>
+        <div className='h-full w-1/3 flex items-center overflow-hidden'>
+          <BsChevronLeft className='absolute left-0 stroke-current stroke-1 text-coolGray-50'/>
+          <StyledChevronContainer left onClick={() => prevSlide()} />
+        </div>
+        <div className='h-full w-1/3 flex items-center overflow-hidden'>
+          <BsChevronRight className='absolute right-0 stroke-current stroke-1 text-coolGray-50' />
+          <StyledChevronContainer right onClick={() => nextSlide()} />
+        </div>
+      </div>
 
     </div>
   )
