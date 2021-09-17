@@ -7,6 +7,9 @@ import { BsCircleFill } from 'react-icons/bs';
 
 const ViewContainer = styled.div`
   ${tw`absolute h-full w-full flex justify-center`};
+  --duration: 200ms;
+  --timing-function: linear;
+  --transition: all var(--duration) var(--timing-function);
   &.forward-enter {
     opacity: 0;
     transform: translateX(100%);
@@ -14,7 +17,7 @@ const ViewContainer = styled.div`
   &.forward-enter-active {
     opacity: 1;
     transform: translateX(0%);
-    transition: all 200ms linear;
+    transition: var(--transition);
   }
   &.forward-exit {
     opacity: 1;
@@ -23,7 +26,7 @@ const ViewContainer = styled.div`
   &.forward-exit-active {
     opacity: 0;
     transform: translateX(-100%);
-    transition: all 200ms linear;
+    transition: var(--transition);
   }
   &.backward-enter {
     opacity: 0;
@@ -32,7 +35,7 @@ const ViewContainer = styled.div`
   &.backward-enter-active {
     opacity: 1;
     transform: translateX(0%);
-    transition: all 200ms linear;
+    transition: var(--transition);
   }
   &.backward-exit {
     opacity: 1;
@@ -41,13 +44,23 @@ const ViewContainer = styled.div`
   &.backward-exit-active {
     opacity: 0;
     transform: translateX(100%);
-    transition: all 200ms linear;
+    transition: var(--transition);
   }
 `
 
-const ValueContainer = styled.div<{value: number}>`
+const ValueDisplay = styled.p<{value: number}>`
   ${tw`absolute top-5 text-coolGray-50 text-6xl font-MerriweatherItalic-300`};
   transform-style: preserve-3d;
+  &::after {
+    content: '${({value}) => `${value}`}';
+    ${tw`absolute top-0 left-0`};
+    pointer-events: none;
+    transform-origin: bottom;
+    transform: scaleY(-1) translateY(-7%) rotateX(-70deg);
+    background: linear-gradient(0deg, #F9FAFB 0%, transparent 60%);
+    ${tw`bg-clip-text text-transparent`};
+    filter: blur(3px);
+  }
   &:hover {
     animation: turn 3000ms linear infinite;
     @keyframes turn {
@@ -55,83 +68,74 @@ const ValueContainer = styled.div<{value: number}>`
         transform: rotateY(0deg);
       }
       25% {
-        transform: rotateY(50deg);
+        transform: rotateY(40deg);
       }
       75% {
-        transform: rotateY(-50deg);
+        transform: rotateY(-40deg);
       }
     }
-  }
-  &::after {
-    content: '${({value}) => `${value}`}';
-    ${tw`absolute top-0 left-0`};
-    background: linear-gradient(0deg, #F9FAFB 0%, transparent 60%);
-    transform-origin: bottom;
-    transform: scaleY(-1) translateY(-7%) rotateX(-70deg);
-    ${tw`bg-clip-text text-transparent`};
-    filter: blur(3px);
   }
 `
 
-const StyledChevronContainer = styled.div<{left?: boolean; right?: boolean;}>`
+const GradientPane = styled.div<{left?: boolean; right?: boolean;}>`
   ${tw`relative h-full cursor-pointer`};
   min-width: 200%;
-  --translateXDuration: 300ms;
-  --translateXFunction: ease-out;
+  --translateXDuration: 100ms;
+  --translateXFunction: linear;
   --transition: transform var(--translateXDuration) var(--translateXFunction);
   transition: var(--transition);
   ${({ left }) => left && css`
-  transform: translateX(-50%);
-  &::before {
-    content: '';
-    ${tw`absolute h-full w-1/2 bg-gradient-to-r from-coolGray-300 opacity-50`};
-  }
-  &:hover {
-    transform: translateX(0%);
-    transition: var(--transition);
-  };
+    transform: translateX(-50%);
+    &::before {
+      content: '';
+      ${tw`absolute h-full w-1/2 bg-gradient-to-r from-coolGray-300 opacity-50`};
+    }
+    &:hover {
+      transform: translateX(0%);
+      transition: var(--transition);
+    };
   `};
   ${({ right }) => right && css`
-  transform: translateX(0%);
-  &::before {
-    content: '';
-    ${tw`absolute right-0 h-full w-1/2 bg-gradient-to-l from-coolGray-300 opacity-50`};
-  }
-  &:hover {
-    transform: translateX(-50%);
-    transition: var(--transition);
-  };
+    transform: translateX(0%);
+    &::before {
+      content: '';
+      ${tw`absolute right-0 h-full w-1/2 bg-gradient-to-l from-coolGray-300 opacity-50`};
+    }
+    &:hover {
+      transform: translateX(-50%);
+      transition: var(--transition);
+    };
   `};
-  `
+`
 
-  const StyledBsCircleFill = styled(BsCircleFill)<{selected: boolean}>`
-    ${tw`mx-0.5 fill-current text-coolGray-500`};
-    --neon-light-center: #f9fafb;
-    --neon-light-color: #0d9488;
-    --light-effect: drop-shadow(0 0 4px var(--neon-light-center))
-                    drop-shadow(0 0 6px var(--neon-light-center))
-                    drop-shadow(0 0 8px var(--neon-light-center))
-                    drop-shadow(0 0 8px var(--neon-light-color))
-                    drop-shadow(0 0 8px var(--neon-light-color));
-    ${({ selected }) => selected
-      ? css`
+const StyledBsCircleFill = styled(BsCircleFill)<{selected: boolean}>`
+  ${tw`mx-0.5 stroke-current text-coolGray-500`};
+  --neon-light-center: #f9fafb;
+  --neon-light-color: #0d9488;
+  --light-effect: drop-shadow(0 0 4px var(--neon-light-center))
+                  drop-shadow(0 0 6px var(--neon-light-center))
+                  drop-shadow(0 0 8px var(--neon-light-center))
+                  drop-shadow(0 0 8px var(--neon-light-color))
+                  drop-shadow(0 0 8px var(--neon-light-color));
+  ${({ selected }) => selected
+    ? css`
+      color: var(--neon-light-center);
+      filter: var(--light-effect);
+      mix-blend-mode: lighten;
+    `
+    : css`
+      &:hover {
+        ${tw`cursor-pointer animate-pulse`};
         color: var(--neon-light-center);
         filter: var(--light-effect);
         mix-blend-mode: lighten;
-      `
-      : css`
-        &:hover {
-          ${tw`cursor-pointer animate-pulse`};
-          color: var(--neon-light-center);
-          filter: var(--light-effect);
-          mix-blend-mode: lighten;
-        }
-      `
-    }
-  `
+      }
+    `
+  }
+`
 
 const DetailsView = ({ readDetails }: { readDetails: Array<{ key:string; value:number }> }) => {
-  const [currIdx, setCurrIdx] = useState<number>(0);
+  const [ currIdx, setCurrIdx ] = useState<number>(0);
   const prevIdx = usePrevious(currIdx);
   const length = readDetails.length;
   const classNames = ((currIdx > prevIdx && currIdx !== prevIdx + (length - 1)) || currIdx === prevIdx - (length - 1)) ? 'forward' : 'backward';
@@ -144,27 +148,27 @@ const DetailsView = ({ readDetails }: { readDetails: Array<{ key:string; value:n
     <div className='relative row-start-4 row-end-10 col-start-2 col-end-3 bg-blueGray-500 bg-opacity-40 overflow-hidden'>
 
       <TransitionGroup component={null} childFactory={child => cloneElement(child, {classNames})}>
-        <CSSTransition timeout={200} key={`ReadDetails-${currIdx}`} /* nodeRef={detailsViewRef} */>
+        <CSSTransition timeout={200} key={`ReadDetails-${currIdx}`} unmountOnExit /* nodeRef={detailsViewRef} */>
           <ViewContainer /* ref={detailsViewRef} */>
-            <ValueContainer value={readDetails[currIdx].value}>{readDetails[currIdx].value}</ValueContainer>
+            <ValueDisplay value={readDetails[currIdx].value}>{readDetails[currIdx].value}</ValueDisplay>
             <div className='absolute text-trueGray-50 text-xl font-AdventPro-400'>{readDetails[currIdx].key}</div>
           </ViewContainer>
         </CSSTransition>
       </TransitionGroup>
 
-        <div className='absolute left-0 h-full w-1/3 flex items-center overflow-hidden'>
-          <BsChevronLeft className='absolute left-0 stroke-current stroke-1 text-coolGray-50'/>
-          <StyledChevronContainer left onClick={() => prevSlide()} />
-        </div>
+      <div className='absolute left-0 h-full w-1/3 flex items-center overflow-hidden'>
+        <BsChevronLeft className='absolute left-0 stroke-current stroke-1 text-coolGray-50'/>
+        <GradientPane left onClick={() => prevSlide()} />
+      </div>
 
-        <div className='absolute right-0 h-full w-1/3 flex items-center overflow-hidden'>
-          <BsChevronRight className='absolute right-0 stroke-current stroke-1 text-coolGray-50' />
-          <StyledChevronContainer right onClick={() => nextSlide()} />
-        </div>
+      <div className='absolute right-0 h-full w-1/3 flex items-center overflow-hidden'>
+        <BsChevronRight className='absolute right-0 stroke-current stroke-1 text-coolGray-50' />
+        <GradientPane right onClick={() => nextSlide()} />
+      </div>
 
       <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-1.5 flex'>
         {readDetails.map((_, i) => (
-          <StyledBsCircleFill key={`BsCircleFill-${i}`} size={7} selected={i === currIdx} {...(i !== currIdx && {onClick: () => setCurrIdx(i)})}/>
+          <StyledBsCircleFill key={`BsCircleFill-${i}`} size={7} selected={i === currIdx} {...(i !== currIdx && {onClick: () => setCurrIdx(i)})} />
         ))}
       </div>
 
