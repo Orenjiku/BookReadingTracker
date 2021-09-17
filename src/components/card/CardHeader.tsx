@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import useXOverflow from '../../hooks/useXOverflow';
 import useLeftPosition from '../../hooks/useLeftPosition';
@@ -17,24 +17,102 @@ interface CardHeaderPropsITF {
 
 const StyledLeftArrow = styled(LeftArrow)`
   ${tw`min-w-min cursor-pointer`};
-  ${tw`fill-current text-sky-900`};
+  opacity: 0.4;
+  fill: #F9FAFB;
+  stroke: #F9FAFB;
+  stroke-width: 1;
+  filter: drop-shadow(0px 2px 0 black);
+  --neon-light-center: #f9fafb;
+  --neon-light-color: #0d9488;
+  --light-effect: drop-shadow(0 0 4px var(--neon-light-center))
+                  drop-shadow(0 0 6px var(--neon-light-center))
+                  drop-shadow(0 0 8px var(--neon-light-center))
+                  drop-shadow(0 0 8px var(--neon-light-color))
+                  drop-shadow(0 0 8px var(--neon-light-color));
   &.arrowRotate-enter-active {
-    ${tw`text-red-500`};
-    transform: rotate(-180deg);
-    transition: all 800ms cubic-bezier(0.22, 1, 0.36, 1);
+    animation: arrowDown 500ms linear, arrowLight 100ms linear 500ms, arrowRotateCC 1000ms cubic-bezier(0.22, 1, 0.36, 1) 600ms;
+    @keyframes arrowDown {
+      100% {
+        filter: none;
+      }
+    }
+
+    @keyframes arrowLight {
+      0% {
+        filter: none;
+      }
+      100% {
+        fill: var(--neon-light-center);
+        filter: var(--light-effect);
+      }
+    }
+    @keyframes arrowRotateCC {
+      0% {
+        fill: var(--neon-light-center);
+        filter: var(--light-effect);
+        transform: rotate(0deg);
+      }
+      100% {
+        fill: var(--neon-light-center);
+        filter: var(--light-effect);
+        transform: rotate(-180deg);
+      }
+    }
+
   };
   &.arrowRotate-enter-done {
-    ${tw`text-red-500`};
+    color: var(--neon-light-center);
+    filter: var(--light-effect);
     transform: rotate(180deg);
   };
+
   &.arrowRotate-exit {
-    ${tw`text-red-500`};
+    color: var(--neon-light-center);
+    filter: var(--light-effect);
     transform: rotate(-180deg);
   }
   &.arrowRotate-exit-active {
-    ${tw`text-sky-900`};
-    transform: rotate(0deg);
-    transition: all 800ms cubic-bezier(0.5, 0, 0.75, 0);
+    animation: arrowRotateC 1000ms cubic-bezier(0.22, 1, 0.36, 1), arrowDark 100ms linear 1000ms, arrowUp 500ms linear 1100ms;
+
+    @keyframes arrowRotateC {
+      0% {
+        fill: var(--neon-light-center);
+        filter: var(--light-effect);
+        transform: rotate(-180deg);
+      }
+      100% {
+        fill: var(--neon-light-center);
+        filter: var(--light-effect);
+        transform: rotate(0deg);
+      }
+    }
+
+    @keyframes arrowDark {
+      0% {
+        fill: var(--neon-light-center);
+        filter: var(--light-effect);
+        transform: rotate(0deg);
+      }
+      100% {
+        fill: #F9FAFB;
+        filter: none;
+        transform: rotate(0deg);
+      }
+    }
+
+    @keyframes arrowUp {
+      0%{
+        fill: #F9FAFB;
+        filter: none;
+        transform: rotate(0deg);
+      }
+      100% {
+        fill: #F9FAFB;
+        filter: drop-shadow(0px 2px 0 black);
+        transform: rotate(0deg);
+      }
+    }
+
   };
 `
 
@@ -46,23 +124,23 @@ interface TitleITF {
 }
 
 const Title = styled.p<TitleITF>`
-  ${tw`max-w-min font-AllertaStencil-400 whitespace-nowrap text-blueGray-200 opacity-50`};
+  ${tw`max-w-min opacity-50 font-AllertaStencil-400 text-blueGray-200 whitespace-nowrap`};
   ${({ isTitleEllipsis }) => isTitleEllipsis && css`${tw`truncate`}`};
   font-size: 1.625rem;
   letter-spacing: -1.5px;
   text-shadow: 0px -2px 0 white, 0px -1px 1px white, 0px 1px 0 black, 0px 1px 2px black;
   --distance: ${({titleOffsetRight}) => titleOffsetRight};
   --rate: 30;
-  --time: calc(var(--distance) / var(--rate) * 1s);
+  --duration: calc(var(--distance) / var(--rate) * 1s);
   transform: translateX(0%);
-  transition: transform var(--time) linear;
+  transition: transform var(--duration) linear;
   &:hover {
-    ${tw`text-trueGray-50 opacity-60`};
+    ${tw`opacity-60 text-trueGray-50`};
   }
   ${({ isTitleOverflow }) => isTitleOverflow && css`${tw`cursor-pointer`}`};
   ${({isTitleOverflow, isTitleTranslatingLeft}) => isTitleOverflow && isTitleTranslatingLeft && css`
     transform: translateX(calc(var(--distance) * -1px));
-    transition: transform var(--time) * 1s) linear;
+    transition: transform var(--duration) * 1s) linear;
   `};
 `
 
@@ -93,7 +171,7 @@ const StyledEdit = styled(Edit)<{isEditing?: boolean}>`
   --button-up: drop-shadow(0px 1px 0.5px gray);
   filter: var(--button-up);
   &:hover {
-    ${tw`fill-current text-trueGray-50`};
+    ${tw`stroke-current text-trueGray-50`};
     filter: var(--button-up)
             drop-shadow(0 0 7px #fff)
             drop-shadow(0 0 10px #fff)
@@ -101,7 +179,7 @@ const StyledEdit = styled(Edit)<{isEditing?: boolean}>`
             drop-shadow(0 0 42px #0fa);
   }
   ${({ isEditing }) => isEditing && css`
-    ${tw`fill-current text-trueGray-50`};
+    ${tw`stroke-current text-trueGray-50`};
     --shadows-down: drop-shadow(0px -1px 0.5px gray);
     --light-effect: drop-shadow(0 0 7px #fff)
                     drop-shadow(0 0 10px #fff)
@@ -142,6 +220,21 @@ const CardHeader = ({title, author, isShowingSlide, isEditing, handleShowSlide, 
   const [ isAuthorEllipsis, setIsAuthorEllipsis ] = useState(true);
   const [ isAuthorTranslatingLeft, setIsAuthorTranslatingLeft] = useState(false);
 
+  const [ isArrowTransitioning, setIsArrowTransitioning ] = useState(false);
+
+  const handleArrowClick = () => {
+    handleShowSlide();
+    setIsArrowTransitioning(true);
+  }
+
+  useEffect(() => {
+    const timer = () => setTimeout(() => {
+      setIsArrowTransitioning(false);
+    }, 1800);
+    const arrowClickDelay = timer();
+    return () => {clearTimeout(arrowClickDelay)}
+  }, [isArrowTransitioning])
+
   const handleEllipsis = (input: 'title' | 'author') => {
     if (!bookTitleRef.current || !bookAuthorRef.current) return;
     if (input === 'title') {
@@ -166,8 +259,9 @@ const CardHeader = ({title, author, isShowingSlide, isEditing, handleShowSlide, 
         <StyledEdit size={22} isEditing={isEditing} onClick={() => handleEdit()} />
 
       <div className='flex items-center justify-start pl-2 -mb-1.5'>
-        <CSSTransition in={isShowingSlide} timeout={800} classNames='arrowRotate' nodeRef={cardHeaderRef}>
-          <StyledLeftArrow size={24} ref={cardHeaderRef} onClick={() => {!isEditing && handleShowSlide()}} />
+        <CSSTransition in={isShowingSlide} timeout={1600} classNames='arrowRotate' nodeRef={cardHeaderRef}>
+          <StyledLeftArrow size={24} ref={cardHeaderRef} onClick={() => {!isEditing && !isArrowTransitioning && handleArrowClick()}} />
+          {/* <StyledLeftArrow size={24} ref={cardHeaderRef} onClick={() => {!isEditing && handleShowSlide()}} /> */}
         </CSSTransition>
         <div className='ml-2 mr-5 overflow-hidden'>
           <Title ref={bookTitleRef} isTitleOverflow={isTitleOverflow} titleOffsetRight={titleOffsetRight} onClick={() => handleClick('title')} isTitleTranslatingLeft={isTitleTranslatingLeft} onTransitionEnd={() => handleEllipsis('title')} isTitleEllipsis={isTitleEllipsis} {...(isTitleOverflow && {title: title})}>{title}</Title>
