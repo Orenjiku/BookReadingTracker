@@ -4,7 +4,7 @@ const usePrevious = (value: number): number => {
   const ref = useRef<number>(value);
   useEffect(() => {
     ref.current = value;
-  });
+  }, [value]);
   return ref.current;
 }
 
