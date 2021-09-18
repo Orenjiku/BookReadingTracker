@@ -71,55 +71,96 @@ const StyledLeftArrow = styled(LeftArrow)<{slideShowTimer: number}>`
   }
 `
 
-interface TitleITF {
-  isTitleOverflow: boolean;
-  titleOffsetRight: number;
-  isTitleTranslatingLeft: boolean;
-  isTitleEllipsis: boolean;
+// interface TitleITF {
+//   isTitleOverflow: boolean;
+//   titleOffsetRight: number;
+//   isTitleTranslatingLeft: boolean;
+//   isTitleEllipsis: boolean;
+// }
+
+// const Title = styled.p<TitleITF>`
+//   ${tw`opacity-50 font-AllertaStencil-400 text-blueGray-200 whitespace-nowrap`};
+//   ${({ isTitleEllipsis }) => isTitleEllipsis && css`${tw`truncate`}`};
+//   font-size: 1.625rem;
+//   letter-spacing: -1.5px;
+//   text-shadow: 0px -2px 0 white, 0px -1px 1px white, 0px 1px 0 black, 0px 1px 2px black;
+//   --distance: ${({titleOffsetRight}) => titleOffsetRight};
+//   --rate: 30;
+//   --duration: calc(var(--distance) / var(--rate) * 1s);
+//   transform: translateX(0%);
+//   transition: transform var(--duration) linear;
+//   &:hover {
+//     ${tw`opacity-60 text-trueGray-50`};
+//   }
+//   ${({ isTitleOverflow }) => isTitleOverflow && css`${tw`cursor-pointer`}`};
+//   ${({isTitleOverflow, isTitleTranslatingLeft}) => isTitleOverflow && isTitleTranslatingLeft && css`
+//     transform: translateX(calc(var(--distance) * -1px));
+//     transition: transform var(--duration) linear;
+//   `};
+// `
+
+// interface AuthorITF {
+//   isAuthorOverflow: boolean;
+//   authorOffsetRight: number;
+//   isAuthorTranslatingLeft: boolean;
+//   isAuthorEllipsis: boolean;
+// }
+
+// const Author = styled.p<AuthorITF>`
+//   ${tw`text-trueGray-900 font-Charm-400 whitespace-nowrap`};
+//   ${({ isAuthorEllipsis }) => isAuthorEllipsis && css`${tw`truncate`}`};
+//   --distance: ${({authorOffsetRight}) => authorOffsetRight};
+//   --rate: 30;
+//   --duration: calc(var(--distance) / var(--rate) * 1s);
+//   transform: translateX(0%);
+//   transition: transform var(--duration) linear;
+//   ${({ isAuthorOverflow }) => isAuthorOverflow && css`${tw`cursor-pointer`}`};
+//   ${({isAuthorOverflow, isAuthorTranslatingLeft}) => isAuthorOverflow && isAuthorTranslatingLeft && css`
+//     transform: translateX(calc(var(--distance) * -1px));
+//     transition: transform var(--duration) linear;
+//   `};
+// `
+
+interface TextITF {
+  bookTitle?: true;
+  author?: true;
+  isOverflow: boolean;
+  offsetRight: number;
+  isTranslatingLeft: boolean;
+  isEllipsis: boolean;
 }
 
-const Title = styled.p<TitleITF>`
-  ${tw`max-w-min opacity-50 font-AllertaStencil-400 text-blueGray-200 whitespace-nowrap`};
-  ${({ isTitleEllipsis }) => isTitleEllipsis && css`${tw`truncate`}`};
-  font-size: 1.625rem;
-  letter-spacing: -1.5px;
-  text-shadow: 0px -2px 0 white, 0px -1px 1px white, 0px 1px 0 black, 0px 1px 2px black;
-  --distance: ${({titleOffsetRight}) => titleOffsetRight};
+const Text = styled.p<TextITF>`
+  ${({ bookTitle }) => bookTitle && css`
+    ${tw`opacity-50 font-AllertaStencil-400 text-blueGray-200 whitespace-nowrap`};
+    font-size: 1.625rem;
+    letter-spacing: -1.5px;
+    text-shadow: 0px -2px 0 white, 0px -1px 1px white, 0px 1px 0 black, 0px 1px 2px black;
+  `};
+  ${({ author }) => author && css`${tw`text-trueGray-900 font-Charm-400 whitespace-nowrap`}`};
+  ${({ isEllipsis }) => isEllipsis && css`${tw`truncate`}`};
+  --distance: ${({offsetRight}) => offsetRight};
   --rate: 30;
   --duration: calc(var(--distance) / var(--rate) * 1s);
   transform: translateX(0%);
   transition: transform var(--duration) linear;
-  &:hover {
-    ${tw`opacity-60 text-trueGray-50`};
-  }
-  ${({ isTitleOverflow }) => isTitleOverflow && css`${tw`cursor-pointer`}`};
-  ${({isTitleOverflow, isTitleTranslatingLeft}) => isTitleOverflow && isTitleTranslatingLeft && css`
+  ${({ isOverflow }) => isOverflow && css`${tw`cursor-pointer`}`};
+  ${({isOverflow, isTranslatingLeft}) => isOverflow && isTranslatingLeft && css`
     transform: translateX(calc(var(--distance) * -1px));
     transition: transform var(--duration) linear;
   `};
 `
 
-interface AuthorITF {
-  isAuthorOverflow: boolean;
-  authorOffsetRight: number;
-  isAuthorTranslatingLeft: boolean;
-  isAuthorEllipsis: boolean;
-}
+// const Title = styled(OverflowP)`
+//   ${tw`opacity-50 font-AllertaStencil-400 text-blueGray-200 whitespace-nowrap`};
+//   font-size: 1.625rem;
+//   letter-spacing: -1.5px;
+//   text-shadow: 0px -2px 0 white, 0px -1px 1px white, 0px 1px 0 black, 0px 1px 2px black;
+// `
 
-const Author = styled.p<AuthorITF>`
-  ${tw`text-trueGray-900 font-Charm-400 whitespace-nowrap`};
-  ${({ isAuthorEllipsis }) => isAuthorEllipsis && css`${tw`truncate`}`};
-  --distance: ${({authorOffsetRight}) => authorOffsetRight};
-  --rate: 30;
-  --duration: calc(var(--distance) / var(--rate) * 1s);
-  transform: translateX(0%);
-  transition: transform var(--duration) linear;
-  ${({ isAuthorOverflow }) => isAuthorOverflow && css`${tw`cursor-pointer`}`};
-  ${({isAuthorOverflow, isAuthorTranslatingLeft}) => isAuthorOverflow && isAuthorTranslatingLeft && css`
-    transform: translateX(calc(var(--distance) * -1px));
-    transition: transform var(--duration) linear;
-  `};
-`
+// const Author = styled(OverflowP)`
+//   ${tw`text-trueGray-900 font-Charm-400 whitespace-nowrap`};
+// `
 
 const CardHeader = ({title, author, isSlideShow, slideShowTimer, handleSlideShow}: CardHeaderPropsITF) => {
 
@@ -174,13 +215,15 @@ const CardHeader = ({title, author, isSlideShow, slideShowTimer, handleSlideShow
           <StyledLeftArrow size={26} ref={cardHeaderRef} slideShowTimer={slideShowTimer} onClick={() => !isArrowAnimating && handleArrowClick()} />
         </CSSTransition>
         <div className='ml-2 mr-5 overflow-hidden'>
-          <Title ref={bookTitleRef} isTitleOverflow={isTitleOverflow} titleOffsetRight={titleOffsetRight} onClick={() => handleClick('title')} isTitleTranslatingLeft={isTitleTranslatingLeft} onTransitionEnd={() => handleEllipsis('title')} isTitleEllipsis={isTitleEllipsis} {...(isTitleOverflow && {title: title})}>{title}</Title>
+          {/* <Title ref={bookTitleRef} isTitleOverflow={isTitleOverflow} titleOffsetRight={titleOffsetRight} onClick={() => handleClick('title')} isTitleTranslatingLeft={isTitleTranslatingLeft} onTransitionEnd={() => handleEllipsis('title')} isTitleEllipsis={isTitleEllipsis} {...(isTitleOverflow && {title: title})}>{title}</Title> */}
+          <Text bookTitle ref={bookTitleRef} isOverflow={isTitleOverflow} offsetRight={titleOffsetRight} onClick={() => handleClick('title')} isTranslatingLeft={isTitleTranslatingLeft} onTransitionEnd={() => handleEllipsis('title')} isEllipsis={isTitleEllipsis} {...(isTitleOverflow && {title: title})}>{title}</Text>
         </div>
       </div>
 
       <div className='relative ml-2 mr-5 flex justify-end'>
         <div className='ml-16 overflow-hidden'>
-          <Author ref={bookAuthorRef} isAuthorOverflow={isAuthorOverflow} authorOffsetRight={authorOffsetRight} onClick={() => handleClick('author')} isAuthorTranslatingLeft={isAuthorTranslatingLeft} onTransitionEnd={() => handleEllipsis('author')} isAuthorEllipsis={isAuthorEllipsis} {...(isAuthorOverflow && {title: authors})}>{authors}</Author>
+          {/* <Author ref={bookAuthorRef} isAuthorOverflow={isAuthorOverflow} authorOffsetRight={authorOffsetRight} onClick={() => handleClick('author')} isAuthorTranslatingLeft={isAuthorTranslatingLeft} onTransitionEnd={() => handleEllipsis('author')} isAuthorEllipsis={isAuthorEllipsis} {...(isAuthorOverflow && {title: authors})}>{authors}</Author> */}
+          <Text author ref={bookAuthorRef} isOverflow={isAuthorOverflow} offsetRight={authorOffsetRight} onClick={() => handleClick('author')} isTranslatingLeft={isAuthorTranslatingLeft} onTransitionEnd={() => handleEllipsis('author')} isEllipsis={isAuthorEllipsis} {...(isAuthorOverflow && {title: authors})}>{authors}</Text>
         </div>
       </div>
 
