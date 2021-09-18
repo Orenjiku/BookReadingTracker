@@ -6,13 +6,13 @@ import CardHeader from './CardHeader';
 import BookImage from './BookImage';
 import DetailsView from './DetailsView';
 import ReaderBookView from './ReaderBookView';
+import { Edit } from '@styled-icons/boxicons-regular/Edit';
 
 const CardFrontContainer = styled.div<{isFlipped: boolean}>`
   ${tw`absolute h-full w-full rounded-2xl grid grid-cols-2 grid-rows-20`};
   ${tw`bg-blueGray-200 bg-opacity-10 backdrop-filter backdrop-blur-sm`};
   ${tw`border-t border-l border-r border-blueGray-50 rounded-2xl shadow-xl`};
   ${tw`overflow-hidden select-none`};
-  background: linear-gradient(#dbeafe 0, transparent 3%);
   backface-visibility: hidden;
   transform: perspective(1200px) rotateY(0deg);
   transition: transform 600ms linear;
@@ -43,15 +43,30 @@ const SlideContainer = styled.div<{src?: string;}>`
   };
 `
 
+const StyledEdit = styled(Edit)<{isEditing?: boolean}>`
+  ${tw`absolute left-1 top-14 min-w-min opacity-50 stroke-1 stroke-current text-coolGray-50 cursor-pointer`};
+  --edit-shadow: drop-shadow(0px 1px 0 black);
+  filter: var(--edit-shadow);
+  transition: all 100ms linear;
+  ${({ isEditing }) => isEditing && css`
+    --neon-light-center: #f9fafb;
+    --neon-light-color: #0d9488;
+    --light-effect: drop-shadow(0 0 4px var(--neon-light-center))
+                    drop-shadow(0 0 16px var(--neon-light-color));
+    opacity: 1;
+    color: var(--neon-light-center);
+    filter: var(--light-effect);
+    fill: none;
+    transition: all 100ms linear;
+  `}
+`
+
 const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: boolean; handleFlip: Function }) => {
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [isShowingSlide, setIsShowingSlide] = useState<boolean>(false);
+  const [isSlideShow, setIsSlideShow] = useState<boolean>(false);
 
   const cardFrontRef = useRef(null);
-
-  const handleEdit = () => setIsEditing(isEditing => !isEditing);
-  const handleShowSlide = () => setIsShowingSlide(isShowingSlide => !isShowingSlide);
 
   const totalDays = book.reader_book.reduce((acc, cur) => acc + cur.days_total, 0);
   const totalDaysRead = book.reader_book.reduce((acc, cur) => acc + cur.days_read, 0);
@@ -70,10 +85,14 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
     {key: 'Times Read', value: book.reader_book.length},
   ];
 
+  const slideShowTimer = 800;
+
+  const handleEdit = () => setIsEditing(isEditing => !isEditing);
+  const handleSlideShow = () => setIsSlideShow(isSlideShow => !isSlideShow);
+
   return (
     <CardFrontContainer isFlipped={isFlipped}>
-
-      <CardHeader title={book.title} author={book.author} isShowingSlide={isShowingSlide} isEditing={isEditing} handleShowSlide={handleShowSlide} handleEdit={handleEdit} />
+      <CardHeader title={book.title} author={book.author} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleSlideShow={handleSlideShow} />
       <BookImage pictureLink={book.picture_link} isEditing={isEditing} handleFlip={handleFlip}/>
       <DetailsView readDetails={readDetails} />
       <ReaderBookView readerBookList={book.reader_book} isEditing={isEditing} />
@@ -81,8 +100,9 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
       <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center text-trueGray-900 text-2xl font-Charm-400'>
         Completed!
       </div>
+      <StyledEdit size={22} isEditing={isEditing} onClick={() => handleEdit()} />
 
-      <CSSTransition in={isShowingSlide} timeout={800} classNames='slide' nodeRef={cardFrontRef} unmountOnExit>
+      <CSSTransition in={isSlideShow} timeout={slideShowTimer} classNames='slide' nodeRef={cardFrontRef} unmountOnExit>
         <SlideContainer ref={cardFrontRef} src={book.picture_link}>
           <div className='z-10 h-4/5 w-11/12 p-4 rounded-tl-2xl overflow-y-scroll whitespace-pre-wrap select-text bg-trueGray-50 bg-opacity-60 text-xs font-Helvetica'>
             {book.blurb}
