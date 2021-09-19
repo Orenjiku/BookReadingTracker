@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
-import tw, { styled, css } from 'twin.macro';
-import useXOverflow from '../../hooks/useXOverflow';
-import useLeftPosition from '../../hooks/useLeftPosition';
+import tw, { styled } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
+import { StyledText } from './styled';
+import OverflowText from './OverflowText';
+import useIsXOverflow from '../../hooks/useIsXOverflow';
 import { LeftArrow } from '@styled-icons/boxicons-regular/LeftArrow';
 
 interface CardHeaderPropsITF {
@@ -18,7 +19,7 @@ const CardHeaderContainer = styled.div`
   &::before {
     content: '';
     ${tw`absolute top-0 left-0 w-full h-full opacity-70`};
-    background: linear-gradient(#DBEAFE 0, transparent 25%);
+    background: linear-gradient(#dbeafe 0, transparent 25%);
 };
 `
 
@@ -71,97 +72,6 @@ const StyledLeftArrow = styled(LeftArrow)<{slideShowTimer: number}>`
   }
 `
 
-// interface TitleITF {
-//   isTitleOverflow: boolean;
-//   titleOffsetRight: number;
-//   isTitleTranslatingLeft: boolean;
-//   isTitleEllipsis: boolean;
-// }
-
-// const Title = styled.p<TitleITF>`
-//   ${tw`opacity-50 font-AllertaStencil-400 text-blueGray-200 whitespace-nowrap`};
-//   ${({ isTitleEllipsis }) => isTitleEllipsis && css`${tw`truncate`}`};
-//   font-size: 1.625rem;
-//   letter-spacing: -1.5px;
-//   text-shadow: 0px -2px 0 white, 0px -1px 1px white, 0px 1px 0 black, 0px 1px 2px black;
-//   --distance: ${({titleOffsetRight}) => titleOffsetRight};
-//   --rate: 30;
-//   --duration: calc(var(--distance) / var(--rate) * 1s);
-//   transform: translateX(0%);
-//   transition: transform var(--duration) linear;
-//   &:hover {
-//     ${tw`opacity-60 text-trueGray-50`};
-//   }
-//   ${({ isTitleOverflow }) => isTitleOverflow && css`${tw`cursor-pointer`}`};
-//   ${({isTitleOverflow, isTitleTranslatingLeft}) => isTitleOverflow && isTitleTranslatingLeft && css`
-//     transform: translateX(calc(var(--distance) * -1px));
-//     transition: transform var(--duration) linear;
-//   `};
-// `
-
-// interface AuthorITF {
-//   isAuthorOverflow: boolean;
-//   authorOffsetRight: number;
-//   isAuthorTranslatingLeft: boolean;
-//   isAuthorEllipsis: boolean;
-// }
-
-// const Author = styled.p<AuthorITF>`
-//   ${tw`text-trueGray-900 font-Charm-400 whitespace-nowrap`};
-//   ${({ isAuthorEllipsis }) => isAuthorEllipsis && css`${tw`truncate`}`};
-//   --distance: ${({authorOffsetRight}) => authorOffsetRight};
-//   --rate: 30;
-//   --duration: calc(var(--distance) / var(--rate) * 1s);
-//   transform: translateX(0%);
-//   transition: transform var(--duration) linear;
-//   ${({ isAuthorOverflow }) => isAuthorOverflow && css`${tw`cursor-pointer`}`};
-//   ${({isAuthorOverflow, isAuthorTranslatingLeft}) => isAuthorOverflow && isAuthorTranslatingLeft && css`
-//     transform: translateX(calc(var(--distance) * -1px));
-//     transition: transform var(--duration) linear;
-//   `};
-// `
-
-interface TextITF {
-  bookTitle?: true;
-  author?: true;
-  isOverflow: boolean;
-  offsetRight: number;
-  isTranslatingLeft: boolean;
-  isEllipsis: boolean;
-}
-
-const Text = styled.p<TextITF>`
-  ${({ bookTitle }) => bookTitle && css`
-    ${tw`opacity-50 font-AllertaStencil-400 text-blueGray-200 whitespace-nowrap`};
-    font-size: 1.625rem;
-    letter-spacing: -1.5px;
-    text-shadow: 0px -2px 0 white, 0px -1px 1px white, 0px 1px 0 black, 0px 1px 2px black;
-  `};
-  ${({ author }) => author && css`${tw`text-trueGray-900 font-Charm-400 whitespace-nowrap`}`};
-  ${({ isEllipsis }) => isEllipsis && css`${tw`truncate`}`};
-  --distance: ${({offsetRight}) => offsetRight};
-  --rate: 30;
-  --duration: calc(var(--distance) / var(--rate) * 1s);
-  transform: translateX(0%);
-  transition: transform var(--duration) linear;
-  ${({ isOverflow }) => isOverflow && css`${tw`cursor-pointer`}`};
-  ${({isOverflow, isTranslatingLeft}) => isOverflow && isTranslatingLeft && css`
-    transform: translateX(calc(var(--distance) * -1px));
-    transition: transform var(--duration) linear;
-  `};
-`
-
-// const Title = styled(OverflowP)`
-//   ${tw`opacity-50 font-AllertaStencil-400 text-blueGray-200 whitespace-nowrap`};
-//   font-size: 1.625rem;
-//   letter-spacing: -1.5px;
-//   text-shadow: 0px -2px 0 white, 0px -1px 1px white, 0px 1px 0 black, 0px 1px 2px black;
-// `
-
-// const Author = styled(OverflowP)`
-//   ${tw`text-trueGray-900 font-Charm-400 whitespace-nowrap`};
-// `
-
 const CardHeader = ({title, author, isSlideShow, slideShowTimer, handleSlideShow}: CardHeaderPropsITF) => {
 
   const authors = author.join(', ');
@@ -169,16 +79,8 @@ const CardHeader = ({title, author, isSlideShow, slideShowTimer, handleSlideShow
   const bookTitleRef = useRef<HTMLParagraphElement>(null);
   const bookAuthorRef = useRef<HTMLParagraphElement>(null);
 
-  const { isRefXOverflowing: isTitleOverflow, refOffsetRight: titleOffsetRight } = useXOverflow(bookTitleRef);
-  const { isRefXOverflowing: isAuthorOverflow, refOffsetRight: authorOffsetRight } = useXOverflow(bookAuthorRef);
-
-  const { leftPosition: titleLeftPosition } = useLeftPosition(bookTitleRef);
-  const [ isTitleEllipsis, setIsTitleEllipsis ] = useState(true);
-  const [ isTitleTranslatingLeft, setIsTitleTranslatingLeft] = useState(false);
-
-  const { leftPosition: authorLeftPosition } = useLeftPosition(bookAuthorRef);
-  const [ isAuthorEllipsis, setIsAuthorEllipsis ] = useState(true);
-  const [ isAuthorTranslatingLeft, setIsAuthorTranslatingLeft] = useState(false);
+  const { isRefXOverflowing: isTitleOverflow } = useIsXOverflow(bookTitleRef);
+  const { isRefXOverflowing: isAuthorOverflow } = useIsXOverflow(bookAuthorRef);
 
   const [ isArrowAnimating, setIsArrowAnimating ] = useState(false);
 
@@ -187,43 +89,21 @@ const CardHeader = ({title, author, isSlideShow, slideShowTimer, handleSlideShow
     setIsArrowAnimating(true);
   }
 
-  const handleEllipsis = (input: 'title' | 'author') => {
-    if (!bookTitleRef.current || !bookAuthorRef.current) return;
-    if (input === 'title') {
-      if (bookTitleRef.current.getBoundingClientRect().left === titleLeftPosition) setIsTitleEllipsis(true);
-    } else if (input === 'author') {
-      if (bookAuthorRef.current.getBoundingClientRect().left === authorLeftPosition) setIsAuthorEllipsis(true);
-    }
-  }
-
-  const handleClick = (input: 'title' | 'author') => {
-    if (input === 'title') {
-      setIsTitleTranslatingLeft((isTitleTranslatingLeft) => !isTitleTranslatingLeft);
-      setIsTitleEllipsis(false);
-    } else if (input === 'author') {
-      setIsAuthorTranslatingLeft((isAuthorTranslatingLeft) => !isAuthorTranslatingLeft);
-      setIsAuthorEllipsis(false);
-    }
-  }
-
   return (
     <CardHeaderContainer>
 
-      <div className='flex items-center justify-start pl-2 -mb-1.5'>
-        {/* <CSSTransition in={isSlideShow} timeout={{enter: 400, exit: 200}} classNames='arrow' nodeRef={cardHeaderRef}> */}
+      <div className='-mt-0.5 -mb-1 pl-2 mr-5 flex items-center justify-start'>
         <CSSTransition in={isSlideShow} timeout={slideShowTimer} classNames='arrow' nodeRef={cardHeaderRef} onEntered={() => setIsArrowAnimating(false)} onExited={() => setIsArrowAnimating(false)}>
           <StyledLeftArrow size={26} ref={cardHeaderRef} slideShowTimer={slideShowTimer} onClick={() => !isArrowAnimating && handleArrowClick()} />
         </CSSTransition>
-        <div className='ml-2 mr-5 overflow-hidden'>
-          {/* <Title ref={bookTitleRef} isTitleOverflow={isTitleOverflow} titleOffsetRight={titleOffsetRight} onClick={() => handleClick('title')} isTitleTranslatingLeft={isTitleTranslatingLeft} onTransitionEnd={() => handleEllipsis('title')} isTitleEllipsis={isTitleEllipsis} {...(isTitleOverflow && {title: title})}>{title}</Title> */}
-          <Text bookTitle ref={bookTitleRef} isOverflow={isTitleOverflow} offsetRight={titleOffsetRight} onClick={() => handleClick('title')} isTranslatingLeft={isTitleTranslatingLeft} onTransitionEnd={() => handleEllipsis('title')} isEllipsis={isTitleEllipsis} {...(isTitleOverflow && {title: title})}>{title}</Text>
+        <div className='ml-2 overflow-hidden'>
+          {!isTitleOverflow ? <StyledText bookTitle ref={bookTitleRef}>{title}</StyledText> : <OverflowText bookTitle text={title}/>}
         </div>
       </div>
 
       <div className='relative ml-2 mr-5 flex justify-end'>
         <div className='ml-16 overflow-hidden'>
-          {/* <Author ref={bookAuthorRef} isAuthorOverflow={isAuthorOverflow} authorOffsetRight={authorOffsetRight} onClick={() => handleClick('author')} isAuthorTranslatingLeft={isAuthorTranslatingLeft} onTransitionEnd={() => handleEllipsis('author')} isAuthorEllipsis={isAuthorEllipsis} {...(isAuthorOverflow && {title: authors})}>{authors}</Author> */}
-          <Text author ref={bookAuthorRef} isOverflow={isAuthorOverflow} offsetRight={authorOffsetRight} onClick={() => handleClick('author')} isTranslatingLeft={isAuthorTranslatingLeft} onTransitionEnd={() => handleEllipsis('author')} isEllipsis={isAuthorEllipsis} {...(isAuthorOverflow && {title: authors})}>{authors}</Text>
+          {!isAuthorOverflow ? <StyledText author ref={bookAuthorRef}>{authors}</StyledText> : <OverflowText author text={authors}/>}
         </div>
       </div>
 
