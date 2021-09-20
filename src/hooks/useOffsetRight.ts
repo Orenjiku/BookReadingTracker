@@ -5,15 +5,9 @@ const useOffsetRight = (ref: RefObject<HTMLElement>): {offsetRight: number} => {
 
   useEffect(() => {
     if (!ref.current) return;
+    else setOffsetRight(ref.current.scrollWidth - ref.current.clientWidth);
 
-    const delayTiming = setTimeout(() => {
-      if (ref.current) {
-        setOffsetRight(ref.current.scrollWidth - ref.current.clientWidth);
-      }
-    }, 1000);
-
-    return () => { clearTimeout(delayTiming) };
-  }, []);
+  }, [ref.current?.scrollWidth, ref.current?.clientWidth]);
 
   return { offsetRight };
 }

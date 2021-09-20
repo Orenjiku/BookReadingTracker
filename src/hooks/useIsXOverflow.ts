@@ -1,10 +1,6 @@
 import { useState, useEffect, RefObject } from 'react';
 
-interface RefXITF {
-  isRefXOverflowing: boolean;
-}
-
-const useIsXOverflow = (ref: RefObject<HTMLElement>): RefXITF => {
+const useIsXOverflow = (ref: RefObject<HTMLElement>): {isRefXOverflowing: boolean} => {
   const [isRefXOverflowing, setIsRefXOverflowing] = useState(false);
 
   useEffect(() => {

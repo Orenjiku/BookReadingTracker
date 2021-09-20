@@ -44,20 +44,36 @@ const SlideContainer = styled.div<{src?: string;}>`
 `
 
 const StyledEdit = styled(Edit)<{isEditing?: boolean}>`
-  ${tw`absolute left-1 top-14 min-w-min opacity-50 stroke-1 stroke-current text-coolGray-50 cursor-pointer`};
+  ${tw`absolute top-1.5 right-1 min-w-min opacity-50 stroke-1 stroke-current text-coolGray-50 cursor-pointer`};
   --edit-shadow: drop-shadow(0px 1px 0 black);
   filter: var(--edit-shadow);
   transition: all 100ms linear;
   ${({ isEditing }) => isEditing && css`
-    --neon-light-center: #f9fafb;
-    --neon-light-color: #0d9488;
-    --light-effect: drop-shadow(0 0 4px var(--neon-light-center))
-                    drop-shadow(0 0 16px var(--neon-light-color));
+  --neon-light-center: #f9fafb;
+  --neon-light-color: #0d9488;
+  --light-effect: drop-shadow(0 0 4px var(--neon-light-center))
+                  drop-shadow(0 0 6px var(--neon-light-center))
+                  drop-shadow(0 0 8px var(--neon-light-center))
+                  drop-shadow(0 0 12px var(--neon-light-center))
+                  drop-shadow(0 0 16px var(--neon-light-color));
     opacity: 1;
     color: var(--neon-light-center);
     filter: var(--light-effect);
     fill: none;
     transition: all 100ms linear;
+    &:hover {
+      animate: pulse 1s infinite;
+      @keyframes pulse {
+        0%, 100% {
+          color: var(--neon-light-center);
+          filter: var(--light-effect);
+        }
+        50% {
+          color: var(--neon-light-center);
+          filter: drop-shadow(0 0 1px var(--neon-light-center))
+        }
+      }
+    }
   `}
 `
 

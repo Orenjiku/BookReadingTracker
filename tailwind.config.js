@@ -35,8 +35,6 @@ module.exports = {
         'Charm-400': 'Charm',
         'SortsMillGoudy-400': 'Sorts Mill Goudy',
         'MerriweatherItalic-300': 'MerriweatherItalic',
-        'MerriweatherLight-300': 'MerriweatherLight',
-        'Merriweather-400': 'Merriweather',
         'AllertaStencil-400': 'AllertaStencil',
       },
       gridTemplateRows: {

@@ -1,15 +1,16 @@
 import { useState, useEffect, RefObject } from 'react';
 
 interface useXStartReturnITF {
-  leftPosition: number | null;
+  leftPosition: number;
 }
 
 const useLeft = (ref: RefObject<HTMLElement>): useXStartReturnITF => {
-  const [leftPosition, setLeftPosition] = useState<null | number>(null);
+  const [leftPosition, setLeftPosition] = useState<number>(0);
   const [windowWidth, setWindowWidth] = useState(0);
 
   useEffect(() => {
     if (!ref.current) return;
+    ref.current && setLeftPosition(ref.current.getBoundingClientRect().left);
 
     let listenerTimeout: ReturnType<typeof setTimeout>;
     const resizeListener = () => {
@@ -19,13 +20,12 @@ const useLeft = (ref: RefObject<HTMLElement>): useXStartReturnITF => {
     }
 
     window.addEventListener('resize', resizeListener);
-    ref.current && setLeftPosition(ref.current.getBoundingClientRect().left);
 
     return () => {
       window.removeEventListener('resize', resizeListener);
       clearTimeout(listenerTimeout);
     }
-  }, [ref, windowWidth]);
+  }, [windowWidth]);
 
   return { leftPosition };
 }

@@ -92,18 +92,18 @@ const CardHeader = ({title, author, isSlideShow, slideShowTimer, handleSlideShow
   return (
     <CardHeaderContainer>
 
-      <div className='-mt-0.5 -mb-1 pl-2 mr-5 flex items-center justify-start'>
+      <div className='-mt-0.5 pl-2 mr-10 flex items-center justify-start'>
         <CSSTransition in={isSlideShow} timeout={slideShowTimer} classNames='arrow' nodeRef={cardHeaderRef} onEntered={() => setIsArrowAnimating(false)} onExited={() => setIsArrowAnimating(false)}>
           <StyledLeftArrow size={26} ref={cardHeaderRef} slideShowTimer={slideShowTimer} onClick={() => !isArrowAnimating && handleArrowClick()} />
         </CSSTransition>
         <div className='ml-2 overflow-hidden'>
-          {!isTitleOverflow ? <StyledText bookTitle ref={bookTitleRef}>{title}</StyledText> : <OverflowText bookTitle text={title}/>}
+          {!isTitleOverflow ? <StyledText bookTitle ref={bookTitleRef}>{title}</StyledText> : <OverflowText bookTitle text={title} />}
         </div>
       </div>
 
-      <div className='relative ml-2 mr-5 flex justify-end'>
+      <div className='relative -mt-1.5 ml-2 mr-5 flex justify-end'>
         <div className='ml-16 overflow-hidden'>
-          {!isAuthorOverflow ? <StyledText author ref={bookAuthorRef}>{authors}</StyledText> : <OverflowText author text={authors}/>}
+          {!isAuthorOverflow ? <StyledText author ref={bookAuthorRef}>{authors}</StyledText> : <OverflowText author text={authors} />}
         </div>
       </div>
 
