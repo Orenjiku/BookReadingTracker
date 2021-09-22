@@ -6,6 +6,7 @@ import CardHeader from './CardHeader';
 import BookImage from './BookImage';
 import DetailsView from './DetailsView';
 import ReaderBookView from './ReaderBookView';
+import SlideButton from './SlideButton';
 import { Edit } from '@styled-icons/boxicons-regular/Edit';
 
 const CardFrontContainer = styled.div<{isFlipped: boolean}>`
@@ -103,6 +104,8 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
 
   const slideShowTimer = 800;
 
+  const isReading = book.reader_book[0].is_reading;
+
   const handleEdit = () => setIsEditing(isEditing => !isEditing);
   const handleSlideShow = () => setIsSlideShow(isSlideShow => !isSlideShow);
 
@@ -110,12 +113,13 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
     <CardFrontContainer isFlipped={isFlipped}>
       <CardHeader title={book.title} author={book.author} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleSlideShow={handleSlideShow} />
       <BookImage pictureLink={book.picture_link} isEditing={isEditing} handleFlip={handleFlip}/>
-      <DetailsView readDetails={readDetails} />
+      <DetailsView isEditing={isEditing} readDetails={readDetails} />
       <ReaderBookView readerBookList={book.reader_book} isEditing={isEditing} />
 
-      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center text-trueGray-900 text-2xl font-Charm-400'>
-        Completed!
+      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center rounded-b-2xl text-trueGray-900 text-2xl font-Charm-400'>
+        {isReading ? <SlideButton /> : 'Completed!'}
       </div>
+
       <StyledEdit size={22} isEditing={isEditing} onClick={() => handleEdit()} />
 
       <CSSTransition in={isSlideShow} timeout={slideShowTimer} classNames='slide' nodeRef={cardFrontRef} unmountOnExit>
