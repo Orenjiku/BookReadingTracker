@@ -4,11 +4,11 @@ import { CSSTransition } from 'react-transition-group';
 
 interface BookImagePropsITF {
   pictureLink: string;
-  isEditing: boolean;
+  isEdit: boolean;
   handleFlip: Function;
 }
 
-const EditBookButton = styled.button<{isEditing: boolean}>`
+const EditBookButton = styled.button`
   ${tw`h-8 w-24 rounded border border-coolGray-50 flex justify-center items-center`};
   ${tw`bg-blueGray-300 bg-opacity-40 text-trueGray-50 font-Charm-400`};
   ${tw`backdrop-filter backdrop-blur`};
@@ -28,12 +28,12 @@ const EditBookButton = styled.button<{isEditing: boolean}>`
   }
 `
 
-const BookImage = ({ pictureLink, isEditing, handleFlip }: BookImagePropsITF) => {
+const BookImage = ({ pictureLink, isEdit, handleFlip }: BookImagePropsITF) => {
   const bookImageRef = useRef(null);
   return (
     <div className='col-start-1 col-end-2 row-start-4 row-end-19 rounded-tl-2xl grid place-content-center bg-cover overflow-hidden' style={{backgroundImage: `url(${pictureLink})`}}>
-      <CSSTransition in={isEditing} timeout={500} classNames='fade' nodeRef={bookImageRef} unmountOnExit>
-        <EditBookButton ref={bookImageRef} isEditing={isEditing} onClick={() => handleFlip()}>Edit Book</EditBookButton>
+      <CSSTransition in={isEdit} timeout={500} classNames='fade' nodeRef={bookImageRef} unmountOnExit>
+        <EditBookButton ref={bookImageRef} onClick={() => handleFlip()}>Edit Book</EditBookButton>
       </CSSTransition>
     </div>
   )
