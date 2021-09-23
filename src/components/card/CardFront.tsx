@@ -6,7 +6,7 @@ import CardHeader from './CardHeader';
 import BookImage from './BookImage';
 import DetailsView from './DetailsView';
 import ReaderBookView from './ReaderBookView';
-import SlideButton from './SlideButton';
+import CompletionSlider from './CompletionSlider';
 import { Edit } from '@styled-icons/boxicons-regular/Edit';
 
 const CardFrontContainer = styled.div<{isFlipped: boolean}>`
@@ -117,7 +117,7 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
       <ReaderBookView readerBookList={book.reader_book} isEditing={isEditing} />
 
       <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center rounded-b-2xl text-trueGray-900 text-2xl font-Charm-400'>
-        {isReading ? <SlideButton /> : 'Completed!'}
+        {isReading ? <CompletionSlider /> : 'Completed!'}
       </div>
 
       <StyledEdit size={22} isEditing={isEditing} onClick={() => handleEdit()} />
