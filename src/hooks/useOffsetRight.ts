@@ -5,9 +5,8 @@ const useOffsetRight = (ref: RefObject<HTMLElement>): {offsetRight: number} => {
 
   useEffect(() => {
     if (!ref.current) return;
-    else setOffsetRight(ref.current.scrollWidth - ref.current.clientWidth);
-
-  }, [ref.current?.scrollWidth, ref.current?.clientWidth]);
+    setOffsetRight(ref.current.scrollWidth - ref.current.clientWidth);
+  }, []);
 
   return { offsetRight };
 }
