@@ -251,6 +251,16 @@ $$ LANGUAGE plpgsql;
 \set book_19_blurb 'This omnibus edition collects together for the first time the four Blood Angels novels of author James Swallow and includes several bonus short stories. The full story of Blood Angels Brother Rafen. From humble battle-brother to war-hardened sergeant, Rafen survives civil war, Chaos plots and the calling of destiny in four novels by James Swallow. \n\nIn this epic tale of brotherhood and darkness, the Blood Angels face strife from within when Brother Arkio claims to be a reincarnation of Sanguinius, the Blood Angels’ spiritual father. His message is clear: follow me or die. With no other choice, his brother Rafen kneels before this prophet of the Blood and swears an oath of devotion. But in his heart, Rafen knows that Arkio cannot be allowed to lead the Chapter into darkness. A reckoning is coming, one that they will not both survive. \nAs the ashes settle on the devastating by civil war, the Blood Angels face a dire crisis and must call together their Successor Chapters or face extinction. But the sons of Sanguinius have many enemies, and this audacious scheme to rebuild their ranks comes under threat by the machinations of the arch-traitor Fabius Bile.'
 \set book_19_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1587322079l/53208413.jpg'
 
+\set book_20_title 'Belisarius Cawl: The Great Work'
+\set book_20_title_sort 'Belisarius Cawl: The Great Work'
+\set book_20_published_date '2019/09/21'
+\set book_20_published_date_edition '2020/03/17'
+\set book_20_book_format 'Paperback'
+\set book_20_total_pages 416
+\set book_20_blurb 'Warhammer 40,000 fans rejoice - Belisarius Cawl has his own novel! Join him on his journey to the abandoned world of Sotha which hides a long-buried secret… and an ancient evil. \n\nBelisarius Cawl, Archmagos Dominus of the Adeptus Mechanicus is the most brilliant mind alive. For 10,000 years he has furthered the cause of mankind, working under the aegis of the Emperor and Lord Commander Roboute Guilliman to prevent the inexorable march of the alien and the traitor. Many call him heretic, but all must recognise the magnitude of his achievements, for who else but he was entrusted to create a new generation of Space Marines? Who else but the great Belisarius Cawl could even accomplish such a task? \nNow, in the wake of the Great Rift and the Indomitus Crusade, his ambitions bring him to the long-dead world of Sotha, once home to the Scythes of the Emperor, now a barren wasteland devoured by the vile Tyranids. Accompanied by Tetrarch Felix and his elite warriors, it is here that Cawl believes the lynchpin of his mysterious Great Work lies. But uncovering it is a near impossible task, one in which the Archmagos must overcome an ancient evil that threatens to extinguish the last hope of humanity.'
+\set book_20_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1562505193l/51085980._SX318_SY475_.jpg'
+
+
 -- INSERT book using previously declared variables
 SELECT insert_book(:'book_1_title', :'book_1_title_sort', :'book_1_published_date', :'book_1_published_date_edition', :'book_1_book_format', :'book_1_total_pages', :'book_1_blurb', :'book_1_picture_link');
 SELECT insert_book(:'book_2_title', :'book_2_title_sort', :'book_2_published_date', :'book_2_published_date_edition', :'book_2_book_format', :'book_2_total_pages', :'book_2_blurb', :'book_2_picture_link');
@@ -271,6 +281,7 @@ SELECT insert_book(:'book_16_title', :'book_16_title_sort', :'book_16_published_
 SELECT insert_book(:'book_17_title', :'book_17_title_sort', :'book_17_published_date', :'book_17_published_date_edition', :'book_17_book_format', :'book_17_total_pages', :'book_17_blurb', :'book_17_picture_link');
 SELECT insert_book(:'book_18_title', :'book_18_title_sort', :'book_18_published_date', :'book_18_published_date_edition', :'book_18_book_format', :'book_18_total_pages', :'book_18_blurb', :'book_18_picture_link');
 SELECT insert_book(:'book_19_title', :'book_19_title_sort', :'book_19_published_date', :'book_19_published_date_edition', :'book_19_book_format', :'book_19_total_pages', :'book_19_blurb', :'book_19_picture_link');
+SELECT insert_book(:'book_20_title', :'book_20_title_sort', :'book_20_published_date', :'book_20_published_date_edition', :'book_20_book_format', :'book_20_total_pages', :'book_20_blurb', :'book_20_picture_link');
 
 
 /* --------------------------------------------------- INSERT reader_book --------------------------------------------------- */
@@ -306,6 +317,7 @@ SELECT insert_reader_book(:'username_1', :'book_16_title');
 SELECT insert_reader_book(:'username_1', :'book_17_title');
 SELECT insert_reader_book(:'username_1', :'book_18_title');
 SELECT insert_reader_book(:'username_1', :'book_19_title');
+SELECT insert_reader_book(:'username_1', :'book_20_title');
 
 
 /* --------------------------------------------- INSERT read_entry --------------------------------------------- */
@@ -487,6 +499,11 @@ SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-18', 64, 645,
 SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-19', 60, 705, 85.14);
 SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-20', 123, 828, 100);
 
+-- INSERT book_20
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-21', 35, 35, 8.41);
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-22', 56, 91, 21.88);
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 58, 149, 35.82);
+
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
 -- FUNCTION insert_author
@@ -613,6 +630,10 @@ $$ LANGUAGE plpgsql;
 \set book_19_author_1_first_name 'James'
 \set book_19_author_1_last_name 'Swallow'
 \set book_19_author_1_full_name 'James Swallow'
+-- book 20 author
+\set book_20_author_1_first_name 'Guy'
+\set book_20_author_1_last_name 'Haley'
+\set book_20_author_1_full_name 'Guy Haley'
 
 -- INSERT author using FUNCTION insert_author and DECLARED author variables as arguments, CHECK UNIQUE full_name (middle_name argument is optional)
 -- book 1 author
@@ -663,6 +684,8 @@ SELECT insert_author(:'book_17_author_1_full_name', :'book_17_author_1_first_nam
 SELECT insert_author(:'book_18_author_1_full_name', :'book_18_author_1_first_name', :'book_18_author_1_last_name');
 -- book 19 author
 SELECT insert_author(:'book_19_author_1_full_name', :'book_19_author_1_first_name', :'book_19_author_1_last_name');
+-- book 20 author
+SELECT insert_author(:'book_20_author_1_full_name', :'book_20_author_1_first_name', :'book_20_author_1_last_name');
 
 
 /* --------------------------------------------- INSERT book_author (JOIN TABLE) --------------------------------------------- */
@@ -725,8 +748,10 @@ SELECT join_book_author(:'book_16_title', :'book_16_author_1_full_name');
 SELECT join_book_author(:'book_17_title', :'book_17_author_1_full_name');
 -- book 18 author
 SELECT join_book_author(:'book_18_title', :'book_18_author_1_full_name');
--- book 18 author
+-- book 19 author
 SELECT join_book_author(:'book_19_title', :'book_19_author_1_full_name');
+-- book 20 author
+SELECT join_book_author(:'book_20_title', :'book_20_author_1_full_name');
 
 
 /* --------------------------------------------- UPDATE is_reading and is_finished --------------------------------------------- */
@@ -775,6 +800,7 @@ SELECT update_reader_book(:'username_1', :'book_17_title', 6, 6, FALSE, TRUE);
 SELECT update_reader_book(:'username_1', :'book_18_title', 5, 5, FALSE, TRUE);
 -- UPDATE reader_book.is_reading to true
 SELECT update_reader_book(:'username_1', :'book_19_title', 14, 14, TRUE, FALSE);
+SELECT update_reader_book(:'username_1', :'book_20_title', 3, 3, TRUE, FALSE);
 
 
 /* --------------------------------------------- DROP functions --------------------------------------------- */
