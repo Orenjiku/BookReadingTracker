@@ -49,11 +49,11 @@ const ViewContainer = styled.div`
   }
 `
 
-const ValueDisplay = styled.p<{value: number}>`
+const ValueDisplay = styled.p<{ $value: number }>`
   ${tw`absolute top-5 text-coolGray-50 text-6xl font-MerriweatherItalic-300`};
   transform-style: preserve-3d;
   &::after {
-    content: '${({value}) => `${value}`}';
+    content: '${({ $value }) => $value}';
     ${tw`absolute top-0 left-0`};
     pointer-events: none;
     transform-origin: bottom;
@@ -65,27 +65,21 @@ const ValueDisplay = styled.p<{value: number}>`
   &:hover {
     animation: turn 3000ms linear infinite;
     @keyframes turn {
-      0%, 100% {
-        transform: rotateY(0deg);
-      }
-      25% {
-        transform: rotateY(40deg);
-      }
-      75% {
-        transform: rotateY(-40deg);
-      }
+      0%, 100% { transform: rotateY(0deg); };
+      25% { transform: rotateY(40deg); };
+      75% { transform: rotateY(-40deg); };
     }
   }
 `
 
-const GradientPane = styled.div<{left?: boolean; right?: boolean;}>`
+const GradientPane = styled.div<{ $left?: boolean; $right?: boolean }>`
   ${tw`relative h-full cursor-pointer`};
   min-width: 200%;
   --translateXDuration: 100ms;
   --translateXFunction: linear;
   --transition: transform var(--translateXDuration) var(--translateXFunction);
   transition: var(--transition);
-  ${({ left }) => left && css`
+  ${({ $left }) => $left && css`
     transform: translateX(-50%);
     &::before {
       content: '';
@@ -96,7 +90,7 @@ const GradientPane = styled.div<{left?: boolean; right?: boolean;}>`
       transition: var(--transition);
     };
   `};
-  ${({ right }) => right && css`
+  ${({ $right }) => $right && css`
     transform: translateX(0%);
     &::before {
       content: '';
@@ -109,7 +103,7 @@ const GradientPane = styled.div<{left?: boolean; right?: boolean;}>`
   `};
 `
 
-const StyledBsCircleFill = styled(BsCircleFill)<{selected: boolean}>`
+const StyledBsCircleFill = styled(BsCircleFill)<{ $selected: boolean }>`
   ${tw`mx-0.5 stroke-current text-coolGray-500`};
   --neon-light-center: #f9fafb;
   --neon-light-color: #0d9488;
@@ -118,7 +112,7 @@ const StyledBsCircleFill = styled(BsCircleFill)<{selected: boolean}>`
                   drop-shadow(0 0 8px var(--neon-light-center))
                   drop-shadow(0 0 8px var(--neon-light-color))
                   drop-shadow(0 0 8px var(--neon-light-color));
-  ${({ selected }) => selected
+  ${({ $selected }) => $selected
     ? css`
       color: var(--neon-light-center);
       filter: var(--light-effect);
@@ -135,7 +129,7 @@ const StyledBsCircleFill = styled(BsCircleFill)<{selected: boolean}>`
   }
 `
 
-const DetailsView = ({ isEditing, readDetails }: { isEditing: boolean, readDetails: Array<{ key:string; value:number }> }) => {
+const DetailsView = ({ isEdit, readDetails }: { isEdit: boolean, readDetails: Array<{ key: string; value: number }> }) => {
   const [ currIdx, setCurrIdx ] = useState<number>(0);
   const prevIdx = usePrevious(currIdx);
   const length = readDetails.length;
@@ -153,31 +147,31 @@ const DetailsView = ({ isEditing, readDetails }: { isEditing: boolean, readDetai
         <TransitionGroup component={null} childFactory={child => cloneElement(child, {classNames})}>
           <CSSTransition timeout={200} key={`ReadDetails-${currIdx}`} unmountOnExit /* nodeRef={detailsViewRef} */>
             <ViewContainer /* ref={detailsViewRef} */>
-              <ValueDisplay value={readDetails[currIdx].value}>{readDetails[currIdx].value}</ValueDisplay>
+              <ValueDisplay $value={readDetails[currIdx].value}>{readDetails[currIdx].value}</ValueDisplay>
               <div className='absolute text-trueGray-50 text-xl font-AdventPro-400'>{readDetails[currIdx].key}</div>
             </ViewContainer>
           </CSSTransition>
         </TransitionGroup>
 
         <div className='absolute left-0 h-full w-1/3 flex items-center overflow-hidden'>
-          <BsChevronLeft className='absolute left-0 stroke-current stroke-1 text-coolGray-50'/>
-          <GradientPane left onClick={() => prevSlide()} />
+          <BsChevronLeft className='absolute left-0 stroke-current stroke-1 text-coolGray-50' />
+          <GradientPane $left onClick={() => prevSlide()} />
         </div>
 
         <div className='absolute right-0 h-full w-1/3 flex items-center overflow-hidden'>
           <BsChevronRight className='absolute right-0 stroke-current stroke-1 text-coolGray-50' />
-          <GradientPane right onClick={() => nextSlide()} />
+          <GradientPane $right onClick={() => nextSlide()} />
         </div>
 
         <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-1.5 flex'>
           {readDetails.map((_, i) => (
-            <StyledBsCircleFill key={`BsCircleFill-${i}`} size={7} selected={i === currIdx} {...(i !== currIdx && {onClick: () => setCurrIdx(i)})} />
+            <StyledBsCircleFill key={`BsCircleFill-${i}`} size={7} $selected={i === currIdx} {...(i !== currIdx && {onClick: () => setCurrIdx(i)})} />
           ))}
         </div>
 
       </div>
 
-      <DetailsViewEdit isEditing={isEditing} />
+      <DetailsViewEdit isEdit={isEdit} />
 
     </div>
   )

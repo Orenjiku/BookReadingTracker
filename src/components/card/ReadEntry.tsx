@@ -7,19 +7,19 @@ import { Trash } from '@styled-icons/bootstrap/Trash';
 
 interface ReadEntryPropsITF {
   readEntry: ReadEntryITF;
-  isEditing: boolean;
+  isEdit: boolean;
   handleDeleteReadEntry: Function;
 }
 
-const EntryBar = styled.div<{before: string; after: number;}>`
+const EntryBar = styled.div<{ $before: string; $after: number }>`
   ${tw`relative px-0.5 flex justify-center`};
   ${tw`text-trueGray-900 text-xs font-SortsMillGoudy-400`};
   &::before {
-    content: '${({ before }) => before}';
+    content: '${({ $before }) => $before}';
     ${tw`absolute left-0`};
   };
   &::after {
-    content: '${({ after }) => `+${after} pgs`}';
+    content: '${({ $after }) => `+${$after} pgs`}';
     ${tw`absolute right-0 text-green-600`};
   };
 `
@@ -43,17 +43,17 @@ const DeleteContainer = styled.div`
   };
 `
 
-const DeleteButton = styled.button<{isMouseDown: boolean}>`
+const DeleteButton = styled.button<{ $isMouseDown: boolean }>`
   ${tw`px-1.5 mx-1 rounded flex justify-center items-center`};
   ${tw`bg-red-400 text-trueGray-50 text-sm font-AdventPro-200`};
   height: 26px;
   ${tw`transition-colors duration-200 ease-linear`};
-  ${({ isMouseDown }) => isMouseDown && css`
+  ${({ $isMouseDown }) => $isMouseDown && css`
     ${tw`bg-red-500 transition-colors duration-1000 ease-linear`};
   `}
 `
 
-const ReadEntry = ({ readEntry, isEditing, handleDeleteReadEntry }: ReadEntryPropsITF) => {
+const ReadEntry = ({ readEntry, isEdit, handleDeleteReadEntry }: ReadEntryPropsITF) => {
   const [ isEntrySelected, setIsEntrySelected ] = useState<boolean>(false);
   const [ isMouseDown, setIsMouseDown ] = useState<boolean>(false);
 
@@ -62,7 +62,7 @@ const ReadEntry = ({ readEntry, isEditing, handleDeleteReadEntry }: ReadEntryPro
   const currentPercent = Number(readEntry.current_percent.toFixed(0));
   let deleteTimeout: ReturnType<typeof setTimeout>;
 
-  const handleEntrySelect = () => isEditing && setIsEntrySelected(isEntrySelected => !isEntrySelected);
+  const handleEntrySelect = () => isEdit && setIsEntrySelected(isEntrySelected => !isEntrySelected);
   const handleMouseDown = () => setIsMouseDown(true);
   const handleMouseUp = () => {
     clearTimeout(deleteTimeout);
@@ -70,8 +70,8 @@ const ReadEntry = ({ readEntry, isEditing, handleDeleteReadEntry }: ReadEntryPro
   };
 
   useEffect(() => {
-    !isEditing && setIsEntrySelected(false);
-  }, [isEditing])
+    !isEdit && setIsEntrySelected(false);
+  }, [isEdit])
 
   useEffect(() => {
     if (isMouseDown) {
@@ -85,14 +85,14 @@ const ReadEntry = ({ readEntry, isEditing, handleDeleteReadEntry }: ReadEntryPro
   return (
     <div>
 
-      <div className={`relative px-1 pb-0.5 ${isEditing && 'cursor-pointer hover:bg-blueGray-300 hover:bg-opacity-50'}`} onClick={handleEntrySelect}>
-        <EntryBar before={entryDate} after={readEntry.pages_read}>{`${currentPercent}%`}</EntryBar>
-        <ProgressBar isEditing={isEditing} currentPercent={currentPercent} />
+      <div className={`relative px-1 pb-0.5 ${isEdit && 'cursor-pointer hover:bg-blueGray-300 hover:bg-opacity-50'}`} onClick={handleEntrySelect}>
+        <EntryBar $before={entryDate} $after={readEntry.pages_read}>{`${currentPercent}%`}</EntryBar>
+        <ProgressBar isEdit={isEdit} currentPercent={currentPercent} />
       </div>
 
-      <CSSTransition in={isEditing && isEntrySelected} timeout={300} classNames='slide' nodeRef={readEntryRef} unmountOnExit>
+      <CSSTransition in={isEdit && isEntrySelected} timeout={300} classNames='slide' nodeRef={readEntryRef} unmountOnExit>
         <DeleteContainer ref={readEntryRef}>
-          <DeleteButton isMouseDown={isMouseDown} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
+          <DeleteButton $isMouseDown={isMouseDown} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
             <p className='mr-2'>Hold for 1 second</p>
             <Trash size={13} />
           </DeleteButton>

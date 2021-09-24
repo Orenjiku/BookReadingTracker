@@ -7,16 +7,14 @@ const SlideContainer = styled.div`
   user-select: none;
 `
 
-const StyledSlider = styled.div<{ $isDragging: boolean; $sliderButtonWidth: number; $distance: number }>`
+const StyledSlider = styled.div<{ $isDragging: boolean; $sliderButtonWidth: number; $offsetLeft: number }>`
   ${tw`absolute h-full w-full flex rounded-b-2xl justify-center items-center cursor-pointer`};
-  width: 100%;
   left: calc((${({ $sliderButtonWidth }) => $sliderButtonWidth} - 1) * 100%);
-  background: ${({$sliderButtonWidth}) => css`
-    linear-gradient(90deg, #059669 0, transparent ${100 - ($sliderButtonWidth * 100)}%, transparent 75% 100%)
-  `};
-  ${({$isDragging, $distance}) => !$isDragging && css`
+  --sliderNoButtonWidth: calc((1 - (${({ $sliderButtonWidth }) => $sliderButtonWidth})) * 100%);
+  background: linear-gradient(90deg, #059669 0, transparent var(--sliderNoButtonWidth));
+  ${({ $isDragging, $offsetLeft }) => !$isDragging && css`
     --rate: 1000;
-    --duration: calc(${$distance} / var(--rate) * 1s);
+    --duration: calc(${$offsetLeft} / var(--rate) * 1s);
     transition: left var(--duration) ease-out;
   `};
   &::after{
@@ -38,6 +36,7 @@ const CompletionSlider = () => {
   const mouseDownSliderLeftOffset = useRef(0);
 
   const sliderButtonWidth = 0.25;
+  const offsetLeft = relativeSliderLeftBoundedCurrentPosition.current - relativeSliderLeftStartPosition.current;
 
   useEffect(() => {
     if (containerRef.current) {
@@ -52,6 +51,7 @@ const CompletionSlider = () => {
 
   useEffect(() => {
     console.log(atEnd)
+    //Add effects
   }, [atEnd]);
 
   const startDrag = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -81,7 +81,7 @@ const CompletionSlider = () => {
 
   return (
     <SlideContainer ref={containerRef}>
-      <StyledSlider ref={sliderRef} $isDragging={isDragging} $sliderButtonWidth={sliderButtonWidth} $distance={relativeSliderLeftBoundedCurrentPosition.current - relativeSliderLeftStartPosition.current} onMouseDown={startDrag}>
+      <StyledSlider ref={sliderRef} $isDragging={isDragging} $sliderButtonWidth={sliderButtonWidth} $offsetLeft={offsetLeft} onMouseDown={startDrag}>
         <div style={{width: `${sliderButtonWidth * 100}%`}} className='absolute h-full right-0 flex justify-center items-center'>
           <ArrowRightSquare style={{height:'22px', width: '30px'}} className='z-10 stroke-0 stroke-current text-gray-50' />
         </div>

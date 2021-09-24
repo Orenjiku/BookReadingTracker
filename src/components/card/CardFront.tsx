@@ -9,7 +9,7 @@ import ReaderBookView from './ReaderBookView';
 import CompletionSlider from './CompletionSlider';
 import { Edit } from '@styled-icons/boxicons-regular/Edit';
 
-const CardFrontContainer = styled.div<{isFlipped: boolean}>`
+const CardFrontContainer = styled.div<{ $isFlipped: boolean }>`
   ${tw`absolute h-full w-full rounded-2xl grid grid-cols-2 grid-rows-20`};
   ${tw`bg-blueGray-200 bg-opacity-10 backdrop-filter backdrop-blur-sm`};
   ${tw`border-t border-l border-r border-blueGray-50 rounded-2xl shadow-xl`};
@@ -17,17 +17,17 @@ const CardFrontContainer = styled.div<{isFlipped: boolean}>`
   backface-visibility: hidden;
   transform: perspective(1200px) rotateY(0deg);
   transition: transform 600ms linear;
-  ${({ isFlipped }) => isFlipped && css`
+  ${({ $isFlipped }) => $isFlipped && css`
     transform: perspective(1200px) rotateY(-180deg);
   `};
 `
 
-const SlideContainer = styled.div<{src?: string;}>`
+const SlideContainer = styled.div<{ $src?: string }>`
   ${tw`relative col-start-1 col-end-3 row-start-4 row-end-19 rounded-tl-2xl flex justify-center items-center`};
   ${tw`bg-trueGray-100 overflow-hidden`};
   &::before {
     content: '';
-    background: url('${({ src }) => src}');
+    background: url('${({ $src }) => $src}');
     ${tw`absolute w-full h-full`}
     ${tw`bg-cover bg-center bg-no-repeat filter blur`};
   }
@@ -44,12 +44,12 @@ const SlideContainer = styled.div<{src?: string;}>`
   };
 `
 
-const StyledEdit = styled(Edit)<{isEditing?: boolean}>`
+const StyledEdit = styled(Edit)<{ isEdit?: boolean }>`
   ${tw`absolute top-1.5 right-1 min-w-min opacity-50 stroke-1 stroke-current text-coolGray-50 cursor-pointer`};
   --edit-shadow: drop-shadow(0px 1px 0 black);
   filter: var(--edit-shadow);
   transition: all 100ms linear;
-  ${({ isEditing }) => isEditing && css`
+  ${({ isEdit }) => isEdit && css`
   --neon-light-center: #f9fafb;
   --neon-light-color: #0d9488;
   --light-effect: drop-shadow(0 0 4px var(--neon-light-center))
@@ -80,8 +80,8 @@ const StyledEdit = styled(Edit)<{isEditing?: boolean}>`
 
 const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: boolean; handleFlip: Function }) => {
 
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [isSlideShow, setIsSlideShow] = useState<boolean>(false);
+  const [ isEdit, setIsEdit ] = useState<boolean>(false);
+  const [ isSlideShow, setIsSlideShow ] = useState<boolean>(false);
 
   const cardFrontRef = useRef(null);
 
@@ -106,24 +106,24 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
 
   const isReading = book.reader_book[0].is_reading;
 
-  const handleEdit = () => setIsEditing(isEditing => !isEditing);
+  const handleEdit = () => setIsEdit(isEdit => !isEdit);
   const handleSlideShow = () => setIsSlideShow(isSlideShow => !isSlideShow);
 
   return (
-    <CardFrontContainer isFlipped={isFlipped}>
+    <CardFrontContainer $isFlipped={isFlipped}>
       <CardHeader title={book.title} author={book.author} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleSlideShow={handleSlideShow} />
-      <BookImage pictureLink={book.picture_link} isEditing={isEditing} handleFlip={handleFlip}/>
-      <DetailsView isEditing={isEditing} readDetails={readDetails} />
-      <ReaderBookView readerBookList={book.reader_book} isEditing={isEditing} />
+      <BookImage pictureLink={book.picture_link} isEdit={isEdit} handleFlip={handleFlip} />
+      <DetailsView isEdit={isEdit} readDetails={readDetails} />
+      <ReaderBookView readerBookList={book.reader_book} isEdit={isEdit} />
 
       <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center rounded-b-2xl text-trueGray-900 text-2xl font-Charm-400'>
         {isReading ? <CompletionSlider /> : 'Completed!'}
       </div>
 
-      <StyledEdit size={22} isEditing={isEditing} onClick={() => handleEdit()} />
+      <StyledEdit size={22} isEdit={isEdit} onClick={() => handleEdit()} />
 
       <CSSTransition in={isSlideShow} timeout={slideShowTimer} classNames='slide' nodeRef={cardFrontRef} unmountOnExit>
-        <SlideContainer ref={cardFrontRef} src={book.picture_link}>
+        <SlideContainer ref={cardFrontRef} $src={book.picture_link}>
           <div className='z-10 h-4/5 w-11/12 p-4 rounded-tl-2xl overflow-y-scroll whitespace-pre-wrap select-text bg-trueGray-50 bg-opacity-60 text-xs font-Helvetica'>
             {book.blurb}
           </div>

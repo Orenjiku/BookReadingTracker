@@ -23,11 +23,11 @@ const CardHeaderContainer = styled.div`
 };
 `
 
-const StyledLeftArrow = styled(LeftArrow)<{slideShowTimer: number}>`
+const StyledLeftArrow = styled(LeftArrow)<{ $slideShowTimer: number }>`
   ${tw`min-w-min opacity-40 stroke-current text-coolGray-50 stroke-1 cursor-pointer`};
   --arrow-shadow: drop-shadow(0px 2px 0px black);
   filter: var(--arrow-shadow);
-  --slideShowTimer: ${({slideShowTimer}) => `${slideShowTimer}ms`};
+  --slideShowTimer: ${({ $slideShowTimer }) => `${$slideShowTimer}ms`};
   --neon-light-center: #f9fafb;
   --neon-light-color: #0d9488;
   --light-effect: drop-shadow(0 0 4px var(--neon-light-center))
@@ -94,7 +94,7 @@ const CardHeader = ({title, author, isSlideShow, slideShowTimer, handleSlideShow
 
       <div className='-mt-0.5 pl-2 mr-10 flex items-center justify-start'>
         <CSSTransition in={isSlideShow} timeout={slideShowTimer} classNames='arrow' nodeRef={cardHeaderRef} onEntered={() => setIsArrowAnimating(false)} onExited={() => setIsArrowAnimating(false)}>
-          <StyledLeftArrow size={26} ref={cardHeaderRef} slideShowTimer={slideShowTimer} onClick={() => !isArrowAnimating && handleArrowClick()} />
+          <StyledLeftArrow size={26} ref={cardHeaderRef} $slideShowTimer={slideShowTimer} onClick={() => !isArrowAnimating && handleArrowClick()} />
         </CSSTransition>
         <div className='ml-2 overflow-hidden'>
           {!isTitleOverflow ? <StyledText bookTitle ref={bookTitleRef}>{title}</StyledText> : <OverflowText bookTitle text={title} />}

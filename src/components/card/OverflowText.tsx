@@ -9,13 +9,13 @@ interface TextOverflowPropsITF {
   text: string;
 }
 
-const OverflowText = ({bookTitle, author, text}: TextOverflowPropsITF) => {
+const OverflowText = ({ bookTitle, author, text }: TextOverflowPropsITF) => {
   const ref = useRef<HTMLParagraphElement>(null);
 
   const { offsetRight } = useOffsetRight(ref);
   const { leftPosition } = useLeft(ref);
   const [ isEllipsis, setIsEllipsis ] = useState(true);
-  const [ isTranslatingLeft, setIsTranslatingLeft] = useState(false);
+  const [ isTranslatingLeft, setIsTranslatingLeft ] = useState(false);
 
   const handleEllipsis = () => {
     if (!ref.current) return;
@@ -28,7 +28,7 @@ const OverflowText = ({bookTitle, author, text}: TextOverflowPropsITF) => {
   }
 
   return (
-    <StyledOverflowText {...(bookTitle && {bookTitle} || author && {author})} ref={ref} offsetRight={offsetRight} onClick={handleClick} isTranslatingLeft={isTranslatingLeft} onTransitionEnd={handleEllipsis} isEllipsis={isEllipsis} title={text}>{text}</StyledOverflowText>
+    <StyledOverflowText ref={ref} {...(bookTitle && {bookTitle} || author && {author})} $offsetRight={offsetRight} onClick={handleClick}  onTransitionEnd={handleEllipsis} $isTranslatingLeft={isTranslatingLeft} $isEllipsis={isEllipsis} title={text}>{text}</StyledOverflowText>
   )
 }
 

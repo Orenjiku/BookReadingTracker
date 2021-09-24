@@ -21,12 +21,12 @@ const StyledReadEntryContainer = styled.div`
   };
 `
 
-const ReaderBook = ({ readerBook, isEditing } : { readerBook: ReaderBookITF; isEditing: boolean }) => {
-  const [readEntryList, setReadEntryList] = useState<ReadEntryITF[]>(readerBook.read_entry!)
+const ReaderBook = ({ readerBook, isEdit } : { readerBook: ReaderBookITF; isEdit: boolean }) => {
+  const [ readEntryList, setReadEntryList ] = useState<ReadEntryITF[]>(readerBook.read_entry!)
 
   // const bookReadRef = useRef(null);
   const verticalScrollRef = useRef(null);
-  const {refYOverflowing, refYScrollBegin, refYScrollEnd} = useOverflow(verticalScrollRef);
+  const { refYOverflowing, refYScrollBegin, refYScrollEnd } = useOverflow(verticalScrollRef);
 
   const handleDeleteReadEntry = (readEntryId: number) => {
     //add fetch function to delete from database then update after transaction completed
@@ -45,7 +45,7 @@ const ReaderBook = ({ readerBook, isEditing } : { readerBook: ReaderBookITF; isE
           {readEntryList.map(readEntry => (
             <CSSTransition key={`cssT-${readEntry.re_id}`} timeout={500} classNames='readEntryAnimate' /* nodeRef={bookReadRef} */ >
               <StyledReadEntryContainer /* ref={bookReadRef} */>
-                <ReadEntry key={readEntry.re_id} readEntry={readEntry} isEditing={isEditing} handleDeleteReadEntry={handleDeleteReadEntry}/>
+                <ReadEntry key={readEntry.re_id} readEntry={readEntry} isEdit={isEdit} handleDeleteReadEntry={handleDeleteReadEntry}/>
               </StyledReadEntryContainer>
             </CSSTransition>
           ))}

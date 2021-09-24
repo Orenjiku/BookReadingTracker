@@ -479,6 +479,13 @@ SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-10', 36, 159,
 SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-11', 52, 211, 25.48);
 SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-12', 48, 259, 31.28);
 SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-13', 60, 319, 38.53);
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-14', 90, 409, 49.4);
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-15', 36, 445, 53.74);
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-16', 58, 503, 60.75);
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-17', 78, 581, 70.17);
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-18', 64, 645, 77.9);
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-19', 60, 705, 85.14);
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-20', 123, 828, 100);
 
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
@@ -767,7 +774,7 @@ SELECT update_reader_book(:'username_1', :'book_16_title', 6, 6, FALSE, TRUE);
 SELECT update_reader_book(:'username_1', :'book_17_title', 6, 6, FALSE, TRUE);
 SELECT update_reader_book(:'username_1', :'book_18_title', 5, 5, FALSE, TRUE);
 -- UPDATE reader_book.is_reading to true
-SELECT update_reader_book(:'username_1', :'book_19_title', 7, 7, TRUE, FALSE);
+SELECT update_reader_book(:'username_1', :'book_19_title', 14, 14, TRUE, FALSE);
 
 
 /* --------------------------------------------- DROP functions --------------------------------------------- */

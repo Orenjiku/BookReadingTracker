@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import tw, { styled } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 
@@ -17,13 +17,13 @@ const EditViewContainer = styled.div`
   }
 `
 
-const DetailsViewEdit = ({isEditing}: {isEditing: boolean}) => {
+const DetailsViewEdit = ({ isEdit }: { isEdit: boolean }) => {
   // const [ date, setDate ] = useState('');
   // const [ page, setPage ] = useState('');
   // const [ percent, setPercent ] = useState('');
 
   return (
-    <CSSTransition in={isEditing} timeout={300} classNames='slide' unmountOnExit>
+    <CSSTransition in={isEdit} timeout={300} classNames='slide' unmountOnExit>
       <EditViewContainer>
         Edit Screen
       </EditViewContainer>
