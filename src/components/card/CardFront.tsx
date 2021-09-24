@@ -87,15 +87,16 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
 
   const totalDays = book.reader_book.reduce((acc, cur) => acc + cur.days_total, 0);
   const totalDaysRead = book.reader_book.reduce((acc, cur) => acc + cur.days_read, 0);
-  const dailyPagesRead = book.reader_book.reduce((acc: number[], cur): number[] => {
+  const dailyPagesReadList = book.reader_book.reduce((acc: number[], cur): number[] => {
     const pagesRead = cur.read_entry ? cur.read_entry.map(readEntry => readEntry.pages_read): [];
-    return [...acc, ...pagesRead];
+    return acc.concat(pagesRead);
   }, []);
-  const maxDailyRead = Math.max(...dailyPagesRead);
+  const dailyPagesRead = dailyPagesReadList.reduce((acc, cur) => acc = acc + cur, 0)
+  const maxDailyRead = Math.max(...dailyPagesReadList);
 
   const readDetails = [
     {key: 'Total Pages', value: book.total_pages},
-    {key: 'Avg Daily Read', value: Math.round(book.total_pages / totalDaysRead)},
+    {key: 'Avg Daily Read', value: Math.round(dailyPagesRead / totalDaysRead)},
     {key: 'Max Daily Read', value: maxDailyRead},
     {key: 'Total Days', value: totalDays},
     {key: 'Total Days Read', value: totalDaysRead},
@@ -104,6 +105,7 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
 
   const slideShowTimer = 800;
 
+  //test variable for CompletionSlider based on first reader_book entry
   const isReading = book.reader_book[0].is_reading;
 
   const handleEdit = () => setIsEdit(isEdit => !isEdit);
