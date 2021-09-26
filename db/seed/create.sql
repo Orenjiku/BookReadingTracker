@@ -26,10 +26,12 @@ CREATE INDEX ix_book_title ON book (title);
 
 CREATE TABLE reader_book (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_reader_book PRIMARY KEY,
-  days_read INT DEFAULT 0,
-  days_total INT DEFAULT 0,
-  is_reading BOOLEAN DEFAULT FALSE,
-  is_finished BOOLEAN DEFAULT FALSE,
+  days_read_lifetime INT DEFAULT 0,
+  days_total_lifetime INT DEFAULT 0,
+  max_daily_read_lifetime INT DEFAULT 0,
+  read_count INT DEFAULT 1,
+  is_any_reading BOOLEAN DEFAULT FALSE,
+  is_all_dnf BOOLEAN DEFAULT FALSE,
   reader_id INT,
   book_id INT,
   CONSTRAINT fk_reader_reader_book
@@ -41,19 +43,34 @@ CREATE TABLE reader_book (
 CREATE INDEX ix_reader_book_reader_id ON reader_book (reader_id);
 CREATE INDEX ix_reader_book_book_id ON reader_book (book_id);
 
+CREATE TABLE read_instance (
+  id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_read_instance PRIMARY KEY,
+  days_read INT DEFAULT 0,
+  days_total INT DEFAULT 0,
+  max_daily_read INT DEFAULT 0,
+  is_reading BOOLEAN DEFAULT FALSE,
+  is_finished BOOLEAN DEFAULT FALSE,
+  is_dnf BOOLEAN DEFAULT FALSE,
+  reader_book_id INT,
+  CONSTRAINT fk_reader_book_read_instance
+    FOREIGN KEY (reader_book_id) REFERENCES reader_book (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX ix_read_instance_reader_book_id ON read_instance (reader_book_id);
+
 CREATE TABLE read_entry (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_read_entry PRIMARY KEY,
   date_read TIMESTAMP (0) WITH TIME ZONE NOT NULL,
   pages_read INT NOT NULL,
   current_page INT NOT NULL,
   current_percent DECIMAL NOT NULL,
-  reader_book_id INT,
-  CONSTRAINT fk_reader_book_read_entry
-    FOREIGN KEY (reader_book_id) REFERENCES reader_book (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  read_instance_id INT,
+  CONSTRAINT fk_read_instance_read_entry
+    FOREIGN KEY (read_instance_id) REFERENCES read_instance (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT ck_current_percent CHECK (current_percent >= 0.00 AND current_percent <= 100.00)
 );
 
-CREATE INDEX ix_read_entry_reader_book_id ON read_entry (reader_book_id);
+CREATE INDEX ix_read_entry_read_instance_id ON read_entry (read_instance_id);
 
 CREATE TABLE author (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_author PRIMARY KEY,
@@ -62,6 +79,8 @@ CREATE TABLE author (
   middle_name VARCHAR DEFAULT '',
   last_name VARCHAR NOT NULL
 );
+
+CREATE INDEX ix_author_full_name ON author (full_name);
 
 CREATE TABLE book_author (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_book_author PRIMARY KEY,

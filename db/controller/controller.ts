@@ -6,10 +6,9 @@ import { Request, Response } from 'express';
 const controller = {
     getCurrentlyReading: async (req: Request, res: Response) => {
     const readerId = req.params.id;
-    const isReading = true;
-    const isFinished = false;
+    const is_any_reading = true;
     try {
-      const result = await db.query(getBooks(readerId, isReading, isFinished));
+      const result = await db.query(getBooks(readerId, is_any_reading));
       res.status(200).json(result.rows[0].books);
     } catch (err) {
       res.sendStatus(400);
@@ -18,10 +17,9 @@ const controller = {
 
   getFinishedReading: async (req: Request, res: Response) => {
     const readerId = req.params.id;
-    const isReading = false;
-    const isFinished = true;
+    const is_any_reading = false;
     try {
-      const result = await db.query(getBooks(readerId, isReading, isFinished));
+      const result = await db.query(getBooks(readerId, is_any_reading));
       res.status(200).json(result.rows[0].books);
     } catch (err) {
       res.sendStatus(400);

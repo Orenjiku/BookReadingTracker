@@ -1,5 +1,5 @@
 /* --------------------------------------------- CLEAR EXISTING TABLES --------------------------------------------- */
-TRUNCATE TABLE reader, book, reader_book, book_read, read_entry, book_author, author CASCADE;
+TRUNCATE TABLE reader, book, reader_book, read_instance, read_entry, book_author, author CASCADE;
 
 
 /* --------------------------------------------- HELPER FUNCTIONS --------------------------------------------- */
@@ -33,12 +33,22 @@ RETURNS INT AS $$
 BEGIN
   RETURN (
     SELECT r.id FROM reader_book AS r
-    WHERE r.reader_id=(SELECT get_reader_id($1))
-    AND r.book_id=(SELECT get_book_id($2))
+    WHERE r.reader_id=get_reader_id($1)
+    AND r.book_id=get_book_id($2)
   );
 END;
 $$ LANGUAGE plpgsql;
 
+-- FUNCTION get_read_instance_id
+CREATE OR REPLACE FUNCTION get_read_instance_id(arg_username VARCHAR, arg_book_title VARCHAR)
+RETURNS INT AS $$
+BEGIN
+  RETURN (
+    SELECT ri.id FROM read_instance AS ri
+    WHERE ri.reader_book_id=get_reader_book_id($1, $2)
+  );
+END;
+$$ LANGUAGE plpgsql;
 
 /* --------------------------------------------- INSERT reader --------------------------------------------- */
 -- FUNCTION insert_reader
@@ -320,6 +330,41 @@ SELECT insert_reader_book(:'username_1', :'book_19_title');
 SELECT insert_reader_book(:'username_1', :'book_20_title');
 
 
+/* --------------------------------------------- INSERT read_instance --------------------------------------------- */
+-- FUNCTION insert_read_instance
+CREATE OR REPLACE FUNCTION insert_read_instance(arg_username VARCHAR, arg_book_title VARCHAR)
+RETURNS VOID AS $$
+DECLARE
+  var_reader_book_id INT = get_reader_book_id($1, $2);
+BEGIN
+  INSERT INTO read_instance (reader_book_id)
+  VALUES (var_reader_book_id);
+END;
+$$ LANGUAGE plpgsql;
+
+-- INSERT relationship between reader_book and read_instance
+SELECT insert_read_instance(:'username_1', :'book_1_title');
+SELECT insert_read_instance(:'username_1', :'book_2_title');
+SELECT insert_read_instance(:'username_1', :'book_3_title');
+SELECT insert_read_instance(:'username_1', :'book_4_title');
+SELECT insert_read_instance(:'username_1', :'book_5_title');
+SELECT insert_read_instance(:'username_1', :'book_6_title');
+SELECT insert_read_instance(:'username_1', :'book_7_title');
+SELECT insert_read_instance(:'username_1', :'book_8_title');
+SELECT insert_read_instance(:'username_1', :'book_9_title');
+SELECT insert_read_instance(:'username_1', :'book_10_title');
+SELECT insert_read_instance(:'username_1', :'book_11_title');
+SELECT insert_read_instance(:'username_1', :'book_12_title');
+SELECT insert_read_instance(:'username_1', :'book_13_title');
+SELECT insert_read_instance(:'username_1', :'book_14_title');
+SELECT insert_read_instance(:'username_1', :'book_15_title');
+SELECT insert_read_instance(:'username_1', :'book_16_title');
+SELECT insert_read_instance(:'username_1', :'book_17_title');
+SELECT insert_read_instance(:'username_1', :'book_18_title');
+SELECT insert_read_instance(:'username_1', :'book_19_title');
+SELECT insert_read_instance(:'username_1', :'book_20_title');
+
+
 /* --------------------------------------------- INSERT read_entry --------------------------------------------- */
 -- FUNCTION insert_read_entry
 CREATE OR REPLACE FUNCTION insert_read_entry(
@@ -332,10 +377,10 @@ CREATE OR REPLACE FUNCTION insert_read_entry(
 )
 RETURNS VOID AS $$
 DECLARE
-  var_reader_book_id INT = get_reader_book_id($1, $2);
+  var_read_instance_id INT = get_read_instance_id($1, $2);
 BEGIN
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, reader_book_id)
-  VALUES ($3, $4, $5, $6, var_reader_book_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id)
+  VALUES ($3, $4, $5, $6, var_read_instance_id);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -754,54 +799,168 @@ SELECT join_book_author(:'book_19_title', :'book_19_author_1_full_name');
 SELECT join_book_author(:'book_20_title', :'book_20_author_1_full_name');
 
 
-/* --------------------------------------------- UPDATE is_reading and is_finished --------------------------------------------- */
--- FUNCTION UPDATE reader_book
-CREATE OR REPLACE FUNCTION update_reader_book(
+/* --------------------------------------------- UPDATE read_instance --------------------------------------------- */
+-- FUNCTION UPDATE read_instance
+CREATE OR REPLACE FUNCTION update_read_instance(
   arg_username VARCHAR,
   arg_book_title VARCHAR,
-  arg_days_read INT,
-  arg_days_total INT,
   arg_is_reading BOOLEAN,
-  arg_is_finished BOOLEAN
+  arg_is_finished BOOLEAN,
+  arg_is_dnf BOOLEAN
 )
 RETURNS VOID AS $$
 DECLARE
   var_reader_id INT = get_reader_id($1);
   var_book_id INT = get_book_id($2);
+  var_read_instance_id INT = get_read_instance_id($1, $2);
 BEGIN
-  UPDATE reader_book
-  SET days_read=$3, days_total=$4, is_reading=$5, is_finished=$6
-    WHERE reader_book.id=(
-      SELECT id
-      FROM reader_book AS r
-      WHERE r.reader_id=var_reader_id AND r.book_id=var_book_id
-    );
+  UPDATE read_instance
+  SET   days_read =       (SELECT COUNT(DISTINCT Date(re.date_read)) AS days_read
+                          FROM   read_instance AS ri
+                          INNER JOIN read_entry AS re
+                          ON re.read_instance_id = var_read_instance_id),
+        days_total =      (SELECT (MAX(Date(re.date_read)) - MIN(Date(re.date_read)) + 1) AS days_total
+                          FROM   read_entry AS re
+                          WHERE  re.read_instance_id = var_read_instance_id),
+        max_daily_read =  (SELECT MAX(daily_read.daily_pages_read)
+                          FROM   (SELECT SUM(pages_read) AS daily_pages_read
+                                  FROM   read_entry AS re
+                                  WHERE re.read_instance_id = var_read_instance_id
+                                  GROUP  BY Date(re.date_read))
+                          AS daily_read),
+        is_reading = $3,
+        is_finished = $4,
+        is_dnf = $5
+  WHERE  read_instance.reader_book_id = get_reader_book_id($1, $2);
 END;
 $$ LANGUAGE plpgsql;
 
--- UPDATE reader_book.is_finished to true
-SELECT update_reader_book(:'username_1', :'book_1_title', 5, 5, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_2_title', 6, 6, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_3_title', 6, 6, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_4_title', 14, 14, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_5_title', 3, 4, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_6_title', 5, 5, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_7_title', 2, 2, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_8_title', 4, 4, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_9_title', 2, 2, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_10_title', 8, 8,  FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_11_title', 11, 20, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_12_title', 10, 12, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_13_title', 4, 4, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_14_title', 4, 4, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_15_title', 6, 6, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_16_title', 6, 6, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_17_title', 6, 6, FALSE, TRUE);
-SELECT update_reader_book(:'username_1', :'book_18_title', 5, 5, FALSE, TRUE);
--- UPDATE reader_book.is_reading to true
-SELECT update_reader_book(:'username_1', :'book_19_title', 14, 14, TRUE, FALSE);
-SELECT update_reader_book(:'username_1', :'book_20_title', 3, 3, TRUE, FALSE);
+-- UPDATE read_instance.is_finished to true
+SELECT update_read_instance(:'username_1', :'book_1_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_2_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_3_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_4_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_5_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_6_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_7_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_8_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_9_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_10_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_11_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_12_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_13_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_14_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_15_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_16_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_17_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_18_title', FALSE, TRUE, FALSE);
+-- UPDATE read_instance.is_reading to true
+SELECT update_read_instance(:'username_1', :'book_19_title', TRUE, FALSE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_20_title', TRUE, FALSE, FALSE);
+
+
+/* --------------------------------------------- UPDATE reader_book  --------------------------------------------- */
+-- FUNCTION UPDATE reader_book
+CREATE OR REPLACE FUNCTION update_reader_book(arg_username VARCHAR, arg_book_title VARCHAR)
+RETURNS VOID AS $$
+DECLARE
+  var_reader_id INT = get_reader_id($1);
+  var_book_id INT = get_book_id($2);
+  var_reader_book_id INT = get_reader_book_id($1, $2);
+BEGIN
+  UPDATE reader_book AS rb
+  SET days_read_lifetime=(SELECT SUM(ri.days_read) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
+      days_total_lifetime=(SELECT SUM(ri.days_total) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
+      max_daily_read_lifetime=(SELECT MAX(ri.max_daily_read) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
+      is_any_reading=(SELECT bool_or(ri.is_reading) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
+      is_all_dnf=(SELECT bool_and(ri.is_dnf) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id)
+  WHERE rb.reader_id = get_reader_id($1)
+  AND rb.book_id = get_book_id($2);
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT update_reader_book(:'username_1', :'book_1_title');
+SELECT update_reader_book(:'username_1', :'book_2_title');
+SELECT update_reader_book(:'username_1', :'book_3_title');
+SELECT update_reader_book(:'username_1', :'book_4_title');
+SELECT update_reader_book(:'username_1', :'book_5_title');
+SELECT update_reader_book(:'username_1', :'book_6_title');
+SELECT update_reader_book(:'username_1', :'book_7_title');
+SELECT update_reader_book(:'username_1', :'book_8_title');
+SELECT update_reader_book(:'username_1', :'book_9_title');
+SELECT update_reader_book(:'username_1', :'book_10_title');
+SELECT update_reader_book(:'username_1', :'book_11_title');
+SELECT update_reader_book(:'username_1', :'book_12_title');
+SELECT update_reader_book(:'username_1', :'book_13_title');
+SELECT update_reader_book(:'username_1', :'book_14_title');
+SELECT update_reader_book(:'username_1', :'book_15_title');
+SELECT update_reader_book(:'username_1', :'book_16_title');
+SELECT update_reader_book(:'username_1', :'book_17_title');
+SELECT update_reader_book(:'username_1', :'book_18_title');
+SELECT update_reader_book(:'username_1', :'book_19_title');
+SELECT update_reader_book(:'username_1', :'book_20_title');
+
+
+/* --------------------------------------------- ADD another read_instance for testing --------------------------------------------- */
+
+CREATE OR REPLACE FUNCTION add_another_read_instance(arg_username VARCHAR, arg_book_title VARCHAR)
+RETURNS VOID AS $$
+DECLARE
+  var_reader_book_id INT = get_reader_book_id($1, $2);
+  --Find current max read_instance_id and add 1 for new read_instance_id
+  var_read_instance_id INT := (SELECT MAX(ri.id) FROM read_instance AS ri) + 1;
+BEGIN
+  --Add new read_instance and reference reader_book
+  INSERT INTO read_instance (reader_book_id) VALUES (var_reader_book_id);
+
+  --Add a few read_entries
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/1', 100, 100, 12.08, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/2', 100, 200, 24.15, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/3', 100, 300, 36.23, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/4', 100, 400, 48.31, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/5', 100, 500, 60.39, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/6', 100, 600, 72.46, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/7', 100, 700, 84.54, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/8', 100, 800, 96.61, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/9', 28, 828, 100, var_read_instance_id);
+
+  --Update read_instance meta data based on previously added read_entries
+  UPDATE read_instance
+  SET   days_read =   (SELECT Count(DISTINCT Date(re.date_read)) AS days_read
+                      FROM   read_instance AS ri
+                      INNER JOIN read_entry AS re
+                      ON re.read_instance_id = var_read_instance_id),
+        days_total =  (SELECT (MAX(Date(re.date_read)) - MIN(Date(re.date_read)) + 1) AS days_total
+                      FROM   read_entry AS re
+                      WHERE  re.read_instance_id = var_read_instance_id),
+        max_daily_read = (SELECT MAX(daily_read.daily_pages_read)
+                          FROM   (SELECT SUM(pages_read) AS daily_pages_read
+                                  FROM   read_entry AS re
+                                  WHERE re.read_instance_id = var_read_instance_id
+                                  GROUP  BY Date(re.date_read))
+                          AS daily_read),
+        is_reading = FALSE,
+        is_finished = TRUE,
+        is_dnf = FALSE
+  WHERE  read_instance.reader_book_id = var_reader_book_id
+  AND read_instance.id = var_read_instance_id;
+
+  --Update meta data for reader_book based on previously added read_intance
+  UPDATE reader_book AS rb
+  SET days_read_lifetime=(SELECT SUM(ri.days_read) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
+      days_total_lifetime=(SELECT SUM(ri.days_total) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
+      max_daily_read_lifetime=(SELECT MAX(ri.max_daily_read) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
+      read_count=(SELECT rb.read_count FROM reader_book AS rb WHERE rb.id = var_reader_book_id) + 1,
+      is_any_reading=(SELECT bool_or(ri.is_reading) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
+      is_all_dnf=(SELECT bool_and(ri.is_dnf) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id)
+  WHERE rb.reader_id = get_reader_id($1)
+  AND rb.book_id = get_book_id($2);
+END;
+$$ LANGUAGE plpgsql;
+
+
+SELECT add_another_read_instance(:'username_1', :'book_19_title');
 
 
 /* --------------------------------------------- DROP functions --------------------------------------------- */
-DROP FUNCTION insert_reader, insert_book, insert_reader_book, insert_read_entry, insert_author, join_book_author, update_reader_book, get_reader_id, get_book_id, get_author_id, get_reader_book_id;
+DROP FUNCTION get_reader_id, get_book_id, get_author_id, get_reader_book_id, get_read_instance_id, insert_reader, insert_book, insert_reader_book, insert_read_instance, insert_read_entry, insert_author, join_book_author, update_read_instance, update_reader_book;

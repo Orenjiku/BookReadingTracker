@@ -75,6 +75,12 @@
     SELECT insert_reader_book(:'username_1', :'book_{number}_title');
     ~~~~
 
+6.  INSERT read_instance  
+    Create relationship between read_instance and reader_book
+    **_Reminder:_** Change { number } in variable to corresponding book
+    ~~~~sql
+    SELECT insert_read_instance(:'username_1', :'book_{number}_title');
+    ~~~~
 7.  INSERT read_entry  
     Creates read_entry entry that is associated to book_read.id from previous step.  
     **_Reminder:_** Change { number } to a number.
@@ -112,15 +118,24 @@
     SELECT join_book_author(:'book_{number}_title', :'book_{number}_author_{number}_full_name');
     ~~~~
 
-11. UPDATE reader_book (Optional)  
-    Update whether a book is currently being read.  
-    **_Note:_** is_reading and is_finished default value is FALSE  
+11. UPDATE read_instance  
+    Update read_instance meta data based on its read_entry data.  
     **_Reminder:_** Change { number } to a number.
-    | username | book_title | days_read | days_total | is_reading | is_finished
-    | --- | ---------- | -------- | ------- | ------ | ------- |
-    | string | string | number | number | boolean | boolean |
+    | username | book_title | is_reading | is_finished | is_dnf |
+    | -------- | ---------- | ---------- | ----------- | ------ |
+    | string | string | boolean | boolean | boolean |
     ~~~~sql
-    SELECT update_reader_book(:'username_1', :'book_{number}_title', {days_read}, {days_total}, {is_reading}, {is_finished});
+    SELECT update_read_instance(:'username_1', :'book_{number}_title', {is_reading}, {is_finished}, {is_dnf});
+    ~~~~
+
+12. UPDATE reader_book  
+    Update reader_book meta data based on its read_instance data.  
+    **_Reminder:_** Change { number } to a number.
+    | username | book_title |
+    | -------- | ---------- |
+    |string | number |
+    ~~~~sql
+    SELECT update_reader_book(:'username_1', :'book_{number}_title');
     ~~~~
 ---
 
@@ -154,56 +169,67 @@ Retrieves a list of books that are currently being read.
     "total_pages": 512,
     "blurb":  "Action packed novel featuring the galaxies foremost alien hunting taskforce, the Deathwatch. Led by Librarian Karras, the elite alien-hunting Talon Squad must penetrate a genestealer lair and put the abominations to the flame or face the consequences of an entire planet's extinction.//n//nGathered from the many Chapters of Space Marines, the Deathwatch are elite, charged with defending the Imperium of Man from aliens. Six Space Marines, strangers from different words, make up Talon Squad. On 31-Caro, a new terror has emerged, a murderous shadow that stalks the dark, and only the Deathwatch can stop it. Under the direction of a mysterious Inquisitor Lord known only as Sigma, they must cleanse this planet or die in the attempt.",
     "picture_link": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561288604l/52357292._SX318_SY475_.jpg",
-    "reader_book": [
-      {
-        "rb_id": 15,
-        "days_read": 6,
-        "days_total": 6,
-        "is_reading": true,
-        "is_finished": false,
-        "read_entry": [
-          {
-            "re_id": 90,
-            "date_read": "2021-08-20T00:00:00-04:00",
-            "pages_read": 183,
-            "current_page": 512,
-            "current_percent": 100
-          },
-          {
-            "re_id": 89,
-            "date_read": "2021-08-19T00:00:00-04:00",
-            "pages_read": 52,
-            "current_page": 329,
-            "current_percent": 64.26
-          },
-          {
-            "re_id": 88,
-            "date_read": "2021-08-18T00:00:00-04:00",
-            "pages_read": 54,
-            "current_page": 277,
-            "current_percent": 54.1
-          },
+    "reader_book": {
+      "rb_id": 15,
+      "days_read_lifetime": 10,
+      "days_total_lifetime": 14,
+      "max_daily_read_lifetime": 54,
+      "read_count": 2,
+      "is_any_reading": true,
+      "is_all_dnf": false,
+      "read_instance": [
+        {
+          "ri_id": 21,
+          "days_read": 3,
+          "days_total": 7,
+          "max_daily_read": 131,
+          "is_reading": true,
+          "is_finished": false,
+          "read_entry": [
+            {
+              "re_id": 121,
+              "date_read": "2021-09-20T00:00:00-04:00",
+              "pages_read": 131,
+              "current_page": 283,
+              "current_percent": 55.27
+            },
+            {
+              "re_id": 120,
+              "date_read": "2021-09-15T00:00:00-04:00",
+              "pages_read": 110,
+              "current_page": 152,
+              "current_percent": 29.69
+            },
+            {
+              "re_id": 119,
+              "date_read": "2021-09-15T00:00:00-04:00",
+              "pages_read": 42,
+              "current_page": 42,
+              "current_percent": 8.20
+            }
+          ]
+        },
+        {
+          "ri_id": 15,
+          "days_read": 7,
+          "days_total": 7,
+          "max_daily_read": 183,
+          "is_reading": false,
+          "is_finished": true,
+          "is_dnf": false,
+          "read_entry": [
+            {
+              "re_id": 90,
+              "date_read": "2021-08-20T00:00:00-04:00",
+              "pages_read": 183,
+              "current_page": 512,
+              "current_percent": 100
+            },
             ...
-        ]
-      },
-      {
-        "rb_id": 12,
-        "days_read": 10,
-        "days_total": 12,
-        "is_reading": false,
-        "is_finished": true,
-        "read_entry": [
-          {
-            "re_id": 75,
-            "date_read": "2021-08-08T00:00:00-04:00",
-            "pages_read": 113,
-            "current_page": 688,
-            "current_percent": 100
-          },
-          ...
-        ]
-      }
-    ]
+          ]
+        }
+      ]
+    }
   },
   {
     "b_id": 14,
@@ -241,16 +267,16 @@ Retrieves a list of books that reader has finished reading.
     "b_id": 8,
     "title": "Maledictions: A Horror Anthology",
     "author": [
-      "Cassandra Khaw",
-      "Richard Strachan",
-      "Graham McNeill",
-      "Lora Gray",
-      "C L Werner",
-      "Peter McLean",
       "David Annandale",
+      "Lora Gray",
       "Paul Kane",
+      "Cassandra Khaw",
+      "Peter McLean",
+      "Graham McNeill",
       "Josh Reynolds",
       "J.C. Stearns",
+      "Richard Strachan",
+      "C L Werner",
       "Alec Worley"
     ],
     "published_date": "2019-03-30",
@@ -259,33 +285,43 @@ Retrieves a list of books that reader has finished reading.
     "total_pages": 352,
     "blurb": "A eclectic collection of gut wrenching tales to spook and scare.\n\nHorror is no stranger to the worlds of Warhammer. Its very fabric is infested with the arcane, the strange and the downright terrifying. From the cold, vastness of the 41st millenium to the creeping evil at large in the Mortal Realms, this anthology of short stories explores the sinister side of Warhammer in a way it never has been before. Psychological torment, visceral horrors, harrowing tales of the supernatural and the nightmares buried within, this collection brings together some of the best horror writing from the Black Library.\n\nFeaturing stories from Graham McNeill, Cassandra Khaw, Alec Worley, David Annandale and more.",
     "picture_link": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1548642309l/40744548.jpg",
-    "reader_book": [
-      {
-        "rb_id": 8,
-        "days_read": 4,
-        "days_total": 4,
-        "is_reading": false,
-        "is_finished": true,
-        "read_entry": [
-          {
-            "re_id": 43,
-            "date_read": "2021-07-10T00:00:00-04:00",
-            "pages_read": 69,
-            "current_page": 352,
-            "current_percent": 100
-          },
-          {
-            "re_id": 42,
-            "date_read": "2021-07-09T00:00:00-04:00",
-            "pages_read": 152,
-            "current_page": 283,
-            "current_percent": 80.4
-          },
-          ...
-        ]
-      },
-      ...
-    ]
+    "reader_book": {
+      "rb_id": 8,
+      "days_read_lifetime": 4,
+      "days_total_lifetime": 4,
+      "max_daily_read_lifetime": 152,
+      "read_count": 1,
+      "is_any_reading": false,
+      "is_all_dnf": false,
+      "read_instance": [
+        {
+          "ri_id": 8,
+          "days_read": 4,
+          "days_total": 4,
+          "max_daily_read": 152,
+          "is_reading": false,
+          "is_finished": true,
+          "is_dnf": false,
+          "read_entry": [
+            {
+              "re_id": 43,
+              "date_read": "2021-07-10T00:00:00-04:00",
+              "pages_read": 69,
+              "current_page": 352,
+              "current_percent": 100
+            },
+            {
+              "re_id": 42,
+              "date_read": "2021-07-09T00:00:00-04:00",
+              "pages_read": 152,
+              "current_page": 283,
+              "current_percent": 80.4
+            },
+            ...
+          ]
+        }
+      ]
+    }
   },
   {
     "b_id": 2,
