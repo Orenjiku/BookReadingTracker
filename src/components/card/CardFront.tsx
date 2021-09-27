@@ -5,12 +5,12 @@ import { BookITF } from '../../interfaces/interface';
 import CardHeader from './CardHeader';
 import BookImage from './BookImage';
 import DetailsView from './DetailsView';
-import ReaderBookView from './ReaderBookView';
+import ReaderBook from './ReaderBook';
 import CompletionSlider from './CompletionSlider';
 import { Edit } from '@styled-icons/boxicons-regular/Edit';
 
 const CardFrontContainer = styled.div<{ $isFlipped: boolean }>`
-  ${tw`absolute h-full w-full rounded-2xl grid grid-cols-2 grid-rows-20`};
+  ${tw`absolute h-full w-full rounded-2xl grid grid-cols-2 grid-rows-21`};
   ${tw`bg-blueGray-200 bg-opacity-10 backdrop-filter backdrop-blur-sm`};
   ${tw`border-t border-l border-r border-blueGray-50 rounded-2xl shadow-xl`};
   ${tw`overflow-hidden select-none`};
@@ -23,7 +23,7 @@ const CardFrontContainer = styled.div<{ $isFlipped: boolean }>`
 `
 
 const SlideContainer = styled.div<{ $src?: string }>`
-  ${tw`relative col-start-1 col-end-3 row-start-4 row-end-19 rounded-tl-2xl flex justify-center items-center`};
+  ${tw`relative col-start-1 col-end-3 row-start-4 row-end-20 rounded-tl-2xl flex justify-center items-center`};
   ${tw`bg-trueGray-100 overflow-hidden`};
   &::before {
     content: '';
@@ -80,46 +80,51 @@ const StyledEdit = styled(Edit)<{ isEdit?: boolean }>`
 
 const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: boolean; handleFlip: Function }) => {
 
-  const [ isEdit, setIsEdit ] = useState<boolean>(false);
-  const [ isSlideShow, setIsSlideShow ] = useState<boolean>(false);
+  const [ isEdit, setIsEdit ] = useState(false);
+  const [ isSlideShow, setIsSlideShow ] = useState(false);
+  // const [ isAnyReading, setIsAnyReading ] = useState<boolean>(book.reader_book.is_any_reading);
+  // const [ isAnyFinished, setIsAnyFinished ] = useState<boolean>(book.reader_book.is_any_finished);
+  // const [ currentReadInstanceIdx, setCurrentReadInstanceIdx ] = useState<number>(book.reader_book.read_instance.length - 1);
+  const [ isReading, setIsReading ] = useState<boolean>(false);
 
   const cardFrontRef = useRef(null);
 
-  const totalDays = book.reader_book.reduce((acc, cur) => acc + cur.days_total, 0);
-  const totalDaysRead = book.reader_book.reduce((acc, cur) => acc + cur.days_read, 0);
-  const dailyPagesReadList = book.reader_book.reduce((acc: number[], cur): number[] => {
-    const pagesRead = cur.read_entry ? cur.read_entry.map(readEntry => readEntry.pages_read): [];
-    return acc.concat(pagesRead);
-  }, []);
-  const dailyPagesRead = dailyPagesReadList.reduce((acc, cur) => acc = acc + cur, 0)
-  const maxDailyRead = Math.max(...dailyPagesReadList);
+  const readInfo = book.reader_book;
+  const pagesRead = readInfo.read_instance.reduce((acc, cur) => acc += cur.pages_read, 0);
+  const totalDaysRead = readInfo.read_instance.reduce((acc, cur) => acc += cur.days_read, 0);
+  const totalDays = readInfo.read_instance.reduce((acc, cur) => acc += cur.days_total, 0);
+  const avgDailyRead = pagesRead > 0 ? Math.round(pagesRead / totalDaysRead) : 0;
+  const maxDailyRead = Math.max(...readInfo.read_instance.reduce((acc, cur) => acc.concat(cur.max_daily_read), [] as number[]));
+  const timesRead = readInfo.is_any_finished ? readInfo.read_instance.reduce((acc, cur) => acc += cur.is_finished ? 1 : 0, 0) : 0;
 
+  // const [ readDetails, setReadDetails ] = useState({pagesRead, totalDays, totalDaysRead, avgDailyRead, maxDailyRead});
   const readDetails = [
     {key: 'Total Pages', value: book.total_pages},
-    {key: 'Avg Daily Read', value: Math.round(dailyPagesRead / totalDaysRead)},
+    {key: 'Avg Daily Read', value: avgDailyRead},
     {key: 'Max Daily Read', value: maxDailyRead},
     {key: 'Total Days', value: totalDays},
     {key: 'Total Days Read', value: totalDaysRead},
-    {key: 'Times Read', value: book.reader_book.length},
+    {key: 'Times Read', value: timesRead},
   ];
 
   const slideShowTimer = 800;
 
   //test variable for CompletionSlider based on first reader_book entry
-  const isReading = book.reader_book[0].is_reading;
+  // const isReading = book.reader_book.is_any_reading;
 
   const handleEdit = () => setIsEdit(isEdit => !isEdit);
   const handleSlideShow = () => setIsSlideShow(isSlideShow => !isSlideShow);
+  const handleIsReading = (isReading: boolean) => setIsReading(isReading);
 
   return (
     <CardFrontContainer $isFlipped={isFlipped}>
       <CardHeader title={book.title} author={book.author} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleSlideShow={handleSlideShow} />
       <BookImage pictureLink={book.picture_link} isEdit={isEdit} handleFlip={handleFlip} />
       <DetailsView isEdit={isEdit} readDetails={readDetails} />
-      <ReaderBookView readerBookList={book.reader_book} isEdit={isEdit} />
+      <ReaderBook readerBook={book.reader_book} handleIsReading={handleIsReading} isEdit={isEdit} />
 
-      <div className='col-start-1 col-end-3 row-start-19 row-end-21 flex justify-center items-center rounded-b-2xl text-trueGray-900 text-2xl font-Charm-400'>
-        {isReading ? <CompletionSlider /> : 'Completed!'}
+      <div className='col-start-1 col-end-3 row-start-20 row-end-22 flex justify-center items-center rounded-b-2xl text-trueGray-900 text-xl font-Charm-400 border-t border-trueGray-50'>
+        {isReading && <CompletionSlider />}
       </div>
 
       <StyledEdit size={22} isEdit={isEdit} onClick={() => handleEdit()} />

@@ -38,37 +38,27 @@ const StyledLeftArrow = styled(LeftArrow)<{ $slideShowTimer: number }>`
   &:hover {
     ${tw`opacity-60`};
   }
-  &.arrow-enter {
-    opacity: 1;
-  }
   &.arrow-enter-active {
-    opacity: 1;
-    color: var(--neon-light-center);
-    filter: var(--light-effect);
-    fill: none;
-    transition: filter calc(var(--slideShowTimer) * 3 / 8) linear;
+    filter: none;
+    transition: filter calc(var(--slideShowTimer) * 0.4) linear;
   };
   &.arrow-enter-done {
     opacity: 1;
     color: var(--neon-light-center);
     filter: var(--light-effect);
     fill: none;
-    transition: all calc(var(--slideShowTimer) * 5 / 8) linear;
+    transition: filter calc(var(--slideShowTimer) * 0.2) linear;
   };
   &.arrow-exit {
-    opacity: 1;
     color: var(--neon-light-center);
     filter: var(--light-effect);
-    fill: none;
   }
   &.arrow-exit-active {
-    opacity: 1;
-    color: var(--neon-light-center);
-    filter: var(--light-effect);
-    transition: filter calc(var(--slideShowTimer) * 5 / 8) linear;
+    filter: none;
+    transition: filter calc(var(--slideShowTimer) * 0.2) linear;
   };
   &.arrow-exit-done {
-    transition: all calc(var(--slideShowTimer) * 3 / 8) linear;
+    transition: all calc(var(--slideShowTimer) * 0.2) linear;
   }
 `
 

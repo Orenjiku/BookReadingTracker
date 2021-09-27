@@ -6,11 +6,12 @@ import CardBack from './CardBack';
 
 const CardContainer = styled.div`
   ${tw`relative m-5`};
-  --card-size: 370px;
-  min-width: var(--card-size);
-  max-width: var(--card-size);
-  min-height: var(--card-size);
-  max-height: var(--card-size);
+  --card-width: 360px;
+  --card-height: 378px;
+  min-width: var(--card-width);
+  max-width: var(--card-width);
+  min-height: var(--card-height);
+  max-height: var(--card-height);
   transform-style: preserve-3d;
 `
 

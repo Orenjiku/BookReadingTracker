@@ -31,7 +31,7 @@ const EditBookButton = styled.button`
 const BookImage = ({ pictureLink, isEdit, handleFlip }: BookImagePropsITF) => {
   const bookImageRef = useRef(null);
   return (
-    <div className='col-start-1 col-end-2 row-start-4 row-end-19 rounded-tl-2xl grid place-content-center bg-cover overflow-hidden' style={{backgroundImage: `url(${pictureLink})`}}>
+    <div className='col-start-1 col-end-2 row-start-4 row-end-20 rounded-tl-2xl grid place-content-center bg-cover bg-center overflow-hidden' style={{backgroundImage: `url(${pictureLink})`}}>
       <CSSTransition in={isEdit} timeout={500} classNames='fade' nodeRef={bookImageRef} unmountOnExit>
         <EditBookButton ref={bookImageRef} onClick={() => handleFlip()}>Edit Book</EditBookButton>
       </CSSTransition>
