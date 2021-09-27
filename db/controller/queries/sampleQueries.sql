@@ -35,11 +35,8 @@ FROM
                      (
                      SELECT
                             rb.id AS rb_id,
-                            rb.days_read_lifetime,
-                            rb.days_total_lifetime,
-                            rb.max_daily_read_lifetime,
-                            rb.read_count,
                             rb.is_any_reading,
+                            rb.is_any_finished,
                             rb.is_all_dnf,
                             (
                                    SELECT
@@ -50,6 +47,7 @@ FROM
                                           ri.id AS ri_id,
                                           ri.days_read,
                                           ri.days_total,
+                                          ri.pages_read,
                                           ri.max_daily_read,
                                           ri.is_reading,
                                           ri.is_finished,
@@ -75,11 +73,11 @@ FROM
                                                  ) AS read_entry_agg
                                           )
                                           FROM
-                                          read_instance AS ri
+                                                 read_instance AS ri
                                           WHERE
-                                          ri.reader_book_id = rb.id
+                                                 ri.reader_book_id = rb.id
                                           ORDER BY
-                                          rb.id DESC
+                                                 ri.id ASC
                                    ) AS read_instance_agg
                             )
                      FROM
