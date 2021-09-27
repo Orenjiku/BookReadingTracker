@@ -6,13 +6,24 @@ export interface ReadEntryITF {
   current_percent: number;
 }
 
-export interface ReaderBookITF {
-  rb_id: number;
+export interface ReadInstanceITF {
+  ri_id: number;
   days_read: number;
   days_total: number;
+  pages_read: number;
+  max_daily_read: number;
   is_reading: boolean;
   is_finished: boolean;
+  is_dnf: boolean;
   read_entry?: ReadEntryITF[];
+}
+
+export interface ReaderBookITF {
+  rb_id: number;
+  is_any_reading: boolean;
+  is_any_finished: boolean;
+  is_all_dnf: boolean;
+  read_instance: ReadInstanceITF[];
 }
 
 export interface BookITF {
@@ -25,5 +36,5 @@ export interface BookITF {
   total_pages: number;
   blurb: string;
   picture_link: string;
-  reader_book: ReaderBookITF[];
+  reader_book: ReaderBookITF;
 }
