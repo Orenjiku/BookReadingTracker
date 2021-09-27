@@ -39,6 +39,7 @@ module.exports = {
       },
       gridTemplateRows: {
         '20': 'repeat(20, minmax(0, 1fr))',
+        '21': 'repeat(21, minmax(0, 1fr))',
       },
       gridRowStart: {
         '8': '8',
@@ -55,6 +56,7 @@ module.exports = {
         '19': '19',
         '20': '20',
         '21': '21',
+        '22': '22',
       },
       gridRowEnd: {
         '8': '8',
@@ -71,6 +73,7 @@ module.exports = {
         '19': '19',
         '20': '20',
         '21': '21',
+        '22': '22',
       },
       textColor: {
         'transparent': 'transparent'
