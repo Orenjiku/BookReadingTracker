@@ -822,6 +822,7 @@ BEGIN
         days_total =      (SELECT (MAX(Date(re.date_read)) - MIN(Date(re.date_read)) + 1) AS days_total
                           FROM   read_entry AS re
                           WHERE  re.read_instance_id = var_read_instance_id),
+        pages_read =      (SELECT SUM(re.pages_read) FROM read_entry AS re WHERE re.read_instance_id = var_read_instance_id),
         max_daily_read =  (SELECT MAX(daily_read.daily_pages_read)
                           FROM   (SELECT SUM(pages_read) AS daily_pages_read
                                   FROM   read_entry AS re
@@ -869,10 +870,8 @@ DECLARE
   var_reader_book_id INT = get_reader_book_id($1, $2);
 BEGIN
   UPDATE reader_book AS rb
-  SET days_read_lifetime=(SELECT SUM(ri.days_read) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
-      days_total_lifetime=(SELECT SUM(ri.days_total) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
-      max_daily_read_lifetime=(SELECT MAX(ri.max_daily_read) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
-      is_any_reading=(SELECT bool_or(ri.is_reading) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
+  SET is_any_reading=(SELECT bool_or(ri.is_reading) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
+      is_any_finished=(SELECT bool_or(ri.is_finished) FROM read_instance aS ri WHERE ri.reader_book_id = var_reader_book_id),
       is_all_dnf=(SELECT bool_and(ri.is_dnf) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id)
   WHERE rb.reader_id = get_reader_id($1)
   AND rb.book_id = get_book_id($2);
@@ -914,15 +913,15 @@ BEGIN
   INSERT INTO read_instance (reader_book_id) VALUES (var_reader_book_id);
 
   --Add a few read_entries
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/1', 100, 100, 12.08, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/2', 100, 200, 24.15, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/3', 100, 300, 36.23, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/4', 100, 400, 48.31, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/5', 100, 500, 60.39, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/6', 100, 600, 72.46, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/7', 100, 700, 84.54, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/8', 100, 800, 96.61, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2000/1/9', 28, 828, 100, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/1', 100, 100, 12.08, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/2', 100, 200, 24.15, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/3', 100, 300, 36.23, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/4', 100, 400, 48.31, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/5', 100, 500, 60.39, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/6', 100, 600, 72.46, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/7', 100, 700, 84.54, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/8', 100, 800, 96.61, var_read_instance_id);
+  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/9', 28, 828, 100, var_read_instance_id);
 
   --Update read_instance meta data based on previously added read_entries
   UPDATE read_instance
@@ -933,6 +932,7 @@ BEGIN
         days_total =  (SELECT (MAX(Date(re.date_read)) - MIN(Date(re.date_read)) + 1) AS days_total
                       FROM   read_entry AS re
                       WHERE  re.read_instance_id = var_read_instance_id),
+        pages_read =      (SELECT SUM(re.pages_read) FROM read_entry AS re WHERE re.read_instance_id = var_read_instance_id),
         max_daily_read = (SELECT MAX(daily_read.daily_pages_read)
                           FROM   (SELECT SUM(pages_read) AS daily_pages_read
                                   FROM   read_entry AS re
@@ -947,11 +947,8 @@ BEGIN
 
   --Update meta data for reader_book based on previously added read_intance
   UPDATE reader_book AS rb
-  SET days_read_lifetime=(SELECT SUM(ri.days_read) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
-      days_total_lifetime=(SELECT SUM(ri.days_total) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
-      max_daily_read_lifetime=(SELECT MAX(ri.max_daily_read) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
-      read_count=(SELECT rb.read_count FROM reader_book AS rb WHERE rb.id = var_reader_book_id) + 1,
-      is_any_reading=(SELECT bool_or(ri.is_reading) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
+  SET is_any_reading=(SELECT bool_or(ri.is_reading) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
+      is_any_finished=(SELECT bool_or(ri.is_finished) FROM read_instance aS ri WHERE ri.reader_book_id = var_reader_book_id),
       is_all_dnf=(SELECT bool_and(ri.is_dnf) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id)
   WHERE rb.reader_id = get_reader_id($1)
   AND rb.book_id = get_book_id($2);

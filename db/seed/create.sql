@@ -26,11 +26,8 @@ CREATE INDEX ix_book_title ON book (title);
 
 CREATE TABLE reader_book (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_reader_book PRIMARY KEY,
-  days_read_lifetime INT DEFAULT 0,
-  days_total_lifetime INT DEFAULT 0,
-  max_daily_read_lifetime INT DEFAULT 0,
-  read_count INT DEFAULT 1,
   is_any_reading BOOLEAN DEFAULT FALSE,
+  is_any_finished BOOLEAN DEFAULT FALSE,
   is_all_dnf BOOLEAN DEFAULT FALSE,
   reader_id INT,
   book_id INT,
@@ -47,6 +44,7 @@ CREATE TABLE read_instance (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_read_instance PRIMARY KEY,
   days_read INT DEFAULT 0,
   days_total INT DEFAULT 0,
+  pages_read INT DEFAULT 0,
   max_daily_read INT DEFAULT 0,
   is_reading BOOLEAN DEFAULT FALSE,
   is_finished BOOLEAN DEFAULT FALSE,

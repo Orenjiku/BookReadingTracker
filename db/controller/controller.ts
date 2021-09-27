@@ -1,14 +1,14 @@
 import db from '../config/db';
-import getBooks from './queries/getBooks';
-import getDailyReads from './queries/getDailyReads';
+import queryCurrentlyReading from './queries/queryCurrentlyReading';
+import queryFinishedReading from './queries/queryFinishedReading';
+import queryDailyReads from './queries/queryDailyReads';
 import { Request, Response } from 'express';
 
 const controller = {
     getCurrentlyReading: async (req: Request, res: Response) => {
     const readerId = req.params.id;
-    const is_any_reading = true;
     try {
-      const result = await db.query(getBooks(readerId, is_any_reading));
+      const result = await db.query(queryCurrentlyReading(readerId));
       res.status(200).json(result.rows[0].books);
     } catch (err) {
       res.sendStatus(400);
@@ -17,9 +17,8 @@ const controller = {
 
   getFinishedReading: async (req: Request, res: Response) => {
     const readerId = req.params.id;
-    const is_any_reading = false;
     try {
-      const result = await db.query(getBooks(readerId, is_any_reading));
+      const result = await db.query(queryFinishedReading(readerId));
       res.status(200).json(result.rows[0].books);
     } catch (err) {
       res.sendStatus(400);
@@ -29,7 +28,7 @@ const controller = {
   getDailyReads: async (req: Request, res: Response) => {
     const readerId = req.params.id;
     try {
-      const result = await db.query(getDailyReads(readerId));
+      const result = await db.query(queryDailyReads(readerId));
       res.status(200).json(result.rows);
     } catch (err) {
       res.sendStatus(400);

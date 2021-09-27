@@ -171,17 +171,15 @@ Retrieves a list of books that are currently being read.
     "picture_link": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561288604l/52357292._SX318_SY475_.jpg",
     "reader_book": {
       "rb_id": 15,
-      "days_read_lifetime": 10,
-      "days_total_lifetime": 14,
-      "max_daily_read_lifetime": 54,
-      "read_count": 2,
       "is_any_reading": true,
+      "is_any_finished": true,
       "is_all_dnf": false,
       "read_instance": [
         {
           "ri_id": 21,
           "days_read": 3,
           "days_total": 7,
+          "pages_read": 283,
           "max_daily_read": 131,
           "is_reading": true,
           "is_finished": false,
@@ -213,6 +211,7 @@ Retrieves a list of books that are currently being read.
           "ri_id": 15,
           "days_read": 7,
           "days_total": 7,
+          "pages_read": 512,
           "max_daily_read": 183,
           "is_reading": false,
           "is_finished": true,
@@ -239,7 +238,7 @@ Retrieves a list of books that are currently being read.
     ],
     "published_date": "2016-11-12",
     "published_date_edition": "2018-01-23",
-    "book_format": "Paperback"
+    "book_format": "Paperback",
     "total_pages": 320,
     ...
   },
@@ -287,17 +286,15 @@ Retrieves a list of books that reader has finished reading.
     "picture_link": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1548642309l/40744548.jpg",
     "reader_book": {
       "rb_id": 8,
-      "days_read_lifetime": 4,
-      "days_total_lifetime": 4,
-      "max_daily_read_lifetime": 152,
-      "read_count": 1,
       "is_any_reading": false,
+      "is_any_finished": true,
       "is_all_dnf": false,
       "read_instance": [
         {
           "ri_id": 8,
           "days_read": 4,
           "days_total": 4,
+          "pages_read": 352,
           "max_daily_read": 152,
           "is_reading": false,
           "is_finished": true,
