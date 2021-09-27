@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import tw, { styled } from 'twin.macro';
+import tw, { styled, css } from 'twin.macro';
 import { ReaderBookITF } from '../../interfaces/interface';
 import ReadInstance from './ReadInstance';
-import { BsChevronUp, BsChevronDown } from 'react-icons/bs';
+import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 
-const ReaderBookContainer = styled.div`
-  ${tw`row-start-10 row-end-20 col-start-2 col-end-3 font-SortsMillGoudy-400 overflow-hidden`};
-  display: grid;
-  grid-template-rows: repeat(6, 1fr);
+const ReaderBookContainer = styled.div<{$isExpand: boolean}>`
+  ${tw`row-start-10 row-end-20 col-start-2 col-end-3 flex flex-col flex-grow font-SortsMillGoudy-400 overflow-hidden`};
+  ${({ $isExpand }) => $isExpand && css`${tw`row-start-4`}`}
 `
 
-const ReaderBook = ({ readerBook, isEdit, handleIsReading }: { readerBook: ReaderBookITF; isEdit: boolean; handleIsReading: Function }) => {
+const ReaderBook = ({ readerBook, isEdit, handleIsReading, handleIsReaderBookExpanded, isReaderBookExpanded }: { readerBook: ReaderBookITF; isEdit: boolean; handleIsReading: Function; handleIsReaderBookExpanded: Function; isReaderBookExpanded: boolean }) => {
   const readInstanceLength = readerBook.read_instance.length;
   // startIdx is either the index of a read_instance that is_reading, or the most recent read_instance, i.e. index = 0
   const startIdx = readerBook.is_any_reading ? readerBook.read_instance.findIndex(instance => instance.is_reading === true) : 0;
@@ -29,28 +28,30 @@ const ReaderBook = ({ readerBook, isEdit, handleIsReading }: { readerBook: Reade
   const nextSlide = () => setReadInstanceIdx(readInstanceIdx + 1);
 
   return (
-    <ReaderBookContainer>
+    <ReaderBookContainer $isExpand={isReaderBookExpanded}>
+
       {readInstanceLength > 1 &&
-        <div className='relative row-start-1 row-end-2 bg-trueGray-50 bg-opacity-10 border-t border-b border-trueGray-50 flex justify-center items-center text-xl'>
-          {readInstanceLength - readInstanceIdx}
+        <div className='relative bg-trueGray-50 bg-opacity-10 border-t border-b border-trueGray-50 flex justify-center items-center'>
+
+          <p>{readInstanceLength - readInstanceIdx}</p>
 
           {!isIdxStart &&
-            <div className='absolute left-0 h-full w-1/3 flex items-center overflow-hidden'>
-              <BsChevronUp className='absolute left-0 stroke-current stroke-1 text-coolGray-50' onClick={() => prevSlide()} />
+            <div className='absolute left-0 w-1/4 h-full flex items-center cursor-pointer' onClick={() => prevSlide()} >
+              <BsChevronLeft className='absolute left-1 stroke-current stroke-1 text-coolGray-50' />
             </div>
           }
 
           {!isIdxEnd &&
-            <div className='absolute right-0 h-full w-1/3 flex items-center overflow-hidden'>
-              <BsChevronDown className='absolute right-0 stroke-current stroke-1 text-coolGray-50' onClick={() => nextSlide()} />
+            <div className='absolute right-0 w-1/4 h-full flex items-center cursor-pointer' onClick={() => nextSlide()}>
+              <BsChevronRight className='absolute right-1 stroke-current stroke-1 text-coolGray-50' />
             </div>
           }
+
         </div>
       }
 
-      <div className={`${readInstanceLength === 1 ? 'row-start-1 row-end-7' : 'row-start-2 row-end-7'} overflow-hidden`}>
-        <ReadInstance key={readerBook.read_instance[readInstanceIdx].ri_id} readInstance={readerBook.read_instance[readInstanceIdx]} isEdit={isEdit} />
-      </div>
+      <ReadInstance key={readerBook.read_instance[readInstanceIdx].ri_id} readInstance={readerBook.read_instance[readInstanceIdx]} handleIsReaderBookExpanded={handleIsReaderBookExpanded} isEdit={isEdit} />
+
     </ReaderBookContainer>
   )
 }

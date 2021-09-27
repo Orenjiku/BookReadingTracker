@@ -44,12 +44,12 @@ const SlideContainer = styled.div<{ $src?: string }>`
   };
 `
 
-const StyledEdit = styled(Edit)<{ isEdit?: boolean }>`
+const StyledEdit = styled(Edit)<{ $isEdit?: boolean }>`
   ${tw`absolute top-1.5 right-1 min-w-min opacity-50 stroke-1 stroke-current text-coolGray-50 cursor-pointer`};
   --edit-shadow: drop-shadow(0px 1px 0 black);
   filter: var(--edit-shadow);
   transition: all 100ms linear;
-  ${({ isEdit }) => isEdit && css`
+  ${({ $isEdit }) => $isEdit && css`
   --neon-light-center: #f9fafb;
   --neon-light-color: #0d9488;
   --light-effect: drop-shadow(0 0 4px var(--neon-light-center))
@@ -86,6 +86,7 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
   // const [ isAnyFinished, setIsAnyFinished ] = useState<boolean>(book.reader_book.is_any_finished);
   // const [ currentReadInstanceIdx, setCurrentReadInstanceIdx ] = useState<number>(book.reader_book.read_instance.length - 1);
   const [ isReading, setIsReading ] = useState<boolean>(false);
+  const [ isReaderBookExpanded, setIsReaderBookExpanded ] = useState(false)
 
   const cardFrontRef = useRef(null);
 
@@ -115,19 +116,20 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
   const handleEdit = () => setIsEdit(isEdit => !isEdit);
   const handleSlideShow = () => setIsSlideShow(isSlideShow => !isSlideShow);
   const handleIsReading = (isReading: boolean) => setIsReading(isReading);
+  const handleIsReaderBookExpanded = () => setIsReaderBookExpanded(isReaderBookExpanded => !isReaderBookExpanded)
 
   return (
     <CardFrontContainer $isFlipped={isFlipped}>
       <CardHeader title={book.title} author={book.author} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleSlideShow={handleSlideShow} />
       <BookImage pictureLink={book.picture_link} isEdit={isEdit} handleFlip={handleFlip} />
-      <DetailsView isEdit={isEdit} readDetails={readDetails} />
-      <ReaderBook readerBook={book.reader_book} handleIsReading={handleIsReading} isEdit={isEdit} />
+      {isReaderBookExpanded ? null : <DetailsView isEdit={isEdit} readDetails={readDetails} />}
+      <ReaderBook readerBook={book.reader_book} handleIsReading={handleIsReading} isReaderBookExpanded={isReaderBookExpanded} handleIsReaderBookExpanded={handleIsReaderBookExpanded} isEdit={isEdit} />
 
       <div className='col-start-1 col-end-3 row-start-20 row-end-22 flex justify-center items-center rounded-b-2xl text-trueGray-900 text-xl font-Charm-400 border-t border-trueGray-50'>
         {isReading && <CompletionSlider />}
       </div>
 
-      <StyledEdit size={22} isEdit={isEdit} onClick={() => handleEdit()} />
+      <StyledEdit size={22} $isEdit={isEdit} onClick={() => handleEdit()} />
 
       <CSSTransition in={isSlideShow} timeout={slideShowTimer} classNames='slide' nodeRef={cardFrontRef} unmountOnExit>
         <SlideContainer ref={cardFrontRef} $src={book.picture_link}>

@@ -3,12 +3,17 @@ import tw, { styled } from 'twin.macro';
 import {TransitionGroup, CSSTransition} from 'react-transition-group';
 import { ReadInstanceITF, ReadEntryITF } from '../../interfaces/interface';
 import ReadEntry from './ReadEntry';
-import useOverflow from '../../hooks/useOverflow';
-import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
+import useIsYOverflow from '../../hooks/useIsYOverflow';
+import useYOverflow from '../../hooks/useYOverflow';
+import { BsChevronDown, BsChevronUp, BsChevronExpand } from 'react-icons/bs';
+import { CgCalendarToday } from 'react-icons/cg';
 
 const StyledReadEntryContainer = styled.div`
+  :first-child {
+    ${tw`pt-5`};
+  };
   :last-child {
-    ${tw`mb-2`}
+    ${tw`mb-2`};
   };
   &.readEntryAnimate-exit {
     opacity: 1;
@@ -21,12 +26,13 @@ const StyledReadEntryContainer = styled.div`
   };
 `
 
-const ReadInstance = ({ readInstance, isEdit } : { readInstance: ReadInstanceITF; isEdit: boolean }) => {
+const ReadInstance = ({ readInstance, isEdit, handleIsReaderBookExpanded } : { readInstance: ReadInstanceITF; isEdit: boolean; handleIsReaderBookExpanded: Function }) => {
   const [ readEntryList, setReadEntryList ] = useState<ReadEntryITF[]>(readInstance.read_entry || []);
 
   // const bookReadRef = useRef(null);
   const verticalScrollRef = useRef(null);
-  const { refYOverflowing, refYScrollBegin, refYScrollEnd } = useOverflow(verticalScrollRef);
+  const { isRefYOverflowing } = useIsYOverflow(verticalScrollRef);
+  const { refYOverflowing, refYScrollBegin, refYScrollEnd } = useYOverflow(verticalScrollRef);
 
   const handleDeleteReadEntry = (readEntryId: number) => {
     //add fetch function to delete from database then update after transaction completed
@@ -34,13 +40,24 @@ const ReadInstance = ({ readInstance, isEdit } : { readInstance: ReadInstanceITF
   }
 
   return (
-    <div className='relative h-full overflow-y-hidden'>
+    <div className='relative h-full overflow-hidden'>
 
       <div ref={verticalScrollRef} className='h-full overflow-y-scroll scrollbar-hide'>
 
-        <div className='flex justify-around font-Charm-400'>
-          <p className='text-sm'>Days Read: {readInstance.days_read}</p>
-          <p className='text-sm'>Days Total: {readInstance.days_total}</p>
+        <div className='relative h-6 flex justify-evenly items-center font-Charm-400 text-sm'>
+          <div className='flex items-center'>
+            <p className='mr-0.5'>Read: {readInstance.days_read}</p>
+            <CgCalendarToday />
+          </div>
+          <div className='flex items-center'>
+            <p className='mr-0.5'>Total: {readInstance.days_total}</p>
+            <CgCalendarToday />
+          </div>
+          {isRefYOverflowing &&
+            <div className='absolute w-full flex justify-end cursor-pointer' onClick={() => handleIsReaderBookExpanded() }>
+              <BsChevronExpand className='stroke-current' size={15} />
+            </div>
+          }
         </div>
 
         <TransitionGroup component={null}>

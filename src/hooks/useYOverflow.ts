@@ -6,7 +6,7 @@ interface RefYITF {
   refYScrollEnd: boolean;
 }
 
-const useOverflow = (ref: RefObject<HTMLElement>): RefYITF => {
+const useYOverflow = (ref: RefObject<HTMLElement>): RefYITF => {
     const [refYOverflowing, setRefYOverflowing] = useState(false);
     const [refYScrollBegin, setRefYScrollBegin] = useState(true);
     const [refYScrollEnd, setRefYScrollEnd] = useState(false);
@@ -33,4 +33,4 @@ const useOverflow = (ref: RefObject<HTMLElement>): RefYITF => {
     return {refYOverflowing, refYScrollBegin, refYScrollEnd};
 }
 
-export default useOverflow;
+export default useYOverflow;
