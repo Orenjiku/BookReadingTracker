@@ -20,8 +20,8 @@ const CardHeaderContainer = styled.div`
     content: '';
     ${tw`absolute top-0 left-0 w-full h-full opacity-70`};
     background: linear-gradient(#dbeafe 0, transparent 25%);
-};
-`
+  }
+`;
 
 const StyledLeftArrow = styled(LeftArrow)<{ $slideShowTimer: number }>`
   ${tw`min-w-min opacity-40 stroke-current text-coolGray-50 stroke-1 cursor-pointer`};
@@ -41,14 +41,14 @@ const StyledLeftArrow = styled(LeftArrow)<{ $slideShowTimer: number }>`
   &.arrow-enter-active {
     filter: none;
     transition: filter calc(var(--slideShowTimer) * 0.4) linear;
-  };
+  }
   &.arrow-enter-done {
     opacity: 1;
     color: var(--neon-light-center);
     filter: var(--light-effect);
     fill: none;
     transition: filter calc(var(--slideShowTimer) * 0.2) linear;
-  };
+  }
   &.arrow-exit {
     color: var(--neon-light-center);
     filter: var(--light-effect);
@@ -56,11 +56,11 @@ const StyledLeftArrow = styled(LeftArrow)<{ $slideShowTimer: number }>`
   &.arrow-exit-active {
     filter: none;
     transition: filter calc(var(--slideShowTimer) * 0.2) linear;
-  };
+  }
   &.arrow-exit-done {
     transition: all calc(var(--slideShowTimer) * 0.2) linear;
   }
-`
+`;
 
 const CardHeader = ({title, author, isSlideShow, slideShowTimer, handleSlideShow}: CardHeaderPropsITF) => {
 

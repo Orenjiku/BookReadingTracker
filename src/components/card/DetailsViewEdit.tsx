@@ -15,7 +15,7 @@ const EditViewContainer = styled.div`
     transform: translateY(-100%);
     transition: transform 300ms linear;
   }
-`
+`;
 
 const DetailsViewEdit = ({ isEdit }: { isEdit: boolean }) => {
   // const [ date, setDate ] = useState('');

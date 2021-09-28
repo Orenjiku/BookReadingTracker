@@ -17,22 +17,22 @@ const EntryBar = styled.div<{ $before: string; $after: number }>`
   &::before {
     content: '${({ $before }) => $before}';
     ${tw`absolute left-0`};
-  };
+  }
   &::after {
     content: '${({ $after }) => `+${$after} pgs`}';
     ${tw`absolute right-0 text-green-600`};
-  };
-`
+  }
+`;
 
 const DeleteContainer = styled.div`
   ${tw`flex justify-center items-end p-0 mb-0 overflow-y-hidden`};
   &.slide-enter {
     max-height: 0;
-  };
+  }
   &.slide-enter-active {
     max-height: 26px;
     ${tw`transition-all duration-300 ease-out`};
-  };
+  }
   &.slide-exit {
     max-height: 26px;
     opacity: 1;
@@ -40,8 +40,8 @@ const DeleteContainer = styled.div`
   &.slide-exit-active {
     max-height: 0;
     ${tw`transition-all duration-300 ease-out`};
-  };
-`
+  }
+`;
 
 const DeleteButton = styled.button<{ $isMouseDown: boolean }>`
   ${tw`px-1.5 mx-1 rounded flex justify-center items-center`};
@@ -51,7 +51,7 @@ const DeleteButton = styled.button<{ $isMouseDown: boolean }>`
   ${({ $isMouseDown }) => $isMouseDown && css`
     ${tw`bg-red-500 transition-colors duration-1000 ease-linear`};
   `}
-`
+`;
 
 const ReadEntry = ({ readEntry, isEdit, handleDeleteReadEntry }: ReadEntryPropsITF) => {
   const [ isEntrySelected, setIsEntrySelected ] = useState<boolean>(false);

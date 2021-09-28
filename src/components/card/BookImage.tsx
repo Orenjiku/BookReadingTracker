@@ -26,7 +26,7 @@ const EditBookButton = styled.button`
   &.fade-exit-active {
     ${tw`opacity-0 transition-opacity duration-500 ease-in-out`};
   }
-`
+`;
 
 const BookImage = ({ pictureLink, isEdit, handleFlip }: BookImagePropsITF) => {
   const bookImageRef = useRef(null);

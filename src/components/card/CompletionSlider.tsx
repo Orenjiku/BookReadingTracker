@@ -16,13 +16,13 @@ const StyledSlider = styled.div<{ $isDragging: boolean; $sliderButtonWidth: numb
     --rate: 1000;
     --duration: calc(${$offsetLeft} / var(--rate) * 1s);
     transition: left var(--duration) ease-out;
-  `};
+  `}
   &::after{
     content: '';
     ${tw`absolute right-0 h-full rounded-b-2xl bg-blueGray-500 bg-opacity-40`};
     width: calc(${({ $sliderButtonWidth }) => $sliderButtonWidth} * 100%);
-  };
-`
+  }
+`;
 
 const CompletionSlider = () => {
   const containerRef = useRef<HTMLDivElement>(null);

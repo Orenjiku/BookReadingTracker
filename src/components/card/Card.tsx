@@ -13,7 +13,7 @@ const CardContainer = styled.div`
   min-height: var(--card-height);
   max-height: var(--card-height);
   transform-style: preserve-3d;
-`
+`;
 
 const Card = ({ book }: { book: BookITF }) => {
   const [ isFlipped, setIsFlipped ] = useState<boolean>(false);
