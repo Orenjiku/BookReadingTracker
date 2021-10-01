@@ -84,9 +84,9 @@
 7.  INSERT read_entry  
     Creates read_entry entry that is associated to book_read.id from previous step.  
     **_Reminder:_** Change { number } to a number.
-    | username | book_title | date_read | pages_read | current_page | current_percent |
-    | -------- | ---------- | --------- | ---------- | ------------ | --------------- |
-    | string | string | string | number | number | number |
+    | date_read | pages_read | current_page | current_percent |
+    | --------- | ---------- | ------------ | --------------- |
+    | string | number | number | number |
     ~~~~sql
     SELECT insert_read_entry(:'username_1' :'book_{number}_title', {date_read}, {pages_read}, {current_page}, {current_percent});
     ~~~~
@@ -121,9 +121,9 @@
 11. UPDATE read_instance  
     Update read_instance meta data based on its read_entry data.  
     **_Reminder:_** Change { number } to a number.
-    | username | book_title | is_reading | is_finished | is_dnf |
-    | -------- | ---------- | ---------- | ----------- | ------ |
-    | string | string | boolean | boolean | boolean |
+    | is_reading | is_finished | is_dnf |
+    | ---------- | ----------- | ------ |
+    | boolean | boolean | boolean |
     ~~~~sql
     SELECT update_read_instance(:'username_1', :'book_{number}_title', {is_reading}, {is_finished}, {is_dnf});
     ~~~~
@@ -131,9 +131,6 @@
 12. UPDATE reader_book  
     Update reader_book meta data based on its read_instance data.  
     **_Reminder:_** Change { number } to a number.
-    | username | book_title |
-    | -------- | ---------- |
-    |string | number |
     ~~~~sql
     SELECT update_reader_book(:'username_1', :'book_{number}_title');
     ~~~~
