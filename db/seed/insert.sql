@@ -252,8 +252,8 @@ $$ LANGUAGE plpgsql;
 \set book_18_blurb 'Imperial Knight Titans clash as an internecine war ravages the Knights of Adrastapol. \n\nThe Knight Houses of Adrastapol are both noble and righteous, and when the Imperial world of Donatos falls to the heresy of the Word Bearers, they are foremost in the vanguard to retake it. Led by High King Tolwyn Draconis, the Knights are peerless in battle and strike deep into the enemy’s ranks. But the war soon turns when a terrible tragedy strikes, casting the Imperial campaign into anarchy. As desperation grows, unblooded Knights Errant Danial and Luk must quickly learn the ways of war to prevent an unholy ritual, or Donatos will be lost and all the noble Houses of Adrastapol with it.'
 \set book_18_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1478803265l/32902466.jpg'
 
-\set book_19_title 'Blood Angels - The Complete Rafen Omnibus'
-\set book_19_title_sort 'Blood Angels - The Complete Rafen Omnibus'
+\set book_19_title 'Blood Angels: The Complete Rafen Omnibus'
+\set book_19_title_sort 'Blood Angels: The Complete Rafen Omnibus'
 \set book_19_published_date '2019/01/19'
 \set book_19_published_date_edition '2019/01/19'
 \set book_19_book_format 'Paperback'
@@ -269,6 +269,15 @@ $$ LANGUAGE plpgsql;
 \set book_20_total_pages 416
 \set book_20_blurb 'Warhammer 40,000 fans rejoice - Belisarius Cawl has his own novel! Join him on his journey to the abandoned world of Sotha which hides a long-buried secret… and an ancient evil. \n\nBelisarius Cawl, Archmagos Dominus of the Adeptus Mechanicus is the most brilliant mind alive. For 10,000 years he has furthered the cause of mankind, working under the aegis of the Emperor and Lord Commander Roboute Guilliman to prevent the inexorable march of the alien and the traitor. Many call him heretic, but all must recognise the magnitude of his achievements, for who else but he was entrusted to create a new generation of Space Marines? Who else but the great Belisarius Cawl could even accomplish such a task? \nNow, in the wake of the Great Rift and the Indomitus Crusade, his ambitions bring him to the long-dead world of Sotha, once home to the Scythes of the Emperor, now a barren wasteland devoured by the vile Tyranids. Accompanied by Tetrarch Felix and his elite warriors, it is here that Cawl believes the lynchpin of his mysterious Great Work lies. But uncovering it is a near impossible task, one in which the Archmagos must overcome an ancient evil that threatens to extinguish the last hope of humanity.'
 \set book_20_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1562505193l/51085980._SX318_SY475_.jpg'
+
+\set book_21_title 'Deathwatch: The Omnibus'
+\set book_21_title_sort 'Deathwatch: The Omnibus'
+\set book_21_published_date '2017/11/28'
+\set book_21_published_date_edition '2017/11/28'
+\set book_21_book_format 'Paperback'
+\set book_21_total_pages 960
+\set book_21_blurb 'New omnibus of novels and short stories featuring the Deathwatch, alien-hunting Space Marines who undertake special ops-style missions in the 41st millennium. /n/nThe Deathwatch are the elite. Recruited from numerous Space Marine Chapters, their mission is simple: exterminate any xenos threat to the Imperium. Assembled into kill-teams, the Deathwatch are expert alien hunters, equipped to undertake any mission in any environment. None are as dedicated or as skilled in the brutal art of alien annihilation. This action-packed omnibus contains three separate novels written by Steve Parker, Ian St Martin and Justin D Hill, along with a dozen of the best short stories ever written about the Imperium''s premier xenos hunters.'
+\set book_21_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1502692222l/34466780.jpg'
 
 
 -- INSERT book using previously declared variables
@@ -292,6 +301,7 @@ SELECT insert_book(:'book_17_title', :'book_17_title_sort', :'book_17_published_
 SELECT insert_book(:'book_18_title', :'book_18_title_sort', :'book_18_published_date', :'book_18_published_date_edition', :'book_18_book_format', :'book_18_total_pages', :'book_18_blurb', :'book_18_picture_link');
 SELECT insert_book(:'book_19_title', :'book_19_title_sort', :'book_19_published_date', :'book_19_published_date_edition', :'book_19_book_format', :'book_19_total_pages', :'book_19_blurb', :'book_19_picture_link');
 SELECT insert_book(:'book_20_title', :'book_20_title_sort', :'book_20_published_date', :'book_20_published_date_edition', :'book_20_book_format', :'book_20_total_pages', :'book_20_blurb', :'book_20_picture_link');
+SELECT insert_book(:'book_21_title', :'book_21_title_sort', :'book_21_published_date', :'book_21_published_date_edition', :'book_21_book_format', :'book_21_total_pages', :'book_21_blurb', :'book_21_picture_link');
 
 
 /* --------------------------------------------------- INSERT reader_book --------------------------------------------------- */
@@ -328,6 +338,7 @@ SELECT insert_reader_book(:'username_1', :'book_17_title');
 SELECT insert_reader_book(:'username_1', :'book_18_title');
 SELECT insert_reader_book(:'username_1', :'book_19_title');
 SELECT insert_reader_book(:'username_1', :'book_20_title');
+SELECT insert_reader_book(:'username_1', :'book_21_title');
 
 
 /* --------------------------------------------- INSERT read_instance --------------------------------------------- */
@@ -363,6 +374,7 @@ SELECT insert_read_instance(:'username_1', :'book_17_title');
 SELECT insert_read_instance(:'username_1', :'book_18_title');
 SELECT insert_read_instance(:'username_1', :'book_19_title');
 SELECT insert_read_instance(:'username_1', :'book_20_title');
+SELECT insert_read_instance(:'username_1', :'book_21_title');
 
 
 /* --------------------------------------------- INSERT read_entry --------------------------------------------- */
@@ -548,7 +560,15 @@ SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-20', 123, 828
 SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-21', 35, 35, 8.41);
 SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-22', 56, 91, 21.88);
 SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 58, 149, 35.82);
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 46, 195, 46.88);
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 52, 247, 59.38);
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 60, 307, 73.8);
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 52, 359, 86.3);
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 57, 416, 100);
 
+-- INSERT book_21
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-09-29', 49, 49, 5.1);
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-09-30', 52, 101, 10.52);
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
 -- FUNCTION insert_author
@@ -679,6 +699,45 @@ $$ LANGUAGE plpgsql;
 \set book_20_author_1_first_name 'Guy'
 \set book_20_author_1_last_name 'Haley'
 \set book_20_author_1_full_name 'Guy Haley'
+-- book 21 authors
+\set book_21_author_1_first_name 'Steve'
+\set book_21_author_1_last_name 'Parker'
+\set book_21_author_1_full_name 'Steve Parker'
+\set book_21_author_2_first_name 'Justin'
+\set book_21_author_2_middle_name 'D.'
+\set book_21_author_2_last_name 'Hill'
+\set book_21_author_2_full_name 'Justin D. Hill'
+\set book_21_author_3_first_name 'Ian'
+\set book_21_author_3_middle_name 'St.'
+\set book_21_author_3_last_name 'Martin'
+\set book_21_author_3_full_name 'Ian St. Martin'
+\set book_21_author_4_first_name 'Andy'
+\set book_21_author_4_last_name 'Chambers'
+\set book_21_author_4_full_name 'Andy Chambers'
+\set book_21_author_5_first_name 'Chris'
+\set book_21_author_5_last_name 'Wraight'
+\set book_21_author_5_full_name 'Chris Wraight'
+\set book_21_author_6_first_name 'Nick'
+\set book_21_author_6_last_name 'Kyme'
+\set book_21_author_6_full_name 'Nick Kyme'
+\set book_21_author_7_first_name 'Braden'
+\set book_21_author_7_last_name 'Campbell'
+\set book_21_author_7_full_name 'Braden Campbell'
+\set book_21_author_8_first_name 'Ben'
+\set book_21_author_8_last_name 'Counter'
+\set book_21_author_8_full_name 'Ben Counter'
+\set book_21_author_9_first_name 'David'
+\set book_21_author_9_last_name 'Annandale'
+\set book_21_author_9_full_name 'David Annandale'
+\set book_21_author_10_first_name 'Andy'
+\set book_21_author_10_last_name 'Clark'
+\set book_21_author_10_full_name 'Andy Clark'
+\set book_21_author_11_first_name 'Gav'
+\set book_21_author_11_last_name 'Thorpe'
+\set book_21_author_11_full_name 'Gav Thorpe'
+\set book_21_author_12_first_name 'Anthony'
+\set book_21_author_12_last_name 'Reynolds'
+\set book_21_author_12_full_name 'Anthony Reynolds'
 
 -- INSERT author using FUNCTION insert_author and DECLARED author variables as arguments, CHECK UNIQUE full_name (middle_name argument is optional)
 -- book 1 author
@@ -731,6 +790,19 @@ SELECT insert_author(:'book_18_author_1_full_name', :'book_18_author_1_first_nam
 SELECT insert_author(:'book_19_author_1_full_name', :'book_19_author_1_first_name', :'book_19_author_1_last_name');
 -- book 20 author
 SELECT insert_author(:'book_20_author_1_full_name', :'book_20_author_1_first_name', :'book_20_author_1_last_name');
+-- book 21 author
+SELECT insert_author(:'book_21_author_1_full_name', :'book_21_author_1_first_name', :'book_21_author_1_last_name');
+SELECT insert_author(:'book_21_author_2_full_name', :'book_21_author_2_first_name', :'book_21_author_2_last_name', :'book_21_author_2_middle_name');
+SELECT insert_author(:'book_21_author_3_full_name', :'book_21_author_3_first_name', :'book_21_author_3_last_name', :'book_21_author_3_middle_name');
+SELECT insert_author(:'book_21_author_4_full_name', :'book_21_author_4_first_name', :'book_21_author_4_last_name');
+SELECT insert_author(:'book_21_author_5_full_name', :'book_21_author_5_first_name', :'book_21_author_5_last_name');
+SELECT insert_author(:'book_21_author_6_full_name', :'book_21_author_6_first_name', :'book_21_author_6_last_name');
+SELECT insert_author(:'book_21_author_7_full_name', :'book_21_author_7_first_name', :'book_21_author_7_last_name');
+SELECT insert_author(:'book_21_author_8_full_name', :'book_21_author_8_first_name', :'book_21_author_8_last_name');
+SELECT insert_author(:'book_21_author_9_full_name', :'book_21_author_9_first_name', :'book_21_author_9_last_name');
+SELECT insert_author(:'book_21_author_10_full_name', :'book_21_author_10_first_name', :'book_21_author_10_last_name');
+SELECT insert_author(:'book_21_author_11_full_name', :'book_21_author_11_first_name', :'book_21_author_11_last_name');
+SELECT insert_author(:'book_21_author_12_full_name', :'book_21_author_12_first_name', :'book_21_author_12_last_name');
 
 
 /* --------------------------------------------- INSERT book_author (JOIN TABLE) --------------------------------------------- */
@@ -797,6 +869,19 @@ SELECT join_book_author(:'book_18_title', :'book_18_author_1_full_name');
 SELECT join_book_author(:'book_19_title', :'book_19_author_1_full_name');
 -- book 20 author
 SELECT join_book_author(:'book_20_title', :'book_20_author_1_full_name');
+-- book 21 author
+SELECT join_book_author(:'book_21_title', :'book_21_author_1_full_name');
+SELECT join_book_author(:'book_21_title', :'book_21_author_2_full_name');
+SELECT join_book_author(:'book_21_title', :'book_21_author_3_full_name');
+SELECT join_book_author(:'book_21_title', :'book_21_author_4_full_name');
+SELECT join_book_author(:'book_21_title', :'book_21_author_5_full_name');
+SELECT join_book_author(:'book_21_title', :'book_21_author_6_full_name');
+SELECT join_book_author(:'book_21_title', :'book_21_author_7_full_name');
+SELECT join_book_author(:'book_21_title', :'book_21_author_8_full_name');
+SELECT join_book_author(:'book_21_title', :'book_21_author_9_full_name');
+SELECT join_book_author(:'book_21_title', :'book_21_author_10_full_name');
+SELECT join_book_author(:'book_21_title', :'book_21_author_11_full_name');
+SELECT join_book_author(:'book_21_title', :'book_21_author_12_full_name');
 
 
 /* --------------------------------------------- UPDATE read_instance --------------------------------------------- */
@@ -855,9 +940,10 @@ SELECT update_read_instance(:'username_1', :'book_15_title', FALSE, TRUE, FALSE)
 SELECT update_read_instance(:'username_1', :'book_16_title', FALSE, TRUE, FALSE);
 SELECT update_read_instance(:'username_1', :'book_17_title', FALSE, TRUE, FALSE);
 SELECT update_read_instance(:'username_1', :'book_18_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_19_title', FALSE, TRUE, FALSE);
 -- UPDATE read_instance.is_reading to true
-SELECT update_read_instance(:'username_1', :'book_19_title', TRUE, FALSE, FALSE);
 SELECT update_read_instance(:'username_1', :'book_20_title', TRUE, FALSE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_21_title', TRUE, FALSE, FALSE);
 
 
 /* --------------------------------------------- UPDATE reader_book  --------------------------------------------- */
@@ -898,9 +984,10 @@ SELECT update_reader_book(:'username_1', :'book_17_title');
 SELECT update_reader_book(:'username_1', :'book_18_title');
 SELECT update_reader_book(:'username_1', :'book_19_title');
 SELECT update_reader_book(:'username_1', :'book_20_title');
+SELECT update_reader_book(:'username_1', :'book_21_title');
 
 
-/* --------------------------------------------- ADD another read_instance for testing --------------------------------------------- */
+/* --------------------------------------------- ADD 2nd read_instance to Book 19 Blood Angels Omnibus for testing --------------------------------------------- */
 
 CREATE OR REPLACE FUNCTION add_another_read_instance(arg_username VARCHAR, arg_book_title VARCHAR)
 RETURNS VOID AS $$
