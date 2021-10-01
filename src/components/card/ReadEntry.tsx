@@ -5,9 +5,13 @@ import { ReadEntryITF } from '../../interfaces/interface';
 import ProgressBar from './ProgressBar';
 import { Trash } from '@styled-icons/bootstrap/Trash';
 
+
 interface ReadEntryPropsITF {
   readEntry: ReadEntryITF;
   isEdit: boolean;
+  editTimer: number;
+  readEntrySelectTimer: number;
+  handleToggle: Function;
   handleDeleteReadEntry: Function;
 }
 
@@ -24,14 +28,15 @@ const EntryBar = styled.div<{ $before: string; $after: number }>`
   }
 `;
 
-const DeleteContainer = styled.div`
+const DeleteContainer = styled.div<{ $readEntrySelectTimer: number }>`
   ${tw`flex justify-center items-end p-0 mb-0 overflow-y-hidden`};
+  --duration: ${({ $readEntrySelectTimer }) => `${$readEntrySelectTimer}ms`};
   &.slide-enter {
     max-height: 0;
   }
   &.slide-enter-active {
     max-height: 26px;
-    ${tw`transition-all duration-300 ease-out`};
+    transition: all var(--duration) ease-out;
   }
   &.slide-exit {
     max-height: 26px;
@@ -39,7 +44,7 @@ const DeleteContainer = styled.div`
   }
   &.slide-exit-active {
     max-height: 0;
-    ${tw`transition-all duration-300 ease-out`};
+    transition: all var(--duration) ease-out;
   }
 `;
 
@@ -53,7 +58,7 @@ const DeleteButton = styled.button<{ $isMouseDown: boolean }>`
   `}
 `;
 
-const ReadEntry = ({ readEntry, isEdit, handleDeleteReadEntry }: ReadEntryPropsITF) => {
+const ReadEntry = ({ readEntry, isEdit, editTimer, readEntrySelectTimer, handleToggle, handleDeleteReadEntry }: ReadEntryPropsITF) => {
   const [ isEntrySelected, setIsEntrySelected ] = useState<boolean>(false);
   const [ isMouseDown, setIsMouseDown ] = useState<boolean>(false);
 
@@ -71,7 +76,7 @@ const ReadEntry = ({ readEntry, isEdit, handleDeleteReadEntry }: ReadEntryPropsI
 
   useEffect(() => {
     !isEdit && setIsEntrySelected(false);
-  }, [isEdit])
+  }, [isEdit]);
 
   useEffect(() => {
     if (isMouseDown) {
@@ -82,16 +87,20 @@ const ReadEntry = ({ readEntry, isEdit, handleDeleteReadEntry }: ReadEntryPropsI
     }
   }, [isMouseDown]);
 
+  useEffect(() => {
+    handleToggle();
+  }, [isEntrySelected]);
+
   return (
     <div>
 
       <div className={`relative px-1 pb-0.5 ${isEdit && 'cursor-pointer hover:bg-blueGray-300 hover:bg-opacity-50'}`} onClick={handleEntrySelect}>
         <EntryBar $before={entryDate} $after={readEntry.pages_read}>{`${currentPercent}%`}</EntryBar>
-        <ProgressBar isEdit={isEdit} currentPercent={currentPercent} />
+        <ProgressBar isEdit={isEdit} editTimer={editTimer} currentPercent={currentPercent} />
       </div>
 
-      <CSSTransition in={isEdit && isEntrySelected} timeout={300} classNames='slide' nodeRef={readEntryRef} unmountOnExit>
-        <DeleteContainer ref={readEntryRef}>
+      <CSSTransition in={isEdit && isEntrySelected} timeout={readEntrySelectTimer} classNames='slide' nodeRef={readEntryRef} unmountOnExit>
+        <DeleteContainer ref={readEntryRef} $readEntrySelectTimer={readEntrySelectTimer}>
           <DeleteButton $isMouseDown={isMouseDown} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
             <p className='mr-2'>Hold for 1 second</p>
             <Trash size={13} />

@@ -1,58 +1,123 @@
-import React, { useState, useEffect } from 'react';
-import tw, { styled, css } from 'twin.macro';
+import React, { useState, useEffect, cloneElement } from 'react';
+import tw, { styled } from 'twin.macro';
 import { ReaderBookITF } from '../../interfaces/interface';
 import ReadInstance from './ReadInstance';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
-const ReaderBookContainer = styled.div<{$isExpand: boolean}>`
-  ${tw`row-start-10 row-end-20 col-start-2 col-end-3 flex flex-col flex-grow font-SortsMillGoudy-400 overflow-hidden`};
-  ${({ $isExpand }) => $isExpand && css`${tw`row-start-4`}`}
-`
 
-const ReaderBook = ({ readerBook, isEdit, handleIsReading, handleIsReaderBookExpanded, isReaderBookExpanded }: { readerBook: ReaderBookITF; isEdit: boolean; handleIsReading: Function; handleIsReaderBookExpanded: Function; isReaderBookExpanded: boolean }) => {
+interface ReaderBookPropsITF {
+  readerBook: ReaderBookITF;
+  isEdit: boolean;
+  editTimer: number;
+  isExpanded: boolean;
+  expandTimer: number;
+  handleIsReading: Function;
+  handleIsExpanded: Function;
+}
+
+const ReaderBookHeader = styled.div`
+  ${tw`relative border-b border-trueGray-50 flex justify-center items-center`};
+  height: 1.75rem;
+`;
+
+const ReadInstanceContainer = styled.div`
+  height: calc(100% - 1.75rem);
+  --duration: 300ms;
+  --timing-function: linear;
+  --transition: all var(--duration) var(--timing-function);
+  &.forward-enter {
+    transform: translateX(100%);
+  }
+  &.forward-enter-active {
+    transform: translateX(0%);
+    transition: var(--transition);
+  }
+  &.forward-exit {
+    transform: translateX(0%) translateY(-100%);
+  }
+  &.forward-exit-active {
+    transform: translateX(-100%) translateY(-100%);
+    transition: var(--transition);
+  }
+  &.backward-enter {
+    transform: translateX(-100%);
+  }
+  &.backward-enter-active {
+    transform: translateX(0%);
+    transition: var(--transition);
+  }
+  &.backward-exit {
+    transform: translateX(0%) translateY(-100%);
+  }
+  &.backward-exit-active {
+    transform: translateX(100%) translateY(-100%);
+    transition: var(--transition);
+  }
+`;
+
+const ReaderBook = ({ readerBook, isEdit, editTimer, handleIsReading, isExpanded, expandTimer, handleIsExpanded }: ReaderBookPropsITF) => {
   const readInstanceLength = readerBook.read_instance.length;
   // startIdx is either the index of a read_instance that is_reading, or the most recent read_instance, i.e. index = 0
   const startIdx = readerBook.is_any_reading ? readerBook.read_instance.findIndex(instance => instance.is_reading === true) : 0;
-  const [ readInstanceIdx, setReadInstanceIdx ] = useState(startIdx);
   const [ isIdxStart, setIsIdxStart ] = useState(true);
   const [ isIdxEnd, setIsIdxEnd ] = useState(false);
+  const [ currIdx, setCurrIdx ] = useState(startIdx);
+  const [ transitionClassNames, setTransitionClassNames ] = useState('');
+  // const readerBookRef = useRef(null);
 
   useEffect(() => {
-    handleIsReading(readerBook.read_instance[readInstanceIdx].is_reading);
-    readInstanceIdx === 0 ? setIsIdxStart(true) : setIsIdxStart(false);
-    readInstanceIdx === readInstanceLength- 1 ? setIsIdxEnd(true) : setIsIdxEnd(false);
-  }, [readInstanceIdx])
+    handleIsReading(readerBook.read_instance[currIdx].is_reading);
+    currIdx === 0 ? setIsIdxStart(true) : setIsIdxStart(false);
+    currIdx === readInstanceLength - 1 ? setIsIdxEnd(true) : setIsIdxEnd(false);
+  }, [currIdx]);
 
-  // const classNames = ((readerBookIdx > prevIdx && readerBookIdx !== prevIdx + (length - 1)) || readerBookIdx === prevIdx - (length - 1)) ? 'forward' : 'backward';
-  const prevSlide = () => setReadInstanceIdx(readInstanceIdx - 1);
-  const nextSlide = () => setReadInstanceIdx(readInstanceIdx + 1);
+  const prevSlide = () => {
+    setCurrIdx(currIdx - 1);
+    setTransitionClassNames('backward');
+  };
+
+  const nextSlide = () => {
+    setCurrIdx(currIdx + 1);
+    setTransitionClassNames('forward');
+  };
+
+
+  const convertToRoman = (num: number): string | number => {
+    const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'];
+    return num <= 11 ? roman[num - 1] : num;
+  };
 
   return (
-    <ReaderBookContainer $isExpand={isReaderBookExpanded}>
+    <div className='h-full overflow-hidden'>
 
-      {readInstanceLength > 1 &&
-        <div className='relative bg-trueGray-50 bg-opacity-10 border-t border-b border-trueGray-50 flex justify-center items-center'>
+      <ReaderBookHeader>
 
-          <p>{readInstanceLength - readInstanceIdx}</p>
+        <p className='font-Alegreya-500 text-center text-xl'>{convertToRoman(readInstanceLength - currIdx)}</p>
 
-          {!isIdxStart &&
-            <div className='absolute left-0 w-1/4 h-full flex items-center cursor-pointer' onClick={() => prevSlide()} >
-              <BsChevronLeft className='absolute left-1 stroke-current stroke-1 text-coolGray-50' />
-            </div>
-          }
+        {!isIdxStart &&
+          <div className='absolute left-0 w-1/3 h-full flex items-center cursor-pointer' onClick={() => prevSlide()} >
+            <BsChevronLeft className='absolute left-1' />
+          </div>
+        }
 
-          {!isIdxEnd &&
-            <div className='absolute right-0 w-1/4 h-full flex items-center cursor-pointer' onClick={() => nextSlide()}>
-              <BsChevronRight className='absolute right-1 stroke-current stroke-1 text-coolGray-50' />
-            </div>
-          }
+        {!isIdxEnd &&
+          <div className='absolute right-0 w-1/3 h-full flex items-center cursor-pointer' onClick={() => nextSlide()}>
+            <BsChevronRight className='absolute right-1' />
+          </div>
+        }
 
-        </div>
-      }
+      </ReaderBookHeader>
 
-      <ReadInstance key={readerBook.read_instance[readInstanceIdx].ri_id} readInstance={readerBook.read_instance[readInstanceIdx]} handleIsReaderBookExpanded={handleIsReaderBookExpanded} isEdit={isEdit} />
+      <TransitionGroup component={null} childFactory={child => cloneElement(child, {classNames: transitionClassNames})}>
+        <CSSTransition key={`ReadInstance-${currIdx}`} timeout={300} unmountOnExit /* nodeRef={readerBookRef} */>
+          <ReadInstanceContainer /* ref={readerBookRef} */>
+            <ReadInstance key={readerBook.read_instance[currIdx].ri_id} readInstance={readerBook.read_instance[currIdx]} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} />
+          </ReadInstanceContainer>
+        </CSSTransition>
+      </TransitionGroup>
 
-    </ReaderBookContainer>
+    </div>
   )
 }
 

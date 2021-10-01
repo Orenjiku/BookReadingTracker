@@ -1,6 +1,7 @@
 import React from 'react';
 import tw, { styled, css } from 'twin.macro';
 
+
 const CardBackContainer = styled.div<{isFlipped: boolean}>`
   ${tw`absolute h-full w-full flex justify-center items-center`};
   ${tw`bg-blueGray-200 bg-opacity-10 backdrop-filter backdrop-blur-sm`};
@@ -13,7 +14,7 @@ const CardBackContainer = styled.div<{isFlipped: boolean}>`
   `}
 `;
 
-const CardBack = ({ isFlipped, handleFlip }: {isFlipped: boolean; handleFlip: Function}) => {
+const CardBack = ({ isFlipped, handleFlip }: { isFlipped: boolean; handleFlip: Function }) => {
   return (
     <CardBackContainer isFlipped={isFlipped}>
       <button className='h-10 w-40 bg-blueGray-300' onClick={() => handleFlip()} ></button>

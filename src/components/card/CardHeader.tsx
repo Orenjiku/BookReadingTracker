@@ -6,12 +6,13 @@ import OverflowText from './OverflowText';
 import useIsXOverflow from '../../hooks/useIsXOverflow';
 import { LeftArrow } from '@styled-icons/boxicons-regular/LeftArrow';
 
+
 interface CardHeaderPropsITF {
   title: string;
   author: string[];
   isSlideShow: boolean;
   slideShowTimer: number;
-  handleSlideShow: Function;
+  handleIsSlideShow: Function;
 }
 
 const CardHeaderContainer = styled.div`
@@ -27,7 +28,7 @@ const StyledLeftArrow = styled(LeftArrow)<{ $slideShowTimer: number }>`
   ${tw`min-w-min opacity-40 stroke-current text-coolGray-50 stroke-1 cursor-pointer`};
   --arrow-shadow: drop-shadow(0px 2px 0px black);
   filter: var(--arrow-shadow);
-  --slideShowTimer: ${({ $slideShowTimer }) => `${$slideShowTimer}ms`};
+  --duration: ${({ $slideShowTimer }) => `${$slideShowTimer}ms`};
   --neon-light-center: #f9fafb;
   --neon-light-color: #0d9488;
   --light-effect: drop-shadow(0 0 4px var(--neon-light-center))
@@ -40,14 +41,14 @@ const StyledLeftArrow = styled(LeftArrow)<{ $slideShowTimer: number }>`
   }
   &.arrow-enter-active {
     filter: none;
-    transition: filter calc(var(--slideShowTimer) * 0.4) linear;
+    transition: filter calc(var(--duration) * 0.4) linear;
   }
   &.arrow-enter-done {
     opacity: 1;
     color: var(--neon-light-center);
     filter: var(--light-effect);
     fill: none;
-    transition: filter calc(var(--slideShowTimer) * 0.2) linear;
+    transition: filter calc(var(--duration) * 0.2) linear;
   }
   &.arrow-exit {
     color: var(--neon-light-center);
@@ -55,14 +56,14 @@ const StyledLeftArrow = styled(LeftArrow)<{ $slideShowTimer: number }>`
   }
   &.arrow-exit-active {
     filter: none;
-    transition: filter calc(var(--slideShowTimer) * 0.2) linear;
+    transition: filter calc(var(--duration) * 0.2) linear;
   }
   &.arrow-exit-done {
-    transition: all calc(var(--slideShowTimer) * 0.2) linear;
+    transition: all calc(var(--duration) * 0.2) linear;
   }
 `;
 
-const CardHeader = ({title, author, isSlideShow, slideShowTimer, handleSlideShow}: CardHeaderPropsITF) => {
+const CardHeader = ({ title, author, isSlideShow, slideShowTimer, handleIsSlideShow }: CardHeaderPropsITF) => {
 
   const authors = author.join(', ');
   const cardHeaderRef = useRef(null);
@@ -75,9 +76,9 @@ const CardHeader = ({title, author, isSlideShow, slideShowTimer, handleSlideShow
   const [ isArrowAnimating, setIsArrowAnimating ] = useState(false);
 
   const handleArrowClick = () => {
-    handleSlideShow();
+    handleIsSlideShow();
     setIsArrowAnimating(true);
-  }
+  };
 
   return (
     <CardHeaderContainer>

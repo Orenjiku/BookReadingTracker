@@ -36,6 +36,7 @@ module.exports = {
         'SortsMillGoudy-400': 'Sorts Mill Goudy',
         'MerriweatherItalic-300': 'MerriweatherItalic',
         'AllertaStencil-400': 'AllertaStencil',
+        'Alegreya-500': 'Alegreya',
       },
       gridTemplateRows: {
         '20': 'repeat(20, minmax(0, 1fr))',

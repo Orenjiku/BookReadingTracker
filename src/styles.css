@@ -31,4 +31,8 @@
     font-family: 'AllertaStencil';
     src: url('./fonts/AllertaStencil-Regular.ttf') format('truetype');
   }
+  @font-face {
+    font-family: 'Alegreya';
+    src: url('./fonts/Alegreya-Medium.ttf') format('truetype');
+  }
 };

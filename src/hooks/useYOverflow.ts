@@ -1,12 +1,24 @@
 import { useState, useEffect, RefObject } from "react";
 
-interface RefYITF {
+
+interface useYOverflowPropsITF {
+  scrollElementRef: RefObject<HTMLDivElement>;
+  isExpanded: boolean;
+  expandTimer: number;
+  readEntrySelectToggle: boolean;
+  readEntrySelectTimer: number;
+  readEntryListLength: number;
+  readEntryListAppendTimer: number
+  isEdit: boolean;
+}
+
+interface useYOverflowReturnITF {
   refYOverflowing: boolean;
   refYScrollBegin: boolean;
   refYScrollEnd: boolean;
 }
 
-const useYOverflow = (ref: RefObject<HTMLElement>): RefYITF => {
+const useYOverflow = ({ scrollElementRef: ref, isExpanded, expandTimer, readEntryListLength, readEntryListAppendTimer, readEntrySelectToggle, readEntrySelectTimer, isEdit }: useYOverflowPropsITF): useYOverflowReturnITF => {
     const [refYOverflowing, setRefYOverflowing] = useState(false);
     const [refYScrollBegin, setRefYScrollBegin] = useState(true);
     const [refYScrollEnd, setRefYScrollEnd] = useState(false);
@@ -17,7 +29,7 @@ const useYOverflow = (ref: RefObject<HTMLElement>): RefYITF => {
 
       if (refYOverflowing !== isYOverflowing) setRefYOverflowing(isYOverflowing);
 
-      const handleScroll = (): void => {
+      const handleScroll = () => {
         const offsetBottom = ref?.current?.scrollHeight! - ref?.current?.clientHeight!;
         (ref?.current?.scrollTop! >= offsetBottom && refYScrollEnd === false) ? setRefYScrollEnd(true) : setRefYScrollEnd(false);
         (ref?.current?.scrollTop === 0) ? setRefYScrollBegin(true) : setRefYScrollBegin(false);
@@ -28,7 +40,47 @@ const useYOverflow = (ref: RefObject<HTMLElement>): RefYITF => {
       return () => {
         ref.current?.removeEventListener('scroll', handleScroll);
       }
-    }, [ref?.current?.scrollHeight])
+    }, []);
+
+    //delay scroll height measurement until end of readInstance expand transition
+    useEffect(() => {
+      const scrollHeightMeasureDelay = setTimeout(() => {
+        const isYOverflowing = ref.current && ref.current.scrollHeight > ref.current.clientHeight || false;
+        if (refYOverflowing !== isYOverflowing) setRefYOverflowing(isYOverflowing);
+      }, expandTimer);
+
+      return () => clearTimeout(scrollHeightMeasureDelay);
+    }, [isExpanded]);
+
+      //delay scroll height measurement until end of ReadEntry enter or exit transition
+      useEffect(() => {
+      const scrollHeightMeasureDelay = setTimeout(() => {
+        const isYOverflowing = ref.current && ref.current.scrollHeight > ref.current.clientHeight || false;
+        if (refYOverflowing !== isYOverflowing) setRefYOverflowing(isYOverflowing);
+      }, readEntryListAppendTimer);
+
+      return () => clearTimeout(scrollHeightMeasureDelay);
+    }, [readEntryListLength]);
+
+      //delay scroll height measurement until end of isReadEntrySelected transition
+      useEffect(() => {
+      const scrollHeightMeasureDelay = setTimeout(() => {
+        const isYOverflowing = ref.current && ref.current.scrollHeight > ref.current.clientHeight || false;
+        if (refYOverflowing !== isYOverflowing) setRefYOverflowing(isYOverflowing);
+      }, readEntrySelectTimer);
+
+      return () => clearTimeout(scrollHeightMeasureDelay);
+    }, [readEntrySelectToggle]);
+
+    //delay scroll height measurement in edge case: isExpand: true, isEdit: true, >= 8 readEntry with all Delete Containers open and then changing isEdit to false.
+    useEffect(() => {
+      const scrollHeightMeasureDelay = setTimeout(() => {
+        const isYOverflowing = ref.current && ref.current.scrollHeight > ref.current.clientHeight || false;
+        if (refYOverflowing !== isYOverflowing) setRefYOverflowing(isYOverflowing);
+      }, readEntrySelectTimer);
+
+      return () => clearTimeout(scrollHeightMeasureDelay);
+    }, [isEdit]);
 
     return {refYOverflowing, refYScrollBegin, refYScrollEnd};
 }

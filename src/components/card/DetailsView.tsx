@@ -6,6 +6,38 @@ import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 import { BsCircleFill } from 'react-icons/bs';
 import DetailsViewEdit from './DetailsViewEdit';
 
+
+interface DetailsViewPropsITF {
+  readDetails: Array<{ key: string; value: number }>;
+  isEdit: boolean;
+  editTimer: number;
+  isExpanded: boolean;
+  expandTimer: number;
+}
+
+const DetailsViewContainer = styled.div<{ $isExpanded: boolean; $expandTimer: number }>`
+  ${tw`relative bg-blueGray-500 bg-opacity-40 overflow-hidden`};
+  min-height: 38%;
+  max-height: 38%;
+  --duration: ${({ $expandTimer }) => `${$expandTimer}ms`};
+  transition: all var(--duration) ease-out;
+  ${({ $isExpanded }) => $isExpanded && css`
+    min-height: 0;
+    max-height: 0;
+    transition: all var(--duration) ease-out calc(var(--duration) * 0.2);
+  `}
+`;
+
+const DetailsViewInnerContainer = styled.div<{ $isExpanded: boolean; $expandTimer: number }>`
+  ${tw`relative h-full w-full opacity-100`};
+  --duration: ${({ $expandTimer }) => `${$expandTimer}ms`};
+  transition: all calc(var(--duration) * 0.5) linear calc(var(--duration) * 0.8);
+  ${({ $isExpanded }) => $isExpanded && css`
+    ${tw`opacity-0`};
+    transition: all calc(var(--duration) * 0.5) linear;
+  `}
+`;
+
 const ViewContainer = styled.div`
   ${tw`absolute h-full w-full flex justify-center`};
   --duration: 200ms;
@@ -47,7 +79,7 @@ const ViewContainer = styled.div`
     transform: translateX(100%);
     transition: var(--transition);
   }
-`
+`;
 
 const ValueDisplay = styled.p<{ $value: number }>`
   ${tw`absolute top-5 text-coolGray-50 text-6xl font-MerriweatherItalic-300`};
@@ -70,7 +102,7 @@ const ValueDisplay = styled.p<{ $value: number }>`
       75% { transform: rotateY(-40deg); };
     }
   }
-`
+`;
 
 const GradientPane = styled.div<{ $left?: boolean; $right?: boolean }>`
   ${tw`relative h-full cursor-pointer`};
@@ -88,8 +120,8 @@ const GradientPane = styled.div<{ $left?: boolean; $right?: boolean }>`
     &:hover {
       transform: translateX(0%);
       transition: var(--transition);
-    };
-  `};
+    }
+  `}
   ${({ $right }) => $right && css`
     transform: translateX(0%);
     &::before {
@@ -99,9 +131,9 @@ const GradientPane = styled.div<{ $left?: boolean; $right?: boolean }>`
     &:hover {
       transform: translateX(-50%);
       transition: var(--transition);
-    };
-  `};
-`
+    }
+  `}
+`;
 
 const StyledBsCircleFill = styled(BsCircleFill)<{ $selected: boolean }>`
   ${tw`mx-0.5 stroke-current text-coolGray-500`};
@@ -127,9 +159,9 @@ const StyledBsCircleFill = styled(BsCircleFill)<{ $selected: boolean }>`
       }
     `
   }
-`
+`;
 
-const DetailsView = ({ isEdit, readDetails }: { isEdit: boolean, readDetails: Array<{ key: string; value: number }> }) => {
+const DetailsView = ({ readDetails, isEdit, editTimer, isExpanded, expandTimer }: DetailsViewPropsITF) => {
   const [ currIdx, setCurrIdx ] = useState<number>(0);
   const prevIdx = usePrevious(currIdx);
   const length = readDetails.length;
@@ -140,10 +172,9 @@ const DetailsView = ({ isEdit, readDetails }: { isEdit: boolean, readDetails: Ar
   const prevSlide = () => setCurrIdx((currIdx + length - 1) % length);
 
   return (
-    <div className='relative row-start-4 row-end-10 col-start-2 col-end-3 bg-blueGray-500 bg-opacity-40 overflow-hidden'>
+    <DetailsViewContainer $isExpanded={isExpanded} $expandTimer={expandTimer}>
 
-      <div className='relative h-full w-full'>
-
+      <DetailsViewInnerContainer $isExpanded={isExpanded} $expandTimer={expandTimer}>
         <TransitionGroup component={null} childFactory={child => cloneElement(child, {classNames})}>
           <CSSTransition timeout={200} key={`ReadDetails-${currIdx}`} unmountOnExit /* nodeRef={detailsViewRef} */>
             <ViewContainer /* ref={detailsViewRef} */>
@@ -168,12 +199,11 @@ const DetailsView = ({ isEdit, readDetails }: { isEdit: boolean, readDetails: Ar
             <StyledBsCircleFill key={`BsCircleFill-${i}`} size={7} $selected={i === currIdx} {...(i !== currIdx && {onClick: () => setCurrIdx(i)})} />
           ))}
         </div>
+      </DetailsViewInnerContainer>
 
-      </div>
+      <DetailsViewEdit isEdit={isEdit} editTimer={editTimer} />
 
-      <DetailsViewEdit isEdit={isEdit} />
-
-    </div>
+    </DetailsViewContainer>
   )
 }
 
