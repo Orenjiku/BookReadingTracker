@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
+import useCountdown from '../../hooks/useCountdown';
 import { ArrowRightSquare } from '@styled-icons/bootstrap/ArrowRightSquare';
 
 
@@ -10,10 +11,11 @@ const SlideContainer = styled.div`
 `
 
 const StyledSlider = styled.div<{ $isDragging: boolean; $sliderButtonWidth: number; $offsetLeft: number }>`
-  ${tw`absolute h-full w-full flex rounded-b-2xl justify-center items-center cursor-pointer`};
-  left: calc((${({ $sliderButtonWidth }) => $sliderButtonWidth} - 1) * 100%);
-  --sliderWithoutButtonWidth: calc((1 - (${({ $sliderButtonWidth }) => $sliderButtonWidth})) * 100%);
-  background: linear-gradient(90deg, #059669 0, transparent var(--sliderWithoutButtonWidth));
+  ${tw`absolute h-full w-full flex rounded-b-2xl justify-end`};
+  --sliderButtonWidth: ${({ $sliderButtonWidth }) => `${$sliderButtonWidth * 100}%`};
+  --sliderWithoutButtonWidth: calc(100% - var(--sliderButtonWidth));
+  left: calc(-1 * var(--sliderWithoutButtonWidth));
+  background: linear-gradient(90deg, #5EEAD4 0, transparent var(--sliderWithoutButtonWidth));
   ${({ $isDragging, $offsetLeft }) => !$isDragging && css`
     --rate: 1000;
     --duration: calc(${$offsetLeft} / var(--rate) * 1s);
@@ -22,10 +24,10 @@ const StyledSlider = styled.div<{ $isDragging: boolean; $sliderButtonWidth: numb
   &::after {
     content: '';
     ${tw`absolute right-0 h-full rounded-b-2xl bg-blueGray-500 bg-opacity-40`};
-    width: calc(${({ $sliderButtonWidth }) => $sliderButtonWidth} * 100%);
+    width: var(--sliderButtonWidth);
   }
   &.slide-enter {
-    transform: translateX(calc(${({ $sliderButtonWidth }) => $sliderButtonWidth} * -100%));
+    transform: translateX(calc(-1 * var(--sliderButtonWidth)));
   }
   &.slide-enter-active {
     transform: translateX(0%);
@@ -35,8 +37,44 @@ const StyledSlider = styled.div<{ $isDragging: boolean; $sliderButtonWidth: numb
     transform: translateX(0%);
   }
   &.slide-exit-active {
-    transform: translateX(calc(${({ $sliderButtonWidth }) => $sliderButtonWidth} * -100%));
+    transform: translateX(calc(-1 * var(--sliderButtonWidth)));
     transition: all 300ms linear;
+  }
+`;
+
+const StyledArrowRightSquare = styled(ArrowRightSquare)<{ $atEnd: boolean; }>`
+  ${tw`stroke-0 stroke-current text-gray-50`}
+  transition: all 300ms linear;
+  ${({ $atEnd }) => $atEnd && css`
+    --neon-light-center: #f9fafb;
+    --neon-light-color: #0d9488;
+    --light-effect: drop-shadow(0 0 4px var(--neon-light-center))
+                    drop-shadow(0 0 8px var(--neon-light-center))
+                    drop-shadow(0 0 16px var(--neon-light-center))
+                    drop-shadow(0 0 32px var(--neon-light-color))
+                    drop-shadow(0 0 48px var(--neon-light-color))
+                    drop-shadow(0 0 72px var(--neon-light-color))
+                    drop-shadow(0 0 108px var(--neon-light-color));
+    color: var(--neon-light-center);
+    filter: var(--light-effect);
+  `}
+`;
+
+const TextContainer = styled.div`
+  ${tw`h-full flex justify-center items-center font-Charm-400 text-lg`};
+  &.fade-enter {
+    opacity: 0;
+  }
+  &.fade-enter-active {
+    opacity: 1;
+    transition: opacity 100ms linear 200ms;
+  }
+  &.fade-exit {
+    opacity: 1;
+  }
+  &.fade-exit-active {
+    opacity: 0;
+    transition: opacity 80ms linear;
   }
 `;
 
@@ -54,6 +92,11 @@ const CompletionSlider = ({ isReading }: { isReading: boolean }) => {
   const sliderButtonWidth = 0.25;
   const offsetLeft = relativeSliderLeftBoundedCurrentPosition.current - relativeSliderLeftStartPosition.current;
 
+  const holdTimer = 3000;
+  const { countdown } = useCountdown(atEnd, holdTimer);
+  const swipeTextRef = useRef<HTMLDivElement>(null);
+  const countdownTextRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (containerRef.current) {
       relativeSliderLeftStartPosition.current = containerRef.current.clientWidth * (sliderButtonWidth - 1);
@@ -64,11 +107,6 @@ const CompletionSlider = ({ isReading }: { isReading: boolean }) => {
   useEffect(() => {
     window.onmousemove = isDragging ? onDrag : null;
   }, [isDragging]);
-
-  useEffect(() => {
-    console.log('atEnd:', atEnd)
-    //Add effects
-  }, [atEnd]);
 
   const startDrag = (e: React.MouseEvent<HTMLDivElement>) => {
     const sliderLeftStartPosition = e.currentTarget.getBoundingClientRect().left;
@@ -99,10 +137,18 @@ const CompletionSlider = ({ isReading }: { isReading: boolean }) => {
     <SlideContainer ref={containerRef}>
       <CSSTransition in={isReading} timeout={300} classNames='slide' nodeRef={sliderRef} unmountOnExit>
         <StyledSlider ref={sliderRef} $isDragging={isDragging} $sliderButtonWidth={sliderButtonWidth} $offsetLeft={offsetLeft} onMouseDown={startDrag}>
-          <div style={{width: `${sliderButtonWidth * 100}%`}} className='absolute h-full right-0 flex justify-center items-center'>
-            <ArrowRightSquare style={{height:'22px', width: '30px'}} className='z-10 stroke-0 stroke-current text-gray-50' />
+          <div style={{width: `${sliderButtonWidth * 100}%`}} className='z-10 flex justify-center items-center overflow-hidden rounded-b-2xl cursor-pointer'>
+            <StyledArrowRightSquare size={23} $atEnd={atEnd} />
           </div>
         </StyledSlider>
+      </CSSTransition>
+
+      <CSSTransition in={isReading && !isDragging} timeout={300} classNames='fade' nodeRef={swipeTextRef} unmountOnExit>
+        <TextContainer ref={swipeTextRef}>Swipe to Complete!</TextContainer>
+      </CSSTransition>
+
+      <CSSTransition in={isReading && atEnd} timeout={300} classNames='fade' nodeRef={countdownTextRef} unmountOnExit>
+        <TextContainer ref={countdownTextRef}>Hold: {countdown}</TextContainer>
       </CSSTransition>
     </SlideContainer>
   )
