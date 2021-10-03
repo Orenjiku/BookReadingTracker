@@ -560,15 +560,17 @@ SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-20', 123, 828
 SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-21', 35, 35, 8.41);
 SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-22', 56, 91, 21.88);
 SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 58, 149, 35.82);
-SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 46, 195, 46.88);
-SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 52, 247, 59.38);
-SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 60, 307, 73.8);
-SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 52, 359, 86.3);
-SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 57, 416, 100);
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-24', 46, 195, 46.88);
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-25', 52, 247, 59.38);
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-26', 60, 307, 73.8);
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-27', 52, 359, 86.3);
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-28', 57, 416, 100);
 
 -- INSERT book_21
 SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-09-29', 49, 49, 5.1);
 SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-09-30', 52, 101, 10.52);
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-01', 51, 152, 15.83);
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-02', 48, 200, 20.83);
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
 -- FUNCTION insert_author
@@ -913,7 +915,7 @@ BEGIN
                                   FROM   read_entry AS re
                                   WHERE re.read_instance_id = var_read_instance_id
                                   GROUP  BY Date(re.date_read))
-                          AS daily_read),
+                                  AS daily_read),
         is_reading = $3,
         is_finished = $4,
         is_dnf = $5
