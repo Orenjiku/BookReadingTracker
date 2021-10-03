@@ -34,7 +34,7 @@ const ReadInstanceContainer = styled.div`
     transition: var(--transition);
   }
   &.forward-exit {
-    transform: translateX(0%) translateY(-100%);
+    transform: translateY(-100%);
   }
   &.forward-exit-active {
     transform: translateX(-100%) translateY(-100%);
@@ -48,7 +48,7 @@ const ReadInstanceContainer = styled.div`
     transition: var(--transition);
   }
   &.backward-exit {
-    transform: translateX(0%) translateY(-100%);
+    transform: translateY(-100%);
   }
   &.backward-exit-active {
     transform: translateX(100%) translateY(-100%);
