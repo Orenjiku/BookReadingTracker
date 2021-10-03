@@ -22,7 +22,7 @@ const ReadInstanceHeaderContainer = styled.div`
 `;
 
 const StyledChevronExpand = styled(BsChevronExpand)<{ $isExpanded: boolean; $expandTimer: number }>`
-  ${tw`stroke-current`};
+  ${tw`absolute right-0 stroke-current`};
   --duration: ${({ $expandTimer }) => `${$expandTimer}ms`};
   transition: all var(--duration) linear;
   ${ReadInstanceHeaderContainer}:hover & {
@@ -76,20 +76,20 @@ const StyledReadEntryContainer = styled.div<{ $readEntryListAppendTimer: number 
     ${tw`mb-2`};
   }
   --duration: ${({ $readEntryListAppendTimer }) => `${$readEntryListAppendTimer}ms`};
-  &.readEntryAnimate-enter {
+  &.slideFade-enter {
     opacity: 0;
     max-height: 0;
   }
-  &.readEntryAnimate-enter-active {
+  &.slideFade-enter-active {
     opacity: 1;
     max-height: 52px;
     transition: opacity calc(var(--duration) * 0.4) ease-out, max-height var(--duration) ease-out;
   }
-  &.readEntryAnimate-exit {
+  &.slideFade-exit {
     opacity: 1;
     max-height: 52px;
   }
-  &.readEntryAnimate-exit-active {
+  &.slideFade-exit-active {
     opacity: 0;
     max-height: 0;
     transition: opacity calc(var(--duration) * 0.4) ease-out, max-height var(--duration) ease-out;
@@ -103,8 +103,8 @@ const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer
   const readEntrySelectTimer = 300;
 
   // const bookReadRef = useRef(null);
-  const scrollElementRef = useRef<HTMLDivElement>(null);
-  const { refYOverflowing, refYScrollBegin, refYScrollEnd } = useYOverflow({scrollElementRef, isExpanded, expandTimer, readEntryListLength: readEntryList.length, readEntryListAppendTimer, readEntrySelectToggle, readEntrySelectTimer, isEdit});
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { refYOverflowing, refYScrollBegin, refYScrollEnd } = useYOverflow({scrollContainerRef, isExpanded, expandTimer, readEntryListLength: readEntryList.length, readEntryListAppendTimer, readEntrySelectToggle, readEntrySelectTimer, isEdit});
 
   const handleToggle = () => {
     setReadEntrySelectToggle(readEntrySelectToggle => !readEntrySelectToggle);
@@ -119,7 +119,7 @@ const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer
   return (
     <div className='relative h-full w-full overflow-hidden'>
 
-      <div ref={scrollElementRef} className='h-full overflow-y-scroll scrollbar-hide'>
+      <div ref={scrollContainerRef} className='h-full overflow-y-scroll scrollbar-hide'>
 
         <ReadInstanceHeaderContainer onClick={() => handleIsExpanded()}>
           <div className='flex items-center'>
@@ -130,15 +130,14 @@ const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer
             <p className='mr-0.5'>Total: {readInstance.days_total}</p>
             <CgCalendarToday />
           </div>
-          <div className='absolute h-full w-full flex justify-end items-center'>
-            <StyledChevronExpand size={15} $isExpanded={isExpanded} $expandTimer={expandTimer} />
-          </div>
+
+          <StyledChevronExpand size={15} $isExpanded={isExpanded} $expandTimer={expandTimer} />
           <AnimatedLine $isExpanded={isExpanded}/>
         </ReadInstanceHeaderContainer>
 
         <TransitionGroup component={null}>
           {readEntryList.map(readEntry => (
-            <CSSTransition key={`cssT-${readEntry.re_id}`} timeout={readEntryListAppendTimer} classNames='readEntryAnimate' /* nodeRef={bookReadRef} */ >
+            <CSSTransition key={`cssT-${readEntry.re_id}`} timeout={readEntryListAppendTimer} classNames='slideFade' /* nodeRef={bookReadRef} */ >
               <StyledReadEntryContainer $readEntryListAppendTimer={readEntryListAppendTimer} /* ref={bookReadRef} */>
                 <ReadEntry key={readEntry.re_id} readEntry={readEntry} isEdit={isEdit} editTimer={editTimer} readEntrySelectTimer={readEntrySelectTimer} handleToggle={handleToggle} handleDeleteReadEntry={handleDeleteReadEntry}/>
               </StyledReadEntryContainer>

@@ -83,6 +83,7 @@ const ReadEntry = ({ readEntry, isEdit, editTimer, readEntrySelectTimer, handleT
       deleteTimeout = setTimeout(() => {
         handleDeleteReadEntry(readEntry.re_id);
         setIsMouseDown(false);
+        clearTimeout(deleteTimeout);
       }, 1000);
     }
   }, [isMouseDown]);
