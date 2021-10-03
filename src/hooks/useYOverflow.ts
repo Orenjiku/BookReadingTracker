@@ -2,7 +2,7 @@ import { useState, useEffect, RefObject } from "react";
 
 
 interface useYOverflowPropsITF {
-  scrollElementRef: RefObject<HTMLDivElement>;
+  scrollContainerRef: RefObject<HTMLDivElement>;
   isExpanded: boolean;
   expandTimer: number;
   readEntrySelectToggle: boolean;
@@ -18,7 +18,7 @@ interface useYOverflowReturnITF {
   refYScrollEnd: boolean;
 }
 
-const useYOverflow = ({ scrollElementRef: ref, isExpanded, expandTimer, readEntryListLength, readEntryListAppendTimer, readEntrySelectToggle, readEntrySelectTimer, isEdit }: useYOverflowPropsITF): useYOverflowReturnITF => {
+const useYOverflow = ({ scrollContainerRef: ref, isExpanded, expandTimer, readEntryListLength, readEntryListAppendTimer, readEntrySelectToggle, readEntrySelectTimer, isEdit }: useYOverflowPropsITF): useYOverflowReturnITF => {
     const [refYOverflowing, setRefYOverflowing] = useState(false);
     const [refYScrollBegin, setRefYScrollBegin] = useState(true);
     const [refYScrollEnd, setRefYScrollEnd] = useState(false);
