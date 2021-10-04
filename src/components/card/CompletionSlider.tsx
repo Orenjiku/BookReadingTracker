@@ -15,7 +15,6 @@ const StyledSlider = styled.div<{ $isDragging: boolean; $sliderButtonWidth: numb
   --sliderButtonWidth: ${({ $sliderButtonWidth }) => `${$sliderButtonWidth * 100}%`};
   --sliderWithoutButtonWidth: calc(100% - var(--sliderButtonWidth));
   left: calc(-1 * var(--sliderWithoutButtonWidth));
-  background: linear-gradient(90deg, #5EEAD4 0, transparent var(--sliderWithoutButtonWidth));
   ${({ $isDragging, $offsetLeft }) => !$isDragging && css`
     --rate: 1000;
     --duration: calc(${$offsetLeft} / var(--rate) * 1s);
@@ -67,14 +66,14 @@ const TextContainer = styled.div`
   }
   &.fade-enter-active {
     opacity: 1;
-    transition: opacity 100ms linear 200ms;
+    transition: opacity 100ms linear 250ms;
   }
   &.fade-exit {
     opacity: 1;
   }
   &.fade-exit-active {
     opacity: 0;
-    transition: opacity 80ms linear;
+    transition: opacity 30ms linear;
   }
 `;
 
@@ -82,20 +81,19 @@ const CompletionSlider = ({ isReading }: { isReading: boolean }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
+  const swipeTextRef = useRef<HTMLDivElement>(null);
+  const countdownTextRef = useRef<HTMLDivElement>(null);
+
   const [ isDragging, setIsDragging ] = useState(false);
   const [ atEnd, setAtEnd ] = useState(false);
-
   const relativeSliderLeftStartPosition = useRef(0);
   const relativeSliderLeftBoundedCurrentPosition = useRef(0);
   const mouseDownSliderLeftOffset = useRef(0);
-
   const sliderButtonWidth = 0.25;
   const offsetLeft = relativeSliderLeftBoundedCurrentPosition.current - relativeSliderLeftStartPosition.current;
 
   const holdTimer = 3000;
   const { countdown } = useCountdown(atEnd, holdTimer);
-  const swipeTextRef = useRef<HTMLDivElement>(null);
-  const countdownTextRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -148,7 +146,9 @@ const CompletionSlider = ({ isReading }: { isReading: boolean }) => {
       </CSSTransition>
 
       <CSSTransition in={isReading && atEnd} timeout={300} classNames='fade' nodeRef={countdownTextRef} unmountOnExit>
-        <TextContainer ref={countdownTextRef}>Hold: {countdown}</TextContainer>
+        <TextContainer ref={countdownTextRef}>
+          <p className='w-20 text-left'>Hold: <span className='text-red-600'>{countdown}</span></p>
+        </TextContainer>
       </CSSTransition>
     </SlideContainer>
   )
