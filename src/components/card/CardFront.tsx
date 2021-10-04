@@ -108,7 +108,7 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
 
   const slideShowTimer = 800;
   const expandTimer = 400;
-  const editTimer = 400;
+  const editTimer = 300;
 
   const handleIsEdit = () => setIsEdit(isEdit => !isEdit);
   const handleIsSlideShow = () => setIsSlideShow(isSlideShow => !isSlideShow);
