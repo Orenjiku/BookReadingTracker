@@ -1,10 +1,10 @@
-import React, { useState, cloneElement } from 'react';
+import React, { useState, useRef, cloneElement } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import usePrevious from '../../hooks/usePrevious';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 import { BsCircleFill } from 'react-icons/bs';
-import DetailsViewEdit from './DetailsViewEdit';
+import EditView from './EditView';
 
 
 interface DetailsViewPropsITF {
@@ -16,7 +16,7 @@ interface DetailsViewPropsITF {
 }
 
 const DetailsViewContainer = styled.div<{ $isExpanded: boolean; $expandTimer: number }>`
-  ${tw`relative bg-blueGray-500 bg-opacity-40 overflow-hidden`};
+  ${tw`relative overflow-hidden`};
   min-height: 38%;
   max-height: 38%;
   --duration: ${({ $expandTimer }) => `${$expandTimer}ms`};
@@ -28,14 +28,29 @@ const DetailsViewContainer = styled.div<{ $isExpanded: boolean; $expandTimer: nu
   `}
 `;
 
-const DetailsViewInnerContainer = styled.div<{ $isExpanded: boolean; $expandTimer: number }>`
-  ${tw`relative h-full w-full opacity-100`};
-  --duration: ${({ $expandTimer }) => `${$expandTimer}ms`};
-  transition: all calc(var(--duration) * 0.5) linear calc(var(--duration) * 0.8);
+const DetailsViewInnerContainer = styled.div<{ $editTimer: number; $isExpanded: boolean; $expandTimer: number }>`
+  ${tw`relative h-full w-full bg-blueGray-500 bg-opacity-40 `};
+  --expandDuration: ${({ $expandTimer }) => `${$expandTimer}ms`};
+  transition: all calc(var(--duration) * 0.5) linear calc(var(--expandDuration) * 0.8);
   ${({ $isExpanded }) => $isExpanded && css`
     ${tw`opacity-0`};
-    transition: all calc(var(--duration) * 0.5) linear;
+    transition: all calc(var(--expandDuration) * 0.5) linear;
   `}
+  --editDuration: ${({ $editTimer }) => `${$editTimer}ms`};
+  &.slide-enter {
+    transform: translateY(100%);
+  }
+  &.slide-enter-active {
+    transform: translateY(0);
+    transition: transform var(--editDuration) linear;
+  }
+  &.slide-exit {
+    transform: translateY(0);
+  }
+  &.slide-exit-active {
+    transform: translateY(100%);
+    transition: transform var(--editDuration) linear;
+  }
 `;
 
 const ViewContainer = styled.div`
@@ -161,7 +176,25 @@ const StyledBsCircleFill = styled(BsCircleFill)<{ $selected: boolean }>`
   }
 `;
 
+const EditViewContainer = styled.div<{ $editTimer: number }>`
+  ${tw`absolute top-0 left-0 h-full w-full overflow-hidden`};
+  --duration: ${({ $editTimer }) => `${$editTimer}ms`};
+  &.slide-enter {
+    transform: translateY(-100%);
+  }
+  &.slide-enter-active {
+    transform: translateY(0%);
+    transition: transform var(--duration) linear;
+  }
+  &.slide-exit-active {
+    transform: translateY(-100%);
+    transition: transform var(--duration) linear;
+  }
+`;
+
 const DetailsView = ({ readDetails, isEdit, editTimer, isExpanded, expandTimer }: DetailsViewPropsITF) => {
+  const detailsViewInnerRef = useRef<HTMLDivElement>(null);
+  const editViewRef = useRef<HTMLDivElement>(null);
   const [ currIdx, setCurrIdx ] = useState<number>(0);
   const prevIdx = usePrevious(currIdx);
   const length = readDetails.length;
@@ -174,34 +207,42 @@ const DetailsView = ({ readDetails, isEdit, editTimer, isExpanded, expandTimer }
   return (
     <DetailsViewContainer $isExpanded={isExpanded} $expandTimer={expandTimer}>
 
-      <DetailsViewInnerContainer $isExpanded={isExpanded} $expandTimer={expandTimer}>
-        <TransitionGroup component={null} childFactory={child => cloneElement(child, {classNames})}>
-          <CSSTransition timeout={200} key={`ReadDetails-${currIdx}`} unmountOnExit /* nodeRef={detailsViewRef} */>
-            <ViewContainer /* ref={detailsViewRef} */>
-              <ValueDisplay $value={readDetails[currIdx].value}>{readDetails[currIdx].value}</ValueDisplay>
-              <div className='absolute text-trueGray-50 text-xl font-AdventPro-400'>{readDetails[currIdx].key}</div>
-            </ViewContainer>
-          </CSSTransition>
-        </TransitionGroup>
+      <CSSTransition in={!isEdit} timeout={editTimer} classNames='slide' nodeRef={detailsViewInnerRef} unmountOnExit>
 
-        <div className='absolute left-0 h-full w-1/3 flex items-center overflow-hidden'>
-          <BsChevronLeft className='absolute left-0 stroke-current stroke-1 text-coolGray-50' />
-          <GradientPane $left onClick={() => prevSlide()} />
-        </div>
+        <DetailsViewInnerContainer ref={detailsViewInnerRef} $editTimer={editTimer} $isExpanded={isExpanded} $expandTimer={expandTimer}>
+          <TransitionGroup component={null} childFactory={child => cloneElement(child, {classNames})}>
+            <CSSTransition timeout={200} key={`ReadDetails-${currIdx}`} unmountOnExit /* nodeRef={detailsViewRef} */>
+              <ViewContainer /* ref={detailsViewRef} */>
+                <ValueDisplay $value={readDetails[currIdx].value}>{readDetails[currIdx].value}</ValueDisplay>
+                <div className='absolute text-trueGray-50 text-xl font-AdventPro-400'>{readDetails[currIdx].key}</div>
+              </ViewContainer>
+            </CSSTransition>
+          </TransitionGroup>
 
-        <div className='absolute right-0 h-full w-1/3 flex items-center overflow-hidden'>
-          <BsChevronRight className='absolute right-0 stroke-current stroke-1 text-coolGray-50' />
-          <GradientPane $right onClick={() => nextSlide()} />
-        </div>
+          <div className='absolute left-0 h-full w-1/3 flex items-center overflow-hidden'>
+            <BsChevronLeft className='absolute left-0 stroke-current stroke-1 text-coolGray-50' />
+            <GradientPane $left onClick={() => prevSlide()} />
+          </div>
 
-        <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-1.5 flex'>
-          {readDetails.map((_, i) => (
-            <StyledBsCircleFill key={`BsCircleFill-${i}`} size={7} $selected={i === currIdx} {...(i !== currIdx && {onClick: () => setCurrIdx(i)})} />
-          ))}
-        </div>
-      </DetailsViewInnerContainer>
+          <div className='absolute right-0 h-full w-1/3 flex items-center overflow-hidden'>
+            <BsChevronRight className='absolute right-0 stroke-current stroke-1 text-coolGray-50' />
+            <GradientPane $right onClick={() => nextSlide()} />
+          </div>
 
-      <DetailsViewEdit isEdit={isEdit} editTimer={editTimer} />
+          <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-1.5 flex'>
+            {readDetails.map((_, i) => (
+              <StyledBsCircleFill key={`BsCircleFill-${i}`} size={7} $selected={i === currIdx} {...(i !== currIdx && {onClick: () => setCurrIdx(i)})} />
+              ))}
+          </div>
+        </DetailsViewInnerContainer>
+
+      </CSSTransition>
+
+      <CSSTransition in={isEdit} timeout={editTimer} classNames='slide' nodeRef={editViewRef} unmountOnExit>
+        <EditViewContainer ref={editViewRef} $editTimer={editTimer}>
+          <EditView />
+        </EditViewContainer>
+      </CSSTransition>
 
     </DetailsViewContainer>
   )
