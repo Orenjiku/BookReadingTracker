@@ -67,13 +67,6 @@ const ReadEntry = ({ readEntry, isEdit, editTimer, readEntrySelectTimer, handleT
   const currentPercent = Number(readEntry.current_percent.toFixed(0));
   let deleteTimeout: ReturnType<typeof setTimeout>;
 
-  const handleEntrySelect = () => isEdit && setIsEntrySelected(isEntrySelected => !isEntrySelected);
-  const handleMouseDown = () => setIsMouseDown(true);
-  const handleMouseUp = () => {
-    clearTimeout(deleteTimeout);
-    setIsMouseDown(false);
-  };
-
   useEffect(() => {
     if (isMouseDown) {
       deleteTimeout = setTimeout(() => {
@@ -94,6 +87,13 @@ const ReadEntry = ({ readEntry, isEdit, editTimer, readEntrySelectTimer, handleT
     handleToggle();
   }, [isEntrySelected]);
 
+  const handleEntrySelect = () => isEdit && setIsEntrySelected(isEntrySelected => !isEntrySelected);
+  const handleMouseDown = () => setIsMouseDown(true);
+  const handleStopTimeout = () => {
+    clearTimeout(deleteTimeout);
+    setIsMouseDown(false);
+  };
+
   return (
     <div>
 
@@ -104,7 +104,7 @@ const ReadEntry = ({ readEntry, isEdit, editTimer, readEntrySelectTimer, handleT
 
       <CSSTransition in={isEdit && isEntrySelected} timeout={readEntrySelectTimer} classNames='slide' nodeRef={readEntryRef} unmountOnExit>
         <DeleteTransitionContainer ref={readEntryRef} $readEntrySelectTimer={readEntrySelectTimer}>
-          <DeleteButton $isMouseDown={isMouseDown} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
+          <DeleteButton $isMouseDown={isMouseDown} onMouseDown={handleMouseDown} onMouseUp={handleStopTimeout} onMouseLeave={handleStopTimeout}>
             <p className='mr-2'>Hold for 1 second</p>
             <Trash size={13} />
           </DeleteButton>
