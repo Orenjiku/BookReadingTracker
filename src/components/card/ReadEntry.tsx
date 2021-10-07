@@ -28,7 +28,7 @@ const EntryBar = styled.div<{ $before: string; $after: number }>`
   }
 `;
 
-const DeleteContainer = styled.div<{ $readEntrySelectTimer: number }>`
+const DeleteTransitionContainer = styled.div<{ $readEntrySelectTimer: number }>`
   ${tw`flex justify-center items-end p-0 mb-0 overflow-y-hidden`};
   --duration: ${({ $readEntrySelectTimer }) => `${$readEntrySelectTimer}ms`};
   &.slide-enter {
@@ -75,10 +75,6 @@ const ReadEntry = ({ readEntry, isEdit, editTimer, readEntrySelectTimer, handleT
   };
 
   useEffect(() => {
-    !isEdit && setIsEntrySelected(false);
-  }, [isEdit]);
-
-  useEffect(() => {
     if (isMouseDown) {
       deleteTimeout = setTimeout(() => {
         handleDeleteReadEntry(readEntry.re_id);
@@ -86,7 +82,13 @@ const ReadEntry = ({ readEntry, isEdit, editTimer, readEntrySelectTimer, handleT
         clearTimeout(deleteTimeout);
       }, 1000);
     }
+    return () => clearTimeout(deleteTimeout);
   }, [isMouseDown]);
+
+  useEffect(() => {
+    !isEdit && setIsEntrySelected(false);
+  }, [isEdit]);
+
 
   useEffect(() => {
     handleToggle();
@@ -101,12 +103,12 @@ const ReadEntry = ({ readEntry, isEdit, editTimer, readEntrySelectTimer, handleT
       </div>
 
       <CSSTransition in={isEdit && isEntrySelected} timeout={readEntrySelectTimer} classNames='slide' nodeRef={readEntryRef} unmountOnExit>
-        <DeleteContainer ref={readEntryRef} $readEntrySelectTimer={readEntrySelectTimer}>
+        <DeleteTransitionContainer ref={readEntryRef} $readEntrySelectTimer={readEntrySelectTimer}>
           <DeleteButton $isMouseDown={isMouseDown} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
             <p className='mr-2'>Hold for 1 second</p>
             <Trash size={13} />
           </DeleteButton>
-        </DeleteContainer>
+        </DeleteTransitionContainer>
       </CSSTransition>
 
     </div>

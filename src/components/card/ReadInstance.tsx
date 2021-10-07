@@ -68,7 +68,7 @@ const AnimatedLine = styled.div<{ $isExpanded: boolean }>`
   `}
 `;
 
-const StyledReadEntryContainer = styled.div<{ $readEntryListAppendTimer: number }>`
+const ReadEntryTransitionContainer = styled.div<{ $readEntryListAppendTimer: number }>`
   &:nth-child(2) {
     ${tw`mt-1`};
   }
@@ -138,9 +138,9 @@ const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer
         <TransitionGroup component={null}>
           {readEntryList.map(readEntry => (
             <CSSTransition key={`cssT-${readEntry.re_id}`} timeout={readEntryListAppendTimer} classNames='slideFade' /* nodeRef={bookReadRef} */ >
-              <StyledReadEntryContainer $readEntryListAppendTimer={readEntryListAppendTimer} /* ref={bookReadRef} */>
+              <ReadEntryTransitionContainer $readEntryListAppendTimer={readEntryListAppendTimer} /* ref={bookReadRef} */>
                 <ReadEntry key={readEntry.re_id} readEntry={readEntry} isEdit={isEdit} editTimer={editTimer} readEntrySelectTimer={readEntrySelectTimer} handleToggle={handleToggle} handleDeleteReadEntry={handleDeleteReadEntry}/>
-              </StyledReadEntryContainer>
+              </ReadEntryTransitionContainer>
             </CSSTransition>
           ))}
         </TransitionGroup>
