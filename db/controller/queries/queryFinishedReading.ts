@@ -10,14 +10,20 @@ const queryCurrentlyReading = (reader_id: string) => {
                 b.title,
                 (
                     SELECT
-                        array_agg(full_name ORDER BY a.last_name ASC) AS author
+                        json_agg(row_to_json(authors_agg)) AS author
                     FROM
-                        author AS a
-                        INNER JOIN book_author AS ba ON a.id = ba.author_id
-                    WHERE
-                        ba.book_id = b.id
-                    GROUP BY
-                        b.id
+                        (
+                            SELECT
+                                ba.id AS ba_id,
+                                a.full_name
+                            FROM
+                                author AS a
+                                INNER JOIN book_author AS ba ON b.id = ba.book_id
+                            WHERE
+                                a.id = ba.author_id
+                            ORDER BY
+                                a.last_name ASC
+                        ) AS authors_agg
                 ),
                 b.published_date,
                 b.published_date_edition,
@@ -74,7 +80,7 @@ const queryCurrentlyReading = (reader_id: string) => {
                                             WHERE
                                                 ri.reader_book_id = rb.id
                                             ORDER BY
-                                                ri.id ASC
+                                                ri.id DESC
                                         ) AS read_instance_agg
                                 )
                             FROM

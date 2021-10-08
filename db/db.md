@@ -158,7 +158,10 @@ Retrieves a list of books that are currently being read.
     "b_id": 15,
     "title": "Deathwatch",
     "author": [
-      "Steve Parker"
+      {
+        "ba_id": 32,
+        "full_name": "Steve Parker"
+      }
     ],
     "published_date": "2013-04-11",
     "published_date_edition": "2019-10-15",
@@ -231,7 +234,10 @@ Retrieves a list of books that are currently being read.
     "b_id": 14,
     "title": "Warden of the Blade",
     "author": [
-      "David Annandale",
+      {
+        "ba_id": 24,
+        "full_name": "David Annandale"
+      }
     ],
     "published_date": "2016-11-12",
     "published_date_edition": "2018-01-23",
@@ -263,17 +269,50 @@ Retrieves a list of books that reader has finished reading.
     "b_id": 8,
     "title": "Maledictions: A Horror Anthology",
     "author": [
-      "David Annandale",
-      "Lora Gray",
-      "Paul Kane",
-      "Cassandra Khaw",
-      "Peter McLean",
-      "Graham McNeill",
-      "Josh Reynolds",
-      "J.C. Stearns",
-      "Richard Strachan",
-      "C L Werner",
-      "Alec Worley"
+      {
+        "ba_id": 14,
+        "full_name": "David Annandale"
+      },
+            {
+        "ba_id": 11,
+        "full_name": "Lora Gray"
+      },
+            {
+        "ba_id": 15,
+        "full_name": "Paul Kane"
+      },
+            {
+        "ba_id": 8,
+        "full_name": "Cassandra Khaw"
+      },
+            {
+        "ba_id": 13,
+        "full_name": "Peter McLean"
+      },
+            {
+        "ba_id": 10,
+        "full_name": "Graham McNeill"
+      },
+            {
+        "ba_id": 16,
+        "full_name": "Josh Reynolds"
+      },
+            {
+        "ba_id": 17,
+        "full_name": "J.C. Stearns"
+      },
+            {
+        "ba_id": 9,
+        "full_name": "Richard Strachan"
+      },
+            {
+        "ba_id": 12,
+        "full_name": "C L Werner"
+      }
+      ,      {
+        "ba_id": 18,
+        "full_name": "Alec Worley"
+      }
     ],
     "published_date": "2019-03-30",
     "published_date_edition": "2019-04-02",
@@ -321,7 +360,10 @@ Retrieves a list of books that reader has finished reading.
     "b_id": 2,
     "title": "Malleus",
     "author": [
-      "Dan Abnett"
+      {
+        "ba_id": 2,
+        "full_name": "Dan Abnett"
+      }
     ],
     "published_date": "2001-12-27",
     "published_date_edition": "2015-08-11",
