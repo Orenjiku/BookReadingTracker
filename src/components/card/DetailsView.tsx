@@ -8,7 +8,7 @@ import EditView from './EditView';
 
 
 interface DetailsViewPropsITF {
-  readDetails: Array<{ key: string; value: number }>;
+  viewDetails: Array<{ key: string; value: number }>;
   isEdit: boolean;
   editTimer: number;
   isExpanded: boolean;
@@ -192,12 +192,12 @@ const EditViewContainer = styled.div<{ $editTimer: number }>`
   }
 `;
 
-const DetailsView = ({ readDetails, isEdit, editTimer, isExpanded, expandTimer }: DetailsViewPropsITF) => {
+const DetailsView = ({ viewDetails, isEdit, editTimer, isExpanded, expandTimer }: DetailsViewPropsITF) => {
   const detailsViewInnerRef = useRef<HTMLDivElement>(null);
   const editViewRef = useRef<HTMLDivElement>(null);
   const [ currIdx, setCurrIdx ] = useState<number>(0);
   const prevIdx = usePrevious(currIdx);
-  const length = readDetails.length;
+  const length = viewDetails.length;
   const classNames = ((currIdx > prevIdx && currIdx !== prevIdx + (length - 1)) || currIdx === prevIdx - (length - 1)) ? 'forward' : 'backward';
   // const detailsViewRef = useRef(null);
 
@@ -211,10 +211,10 @@ const DetailsView = ({ readDetails, isEdit, editTimer, isExpanded, expandTimer }
 
         <DetailsViewInnerContainer ref={detailsViewInnerRef} $editTimer={editTimer} $isExpanded={isExpanded} $expandTimer={expandTimer}>
           <TransitionGroup component={null} childFactory={child => cloneElement(child, {classNames})}>
-            <CSSTransition timeout={200} key={`ReadDetails-${currIdx}`} unmountOnExit /* nodeRef={detailsViewRef} */>
+            <CSSTransition timeout={200} key={`view-${currIdx}`} unmountOnExit /* nodeRef={detailsViewRef} */>
               <ViewContainer /* ref={detailsViewRef} */>
-                <ValueDisplay $value={readDetails[currIdx].value}>{readDetails[currIdx].value}</ValueDisplay>
-                <div className='absolute text-trueGray-50 text-xl font-AdventPro-400'>{readDetails[currIdx].key}</div>
+                <ValueDisplay $value={viewDetails[currIdx].value}>{viewDetails[currIdx].value}</ValueDisplay>
+                <div className='absolute text-trueGray-50 text-xl font-AdventPro-400'>{viewDetails[currIdx].key}</div>
               </ViewContainer>
             </CSSTransition>
           </TransitionGroup>
@@ -230,7 +230,7 @@ const DetailsView = ({ readDetails, isEdit, editTimer, isExpanded, expandTimer }
           </div>
 
           <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-1.5 flex'>
-            {readDetails.map((_, i) => (
+            {viewDetails.map((_, i) => (
               <StyledBsCircleFill key={`BsCircleFill-${i}`} size={7} $selected={i === currIdx} {...(i !== currIdx && {onClick: () => setCurrIdx(i)})} />
               ))}
           </div>

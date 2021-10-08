@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
-import { BookITF } from '../../interfaces/interface';
+import { BookDetailsITF } from '../../interfaces/interface';
+import { ReaderBookITF } from '../../interfaces/interface';
 import CardHeader from './CardHeader';
 import BookImage from './BookImage';
 import DetailsView from './DetailsView';
@@ -21,6 +22,7 @@ const CardFrontContainer = styled.div<{ $isFlipped: boolean }>`
   transition: transform 600ms linear;
   ${({ $isFlipped }) => $isFlipped && css`
     transform: perspective(1200px) rotateY(-180deg);
+    pointer-events: none;
   `}
 `;
 
@@ -73,7 +75,7 @@ const StyledEdit = styled(Edit)<{ $isEdit: boolean, $editTimer: number }>`
   `}
 `;
 
-const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: boolean; handleFlip: Function }) => {
+const CardFront = ({ bookDetails, authorDetails, readerBook, isFlipped, handleFlip }: { bookDetails: BookDetailsITF; authorDetails: {ba_id: number, full_name: string}[]; readerBook: ReaderBookITF; isFlipped: boolean; handleFlip: Function }) => {
 
   const [ isEdit, setIsEdit ] = useState(false);
   const [ isSlideShow, setIsSlideShow ] = useState(false);
@@ -82,17 +84,16 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
 
   const cardFrontRef = useRef(null);
 
-  const readInfo = book.reader_book;
-  const pagesRead = readInfo.read_instance.reduce((acc, cur) => acc += cur.pages_read, 0);
-  const totalDaysRead = readInfo.read_instance.reduce((acc, cur) => acc += cur.days_read, 0);
-  const totalDays = readInfo.read_instance.reduce((acc, cur) => acc += cur.days_total, 0);
+  const pagesRead = readerBook.read_instance.reduce((acc, cur) => acc += cur.pages_read, 0);
+  const totalDaysRead = readerBook.read_instance.reduce((acc, cur) => acc += cur.days_read, 0);
+  const totalDays = readerBook.read_instance.reduce((acc, cur) => acc += cur.days_total, 0);
   const avgDailyRead = pagesRead > 0 ? Math.round(pagesRead / totalDaysRead) : 0;
-  const maxDailyRead = Math.max(...readInfo.read_instance.reduce((acc, cur) => acc.concat(cur.max_daily_read), [] as number[]));
-  const timesRead = readInfo.is_any_finished ? readInfo.read_instance.reduce((acc, cur) => acc += cur.is_finished ? 1 : 0, 0) : 0;
+  const maxDailyRead = Math.max(...readerBook.read_instance.reduce((acc, cur) => acc.concat(cur.max_daily_read), [] as number[]));
+  const timesRead = readerBook.is_any_finished ? readerBook.read_instance.reduce((acc, cur) => acc += cur.is_finished ? 1 : 0, 0) : 0;
 
   // const [ readDetails, setReadDetails ] = useState({pagesRead, totalDays, totalDaysRead, avgDailyRead, maxDailyRead});
-  const readDetails = [
-    {key: 'Total Pages', value: book.total_pages},
+  const viewDetails = [
+    {key: 'Total Pages', value: bookDetails.total_pages},
     {key: 'Avg Daily Read', value: avgDailyRead},
     {key: 'Max Daily Read', value: maxDailyRead},
     {key: 'Total Days', value: totalDays},
@@ -100,15 +101,15 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
     {key: 'Times Read', value: timesRead},
   ];
 
-  useEffect(() => {
-    if (book.reader_book.read_instance.length === 1) {
-      setIsReading(book.reader_book.is_any_reading);
-    }
-  }, []);
-
   const slideShowTimer = 800;
   const expandTimer = 400;
   const editTimer = 300;
+
+  useEffect(() => {
+    if (readerBook.read_instance.length === 1) {
+      setIsReading(readerBook.is_any_reading);
+    }
+  }, []);
 
   const handleIsEdit = () => setIsEdit(isEdit => !isEdit);
   const handleIsSlideShow = () => setIsSlideShow(isSlideShow => !isSlideShow);
@@ -118,15 +119,15 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
   return (
     <CardFrontContainer $isFlipped={isFlipped}>
 
-      <CardHeader title={book.title} author={book.author} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleIsSlideShow={handleIsSlideShow} />
+      <CardHeader title={bookDetails.title} authorDetails={authorDetails} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleIsSlideShow={handleIsSlideShow} />
 
-      <BookImage pictureLink={book.picture_link} isEdit={isEdit} editTimer={editTimer} handleFlip={handleFlip} />
+      <BookImage pictureLink={bookDetails.picture_link} isEdit={isEdit} editTimer={editTimer} handleFlip={handleFlip} />
 
       <div className='col-start-2 col-end-3 row-start-4 row-end-20 flex flex-col overflow-hidden'>
-        <DetailsView readDetails={readDetails} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} />
-        {book.reader_book.read_instance.length === 1
-          ? <ReadInstance readInstance={book.reader_book.read_instance[0]} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} />
-          : <ReaderBook readerBook={book.reader_book} isEdit={isEdit} editTimer={editTimer} handleIsReading={handleIsReading} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} />
+        <DetailsView viewDetails={viewDetails} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} />
+        {readerBook.read_instance.length === 1
+          ? <ReadInstance readInstance={readerBook.read_instance[0]} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} />
+          : <ReaderBook readerBook={readerBook} isEdit={isEdit} editTimer={editTimer} handleIsReading={handleIsReading} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} />
         }
       </div>
 
@@ -137,9 +138,9 @@ const CardFront = ({ book, isFlipped, handleFlip }: { book: BookITF; isFlipped: 
       <StyledEdit size={22} $isEdit={isEdit} $editTimer={editTimer} onClick={() => handleIsEdit()} />
 
       <CSSTransition in={isSlideShow} timeout={slideShowTimer} classNames='slide' nodeRef={cardFrontRef} unmountOnExit>
-        <SlideShowContainer ref={cardFrontRef} $src={book.picture_link} $slideShowTimer={slideShowTimer}>
+        <SlideShowContainer ref={cardFrontRef} $src={bookDetails.picture_link} $slideShowTimer={slideShowTimer}>
           <div className='z-10 h-4/5 w-11/12 p-4 rounded-tl-2xl overflow-y-scroll whitespace-pre-wrap select-text bg-trueGray-50 bg-opacity-60 text-xs font-Helvetica'>
-            {book.blurb}
+            {bookDetails.blurb}
           </div>
         </SlideShowContainer>
       </CSSTransition>

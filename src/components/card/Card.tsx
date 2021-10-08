@@ -18,13 +18,30 @@ const CardContainer = styled.div`
 
 const Card = ({ book }: { book: BookITF }) => {
   const [ isFlipped, setIsFlipped ] = useState<boolean>(false);
-
   const handleFlip = () => setIsFlipped(isFlipped => !isFlipped);
+
+  const { reader_book: readerBook, ...bookInfo } = book;
+  // const [ bookDetails, setBookDetails ] = useState(bookInfo)
+  // const [ authorDetails, setAuthorDetails ] = useState(book.author);
+
+  const bookDetails = bookInfo;
+  const authorDetails = book.author;
+
+  // const handleUpdateAuthorList = (arr: string[]) => {
+  //   //for each author in array insert into sql
+  //     //get back ba_id and create new authorDetails object with ba_id and full_name
+  // };
+
+  // const handleDeleteAuthorList = (authorIdList: string[]) => {
+  //   authorList.forEach(id => {
+  //     //send DELETE statement to API
+  //   })
+  // }
 
   return (
     <CardContainer>
-      <CardFront book={book} isFlipped={isFlipped} handleFlip={handleFlip} />
-      <CardBack isFlipped={isFlipped} handleFlip={handleFlip} />
+      <CardFront bookDetails={bookDetails} authorDetails={authorDetails} readerBook={readerBook} isFlipped={isFlipped} handleFlip={handleFlip} />
+      <CardBack bookDetails={bookDetails} authorDetails={authorDetails} isFlipped={isFlipped} handleFlip={handleFlip} />
     </CardContainer>
   )
 }

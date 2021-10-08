@@ -9,7 +9,7 @@ import { LeftArrow } from '@styled-icons/boxicons-regular/LeftArrow';
 
 interface CardHeaderPropsITF {
   title: string;
-  author: string[];
+  authorDetails: {ba_id: number, full_name: string}[];
   isSlideShow: boolean;
   slideShowTimer: number;
   handleIsSlideShow: Function;
@@ -63,9 +63,9 @@ const StyledLeftArrow = styled(LeftArrow)<{ $slideShowTimer: number }>`
   }
 `;
 
-const CardHeader = ({ title, author, isSlideShow, slideShowTimer, handleIsSlideShow }: CardHeaderPropsITF) => {
+const CardHeader = ({ title, authorDetails, isSlideShow, slideShowTimer, handleIsSlideShow }: CardHeaderPropsITF) => {
 
-  const authors = author.join(', ');
+  const authorStr = authorDetails.map(author => author.full_name).join(', ');
   const cardHeaderRef = useRef(null);
   const bookTitleRef = useRef<HTMLParagraphElement>(null);
   const bookAuthorRef = useRef<HTMLParagraphElement>(null);
@@ -94,7 +94,7 @@ const CardHeader = ({ title, author, isSlideShow, slideShowTimer, handleIsSlideS
 
       <div className='relative -mt-1.5 ml-2 mr-5 flex justify-end'>
         <div className='ml-16 overflow-hidden'>
-          {!isAuthorOverflow ? <StyledText author ref={bookAuthorRef}>{authors}</StyledText> : <OverflowText author text={authors} />}
+          {!isAuthorOverflow ? <StyledText author ref={bookAuthorRef}>{authorStr}</StyledText> : <OverflowText author text={authorStr} />}
         </div>
       </div>
 
