@@ -4,10 +4,7 @@ import tw, { styled, css } from 'twin.macro';
 
 
 interface AuthorTagPropsITF {
-  author: {
-    ba_id: number,
-    full_name: string
-  };
+  author: { ba_id: number, full_name: string } | string;
   handleDeleteAuthor: Function;
 }
 
@@ -44,7 +41,7 @@ const AuthorTag = ({ author, handleDeleteAuthor }: AuthorTagPropsITF) => {
   useEffect(() => {
     if (isMouseDown) {
       deleteTimeout = setTimeout(() => {
-        handleDeleteAuthor(author.ba_id);
+        typeof author === 'string' ? handleDeleteAuthor(author) : handleDeleteAuthor(author.ba_id);
         setIsMouseDown(false);
         clearTimeout(deleteTimeout);
       }, holdTimer);
@@ -60,7 +57,7 @@ const AuthorTag = ({ author, handleDeleteAuthor }: AuthorTagPropsITF) => {
 
   return (
     <AuthorTagContainer $isMouseDown={isMouseDown} $hoverTimer={hoverTimer} $holdTimer={holdTimer} onMouseDown={handleMouseDown} onMouseUp={handleStopTimeout} onMouseLeave={handleStopTimeout}>
-      <p className='pr-1'>{author.full_name}</p>
+      <p className='pr-1'>{typeof author === 'string' ? author : author.full_name}</p>
       <StyledRiDeleteBack2Line $hoverTimer={hoverTimer} />
     </AuthorTagContainer>
   )

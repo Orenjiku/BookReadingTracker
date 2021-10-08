@@ -61,6 +61,7 @@ const CardBack = ({ bookDetails, authorDetails, isFlipped, handleFlip }: CardBac
   const [ authorList, setAuthorList ] = useState(authorDetails);
   const [ newAuthor, setNewAuthor ] = useState('');
   const [ newAuthorList, setNewAuthorList ] = useState<string[]>([]);
+  const [ deleteAuthorIdList, setDeleteAuthorIdList ] = useState<number[]>([]);
   const [ totalPages, setTotalPages ] = useState(bookDetails.total_pages);
   const [ publishedDate, setPublishedDate ] = useState(bookDetails.published_date);
   const [ publishedDateEdition, setPublishedDateEdition ] = useState(bookDetails.published_date_edition);
@@ -79,6 +80,8 @@ const CardBack = ({ bookDetails, authorDetails, isFlipped, handleFlip }: CardBac
     setPublishedDate(bookDetails.published_date);
     setPublishedDateEdition(bookDetails.published_date_edition);
     setPictureLink(bookDetails.picture_link);
+    setNewAuthorList([]);
+    setDeleteAuthorIdList([]);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,6 +106,14 @@ const CardBack = ({ bookDetails, authorDetails, isFlipped, handleFlip }: CardBac
     const idx = authorListClone.findIndex(author => author.ba_id === ba_id);
     authorListClone.splice(idx, 1);
     setAuthorList(authorListClone);
+    setDeleteAuthorIdList([...deleteAuthorIdList, ba_id])
+  };
+
+  const handleDeleteNewAuthor = (name: string) => {
+    const newAuthorListClone = [...newAuthorList];
+    const idx = newAuthorListClone.findIndex(author => author === name);
+    newAuthorListClone.splice(idx, 1);
+    setNewAuthorList(newAuthorListClone);
   };
 
   return (
@@ -143,11 +154,13 @@ const CardBack = ({ bookDetails, authorDetails, isFlipped, handleFlip }: CardBac
           </Label>
 
           <div className='flex flex-wrap'>
-            {/* {newAuthorList.length > 0 && newAuthorList.map(author =>
-              <AuthorTag key={author.ba_id} author={author} handleDeleteAuthor={handleDeleteAuthor} />
-            )} */}
-            {authorList.length > 0 && authorList.map(author =>
-              <AuthorTag key={author.ba_id} author={author} handleDeleteAuthor={handleDeleteAuthor} />
+            {newAuthorList.length > 0 && newAuthorList.map(authorName =>
+              <AuthorTag key={authorName} author={authorName} handleDeleteAuthor={handleDeleteNewAuthor} />
+            )}
+          </div>
+          <div className='flex flex-wrap'>
+            {authorList.length > 0 && authorList.map(authorDetails =>
+              <AuthorTag key={authorDetails.ba_id} author={authorDetails} handleDeleteAuthor={handleDeleteAuthor} />
             )}
           </div>
 
