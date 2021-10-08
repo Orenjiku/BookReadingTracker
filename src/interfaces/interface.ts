@@ -27,7 +27,7 @@ export interface ReaderBookITF {
 }
 
 export interface BookITF extends BookDetailsITF {
-  author: {ba_id: number, full_name: string}[];
+  author: string[];
   reader_book: ReaderBookITF;
 }
 

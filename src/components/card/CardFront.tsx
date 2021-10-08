@@ -75,7 +75,7 @@ const StyledEdit = styled(Edit)<{ $isEdit: boolean, $editTimer: number }>`
   `}
 `;
 
-const CardFront = ({ bookDetails, authorDetails, readerBook, isFlipped, handleFlip }: { bookDetails: BookDetailsITF; authorDetails: {ba_id: number, full_name: string}[]; readerBook: ReaderBookITF; isFlipped: boolean; handleFlip: Function }) => {
+const CardFront = ({ bookDetails, author, readerBook, isFlipped, handleFlip }: { bookDetails: BookDetailsITF; author: string[]; readerBook: ReaderBookITF; isFlipped: boolean; handleFlip: Function }) => {
 
   const [ isEdit, setIsEdit ] = useState(false);
   const [ isSlideShow, setIsSlideShow ] = useState(false);
@@ -119,7 +119,7 @@ const CardFront = ({ bookDetails, authorDetails, readerBook, isFlipped, handleFl
   return (
     <CardFrontContainer $isFlipped={isFlipped}>
 
-      <CardHeader title={bookDetails.title} authorDetails={authorDetails} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleIsSlideShow={handleIsSlideShow} />
+      <CardHeader title={bookDetails.title} author={author} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleIsSlideShow={handleIsSlideShow} />
 
       <BookImage pictureLink={bookDetails.picture_link} isEdit={isEdit} editTimer={editTimer} handleFlip={handleFlip} />
 

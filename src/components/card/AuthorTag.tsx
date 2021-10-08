@@ -4,7 +4,8 @@ import tw, { styled, css } from 'twin.macro';
 
 
 interface AuthorTagPropsITF {
-  author: { ba_id: number, full_name: string } | string;
+  author: string;
+  fromList: 'author' | 'newAuthor'
   handleDeleteAuthor: Function;
 }
 
@@ -31,7 +32,7 @@ const AuthorTagContainer = styled.div<{ $isMouseDown: boolean; $hoverTimer: numb
     `}
   }
 `;
-const AuthorTag = ({ author, handleDeleteAuthor }: AuthorTagPropsITF) => {
+const AuthorTag = ({ author, fromList, handleDeleteAuthor }: AuthorTagPropsITF) => {
   const [ isMouseDown, setIsMouseDown ] = useState(false);
   const hoverTimer = 300;
   const holdTimer = 800;
@@ -41,7 +42,7 @@ const AuthorTag = ({ author, handleDeleteAuthor }: AuthorTagPropsITF) => {
   useEffect(() => {
     if (isMouseDown) {
       deleteTimeout = setTimeout(() => {
-        typeof author === 'string' ? handleDeleteAuthor(author) : handleDeleteAuthor(author.ba_id);
+        handleDeleteAuthor(author, fromList);
         setIsMouseDown(false);
         clearTimeout(deleteTimeout);
       }, holdTimer);
@@ -57,7 +58,7 @@ const AuthorTag = ({ author, handleDeleteAuthor }: AuthorTagPropsITF) => {
 
   return (
     <AuthorTagContainer $isMouseDown={isMouseDown} $hoverTimer={hoverTimer} $holdTimer={holdTimer} onMouseDown={handleMouseDown} onMouseUp={handleStopTimeout} onMouseLeave={handleStopTimeout}>
-      <p className='pr-1'>{typeof author === 'string' ? author : author.full_name}</p>
+      <p className='pr-1'>{author}</p>
       <StyledRiDeleteBack2Line $hoverTimer={hoverTimer} />
     </AuthorTagContainer>
   )

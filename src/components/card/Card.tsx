@@ -25,7 +25,7 @@ const Card = ({ book }: { book: BookITF }) => {
   // const [ authorDetails, setAuthorDetails ] = useState(book.author);
 
   const bookDetails = bookInfo;
-  const authorDetails = book.author;
+  const author = book.author;
 
   // const handleUpdateAuthorList = (arr: string[]) => {
   //   //for each author in array insert into sql
@@ -40,8 +40,8 @@ const Card = ({ book }: { book: BookITF }) => {
 
   return (
     <CardContainer>
-      <CardFront bookDetails={bookDetails} authorDetails={authorDetails} readerBook={readerBook} isFlipped={isFlipped} handleFlip={handleFlip} />
-      <CardBack bookDetails={bookDetails} authorDetails={authorDetails} isFlipped={isFlipped} handleFlip={handleFlip} />
+      <CardFront bookDetails={bookDetails} author={author} readerBook={readerBook} isFlipped={isFlipped} handleFlip={handleFlip} />
+      <CardBack bookDetails={bookDetails} author={author} isFlipped={isFlipped} handleFlip={handleFlip} />
     </CardContainer>
   )
 }

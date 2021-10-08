@@ -7,7 +7,7 @@ import AuthorTag from './AuthorTag';
 
 interface CardBackPropsITF {
   bookDetails: BookDetailsITF;
-  authorDetails: {ba_id: number, full_name: string}[];
+  author: string[];
   isFlipped: boolean;
   handleFlip: Function;
 }
@@ -56,12 +56,12 @@ const StyledBsPlusSquare = styled(BsPlusSquare)`
   ${tw`ml-1 stroke-current text-trueGray-100 cursor-pointer`};
 `;
 
-const CardBack = ({ bookDetails, authorDetails, isFlipped, handleFlip }: CardBackPropsITF) => {
+const CardBack = ({ bookDetails, author, isFlipped, handleFlip }: CardBackPropsITF) => {
   const [ title, setTitle ] = useState(bookDetails.title);
-  const [ authorList, setAuthorList ] = useState(authorDetails);
+  const [ authorList, setAuthorList ] = useState<string[]>(author);
   const [ newAuthor, setNewAuthor ] = useState('');
   const [ newAuthorList, setNewAuthorList ] = useState<string[]>([]);
-  const [ deleteAuthorIdList, setDeleteAuthorIdList ] = useState<number[]>([]);
+  const [ deleteAuthorList, setDeleteAuthorList ] = useState<string[]>([]);
   const [ totalPages, setTotalPages ] = useState(bookDetails.total_pages);
   const [ publishedDate, setPublishedDate ] = useState(bookDetails.published_date);
   const [ publishedDateEdition, setPublishedDateEdition ] = useState(bookDetails.published_date_edition);
@@ -76,12 +76,12 @@ const CardBack = ({ bookDetails, authorDetails, isFlipped, handleFlip }: CardBac
     setTitle(bookDetails.title);
     setFormat(bookDetails.book_format);
     setTotalPages(bookDetails.total_pages);
-    setAuthorList(authorDetails);
+    setAuthorList(author);
     setPublishedDate(bookDetails.published_date);
     setPublishedDateEdition(bookDetails.published_date_edition);
     setPictureLink(bookDetails.picture_link);
     setNewAuthorList([]);
-    setDeleteAuthorIdList([]);
+    setDeleteAuthorList([]);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,26 +95,19 @@ const CardBack = ({ bookDetails, authorDetails, isFlipped, handleFlip }: CardBac
   };
 
   const handleAddAuthor = () => {
-    if (newAuthor !== '' && !authorList.find(author => author.full_name === newAuthor) && !newAuthorList.find(author => author === newAuthor)) {
+    if (newAuthor !== '' && !authorList.includes(newAuthor) && !newAuthorList.includes(newAuthor)) {
       setNewAuthorList([...newAuthorList, newAuthor]);
       setNewAuthor('');
     }
   };
 
-  const handleDeleteAuthor = (ba_id: number) => {
-    const authorListClone = [...authorList];
-    const idx = authorListClone.findIndex(author => author.ba_id === ba_id);
+  const handleDeleteAuthor = (authorName: string, fromList: 'author' | 'newAuthor') => {
+    const authorListClone = fromList === 'author' ? [...authorList] : [...newAuthorList];
+    const idx = authorListClone.indexOf(authorName);
     authorListClone.splice(idx, 1);
-    setAuthorList(authorListClone);
-    setDeleteAuthorIdList([...deleteAuthorIdList, ba_id])
-  };
-
-  const handleDeleteNewAuthor = (name: string) => {
-    const newAuthorListClone = [...newAuthorList];
-    const idx = newAuthorListClone.findIndex(author => author === name);
-    newAuthorListClone.splice(idx, 1);
-    setNewAuthorList(newAuthorListClone);
-  };
+    fromList === 'author' ? setAuthorList(authorListClone) : setNewAuthorList(authorListClone);
+    setDeleteAuthorList([...deleteAuthorList, authorName])
+  }
 
   return (
     <CardBackContainer $isFlipped={isFlipped}>
@@ -154,13 +147,13 @@ const CardBack = ({ bookDetails, authorDetails, isFlipped, handleFlip }: CardBac
           </Label>
 
           <div className='flex flex-wrap'>
-            {newAuthorList.length > 0 && newAuthorList.map(authorName =>
-              <AuthorTag key={authorName} author={authorName} handleDeleteAuthor={handleDeleteNewAuthor} />
+            {newAuthorList.length > 0 && newAuthorList.map(author =>
+              <AuthorTag key={author} author={author} fromList={'newAuthor'} handleDeleteAuthor={handleDeleteAuthor} />
             )}
           </div>
           <div className='flex flex-wrap'>
-            {authorList.length > 0 && authorList.map(authorDetails =>
-              <AuthorTag key={authorDetails.ba_id} author={authorDetails} handleDeleteAuthor={handleDeleteAuthor} />
+            {authorList.length > 0 && authorList.map(author =>
+              <AuthorTag key={author} author={author} fromList={'author'} handleDeleteAuthor={handleDeleteAuthor} />
             )}
           </div>
 

@@ -10,21 +10,15 @@ FROM
               b.id AS b_id,
               b.title,
               (
-              SELECT
-                     json_agg(row_to_json(authors_agg)) AS author
-              FROM
-                     (
                      SELECT
-                            ba.id AS ba_id,
-                            a.full_name
+                            array_agg(full_name ORDER BY a.last_name ASC) AS author
                      FROM
                             author AS a
-                            INNER JOIN book_author AS ba ON b.id = ba.book_id
+                            INNER JOIN book_author AS ba ON a.id = ba.author_id
                      WHERE
-                            a.id = ba.author_id
-                     ORDER BY
-                            a.last_name ASC
-                     ) AS authors_agg
+                            ba.book_id = b.id
+                     GROUP BY
+                            b.id
               ),
               b.published_date,
               b.published_date_edition,
