@@ -267,7 +267,7 @@ $$ LANGUAGE plpgsql;
 \set book_20_published_date_edition '2020/03/17'
 \set book_20_book_format 'Paperback'
 \set book_20_total_pages 416
-\set book_20_blurb 'Warhammer 40,000 fans rejoice - Belisarius Cawl has his own novel! Join him on his journey to the abandoned world of Sotha which hides a long-buried secret… and an ancient evil. \n\nBelisarius Cawl, Archmagos Dominus of the Adeptus Mechanicus is the most brilliant mind alive. For 10,000 years he has furthered the cause of mankind, working under the aegis of the Emperor and Lord Commander Roboute Guilliman to prevent the inexorable march of the alien and the traitor. Many call him heretic, but all must recognise the magnitude of his achievements, for who else but he was entrusted to create a new generation of Space Marines? Who else but the great Belisarius Cawl could even accomplish such a task? \nNow, in the wake of the Great Rift and the Indomitus Crusade, his ambitions bring him to the long-dead world of Sotha, once home to the Scythes of the Emperor, now a barren wasteland devoured by the vile Tyranids. Accompanied by Tetrarch Felix and his elite warriors, it is here that Cawl believes the lynchpin of his mysterious Great Work lies. But uncovering it is a near impossible task, one in which the Archmagos must overcome an ancient evil that threatens to extinguish the last hope of humanity.'
+\set book_20_blurb 'Warhammer 40,000 fans rejoice - Belisarius Cawl has his own novel! Join him on his journey to the abandoned world of Sotha which hides a long-buried secret… and an ancient evil. \n\nBelisarius Cawl, Archmagos Dominus of the Adeptus Mechanicus is the most brilliant mind alive. For 10,000 years he has furthered the cause of mankind, working under the aegis of the Emperor and Lord Commander Roboute Guilliman to prevent the inexorable march of the alien and the traitor. Many call him heretic, but all must recognise the magnitude of his achievements, for who else but he was entrusted to create a new generation of Space Marines? Who else but the great Belisarius Cawl could even accomplish such a task? \n\nNow, in the wake of the Great Rift and the Indomitus Crusade, his ambitions bring him to the long-dead world of Sotha, once home to the Scythes of the Emperor, now a barren wasteland devoured by the vile Tyranids. Accompanied by Tetrarch Felix and his elite warriors, it is here that Cawl believes the lynchpin of his mysterious Great Work lies. But uncovering it is a near impossible task, one in which the Archmagos must overcome an ancient evil that threatens to extinguish the last hope of humanity.'
 \set book_20_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1562505193l/51085980._SX318_SY475_.jpg'
 
 \set book_21_title 'Deathwatch: The Omnibus'
@@ -276,7 +276,7 @@ $$ LANGUAGE plpgsql;
 \set book_21_published_date_edition '2017/11/28'
 \set book_21_book_format 'Paperback'
 \set book_21_total_pages 960
-\set book_21_blurb 'New omnibus of novels and short stories featuring the Deathwatch, alien-hunting Space Marines who undertake special ops-style missions in the 41st millennium. /n/nThe Deathwatch are the elite. Recruited from numerous Space Marine Chapters, their mission is simple: exterminate any xenos threat to the Imperium. Assembled into kill-teams, the Deathwatch are expert alien hunters, equipped to undertake any mission in any environment. None are as dedicated or as skilled in the brutal art of alien annihilation. This action-packed omnibus contains three separate novels written by Steve Parker, Ian St Martin and Justin D Hill, along with a dozen of the best short stories ever written about the Imperium''s premier xenos hunters.'
+\set book_21_blurb 'New omnibus of novels and short stories featuring the Deathwatch, alien-hunting Space Marines who undertake special ops-style missions in the 41st millennium. \n\nThe Deathwatch are the elite. Recruited from numerous Space Marine Chapters, their mission is simple: exterminate any xenos threat to the Imperium. Assembled into kill-teams, the Deathwatch are expert alien hunters, equipped to undertake any mission in any environment. None are as dedicated or as skilled in the brutal art of alien annihilation. This action-packed omnibus contains three separate novels written by Steve Parker, Ian St Martin and Justin D Hill, along with a dozen of the best short stories ever written about the Imperium''s premier xenos hunters.'
 \set book_21_picture_link 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1502692222l/34466780.jpg'
 
 
@@ -571,6 +571,11 @@ SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-09-29', 49, 49, 
 SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-09-30', 52, 101, 10.52);
 SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-01', 51, 152, 15.83);
 SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-02', 48, 200, 20.83);
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-03', 52, 252, 26.25);
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-04', 49, 301, 31.35);
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-05', 49, 350, 36.46);
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-06', 45, 395, 41.15);
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-07', 64, 459, 47.81);
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
 -- FUNCTION insert_author
