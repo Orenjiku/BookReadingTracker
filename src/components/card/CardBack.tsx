@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import tw, { styled, css } from 'twin.macro';
-import { BsPlusSquare } from 'react-icons/bs';
-// import { RiDeleteBack2Line } from 'react-icons/ri';
 import { BookDetailsITF } from '../../interfaces/interface';
+import LabelInput from './LabelInput';
 import AuthorTag from './AuthorTag';
+import { BsPlusSquare } from 'react-icons/bs';
+
 
 interface CardBackPropsITF {
   bookDetails: BookDetailsITF;
@@ -13,7 +14,7 @@ interface CardBackPropsITF {
 }
 
 const CardBackContainer = styled.div<{ $isFlipped: boolean}>`
-  ${tw`absolute h-full w-full grid grid-cols-2 grid-rows-21`};
+  ${tw`absolute h-full w-full`};
   ${tw`bg-blueGray-200 bg-opacity-10 backdrop-filter backdrop-blur-sm`};
   ${tw`border-t border-l border-r border-blueGray-50 rounded-2xl shadow-xl`};
   backface-visibility: hidden;
@@ -24,36 +25,35 @@ const CardBackContainer = styled.div<{ $isFlipped: boolean}>`
     : css`pointer-events: none;`}
 `;
 
-const FormContainer = styled.div`
-  ${tw`row-start-3 row-end-20 col-start-1 col-end-3 mx-2 px-3 pt-2 pb-6 border border-trueGray-400 rounded-2xl overflow-y-scroll scrollbar-hide`}
+const Form = styled.form`
+  ${tw`h-full w-full grid grid-cols-2 grid-rows-21`}
 `;
 
-const Label = styled.label`
-  ${tw`text-sm`}
+const FormInput = styled.div`
+  ${tw`row-start-2 row-end-19 col-start-1 col-end-3 mx-2 px-3 py-1 border border-trueGray-400 rounded-2xl overflow-y-scroll scrollbar-hide`}
 `;
 
-const InputContainer = styled.div`
-  ${tw`flex flex-row-reverse mb-1`}
-`
-
-const InputTab = styled.div`
-  ${tw`h-auto w-1 rounded-tl rounded-bl bg-trueGray-50`};
-  transition: all 300ms linear;
-`;
-
-const Input = styled.input`
-  ${tw`text-base rounded-tr rounded-br w-full pl-1 bg-trueGray-50 bg-opacity-20 border-b border-trueGray-50 outline-none`};
-  transition: all 300ms linear;
-  &:focus {
-    ${tw`border-red-500 border-opacity-60`};
-  }
-  &:focus + ${InputTab} {
-    ${tw`bg-red-500 bg-opacity-60`};
-  }
+const StyledBsPlusSquareContainer = styled.div`
+  ${tw`flex items-end mb-1 ml-2`}
 `;
 
 const StyledBsPlusSquare = styled(BsPlusSquare)`
-  ${tw`ml-1 stroke-current text-trueGray-100 cursor-pointer`};
+  ${tw`stroke-current text-trueGray-100 cursor-pointer`};
+  transition: all 300ms linear;
+  &:hover {
+    ${tw`text-red-500 opacity-60`}
+  }
+`;
+
+const StyledButton = styled.button`
+  ${tw`h-auto w-auto py-0.5 px-4 mx-2 rounded border border-coolGray-50 flex justify-center items-center`};
+  ${tw`bg-blueGray-300 bg-opacity-40 font-Charm-400`};
+  ${tw`backdrop-filter backdrop-blur`};
+  transition: opacity 500ms linear;
+  &:hover {
+    ${tw`bg-blueGray-400 bg-opacity-40`};
+    ${tw`transition-colors duration-300 ease-linear`};
+  }
 `;
 
 const CardBack = ({ bookDetails, author, isFlipped, handleFlip }: CardBackPropsITF) => {
@@ -62,11 +62,33 @@ const CardBack = ({ bookDetails, author, isFlipped, handleFlip }: CardBackPropsI
   const [ newAuthor, setNewAuthor ] = useState('');
   const [ newAuthorList, setNewAuthorList ] = useState<string[]>([]);
   const [ deleteAuthorList, setDeleteAuthorList ] = useState<string[]>([]);
+  const [ format, setFormat] = useState(bookDetails.book_format);
   const [ totalPages, setTotalPages ] = useState(bookDetails.total_pages);
   const [ publishedDate, setPublishedDate ] = useState(bookDetails.published_date);
-  const [ publishedDateEdition, setPublishedDateEdition ] = useState(bookDetails.published_date_edition);
-  const [ format, setFormat] = useState(bookDetails.book_format);
+  const [ editionDate, setEditionDate ] = useState(bookDetails.edition_date);
   const [ pictureLink, setPictureLink ] = useState(bookDetails.picture_link);
+  // const [ blurb, setBlurb ] = useState(bookDetails.blurb);
+
+  const [ isSubmitTitle, setIsSubmitTitle ]= useState(false);
+  const [ isSubmitFormat, setIsSubmitFormat ]= useState(false);
+  const [ isSubmitTotalPages, setIsSubmitTotalPages ]= useState(false);
+  const [ isSubmitAuthor, setIsSubmitAuthor ]= useState(false);
+  const [ isSubmitPublishedDate, setIsSubmitPublishedDate ]= useState(false);
+  const [ isSubmitEditionDate, setIsSubmitEditionDate ]= useState(false);
+  const [ isSubmitPictureLink, setIsSubmitPictureLink ]= useState(false);
+  // const [ isSubmitBlurb, setIsSubmitBlurb ]= useState(false);
+  const [ isSubmitComplete, setIsSubmitComplete ] = useState(false);
+
+  const inputFunctionsList: {[key: string]: Function[]} = {
+    title: [setTitle, setIsSubmitTitle],
+    newAuthor: [setNewAuthor, setIsSubmitAuthor],
+    format: [setFormat, setIsSubmitFormat],
+    totalPages: [setTotalPages, setIsSubmitTotalPages],
+    publishedDate: [setPublishedDate, setIsSubmitPublishedDate],
+    editionDate: [setEditionDate, setIsSubmitEditionDate],
+    pictureLink: [setPictureLink, setIsSubmitPictureLink],
+    // blurb: [setBlurb, setIsSubmitBlurb]
+  };
 
   useEffect(() => {
     handleReset();
@@ -78,20 +100,14 @@ const CardBack = ({ bookDetails, author, isFlipped, handleFlip }: CardBackPropsI
     setTotalPages(bookDetails.total_pages);
     setAuthorList(author);
     setPublishedDate(bookDetails.published_date);
-    setPublishedDateEdition(bookDetails.published_date_edition);
+    setEditionDate(bookDetails.edition_date);
     setPictureLink(bookDetails.picture_link);
+    // setBlurb(bookDetails.blurb);
     setNewAuthorList([]);
     setDeleteAuthorList([]);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.name === 'title') setTitle(e.target.value);
-    else if (e.target.name === 'newAuthor') setNewAuthor(e.target.value);
-    else if (e.target.name === 'totalPages') setTotalPages(Number(e.target.value));
-    else if (e.target.name === 'publishedDate') setPublishedDate(e.target.value);
-    else if (e.target.name === 'publishedDateEdition') setPublishedDateEdition(e.target.value);
-    else if (e.target.name === 'format') setFormat(e.target.value);
-    else if (e.target.name === 'pictureLink') setPictureLink(e.target.value);
+    for (let input in inputFunctionsList) {
+      inputFunctionsList[input][1](false);
+    }
   };
 
   const handleAddAuthor = () => {
@@ -101,50 +117,86 @@ const CardBack = ({ bookDetails, author, isFlipped, handleFlip }: CardBackPropsI
     }
   };
 
+  const handleEnterAuthor = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleAddAuthor();
+    }
+  };
+
   const handleDeleteAuthor = (authorName: string, fromList: 'author' | 'newAuthor') => {
     const authorListClone = fromList === 'author' ? [...authorList] : [...newAuthorList];
     const idx = authorListClone.indexOf(authorName);
     authorListClone.splice(idx, 1);
-    fromList === 'author' ? setAuthorList(authorListClone) : setNewAuthorList(authorListClone);
-    setDeleteAuthorList([...deleteAuthorList, authorName])
+    if (fromList === 'author') {
+      setAuthorList(authorListClone);
+      setDeleteAuthorList([...deleteAuthorList, authorName]);
+    } else {
+      setNewAuthorList(authorListClone);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    inputFunctionsList[e.target.name][0](e.target.value);
+    inputFunctionsList[e.target.name][1](false);
+  };
+
+  const handleSubmit = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    if (title !== bookDetails.title) await submitInput({title});
+    if (newAuthorList.length > 1 || deleteAuthorList.length > 1) await submitInput({author: {newAuthorList, deleteAuthorList}});
+    if (format !== bookDetails.book_format) await submitInput({format});
+    if (totalPages !== bookDetails.total_pages) await submitInput({totalPages});
+    if (publishedDate !== bookDetails.published_date) await submitInput({publishedDate});
+    if (editionDate !== bookDetails.edition_date) await submitInput({editionDate});
+    if (pictureLink !== bookDetails.picture_link) await submitInput({pictureLink});
+    // if (blurb !== bookDetails.blurb) await submitInput({blurb});
+    setIsSubmitComplete(true);
+  };
+
+  const submitInput = async (data: {[key: string]: string | number | {[key: string]: string[]}}) => {
+    const key: string = Object.keys(data)[0];
+    const resource: {[key: string]: string} = {
+      title: 'title',
+      author: 'author',
+      format: 'book_format',
+      totalPages: 'total_pages',
+      publishedDate: 'published_date',
+      editionDate: 'edition_date',
+      pictureLink: 'picture_link',
+      blurb: 'blurb'
+    };
+    try {
+      const response = await fetch(`http://localhost:3000/1/${resource[key]}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({b_id: bookDetails.b_id, [resource[key]]: data[key]})
+      });
+      if (response.ok) {
+        inputFunctionsList[key][1](true);
+      }
+    } catch(err) {
+      console.log(err);
+    }
   }
 
   return (
     <CardBackContainer $isFlipped={isFlipped}>
-      <FormContainer>
-        <form>
+      <Form onSubmit={handleSubmit}>
+        <FormInput>
 
-          <Label onClick={e => e.preventDefault()}>Title:
-            <InputContainer>
-              <Input type='text' name='title' placeholder='Title' value={title} onChange={handleInputChange} spellCheck={false}></Input>
-              <InputTab />
-            </InputContainer>
-          </Label>
+          <LabelInput label={'Title'} name={'title'} value={title} placeholder={'title'} submitStatus={[isSubmitTitle, isSubmitComplete]} handleInputChange={handleInputChange} />
 
-          <div className='flex'>
-            <Label className='mr-1' onClick={e => e.preventDefault()}>Format:
-              <InputContainer>
-                <Input type='text' name='format' placeholder='Format' value={format} onChange={handleInputChange}></Input>
-                <InputTab />
-              </InputContainer>
-            </Label>
-            <Label className='ml-1' onClick={e => e.preventDefault()}>Total Pages:
-              <InputContainer>
-                <Input type='text' name='totalPages' placeholder='Total Pages' value={totalPages} onChange={handleInputChange}></Input>
-                <InputTab />
-              </InputContainer>
-            </Label>
+          <div className='flex gap-x-2'>
+            <LabelInput label={'Format'} name={'format'} value={format} placeholder={'format'} submitStatus={[isSubmitFormat, isSubmitComplete]} handleInputChange={handleInputChange} />
+            <LabelInput label={'Total Pages'} name={'totalPages'} value={totalPages} placeholder={'total pages'} submitStatus={[isSubmitTotalPages, isSubmitComplete]} handleInputChange={handleInputChange} />
           </div>
 
-          <Label onClick={e => e.preventDefault()}>Author:
-            <div className='flex'>
-              <InputContainer>
-                <Input type='text' name='newAuthor' value={newAuthor} onChange={handleInputChange} spellCheck={false}></Input>
-                <InputTab />
-              </InputContainer>
+          <div className='relative flex'>
+            <LabelInput label={'Author'} name={'newAuthor'} value={newAuthor} placeholder={''} submitStatus={[isSubmitAuthor, isSubmitComplete]} handleInputChange={handleInputChange} additionalFunction={handleEnterAuthor} />
+            <StyledBsPlusSquareContainer>
               <StyledBsPlusSquare size={25} onClick={handleAddAuthor}/>
-            </div>
-          </Label>
+            </StyledBsPlusSquareContainer>
+          </div>
 
           <div className='flex flex-wrap'>
             {newAuthorList.length > 0 && newAuthorList.map(author =>
@@ -157,35 +209,21 @@ const CardBack = ({ bookDetails, author, isFlipped, handleFlip }: CardBackPropsI
             )}
           </div>
 
-          <div className='flex'>
-            <Label className='mr-1' onClick={e => e.preventDefault()}>Date Published:
-              <InputContainer>
-                <Input type='text' name='publishedDate' placeholder='Published Date' value={publishedDate} onChange={handleInputChange}></Input>
-                <InputTab />
-              </InputContainer>
-            </Label>
-            <Label className='ml-1' onClick={e => e.preventDefault()}>Edition Published:
-              <InputContainer>
-                <Input type='text' name='publishedDateEdition' placeholder='Published Date Edition' value={publishedDateEdition} onChange={handleInputChange}></Input>
-                <InputTab />
-              </InputContainer>
-            </Label>
+          <div className='flex gap-x-2'>
+            <LabelInput label={'Date Published'} name={'publishedDate'} value={publishedDate} placeholder={'2000-01-01'} submitStatus={[isSubmitPublishedDate, isSubmitComplete]} handleInputChange={handleInputChange} />
+            <LabelInput label={'Edition Published'} name={'editionDate'} value={editionDate} placeholder={'2000-01-01'} submitStatus={[isSubmitEditionDate, isSubmitComplete]} handleInputChange={handleInputChange} />
           </div>
 
-          <Label onClick={e => e.preventDefault()}>Picture Link:
-            <InputContainer>
-              <Input type='text' name='pictureLink' placeholder='Picture Link' value={pictureLink} onChange={handleInputChange} spellCheck={false}></Input>
-              <InputTab />
-            </InputContainer>
-          </Label>
+          <LabelInput label={'Picture Link'} name={'pictureLink'} value={pictureLink} placeholder={'picture link'} submitStatus={[isSubmitPictureLink, isSubmitComplete]} handleInputChange={handleInputChange} />
 
-        </form>
-      </FormContainer>
+        </FormInput>
 
-      <div className='row-start-20 row-end-22 col-start-1 col-end-3 flex items-center justify-end'>
-        <button className='h-7 w-28 bg-blueGray-800' onClick={() => handleFlip()} ></button>
-      </div>
+        <div className='row-start-19 row-end-22 col-start-1 col-end-3 pr-5 flex items-center justify-end'>
+          <StyledButton type='button' onClick={() => handleFlip()}>Cancel</StyledButton>
+          <StyledButton type='submit'>Save</StyledButton>
+        </div>
 
+      </Form>
     </CardBackContainer>
   )
 }
