@@ -43,7 +43,6 @@ const AuthorTag = ({ author, fromList, handleDeleteAuthor }: AuthorTagPropsITF) 
     if (isMouseDown) {
       deleteTimeout = setTimeout(() => {
         handleDeleteAuthor(author, fromList);
-        setIsMouseDown(false);
         clearTimeout(deleteTimeout);
       }, holdTimer);
     }
