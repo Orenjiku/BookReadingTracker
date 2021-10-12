@@ -35,7 +35,7 @@ export interface BookDetailsITF {
   b_id: number;
   title: string;
   published_date: string;
-  published_date_edition: string;
+  edition_date: string;
   book_format: string;
   total_pages: number;
   blurb: string;
