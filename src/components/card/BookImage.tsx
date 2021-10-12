@@ -11,7 +11,7 @@ interface BookImagePropsITF {
 }
 
 const EditBookButton = styled.button<{ $editTimer: number }>`
-  ${tw`h-8 w-24 rounded border border-coolGray-50 flex justify-center items-center`};
+  ${tw`h-auto w-auto py-1 px-4 mx-2 rounded border border-coolGray-50 flex justify-center items-center`};
   ${tw`bg-blueGray-300 bg-opacity-40 text-trueGray-50 font-Charm-400`};
   ${tw`backdrop-filter backdrop-blur`};
   --duration: ${({ $editTimer }) => `${$editTimer}ms`};
