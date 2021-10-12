@@ -20,7 +20,7 @@ const queryCurrentlyReading = (reader_id: string) => {
                         b.id
                 ),
                 b.published_date,
-                b.published_date_edition,
+                b.edition_date,
                 b.book_format,
                 b.total_pages,
                 b.blurb,

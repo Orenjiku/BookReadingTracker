@@ -14,7 +14,7 @@ CREATE TABLE book (
   title VARCHAR CONSTRAINT uq_book_title UNIQUE NOT NULL,
   title_sort VARCHAR NOT NULL,
   published_date DATE,
-  published_date_edition DATE,
+  edition_date DATE,
   book_format VARCHAR,
   total_pages INT,
   blurb TEXT,

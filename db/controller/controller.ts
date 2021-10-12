@@ -33,6 +33,20 @@ const controller = {
     } catch (err) {
       res.sendStatus(400);
     }
+  },
+
+  postTitle: async (req: Request, res: Response) => {
+    const readerId = req.params.id;
+    const { b_id, title } = req.body;
+    console.log(b_id, title);
+    res.sendStatus(200);
+  },
+
+  postBookFormat: async (req: Request, res: Response) => {
+    const readerId = req.params.id;
+    const { b_id, book_format } = req.body;
+    console.log(b_id, book_format);
+    res.sendStatus(200);
   }
 }
 
