@@ -19,19 +19,19 @@ const DetailsViewContainer = styled.div<{ $isExpanded: boolean; $expandTimer: nu
   ${tw`relative overflow-hidden`};
   min-height: 38%;
   max-height: 38%;
-  --duration: ${({ $expandTimer }) => `${$expandTimer}ms`};
-  transition: all var(--duration) ease-out;
+  --expandDuration: ${({ $expandTimer }) => `${$expandTimer}ms`};
+  transition: all var(--expandDuration) ease-out;
   ${({ $isExpanded }) => $isExpanded && css`
     min-height: 0;
     max-height: 0;
-    transition: all var(--duration) ease-out calc(var(--duration) * 0.2);
+    transition: all var(--expandDuration) ease-out calc(var(--expandDuration) * 0.5);
   `}
 `;
 
 const DetailsViewInnerContainer = styled.div<{ $editTimer: number; $isExpanded: boolean; $expandTimer: number }>`
   ${tw`relative h-full w-full bg-blueGray-500 bg-opacity-40 `};
   --expandDuration: ${({ $expandTimer }) => `${$expandTimer}ms`};
-  transition: all calc(var(--expandDuration) * 0.5) linear calc(var(--expandDuration) * 0.8);
+  transition: all calc(var(--expandDuration) * 0.5) linear var(--expandDuration);
   ${({ $isExpanded }) => $isExpanded && css`
     ${tw`opacity-0`};
     transition: all calc(var(--expandDuration) * 0.5) linear;

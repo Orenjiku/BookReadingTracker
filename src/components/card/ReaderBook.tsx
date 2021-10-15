@@ -21,7 +21,7 @@ const ReaderBookHeader = styled.div`
   height: 1.75rem;
 `;
 
-const ReadInstanceTransitionContainer = styled.div`
+const ReadInstanceContainer = styled.div`
   height: calc(100% - 1.75rem);
   --duration: 300ms;
   --timing-function: linear;
@@ -111,9 +111,9 @@ const ReaderBook = ({ readerBook, isEdit, editTimer, handleIsReading, isExpanded
 
       <TransitionGroup component={null} childFactory={child => cloneElement(child, {classNames: transitionClassNames})}>
         <CSSTransition key={`ReadInstance-${currIdx}`} timeout={300} unmountOnExit /* nodeRef={readerBookRef} */>
-          <ReadInstanceTransitionContainer /* ref={readerBookRef} */>
+          <ReadInstanceContainer /* ref={readerBookRef} */>
             <ReadInstance key={readerBook.read_instance[currIdx].ri_id} readInstance={readerBook.read_instance[currIdx]} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} />
-          </ReadInstanceTransitionContainer>
+          </ReadInstanceContainer>
         </CSSTransition>
       </TransitionGroup>
 

@@ -68,7 +68,7 @@ const AnimatedLine = styled.div<{ $isExpanded: boolean }>`
   `}
 `;
 
-const ReadEntryTransitionContainer = styled.div<{ $readEntryListAppendTimer: number }>`
+const ReadEntryContainer = styled.div<{ $readEntryListAppendTimer: number }>`
   &:nth-child(2) {
     ${tw`mt-1`};
   }
@@ -104,7 +104,16 @@ const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer
 
   // const bookReadRef = useRef(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const { refYOverflowing, refYScrollBegin, refYScrollEnd } = useYOverflow({scrollContainerRef, isExpanded, expandTimer, readEntryListLength: readEntryList.length, readEntryListAppendTimer, readEntrySelectToggle, readEntrySelectTimer, isEdit});
+  const overflowTriggers = {
+    isExpanded,
+    expandTimer,
+    readEntryListLength: readEntryList.length,
+    readEntryListAppendTimer,
+    readEntrySelectToggle,
+    readEntrySelectTimer,
+    isEdit
+  };
+  const { refYOverflowing, refYScrollBegin, refYScrollEnd } = useYOverflow({scrollContainerRef, overflowTriggers});
 
   const handleToggle = () => {
     setReadEntrySelectToggle(readEntrySelectToggle => !readEntrySelectToggle);
@@ -138,9 +147,9 @@ const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer
         <TransitionGroup component={null}>
           {readEntryList.map(readEntry => (
             <CSSTransition key={`cssT-${readEntry.re_id}`} timeout={readEntryListAppendTimer} classNames='slideFade' /* nodeRef={bookReadRef} */ >
-              <ReadEntryTransitionContainer $readEntryListAppendTimer={readEntryListAppendTimer} /* ref={bookReadRef} */>
+              <ReadEntryContainer $readEntryListAppendTimer={readEntryListAppendTimer} /* ref={bookReadRef} */>
                 <ReadEntry key={readEntry.re_id} readEntry={readEntry} isEdit={isEdit} editTimer={editTimer} readEntrySelectTimer={readEntrySelectTimer} handleToggle={handleToggle} handleDeleteReadEntry={handleDeleteReadEntry}/>
-              </ReadEntryTransitionContainer>
+              </ReadEntryContainer>
             </CSSTransition>
           ))}
         </TransitionGroup>
