@@ -34,10 +34,10 @@ export interface BookITF extends BookDetailsITF {
 export interface BookDetailsITF {
   b_id: number;
   title: string;
-  published_date: string;
-  edition_date: string;
   book_format: string;
   total_pages: number;
+  published_date: string;
+  edition_date: string;
+  picture_url: string;
   blurb: string;
-  picture_link: string;
 }
