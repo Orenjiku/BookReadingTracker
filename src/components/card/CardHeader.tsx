@@ -12,7 +12,7 @@ interface CardHeaderPropsITF {
   author: string[];
   isSlideShow: boolean;
   slideShowTimer: number;
-  handleIsSlideShow: Function;
+  handleShowSlideShow: Function;
 }
 
 const CardHeaderContainer = styled.div`
@@ -63,7 +63,7 @@ const StyledLeftArrow = styled(LeftArrow)<{ $slideShowTimer: number }>`
   }
 `;
 
-const CardHeader = ({ title, author, isSlideShow, slideShowTimer, handleIsSlideShow }: CardHeaderPropsITF) => {
+const CardHeader = ({ title, author, isSlideShow, slideShowTimer, handleShowSlideShow }: CardHeaderPropsITF) => {
   const cardHeaderRef = useRef(null);
   const bookTitleRef = useRef<HTMLParagraphElement>(null);
   const bookAuthorRef = useRef<HTMLParagraphElement>(null);
@@ -74,7 +74,7 @@ const CardHeader = ({ title, author, isSlideShow, slideShowTimer, handleIsSlideS
   const [ isArrowAnimating, setIsArrowAnimating ] = useState(false);
 
   const handleArrowClick = () => {
-    handleIsSlideShow();
+    handleShowSlideShow();
     setIsArrowAnimating(true);
   };
 

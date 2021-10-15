@@ -122,14 +122,17 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
   }, []);
 
   const handleIsEdit = () => setIsEdit(isEdit => !isEdit);
-  const handleIsSlideShow = () => setIsSlideShow(isSlideShow => !isSlideShow);
+
+  const handleShowSlideShow = () => setIsSlideShow(isSlideShow => !isSlideShow);
+
   const handleIsReading = (isReading: boolean) => setIsReading(isReading);
+
   const handleIsExpanded = () => setIsExpanded(isExpanded => !isExpanded);
 
   return (
     <CardFrontContainer $isFlipped={isFlipped} $flipTimer={flipTimer}>
 
-      <CardHeader title={bookDetails.title} author={author} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleIsSlideShow={handleIsSlideShow} />
+      <CardHeader title={bookDetails.title} author={author} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleShowSlideShow={handleShowSlideShow} />
 
       <BookImage pictureUrl={bookDetails.picture_url} isEdit={isEdit} editTimer={editTimer} handleFlip={handleFlip} />
 
