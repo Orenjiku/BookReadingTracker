@@ -12,14 +12,24 @@ import CompletionSlider from './CompletionSlider';
 import { Edit } from '@styled-icons/boxicons-regular/Edit';
 
 
-const CardFrontContainer = styled.div<{ $isFlipped: boolean }>`
+interface CardFrontPropsITF {
+  bookDetails: BookDetailsITF;
+  author: string[];
+  readerBook: ReaderBookITF;
+  isFlipped: boolean;
+  flipTimer: number;
+  handleFlip: Function
+}
+
+const CardFrontContainer = styled.div<{ $isFlipped: boolean; $flipTimer: number }>`
   ${tw`absolute h-full w-full rounded-2xl grid grid-cols-2 grid-rows-21`};
   ${tw`bg-blueGray-200 bg-opacity-10 backdrop-filter backdrop-blur-sm`};
   ${tw`border-t border-l border-r border-blueGray-50 rounded-2xl shadow-xl`};
   ${tw`overflow-hidden select-none`};
   backface-visibility: hidden;
   transform: perspective(1200px) rotateY(0deg);
-  transition: transform 600ms linear;
+  --flipDuration: ${({ $flipTimer }) => `${$flipTimer}ms`};
+  transition: transform var(--flipDuration) linear;
   ${({ $isFlipped }) => $isFlipped && css`
     transform: perspective(1200px) rotateY(-180deg);
     pointer-events: none;
@@ -75,14 +85,14 @@ const StyledEdit = styled(Edit)<{ $isEdit: boolean, $editTimer: number }>`
   `}
 `;
 
-const CardFront = ({ bookDetails, author, readerBook, isFlipped, handleFlip }: { bookDetails: BookDetailsITF; author: string[]; readerBook: ReaderBookITF; isFlipped: boolean; handleFlip: Function }) => {
+const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, handleFlip }: CardFrontPropsITF) => {
 
   const [ isEdit, setIsEdit ] = useState(false);
   const [ isSlideShow, setIsSlideShow ] = useState(false);
   const [ isReading, setIsReading ] = useState<boolean>(false);
   const [ isExpanded, setIsExpanded ] = useState(false);
 
-  const cardFrontRef = useRef(null);
+  const slideShowRef = useRef(null);
 
   const pagesRead = readerBook.read_instance.reduce((acc, cur) => acc += cur.pages_read, 0);
   const totalDaysRead = readerBook.read_instance.reduce((acc, cur) => acc += cur.days_read, 0);
@@ -102,7 +112,7 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, handleFlip }: {
   ];
 
   const slideShowTimer = 800;
-  const expandTimer = 400;
+  const expandTimer = 300;
   const editTimer = 300;
 
   useEffect(() => {
@@ -117,11 +127,11 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, handleFlip }: {
   const handleIsExpanded = () => setIsExpanded(isExpanded => !isExpanded);
 
   return (
-    <CardFrontContainer $isFlipped={isFlipped}>
+    <CardFrontContainer $isFlipped={isFlipped} $flipTimer={flipTimer}>
 
       <CardHeader title={bookDetails.title} author={author} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleIsSlideShow={handleIsSlideShow} />
 
-      <BookImage pictureLink={bookDetails.picture_link} isEdit={isEdit} editTimer={editTimer} handleFlip={handleFlip} />
+      <BookImage pictureUrl={bookDetails.picture_url} isEdit={isEdit} editTimer={editTimer} handleFlip={handleFlip} />
 
       <div className='col-start-2 col-end-3 row-start-4 row-end-20 flex flex-col overflow-hidden'>
         <DetailsView viewDetails={viewDetails} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} />
@@ -137,8 +147,8 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, handleFlip }: {
 
       <StyledEdit size={22} $isEdit={isEdit} $editTimer={editTimer} onClick={() => handleIsEdit()} />
 
-      <CSSTransition in={isSlideShow} timeout={slideShowTimer} classNames='slide' nodeRef={cardFrontRef} unmountOnExit>
-        <SlideShowContainer ref={cardFrontRef} $src={bookDetails.picture_link} $slideShowTimer={slideShowTimer}>
+      <CSSTransition in={isSlideShow} timeout={slideShowTimer} classNames='slide' nodeRef={slideShowRef} unmountOnExit>
+        <SlideShowContainer ref={slideShowRef} $src={bookDetails.picture_url} $slideShowTimer={slideShowTimer}>
           <div className='z-10 h-4/5 w-11/12 p-4 rounded-tl-2xl overflow-y-scroll whitespace-pre-wrap select-text bg-trueGray-50 bg-opacity-60 text-xs font-Helvetica'>
             {bookDetails.blurb}
           </div>
