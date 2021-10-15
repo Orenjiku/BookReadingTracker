@@ -10,12 +10,15 @@ interface AuthorTagPropsITF {
 }
 
 const StyledRiDeleteBack2Line = styled(RiDeleteBack2Line)<{ $hoverTimer: number }>`
+  transform: rotateY(180deg);
   transition: all ${({ $hoverTimer }) => $hoverTimer}ms linear;
 `;
 
 const AuthorTagContainer = styled.div<{ $isMouseDown: boolean; $hoverTimer: number; $holdTimer: number }>`
-  ${tw`relative flex items-center font-Charm-400 text-sm border border-trueGray-50 rounded px-1 mr-1 mb-1.5 cursor-pointer select-none overflow-hidden`};
-  transition: border ${({ $hoverTimer }) => $hoverTimer}ms linear;
+  ${tw`relative flex items-center font-Charm-400 text-sm border border-trueGray-50 rounded px-1 mr-1 my-0.5 cursor-pointer select-none overflow-hidden`};
+  --hoverDuration: ${({ $hoverTimer }) => `${$hoverTimer}ms`};
+  --holdDuration: ${({ $holdTimer }) => `${$holdTimer}ms`};
+  transition: border var(--hoverDuration) linear;
   &:hover {
     ${tw`border-red-500 border-opacity-60`};
   }
@@ -25,17 +28,19 @@ const AuthorTagContainer = styled.div<{ $isMouseDown: boolean; $hoverTimer: numb
   &::after {
     content: '';
     ${tw`absolute h-full left-0 w-0 bg-red-400 bg-opacity-40`};
-    transition: all 200ms linear;
-    ${({ $isMouseDown, $holdTimer }) => $isMouseDown && css`
+    z-index: -1;
+    transition: all 150ms linear;
+    ${({ $isMouseDown }) => $isMouseDown && css`
       ${tw`h-full w-full`};
-      transition: all ${$holdTimer}ms linear;
+      transition: all var(--holdDuration) linear;
     `}
   }
 `;
+
 const AuthorTag = ({ author, fromList, handleDeleteAuthor }: AuthorTagPropsITF) => {
   const [ isMouseDown, setIsMouseDown ] = useState(false);
   const hoverTimer = 300;
-  const holdTimer = 800;
+  const holdTimer = 600;
 
   let deleteTimeout: ReturnType<typeof setTimeout>;
 
@@ -43,20 +48,20 @@ const AuthorTag = ({ author, fromList, handleDeleteAuthor }: AuthorTagPropsITF) 
     if (isMouseDown) {
       deleteTimeout = setTimeout(() => {
         handleDeleteAuthor(author, fromList);
-        clearTimeout(deleteTimeout);
       }, holdTimer);
     }
     return () => clearTimeout(deleteTimeout);
   }, [isMouseDown]);
 
-  const handleMouseDown = () => setIsMouseDown(true);
-  const handleStopTimeout = () => {
+  const handleStartDelete = () => setIsMouseDown(true);
+
+  const handleStopDelete = () => {
     setIsMouseDown(false);
     clearTimeout(deleteTimeout);
   };
 
   return (
-    <AuthorTagContainer $isMouseDown={isMouseDown} $hoverTimer={hoverTimer} $holdTimer={holdTimer} onMouseDown={handleMouseDown} onMouseUp={handleStopTimeout} onMouseLeave={handleStopTimeout}>
+    <AuthorTagContainer $isMouseDown={isMouseDown} $hoverTimer={hoverTimer} $holdTimer={holdTimer} onMouseDown={handleStartDelete} onMouseUp={handleStopDelete} onMouseLeave={handleStopDelete}>
       <p className='pr-1'>{author}</p>
       <StyledRiDeleteBack2Line $hoverTimer={hoverTimer} />
     </AuthorTagContainer>
