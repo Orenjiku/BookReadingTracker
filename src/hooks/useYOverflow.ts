@@ -1,15 +1,21 @@
 import { useState, useEffect, RefObject } from "react";
 
 
-interface useYOverflowPropsITF {
+interface useYOverflowITF {
   scrollContainerRef: RefObject<HTMLDivElement>;
-  isExpanded: boolean;
-  expandTimer: number;
-  readEntrySelectToggle: boolean;
-  readEntrySelectTimer: number;
-  readEntryListLength: number;
-  readEntryListAppendTimer: number
-  isEdit: boolean;
+  overflowTriggers: {
+    isExpanded?: boolean;
+    expandTimer?: number;
+    readEntryListLength?: number;
+    readEntryListAppendTimer?: number;
+    readEntrySelectToggle?: boolean;
+    readEntrySelectTimer?: number;
+    isEdit?: boolean;
+    // isShowBlurb?: boolean;
+    // blurbSlideTimer?: number;
+    newAuthorList?: string[];
+    deleteAuthorList?: string[];
+  };
 }
 
 interface useYOverflowReturnITF {
@@ -18,7 +24,7 @@ interface useYOverflowReturnITF {
   refYScrollEnd: boolean;
 }
 
-const useYOverflow = ({ scrollContainerRef: ref, isExpanded, expandTimer, readEntryListLength, readEntryListAppendTimer, readEntrySelectToggle, readEntrySelectTimer, isEdit }: useYOverflowPropsITF): useYOverflowReturnITF => {
+const useYOverflow = ({scrollContainerRef: ref, overflowTriggers}: useYOverflowITF): useYOverflowReturnITF => {
     const [refYOverflowing, setRefYOverflowing] = useState(false);
     const [refYScrollBegin, setRefYScrollBegin] = useState(true);
     const [refYScrollEnd, setRefYScrollEnd] = useState(false);
@@ -26,8 +32,7 @@ const useYOverflow = ({ scrollContainerRef: ref, isExpanded, expandTimer, readEn
     useEffect(() => {
       if (!ref.current) return
       const isYOverflowing = ref.current.scrollHeight > ref.current.clientHeight;
-
-      if (refYOverflowing !== isYOverflowing) setRefYOverflowing(isYOverflowing);
+      setRefYOverflowing(isYOverflowing);
 
       const handleScroll = () => {
         const offsetBottom = ref?.current?.scrollHeight! - ref?.current?.clientHeight!;
@@ -36,53 +41,65 @@ const useYOverflow = ({ scrollContainerRef: ref, isExpanded, expandTimer, readEn
       }
 
       ref.current.addEventListener('scroll', handleScroll);
-
-      return () => {
-        ref.current?.removeEventListener('scroll', handleScroll);
-      }
+      return () => ref.current?.removeEventListener('scroll', handleScroll);
     }, []);
 
     //delay scroll height measurement until end of readInstance expand transition
     useEffect(() => {
       const scrollHeightMeasureDelay = setTimeout(() => {
         const isYOverflowing = ref.current && ref.current.scrollHeight > ref.current.clientHeight || false;
-        if (refYOverflowing !== isYOverflowing) setRefYOverflowing(isYOverflowing);
-      }, expandTimer);
+        setRefYOverflowing(isYOverflowing);
+      }, overflowTriggers.expandTimer);
 
       return () => clearTimeout(scrollHeightMeasureDelay);
-    }, [isExpanded]);
+    }, [overflowTriggers.isExpanded]);
 
-      //delay scroll height measurement until end of ReadEntry enter or exit transition
-      useEffect(() => {
+    //delay scroll height measurement until end of ReadEntry enter or exit transition
+    useEffect(() => {
       const scrollHeightMeasureDelay = setTimeout(() => {
         const isYOverflowing = ref.current && ref.current.scrollHeight > ref.current.clientHeight || false;
-        if (refYOverflowing !== isYOverflowing) setRefYOverflowing(isYOverflowing);
-      }, readEntryListAppendTimer);
+        setRefYOverflowing(isYOverflowing);
+    }, overflowTriggers.readEntryListAppendTimer);
 
       return () => clearTimeout(scrollHeightMeasureDelay);
-    }, [readEntryListLength]);
+    }, [overflowTriggers.readEntryListLength]);
 
-      //delay scroll height measurement until end of isReadEntrySelected transition
-      useEffect(() => {
+    //delay scroll height measurement until end of isReadEntrySelected transition
+    useEffect(() => {
       const scrollHeightMeasureDelay = setTimeout(() => {
         const isYOverflowing = ref.current && ref.current.scrollHeight > ref.current.clientHeight || false;
-        if (refYOverflowing !== isYOverflowing) setRefYOverflowing(isYOverflowing);
-      }, readEntrySelectTimer);
+        setRefYOverflowing(isYOverflowing);
+    }, overflowTriggers.readEntrySelectTimer);
 
-      return () => clearTimeout(scrollHeightMeasureDelay);
-    }, [readEntrySelectToggle]);
+    return () => clearTimeout(scrollHeightMeasureDelay);
+  }, [overflowTriggers.readEntrySelectToggle]);
 
     //delay scroll height measurement in edge case: isExpand: true, isEdit: true, >= 8 readEntry with all Delete Containers open and then changing isEdit to false.
     useEffect(() => {
       const scrollHeightMeasureDelay = setTimeout(() => {
         const isYOverflowing = ref.current && ref.current.scrollHeight > ref.current.clientHeight || false;
-        if (refYOverflowing !== isYOverflowing) setRefYOverflowing(isYOverflowing);
-      }, readEntrySelectTimer);
+        setRefYOverflowing(isYOverflowing);
+      }, overflowTriggers.readEntrySelectTimer);
 
       return () => clearTimeout(scrollHeightMeasureDelay);
-    }, [isEdit]);
+    }, [overflowTriggers.isEdit]);
 
-    return {refYOverflowing, refYScrollBegin, refYScrollEnd};
+    // useEffect(() => {
+    //   const scrollHeightMeasureDelay = setTimeout(() => {
+    //     const isYOverflowing = ref.current && ref.current.scrollHeight > ref.current.clientHeight || false;
+    //     setRefYOverflowing(isYOverflowing);
+    //   }, overflowTriggers.blurbSlideTimer);
+
+    //   return () => clearTimeout(scrollHeightMeasureDelay);
+    // }, [overflowTriggers.isShowBlurb]);
+
+    //check overflow when adding or removing authors from CardBack.
+    useEffect(() => {
+      const isYOverflowing = ref.current && ref.current.scrollHeight > ref.current.clientHeight || false;
+      setRefYOverflowing(isYOverflowing);
+    }, [overflowTriggers.newAuthorList, overflowTriggers.deleteAuthorList])
+
+    return { refYOverflowing, refYScrollBegin, refYScrollEnd };
 }
 
 export default useYOverflow;
