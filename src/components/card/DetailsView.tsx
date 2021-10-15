@@ -31,7 +31,7 @@ const DetailsViewContainer = styled.div<{ $isExpanded: boolean; $expandTimer: nu
 const DetailsViewInnerContainer = styled.div<{ $editTimer: number; $isExpanded: boolean; $expandTimer: number }>`
   ${tw`relative h-full w-full bg-blueGray-500 bg-opacity-40 `};
   --expandDuration: ${({ $expandTimer }) => `${$expandTimer}ms`};
-  transition: all calc(var(--duration) * 0.5) linear calc(var(--expandDuration) * 0.8);
+  transition: all calc(var(--expandDuration) * 0.5) linear calc(var(--expandDuration) * 0.8);
   ${({ $isExpanded }) => $isExpanded && css`
     ${tw`opacity-0`};
     transition: all calc(var(--expandDuration) * 0.5) linear;
@@ -55,9 +55,7 @@ const DetailsViewInnerContainer = styled.div<{ $editTimer: number; $isExpanded: 
 
 const ViewContainer = styled.div`
   ${tw`absolute h-full w-full flex justify-center`};
-  --duration: 200ms;
-  --timing-function: linear;
-  --transition: all var(--duration) var(--timing-function);
+  --transition: all 200ms linear;
   &.forward-enter {
     opacity: 0;
     transform: translateX(100%);
@@ -122,9 +120,7 @@ const ValueDisplay = styled.p<{ $value: number }>`
 const GradientPane = styled.div<{ $left?: boolean; $right?: boolean }>`
   ${tw`relative h-full cursor-pointer`};
   min-width: 200%;
-  --translateXDuration: 100ms;
-  --translateXFunction: linear;
-  --transition: transform var(--translateXDuration) var(--translateXFunction);
+  --transition: transform 100ms linear;
   transition: var(--transition);
   ${({ $left }) => $left && css`
     transform: translateX(-50%);

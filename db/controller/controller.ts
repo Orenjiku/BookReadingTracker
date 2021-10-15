@@ -31,7 +31,7 @@ const controller = {
       const result = await db.query(queryDailyReads(readerId));
       res.status(200).json(result.rows);
     } catch (err) {
-      res.sendStatus(400);
+      res.sendStatus(200);
     }
   },
 
@@ -42,10 +42,52 @@ const controller = {
     res.sendStatus(200);
   },
 
+  postAuthor: async (req: Request, res: Response) => {
+    const readerId = req.params.id;
+    const { b_id, author } = req.body;
+    console.log(b_id, author);
+    res.sendStatus(200);
+  },
+
   postBookFormat: async (req: Request, res: Response) => {
     const readerId = req.params.id;
     const { b_id, book_format } = req.body;
     console.log(b_id, book_format);
+    res.sendStatus(200);
+  },
+
+  postTotalPages: async (req: Request, res: Response) => {
+    const readerId = req.params.id;
+    const { b_id, total_pages} = req.body;
+    console.log(b_id, total_pages);
+    res.sendStatus(200);
+  },
+
+  postPublishedDate: async (req: Request, res: Response) => {
+    const readerId = req.params.id;
+    const { b_id, published_date } = req.body;
+    console.log(b_id, published_date);
+    res.sendStatus(200);
+  },
+
+  postEditionDate: async (req: Request, res: Response) => {
+    const readerId = req.params.id;
+    const { b_id, edition_date } = req.body;
+    console.log(b_id, edition_date);
+    res.sendStatus(200);
+  },
+
+  postPictureUrl: async (req: Request, res: Response) => {
+    const readerId = req.params.id;
+    const { b_id, picture_url } = req.body;
+    console.log(b_id, picture_url);
+    res.sendStatus(200);
+  },
+
+  postBlurb: async (req: Request, res: Response) => {
+    const readerId = req.params.id;
+    const { b_id, blurb } = req.body;
+    console.log(b_id, blurb);
     res.sendStatus(200);
   }
 }
