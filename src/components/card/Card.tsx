@@ -19,29 +19,30 @@ const CardContainer = styled.div`
 const Card = ({ book }: { book: BookITF }) => {
   const [ isFlipped, setIsFlipped ] = useState<boolean>(false);
   const handleFlip = () => setIsFlipped(isFlipped => !isFlipped);
+  const flipTimer = 600;
 
-  const { reader_book: readerBook, ...bookInfo } = book;
-  // const [ bookDetails, setBookDetails ] = useState(bookInfo)
-  // const [ authorDetails, setAuthorDetails ] = useState(book.author);
+  const { reader_book: readerBook, author: authorInfo, ...bookInfo } = book;
 
-  const bookDetails = bookInfo;
-  const author = book.author;
+  const [ bookDetails, setBookDetails ] = useState(bookInfo);
+  const [ authorDetails, setAuthorDetails ] = useState(authorInfo);
 
-  // const handleUpdateAuthorList = (arr: string[]) => {
-  //   //for each author in array insert into sql
-  //     //get back ba_id and create new authorDetails object with ba_id and full_name
-  // };
+  const handleUpdateBookDetails = (updatedBookDetails: {[key: string]: string | number}) => {
+    setBookDetails(prevBookDetails => ({...prevBookDetails, ...updatedBookDetails}));
+  };
 
-  // const handleDeleteAuthorList = (authorIdList: string[]) => {
-  //   authorList.forEach(id => {
-  //     //send DELETE statement to API
-  //   })
-  // }
+  const handleUpdateAuthorDetails = (updatedAuthorDetails: string[]) => {
+    const sortedUpdatedAuthorDetails = [...updatedAuthorDetails].sort((a, b) => {
+      const lastNameA = a.split(' ').slice(-1)[0];
+      const lastNameB = b.split(' ').slice(-1)[0];
+      return lastNameA.localeCompare(lastNameB);
+    })
+    setAuthorDetails(sortedUpdatedAuthorDetails);
+  };
 
   return (
     <CardContainer>
-      <CardFront bookDetails={bookDetails} author={author} readerBook={readerBook} isFlipped={isFlipped} handleFlip={handleFlip} />
-      <CardBack bookDetails={bookDetails} author={author} isFlipped={isFlipped} handleFlip={handleFlip} />
+      <CardFront bookDetails={bookDetails} author={authorDetails} readerBook={readerBook} isFlipped={isFlipped} flipTimer={flipTimer} handleFlip={handleFlip} />
+      <CardBack bookDetails={bookDetails} author={authorDetails} isFlipped={isFlipped} flipTimer={flipTimer} handleFlip={handleFlip} handleUpdateBookDetails={handleUpdateBookDetails} handleUpdateAuthorDetails={handleUpdateAuthorDetails}/>
     </CardContainer>
   )
 }
