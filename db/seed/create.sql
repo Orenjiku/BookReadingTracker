@@ -13,12 +13,12 @@ CREATE TABLE book (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_book PRIMARY KEY,
   title VARCHAR CONSTRAINT uq_book_title UNIQUE NOT NULL,
   title_sort VARCHAR NOT NULL,
-  published_date DATE,
-  edition_date DATE,
   book_format VARCHAR,
   total_pages INT,
+  published_date DATE,
+  edition_date DATE,
+  picture_url VARCHAR,
   blurb TEXT,
-  picture_link VARCHAR,
   CONSTRAINT ck_book_total_pages CHECK (total_pages > 0)
 );
 

@@ -19,12 +19,12 @@ const queryCurrentlyReading = (reader_id: string) => {
                     GROUP BY
                         b.id
                 ),
-                b.published_date,
-                b.edition_date,
                 b.book_format,
                 b.total_pages,
+                b.published_date,
+                b.edition_date,
+                b.picture_url,
                 b.blurb,
-                b.picture_link,
                 (
                     SELECT
                         row_to_json(reader_book_agg) AS reader_book
