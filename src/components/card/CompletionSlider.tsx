@@ -99,7 +99,8 @@ const CompletionSlider = ({ isReading }: { isReading: boolean }) => {
     if (containerRef.current) {
       relativeSliderLeftStartPosition.current = containerRef.current.clientWidth * (sliderButtonWidth - 1);
     }
-    window.addEventListener('mouseup', endDrag)
+    window.addEventListener('mouseup', endDrag);
+    return () => window.removeEventListener('mouseup', endDrag);
   }, []);
 
   useEffect(() => {
