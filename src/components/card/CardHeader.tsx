@@ -68,8 +68,8 @@ const CardHeader = ({ title, author, isSlideShow, slideShowTimer, handleShowSlid
   const bookTitleRef = useRef<HTMLParagraphElement>(null);
   const bookAuthorRef = useRef<HTMLParagraphElement>(null);
 
-  const { isRefXOverflowing: isTitleOverflow } = useIsXOverflow(bookTitleRef);
-  const { isRefXOverflowing: isAuthorOverflow } = useIsXOverflow(bookAuthorRef);
+  const { isRefXOverflowing: isTitleOverflow } = useIsXOverflow(bookTitleRef, title);
+  const { isRefXOverflowing: isAuthorOverflow } = useIsXOverflow(bookAuthorRef, author);
 
   const [ isArrowAnimating, setIsArrowAnimating ] = useState(false);
 
@@ -92,7 +92,7 @@ const CardHeader = ({ title, author, isSlideShow, slideShowTimer, handleShowSlid
 
       <div className='relative -mt-1.5 ml-2 mr-5 flex justify-end'>
         <div className='ml-16 overflow-hidden'>
-          {!isAuthorOverflow ? <StyledText author ref={bookAuthorRef}>{author}</StyledText> : <OverflowText author text={author.join(', ')} />}
+          {!isAuthorOverflow ? <StyledText author ref={bookAuthorRef}>{author.join(', ')}</StyledText> : <OverflowText author text={author.join(', ')} />}
         </div>
       </div>
 

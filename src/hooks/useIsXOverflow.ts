@@ -1,6 +1,7 @@
 import { useState, useEffect, RefObject } from 'react';
 
-const useIsXOverflow = (ref: RefObject<HTMLElement>): {isRefXOverflowing: boolean} => {
+
+const useIsXOverflow = (ref: RefObject<HTMLElement>, trigger: string | string[]): {isRefXOverflowing: boolean} => {
   const [isRefXOverflowing, setIsRefXOverflowing] = useState(false);
 
   useEffect(() => {
@@ -14,6 +15,10 @@ const useIsXOverflow = (ref: RefObject<HTMLElement>): {isRefXOverflowing: boolea
 
     return () => { clearTimeout(delayTiming) };
   }, []);
+
+  useEffect(() => {
+    ref.current && ref.current.scrollWidth > ref.current.clientWidth ? setIsRefXOverflowing(true) : setIsRefXOverflowing(false);
+  }, [trigger])
 
   return {isRefXOverflowing};
 }
