@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useCountdown = (atEnd: boolean, holdTimer: number): { countdown: number } => {
+const useCountdown = (atEnd: boolean, holdTimer: number): number => {
   const [ countdown, setCountdown ] = useState(holdTimer / 1000);
   let interval: ReturnType<typeof setInterval>;
   let timeout: ReturnType<typeof setTimeout>;
@@ -26,7 +26,7 @@ const useCountdown = (atEnd: boolean, holdTimer: number): { countdown: number } 
     }
   }, [atEnd]);
 
-  return { countdown };
+  return countdown;
 }
 
 export default useCountdown;
