@@ -93,7 +93,7 @@ const CompletionSlider = ({ isReading }: { isReading: boolean }) => {
   const offsetLeft = relativeSliderLeftBoundedCurrentPosition.current - relativeSliderLeftStartPosition.current;
 
   const holdTimer = 3000;
-  const { countdown } = useCountdown(atEnd, holdTimer);
+  const countdown = useCountdown(atEnd, holdTimer);
 
   useEffect(() => {
     if (containerRef.current) {
