@@ -1,26 +1,18 @@
-import { useState, useEffect, RefObject } from 'react';
+import { useEffect, RefObject } from 'react';
 
 
-const useIsXOverflow = (ref: RefObject<HTMLElement>, trigger: string | string[]): {isRefXOverflowing: boolean} => {
-  const [isRefXOverflowing, setIsRefXOverflowing] = useState(false);
+const useIsXOverflow = (ref: RefObject<HTMLElement>, trigger: string | string[], handleIsOverflow: Function) => {
 
   useEffect(() => {
     if (!ref.current) return;
 
     const delayTiming = setTimeout(() => {
-      if (ref.current && ref.current.scrollWidth > ref.current.clientWidth) {
-        setIsRefXOverflowing(true);
-      }
+      ref.current && ref.current.scrollWidth > ref.current.clientWidth ? handleIsOverflow(true) : handleIsOverflow(false);
     }, 1000);
 
-    return () => { clearTimeout(delayTiming) };
-  }, []);
+    return () => clearTimeout(delayTiming);
+  }, [trigger]);
 
-  useEffect(() => {
-    ref.current && ref.current.scrollWidth > ref.current.clientWidth ? setIsRefXOverflowing(true) : setIsRefXOverflowing(false);
-  }, [trigger])
-
-  return {isRefXOverflowing};
 }
 
 export default useIsXOverflow;

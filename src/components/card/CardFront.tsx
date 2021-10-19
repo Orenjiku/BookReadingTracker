@@ -89,7 +89,7 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
 
   const [ isEdit, setIsEdit ] = useState(false);
   const [ isSlideShow, setIsSlideShow ] = useState(false);
-  const [ isReading, setIsReading ] = useState<boolean>(false);
+  const [ isReading, setIsReading ] = useState(false);
   const [ isExpanded, setIsExpanded ] = useState(false);
 
   const slideShowRef = useRef(null);
@@ -101,7 +101,6 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
   const maxDailyRead = Math.max(...readerBook.read_instance.reduce((acc, cur) => acc.concat(cur.max_daily_read), [] as number[]));
   const timesRead = readerBook.is_any_finished ? readerBook.read_instance.reduce((acc, cur) => acc += cur.is_finished ? 1 : 0, 0) : 0;
 
-  // const [ readDetails, setReadDetails ] = useState({pagesRead, totalDays, totalDaysRead, avgDailyRead, maxDailyRead});
   const viewDetails = [
     {key: 'Total Pages', value: bookDetails.total_pages},
     {key: 'Avg Daily Read', value: avgDailyRead},
@@ -121,18 +120,15 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
     }
   }, []);
 
-  const handleIsEdit = () => setIsEdit(isEdit => !isEdit);
-
   const handleShowSlideShow = () => setIsSlideShow(isSlideShow => !isSlideShow);
-
+  const handleIsEdit = () => setIsEdit(isEdit => !isEdit);
   const handleIsReading = (isReading: boolean) => setIsReading(isReading);
-
   const handleIsExpanded = () => setIsExpanded(isExpanded => !isExpanded);
 
   return (
     <CardFrontContainer $isFlipped={isFlipped} $flipTimer={flipTimer}>
 
-      <CardHeader title={bookDetails.title} author={author} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleShowSlideShow={handleShowSlideShow} />
+      <CardHeader title={bookDetails.title} author={author} isFlipped={isFlipped} flipTimer={flipTimer} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleShowSlideShow={handleShowSlideShow} />
 
       <BookImage pictureUrl={bookDetails.picture_url} isEdit={isEdit} editTimer={editTimer} handleFlip={handleFlip} />
 
