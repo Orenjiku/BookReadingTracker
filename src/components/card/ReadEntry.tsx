@@ -71,7 +71,7 @@ const ReadEntry = ({ readEntry, isEdit, editTimer, readEntrySelectTimer, handleT
   useEffect(() => {
     if (isMouseDown) {
       deleteTimeout = setTimeout(() => {
-        handleDeleteReadEntry(readEntry.re_id);
+        handleDeleteReadEntry(readEntry);
         setIsMouseDown(false);
       }, 1000);
     }

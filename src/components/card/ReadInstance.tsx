@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import {TransitionGroup, CSSTransition} from 'react-transition-group';
-import { ReadInstanceITF, ReadEntryITF } from '../../interfaces/interface';
+import { ReadInstanceITF } from '../../interfaces/interface';
 import ReadEntry from './ReadEntry';
 import useYOverflow from '../../hooks/useYOverflow';
 import { BsChevronDown, BsChevronUp, BsChevronExpand } from 'react-icons/bs';
@@ -15,6 +15,7 @@ interface ReadInstancePropsITF {
   isExpanded: boolean;
   expandTimer: number;
   handleIsExpanded: Function;
+  handleDeleteReadEntry: Function;
 }
 
 const ReadInstanceHeaderContainer = styled.div`
@@ -96,8 +97,8 @@ const ReadEntryContainer = styled.div<{ $readEntryListAppendTimer: number }>`
   }
 `;
 
-const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer, handleIsExpanded } : ReadInstancePropsITF) => {
-  const [ readEntryList, setReadEntryList ] = useState<ReadEntryITF[]>(readInstance.read_entry || []);
+const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer, handleIsExpanded, handleDeleteReadEntry } : ReadInstancePropsITF) => {
+  const readEntryList = readInstance.read_entry || [];
   const [ readEntrySelectToggle, setReadEntrySelectToggle ] = useState(false);
   const readEntryListAppendTimer = 500;
   const readEntrySelectTimer = 300;
@@ -115,15 +116,7 @@ const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer
   };
   const { refYOverflowing, refYScrollBegin, refYScrollEnd } = useYOverflow({scrollContainerRef, overflowTriggers});
 
-  const handleToggle = () => {
-    setReadEntrySelectToggle(readEntrySelectToggle => !readEntrySelectToggle);
-  };
-
-  const handleDeleteReadEntry = (readEntryId: number) => {
-    //add fetch function to delete from database then update after transaction completed
-    setReadEntryList(readEntryList.filter(readEntry => readEntry.re_id !== readEntryId));
-  };
-
+  const handleToggle = () => setReadEntrySelectToggle(readEntrySelectToggle => !readEntrySelectToggle);
 
   return (
     <div className='relative h-full w-full overflow-hidden'>
