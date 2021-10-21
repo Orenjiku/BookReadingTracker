@@ -15,7 +15,7 @@ interface DetailsViewPropsITF {
   expandTimer: number;
 }
 
-const DetailsViewContainer = styled.div<{ $isExpanded: boolean; $expandTimer: number }>`
+const ViewExpandContainer = styled.div<{ $isExpanded: boolean; $expandTimer: number }>`
   ${tw`relative overflow-hidden`};
   min-height: 38%;
   max-height: 38%;
@@ -28,7 +28,7 @@ const DetailsViewContainer = styled.div<{ $isExpanded: boolean; $expandTimer: nu
   `}
 `;
 
-const DetailsViewInnerContainer = styled.div<{ $editTimer: number; $isExpanded: boolean; $expandTimer: number }>`
+const ViewVerticalSlideFadeContainer = styled.div<{ $editTimer: number; $isExpanded: boolean; $expandTimer: number }>`
   ${tw`relative h-full w-full bg-blueGray-500 bg-opacity-40 `};
   --expandDuration: ${({ $expandTimer }) => `${$expandTimer}ms`};
   transition: all calc(var(--expandDuration) * 0.5) linear var(--expandDuration);
@@ -53,7 +53,7 @@ const DetailsViewInnerContainer = styled.div<{ $editTimer: number; $isExpanded: 
   }
 `;
 
-const ViewContainer = styled.div`
+const ViewHorizontalSlideContainer = styled.div`
   ${tw`absolute h-full w-full flex justify-center`};
   --transition: all 200ms linear;
   &.forward-enter {
@@ -172,26 +172,32 @@ const StyledBsCircleFill = styled(BsCircleFill)<{ $selected: boolean }>`
   }
 `;
 
-const EditViewContainer = styled.div<{ $editTimer: number }>`
+const EditViewContainer = styled.div<{ $editTimer: number; $isExpanded: boolean; $expandTimer: number  }>`
   ${tw`absolute top-0 left-0 h-full w-full overflow-hidden`};
-  --duration: ${({ $editTimer }) => `${$editTimer}ms`};
+  -expandDuration: ${({ $expandTimer }) => `${$expandTimer}ms`};
+  transition: all calc(var(--expandDuration) * 0.5) linear var(--expandDuration);
+  ${({ $isExpanded }) => $isExpanded && css`
+    ${tw`opacity-0`};
+    transition: all calc(var(--expandDuration) * 0.5) linear;
+  `}
+  --editDuration: ${({ $editTimer }) => `${$editTimer}ms`};
   &.slide-enter {
     transform: translateY(-100%);
   }
   &.slide-enter-active {
     transform: translateY(0%);
-    transition: transform var(--duration) linear;
+    transition: transform var(--editDuration) linear;
   }
   &.slide-exit-active {
     transform: translateY(-100%);
-    transition: transform var(--duration) linear;
+    transition: transform var(--editDuration) linear;
   }
 `;
 
 const DetailsView = ({ viewDetails, isEdit, editTimer, isExpanded, expandTimer }: DetailsViewPropsITF) => {
   const detailsViewInnerRef = useRef<HTMLDivElement>(null);
   const editViewRef = useRef<HTMLDivElement>(null);
-  const [ currIdx, setCurrIdx ] = useState<number>(0);
+  const [ currIdx, setCurrIdx ] = useState(0);
   const prevIdx = usePrevious(currIdx);
   const length = viewDetails.length;
   const classNames = ((currIdx > prevIdx && currIdx !== prevIdx + (length - 1)) || currIdx === prevIdx - (length - 1)) ? 'forward' : 'backward';
@@ -201,17 +207,17 @@ const DetailsView = ({ viewDetails, isEdit, editTimer, isExpanded, expandTimer }
   const prevSlide = () => setCurrIdx((currIdx + length - 1) % length);
 
   return (
-    <DetailsViewContainer $isExpanded={isExpanded} $expandTimer={expandTimer}>
+    <ViewExpandContainer $isExpanded={isExpanded} $expandTimer={expandTimer}>
 
       <CSSTransition in={!isEdit} timeout={editTimer} classNames='slide' nodeRef={detailsViewInnerRef} unmountOnExit>
+        <ViewVerticalSlideFadeContainer ref={detailsViewInnerRef} $editTimer={editTimer} $isExpanded={isExpanded} $expandTimer={expandTimer}>
 
-        <DetailsViewInnerContainer ref={detailsViewInnerRef} $editTimer={editTimer} $isExpanded={isExpanded} $expandTimer={expandTimer}>
           <TransitionGroup component={null} childFactory={child => cloneElement(child, {classNames})}>
             <CSSTransition timeout={200} key={`view-${currIdx}`} unmountOnExit /* nodeRef={detailsViewRef} */>
-              <ViewContainer /* ref={detailsViewRef} */>
+              <ViewHorizontalSlideContainer /* ref={detailsViewRef} */>
                 <ValueDisplay $value={viewDetails[currIdx].value}>{viewDetails[currIdx].value}</ValueDisplay>
                 <div className='absolute text-trueGray-50 text-xl font-AdventPro-400'>{viewDetails[currIdx].key}</div>
-              </ViewContainer>
+              </ViewHorizontalSlideContainer>
             </CSSTransition>
           </TransitionGroup>
 
@@ -230,17 +236,17 @@ const DetailsView = ({ viewDetails, isEdit, editTimer, isExpanded, expandTimer }
               <StyledBsCircleFill key={`BsCircleFill-${i}`} size={7} $selected={i === currIdx} {...(i !== currIdx && {onClick: () => setCurrIdx(i)})} />
               ))}
           </div>
-        </DetailsViewInnerContainer>
 
+        </ViewVerticalSlideFadeContainer>
       </CSSTransition>
 
       <CSSTransition in={isEdit} timeout={editTimer} classNames='slide' nodeRef={editViewRef} unmountOnExit>
-        <EditViewContainer ref={editViewRef} $editTimer={editTimer}>
+        <EditViewContainer ref={editViewRef} $editTimer={editTimer} $isExpanded={isExpanded} $expandTimer={expandTimer}>
           <EditView />
         </EditViewContainer>
       </CSSTransition>
 
-    </DetailsViewContainer>
+    </ViewExpandContainer>
   )
 }
 
