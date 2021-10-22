@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { RiDeleteBack2Line } from 'react-icons/ri';
 import tw, { styled, css } from 'twin.macro';
+import { RiDeleteBack2Line } from 'react-icons/ri';
 
 
 interface AuthorTagPropsITF {
@@ -15,7 +15,7 @@ const StyledRiDeleteBack2Line = styled(RiDeleteBack2Line)<{ $hoverTimer: number 
 `;
 
 const AuthorTagContainer = styled.div<{ $isMouseDown: boolean; $hoverTimer: number; $holdTimer: number }>`
-  ${tw`relative flex items-center font-Charm-400 text-sm border border-trueGray-50 rounded px-1 mr-1 my-0.5 cursor-pointer select-none overflow-hidden`};
+  ${tw`relative flex items-center font-Charm-400 text-sm border border-trueGray-50 rounded px-1 py-0.5 mr-1 my-0.5 cursor-pointer select-none overflow-hidden`};
   --hoverDuration: ${({ $hoverTimer }) => `${$hoverTimer}ms`};
   --holdDuration: ${({ $holdTimer }) => `${$holdTimer}ms`};
   transition: border var(--hoverDuration) linear;
