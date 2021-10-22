@@ -1,9 +1,9 @@
 import React, { useState, useEffect, cloneElement } from 'react';
 import tw, { styled } from 'twin.macro';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { ReadInstanceITF } from '../../interfaces/interface';
 import ReadInstance from './ReadInstance';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 
 interface ReaderBookPropsITF {
