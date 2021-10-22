@@ -27,4 +27,13 @@ const StyledOverflowText = styled(StyledText)<{ $isTranslatingLeft: boolean; $is
   `};
 `
 
-export { StyledText, StyledOverflowText }
+const StyledButton = styled.button`
+  ${tw`h-auto w-auto py-0.5 px-4 mx-1 rounded border border-coolGray-50 flex justify-center items-center overflow-hidden`};
+  ${tw`bg-blueGray-300 bg-opacity-40 font-Charm-400`};
+  ${tw`backdrop-filter backdrop-blur select-none`};
+  &:active {
+    ${tw`bg-trueGray-400 bg-opacity-40`};
+  }
+`;
+
+export { StyledText, StyledOverflowText, StyledButton }
