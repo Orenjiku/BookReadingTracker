@@ -1,7 +1,6 @@
-import React, { useRef } from 'react';
-import tw, { styled, css } from 'twin.macro';
-import { CSSTransition } from 'react-transition-group';
-import { CgCheckO, CgCloseO } from 'react-icons/cg';
+import React from 'react';
+import tw, { styled } from 'twin.macro';
+import SuccessIndicator from './SuccessIndicator'
 
 
 interface FormLabelPropsITF {
@@ -16,27 +15,7 @@ interface FormLabelPropsITF {
 }
 
 const Label = styled.label`
-  ${tw`relative text-sm select-none`}
-`;
-
-const SubmitIndicatorContainer = styled.div<{$indicator: 'check' | 'close'; $indicatorTimer: number}>`
-  ${tw`absolute top-0 -right-4 h-full flex items-center`};
-  ${({ $indicator }) => $indicator === 'check' ? css`${tw`text-green-600`}` : css`${tw`text-red-600`}`}
-  --flipDuration: ${({ $indicatorTimer }) => `${$indicatorTimer / 2}ms`};
-  &.flip-enter {
-    transform: rotateX(90deg);
-  }
-  &.flip-enter-active {
-    transform: rotateX(0);
-    transition: all var(--flipDuration) linear var(--flipDuration);
-  }
-  &.flip-exit {
-    transform: rotateX(0);
-  }
-  &.flip-exit-active {
-    transform: rotateX(90deg);
-    transition: all var(--flipDuration) linear;
-  }
+  ${tw`relative text-sm select-none`};
 `;
 
 const FocusIndicator = styled.div`
@@ -77,24 +56,15 @@ const TextArea = styled.textarea`
 
 const FormLabel = ({type, label, name, value, placeholder, submitStatus, handleInputChange, optionalFunction}: FormLabelPropsITF) => {
   const [ isSubmitSuccess, isSubmitFail ] = submitStatus;
-  const indicatorSuccessRef = useRef<HTMLDivElement>(null);
-  const indicatorFailRef = useRef<HTMLDivElement>(null);
-  const indicatorTimer = 600;
+  const indicatorFlipTimer = 300;
 
   return (
     <div className='mb-0.5' {...(type === 'textarea' && {className: 'h-full w-full'})}>
       <Label onClick={e => e.preventDefault()}>
         {label}:
-        <CSSTransition in={isSubmitSuccess} timeout={indicatorTimer} classNames='flip' nodeRef={indicatorSuccessRef} unmountOnExit>
-          <SubmitIndicatorContainer ref={indicatorSuccessRef} $indicator='check' $indicatorTimer={indicatorTimer}>
-            <CgCheckO size={15} />
-          </SubmitIndicatorContainer>
-        </CSSTransition>
-        <CSSTransition in={isSubmitFail} timeout={indicatorTimer} classNames='flip' nodeRef={indicatorFailRef} unmountOnExit>
-          <SubmitIndicatorContainer ref={indicatorFailRef} $indicator='close' $indicatorTimer={indicatorTimer}>
-            <CgCloseO size={15} />
-          </SubmitIndicatorContainer>
-        </CSSTransition>
+        <div className='absolute top-0 -right-0.5 mt-0.5'>
+          <SuccessIndicator size={13} isSuccess={isSubmitSuccess} isFail={isSubmitFail} indicatorFlipTimer={indicatorFlipTimer} />
+        </div>
         <div className='flex flex-row-reverse' {...(type === 'textarea' && {style: {height: '90%'}})}>
           {type === 'input'
             ? <Input type='text' name={name} placeholder={placeholder} value={value} onChange={e => handleInputChange(e)} {...(optionalFunction && {onKeyDown: e => optionalFunction(e)})} spellCheck={false} autoComplete='off' />
