@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 import tw, { styled, css } from 'twin.macro';
-import {TransitionGroup, CSSTransition} from 'react-transition-group';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { ReadInstanceITF } from '../../interfaces/interface';
-import ReadEntry from './ReadEntry';
 import useYOverflow from '../../hooks/useYOverflow';
+import ReadEntry from './ReadEntry';
 import { BsChevronDown, BsChevronUp, BsChevronExpand } from 'react-icons/bs';
 import { CgCalendarToday } from 'react-icons/cg';
 
@@ -26,20 +26,6 @@ const StyledChevronExpand = styled(BsChevronExpand)<{ $isExpanded: boolean; $exp
   ${tw`absolute right-0 stroke-current`};
   --duration: ${({ $expandTimer }) => `${$expandTimer}ms`};
   transition: all var(--duration) linear;
-  ${ReadInstanceHeaderContainer}:hover & {
-    animation: shake 500ms linear infinite;
-    @keyframes shake {
-      0%, 50%, 100% {
-        transform: translateY(0%);
-      }
-      25% {
-        transform: translateY(-5%);
-      }
-      75% {
-        transform: translateY(5%);
-      }
-    }
-  }
   ${({ $isExpanded }) => $isExpanded && css`
       --neon-light-center: #f9fafb;
       --neon-light-color: #0d9488;
@@ -49,7 +35,6 @@ const StyledChevronExpand = styled(BsChevronExpand)<{ $isExpanded: boolean; $exp
       opacity: 1;
       color: var(--neon-light-center);
       filter: var(--light-effect);
-      transition: all var(--duration) linear;
   `}
 `;
 
