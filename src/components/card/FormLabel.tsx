@@ -44,12 +44,12 @@ const TextArea = styled.textarea`
     ${tw`bg-teal-500`};
   }
   ::-webkit-scrollbar {
-    ${tw`bg-trueGray-50 bg-opacity-60 w-2 rounded-r`}
+    ${tw`bg-trueGray-50 bg-opacity-60 w-2 rounded-r`};
   }
   ::-webkit-scrollbar-thumb {
-    ${tw`bg-trueGray-400 bg-opacity-70 rounded-r`}
+    ${tw`bg-trueGray-400 bg-opacity-70 rounded-r`};
     &:hover {
-      ${tw`bg-teal-500`}
+      ${tw`bg-teal-500`};
     }
   }
 `;
