@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 import { BookDetailsITF, ReaderBookITF, ReadEntryITF } from '../../interfaces/interface';
-import CardHeader from './CardHeader';
 import BookImage from './BookImage';
+import CardHeader from './CardHeader';
+import CompletionSlider from './CompletionSlider';
 import DetailsView from './DetailsView';
+import EditView from './EditView'
 import ReaderBook from './ReaderBook';
 import ReadInstance from './ReadInstance';
-import CompletionSlider from './CompletionSlider';
 import { Edit } from '@styled-icons/boxicons-regular/Edit';
+
 
 
 interface CardFrontPropsITF {
@@ -35,6 +37,66 @@ const CardFrontContainer = styled.div<{ $isFlipped: boolean; $flipTimer: number 
   `}
 `;
 
+const ViewExpandContainer = styled.div<{ $isExpanded: boolean; $expandTimer: number }>`
+  ${tw`relative h-full w-full overflow-hidden`};
+  min-height: 38%;
+  max-height: 38%;
+  --expandDuration: ${({ $expandTimer }) => `${$expandTimer}ms`};
+  transition: all var(--expandDuration) ease-out;
+  ${({ $isExpanded }) => $isExpanded && css`
+    min-height: 0;
+    max-height: 0;
+    transition: all var(--expandDuration) ease-out calc(var(--expandDuration) * 0.5);
+  `}
+`;
+
+const DetailsViewContainer = styled.div<{ $editTimer: number; $isExpanded: boolean; $expandTimer: number }>`
+  ${tw`relative h-full w-full bg-blueGray-500 bg-opacity-40 `};
+  --expandDuration: ${({ $expandTimer }) => `${$expandTimer}ms`};
+  transition: all calc(var(--expandDuration) * 0.5) linear var(--expandDuration);
+  ${({ $isExpanded }) => $isExpanded && css`
+    ${tw`opacity-0`};
+    transition: all calc(var(--expandDuration) * 0.5) linear;
+  `}
+  --editDuration: ${({ $editTimer }) => `${$editTimer}ms`};
+  &.slide-enter {
+    transform: translateY(100%);
+  }
+  &.slide-enter-active {
+    transform: translateY(0);
+    transition: transform var(--editDuration) linear;
+  }
+  &.slide-exit {
+    transform: translateY(0);
+  }
+  &.slide-exit-active {
+    transform: translateY(100%);
+    transition: transform var(--editDuration) linear;
+  }
+`;
+
+const EditViewContainer = styled.div<{ $isExpanded: boolean; $editTimer: number; $expandTimer: number }>`
+  ${tw`absolute top-0 left-0 h-full w-full overflow-hidden`};
+  -expandDuration: ${({ $expandTimer }) => `${$expandTimer}ms`};
+  transition: all calc(var(--expandDuration) * 0.5) linear var(--expandDuration);
+  ${({ $isExpanded }) => $isExpanded && css`
+    ${tw`opacity-0`};
+    transition: all calc(var(--expandDuration) * 0.5) linear;
+  `}
+  --editDuration: ${({ $editTimer }) => `${$editTimer}ms`};
+  &.slide-enter {
+    transform: translateY(-100%);
+  }
+  &.slide-enter-active {
+    transform: translateY(0%);
+    transition: transform var(--editDuration) linear;
+  }
+  &.slide-exit-active {
+    transform: translateY(-100%);
+    transition: transform var(--editDuration) linear;
+  }
+`;
+
 const SlideShowContainer = styled.div<{ $src?: string; $slideShowTimer: number }>`
   ${tw`relative col-start-1 col-end-3 row-start-4 row-end-20 rounded-tl-2xl flex justify-center items-center`};
   ${tw`bg-trueGray-100 overflow-hidden`};
@@ -58,7 +120,20 @@ const SlideShowContainer = styled.div<{ $src?: string; $slideShowTimer: number }
   }
 `;
 
-const StyledEdit = styled(Edit)<{ $isEdit: boolean, $editTimer: number }>`
+const BlurbContainer = styled.div`
+  ${tw`z-10 h-4/5 w-11/12 p-4 rounded-tl-2xl rounded-tr rounded-br overflow-y-scroll whitespace-pre-wrap select-text bg-trueGray-50 bg-opacity-60 text-xs`};
+  ::-webkit-scrollbar {
+    ${tw`bg-trueGray-50 bg-opacity-60 w-2 rounded-r`};
+  }
+  ::-webkit-scrollbar-thumb {
+    ${tw`bg-trueGray-400 bg-opacity-70 rounded-r`};
+    &:hover {
+      ${tw`bg-trueGray-500`};
+    }
+  }
+`;
+
+const StyledEditIcon = styled(Edit)<{ $isEdit: boolean, $editTimer: number }>`
   ${tw`absolute top-1.5 right-1 min-w-min opacity-50 stroke-1 stroke-current text-coolGray-50 cursor-pointer`};
   filter: drop-shadow(0px 1px 0 black);
   --duration: ${({ $editTimer }) => `${$editTimer}ms`};
@@ -111,6 +186,9 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
   ];
 
   //transition conditions
+  const detailsViewRef = useRef<HTMLDivElement>(null);
+  const editViewRef = useRef<HTMLDivElement>(null);
+
   const [ isEdit, setIsEdit ] = useState(false);
   const [ isSlideShow, setIsSlideShow ] = useState(false);
   const [ isReading, setIsReading ] = useState(false);
@@ -209,15 +287,33 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
   //   // setReadInstance({...readInstance, read_entry: newReadEntryList});
   // };
 
+
   return (
     <CardFrontContainer $isFlipped={isFlipped} $flipTimer={flipTimer}>
 
       <CardHeader title={bookDetails.title} author={author} isFlipped={isFlipped} flipTimer={flipTimer} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleShowSlideShow={handleShowSlideShow} />
 
+      <StyledEditIcon size={22} $isEdit={isEdit} $editTimer={editTimer} onClick={() => handleIsEdit()} />
+
       <BookImage pictureUrl={bookDetails.picture_url} isEdit={isEdit} editTimer={editTimer} handleFlip={handleFlip} />
 
       <div className='col-start-2 col-end-3 row-start-4 row-end-20 flex flex-col overflow-hidden'>
-        <DetailsView viewDetails={viewDetails} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} />
+        <ViewExpandContainer $isExpanded={isExpanded} $expandTimer={expandTimer}>
+
+          <CSSTransition in={!isEdit} timeout={editTimer} classNames='slide' nodeRef={detailsViewRef} unmountOnExit>
+            <DetailsViewContainer ref={detailsViewRef} $editTimer={editTimer} $isExpanded={isExpanded} $expandTimer={expandTimer}>
+              <DetailsView viewDetails={viewDetails} />
+            </DetailsViewContainer>
+          </CSSTransition>
+
+          <CSSTransition in={isEdit} timeout={editTimer} classNames='slide' nodeRef={editViewRef} unmountOnExit>
+            <EditViewContainer ref={editViewRef} $editTimer={editTimer} $isExpanded={isExpanded} $expandTimer={expandTimer}>
+              <EditView />
+            </EditViewContainer>
+          </CSSTransition>
+
+        </ViewExpandContainer>
+
         {readInstanceList.length <= 1
           ? <ReadInstance readInstance={readInstanceList[readInstanceIdx]} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} handleDeleteReadEntry={handleDeleteReadEntry}/>
           : <ReaderBook readInstanceList={readInstanceList} readInstanceIdx={readInstanceIdx} isEdit={isEdit} editTimer={editTimer} handleIsReading={handleIsReading} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} handleChangeReadInstanceIdx={handleChangeReadInstanceIdx} handleDeleteReadEntry={handleDeleteReadEntry}/>
@@ -228,13 +324,11 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
         <CompletionSlider isReading={isReading} />
       </div>
 
-      <StyledEdit size={22} $isEdit={isEdit} $editTimer={editTimer} onClick={() => handleIsEdit()} />
-
       <CSSTransition in={isSlideShow} timeout={slideShowTimer} classNames='slide' nodeRef={slideShowRef} unmountOnExit>
         <SlideShowContainer ref={slideShowRef} $src={bookDetails.picture_url} $slideShowTimer={slideShowTimer}>
-          <div className='z-10 h-4/5 w-11/12 p-4 rounded-tl-2xl overflow-y-scroll whitespace-pre-wrap select-text bg-trueGray-50 bg-opacity-60 text-xs font-Helvetica'>
+          <BlurbContainer>
             {bookDetails.blurb}
-          </div>
+          </BlurbContainer>
         </SlideShowContainer>
       </CSSTransition>
 
