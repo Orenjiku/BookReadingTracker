@@ -176,12 +176,19 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     inputFunctionsList[e.target.name][0](e.target.value);
     resetInputSubmitStates(e.target.name);
+    setIsNewAuthorDuplicate(false);
   };
+  //---
+
+  //handle editing author
+  const [ isNewAuthorDuplicate, setIsNewAuthorDuplicate ] = useState(false);
 
   const handleAddAuthor = () => {
-    if (newAuthor !== '' && !authorList.includes(newAuthor) && !newAuthorList.includes(newAuthor)) {
-      setNewAuthorList([...newAuthorList, newAuthor]);
+    if (newAuthor !== '' && !authorList.includes(newAuthor.trim()) && !newAuthorList.includes(newAuthor.trim())) {
+      setNewAuthorList([...newAuthorList, newAuthor.trim()]);
       setNewAuthor('');
+    } else if (newAuthor !== '') {
+      setIsNewAuthorDuplicate(true);
     }
   };
 
@@ -192,16 +199,13 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
   };
 
   const handleDeleteAuthor = (authorName: string, fromList: 'author' | 'newAuthor') => {
-    const authorListClone = fromList === 'author' ? [...authorList] : [...newAuthorList];
-    const idx = authorListClone.indexOf(authorName);
-    authorListClone.splice(idx, 1);
-    if (fromList === 'author') {
-      setAuthorList(authorListClone);
-      setDeleteAuthorList([...deleteAuthorList, authorName]);
-    } else {
-      setNewAuthorList(authorListClone);
-    }
+    const authorListCopy = fromList === 'author' ? [...authorList] : [...newAuthorList];
+    const idx = authorListCopy.indexOf(authorName);
+    authorListCopy.splice(idx, 1);
+    fromList === 'author' ? setAuthorList(authorListCopy) : setNewAuthorList(authorListCopy);
+    setDeleteAuthorList([...deleteAuthorList, authorName]);
     resetInputSubmitStates('author');
+    if (isNewAuthorDuplicate && newAuthor.trim() === authorName) setIsNewAuthorDuplicate(false);
   };
   //---
 
@@ -249,6 +253,7 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
     setEditionDate(bookDetails.edition_date);
     setPictureUrl(bookDetails.picture_url);
     setBlurb(bookDetails.blurb);
+    setIsNewAuthorDuplicate(false);
     for (let input in inputFunctionsList) {
       resetInputSubmitStates(input);
     }
@@ -282,12 +287,13 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
   //handle submit
   useEffect(() => {
     if (isSubmitComplete) {
+      //update local bookDetails and author state stored in parent Card component.
       handleUpdateBookDetails({
         title,
         book_format: format,
-        total_pages: totalPages,
-        published_date: publishedDate,
-        edition_date: editionDate,
+        total_pages: isNaN(totalPages) ? bookDetails.total_pages : totalPages,
+        published_date: isValidDate(publishedDate) ? publishedDate : bookDetails.published_date,
+        edition_date: isValidDate(editionDate) ? editionDate : bookDetails.edition_date,
         picture_url: pictureUrl,
         blurb
       });
@@ -306,14 +312,14 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
   };
 
   const handleSubmitAll = async () => {
-    if (title !== bookDetails.title) await submitInput({title});
+    if (title.trim() !== bookDetails.title) await submitInput({title});
     if (newAuthorList.length > 0 || deleteAuthorList.length > 0) await submitInput({author: {newAuthorList, deleteAuthorList}});
-    if (format !== bookDetails.book_format) await submitInput({format});
+    if (format.trim() !== bookDetails.book_format) await submitInput({format});
     if (totalPages !== bookDetails.total_pages) isNaN(totalPages) ? toggleInputSubmitFailState('totalPages') : await submitInput({totalPages});
     if (publishedDate !== bookDetails.published_date) isValidDate(publishedDate) ? await submitInput({publishedDate}) : toggleInputSubmitFailState('publishedDate');
     if (editionDate !== bookDetails.edition_date) isValidDate(editionDate) ? await submitInput({editionDate}) : toggleInputSubmitFailState('editionDate');
-    if (pictureUrl !== bookDetails.picture_url) await submitInput({pictureUrl});
-    if (blurb !== bookDetails.blurb) await submitInput({blurb});
+    if (pictureUrl.trim() !== bookDetails.picture_url) await submitInput({pictureUrl});
+    if (blurb.trim() !== bookDetails.blurb) await submitInput({blurb});
     setIsSubmitComplete(true); //useEffect trigger for local state book updates.
   };
 
@@ -365,6 +371,9 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
                   <FormLabel type='input' label={'Author'} name={'author'} value={newAuthor} placeholder={''} submitStatus={[isSubmitAuthorSuccess, isSubmitAuthorFail]} handleInputChange={handleInputChange} optionalFunction={handleEnterAuthor} />
                   <div className='flex items-end ml-2'>
                     <StyledBsPlusSquare size={25} onClick={handleAddAuthor}/>
+                    {isNewAuthorDuplicate && <div className='absolute top-1.5 left-14 text-xs text-red-500 select-none'>
+                      Duplicated author
+                    </div>}
                   </div>
                 </div>
                 <div className='flex flex-wrap mt-1'>
