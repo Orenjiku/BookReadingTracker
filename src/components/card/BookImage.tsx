@@ -38,11 +38,14 @@ const BookImage = ({ pictureUrl, isEdit, editTimer, handleFlip }: BookImageProps
   const bookImageRef = useRef(null);
 
   return (
-    <div className='col-start-1 col-end-2 row-start-4 row-end-20'>
+    <div className='relative col-start-1 col-end-2 row-start-4 row-end-20'>
       {pictureUrl === ''
       ? <div className='rounded-tl-2xl  h-full w-full flex flex-col justify-center items-center border-t border-r border-blueGray-50'>
           <FiSlash className='text-red-500 opacity-40' size={75} />
           <p className='font-AdventPro-400 text-xl opacity-60'>No Picture</p>
+          <div className='absolute flex justify-center items-center'>
+            <EditBookButton ref={bookImageRef} $editTimer={editTimer} onClick={() => handleFlip()}>Edit Book</EditBookButton>
+          </div>
         </div>
       : <div className='rounded-tl-2xl h-full w-full flex justify-center items-center bg-cover bg-center' style={{backgroundImage: `url(${pictureUrl})`}}>
           <CSSTransition in={isEdit} timeout={editTimer} classNames='fade' nodeRef={bookImageRef} unmountOnExit>
