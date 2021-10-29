@@ -140,3 +140,15 @@ WHERE t.date_read > (
 );
 
 
+-- UPSERT author, INSERT book_author book_id and author_id
+WITH val AS (SELECT id FROM author WHERE full_name='Anthony Reynolds')
+, ins (id) AS (
+       INSERT INTO author (full_name, first_name, middle_name, last_name)
+       VALUES ('Anthony Reynolds', 'Anthony', '', 'Reynolds')
+       ON CONFLICT (full_name) DO NOTHING
+       RETURNING id
+       )
+INSERT INTO book_author (book_id, author_id) VALUES (19, (SELECT COALESCE(val.id, ins.id) FROM val FULL JOIN ins ON val.id=ins.id));
+
+-- GET book titles based on author full_name
+SELECT b.title FROM book As b INNER JOIN book_author AS ba ON ba.book_id=b.id AND ba.author_id=(SELECT id FROM author WHERE full_name='Dan Abnett');

@@ -2,6 +2,7 @@ import db from '../config/db';
 import queryCurrentlyReading from './queries/queryCurrentlyReading';
 import queryFinishedReading from './queries/queryFinishedReading';
 import queryDailyReads from './queries/queryDailyReads';
+import { queryPostAuthor, queryDeleteAuthor } from './queries/queryAuthor';
 import { Request, Response } from 'express';
 
 const controller = {
@@ -35,60 +36,109 @@ const controller = {
     }
   },
 
-  postTitle: async (req: Request, res: Response) => {
+  putTitle: async (req: Request, res: Response) => {
     const readerId = req.params.id;
-    const { b_id, title } = req.body;
-    console.log(b_id, title);
-    res.sendStatus(200);
+    const { bookId, title } = req.body;
+    console.log(bookId, title);
+    try {
+      await db.query(`UPDATE book SET title='${title}' WHERE book.id=${bookId}`)
+      res.sendStatus(204);
+    } catch(err) {
+      console.error(err);
+      err.detail === `Key (title)=(${title}) already exists.` ? res.status(500).json(err.detail) : res.sendStatus(400);
+    }
   },
 
   postAuthor: async (req: Request, res: Response) => {
     const readerId = req.params.id;
-    const { b_id, author } = req.body;
-    console.log(b_id, author);
+    const { bookId, authorList } = req.body;
+    try {
+      await db.query(queryPostAuthor(bookId, authorList));
+      res.sendStatus(204);
+    } catch(err) {
+      console.error(err);
+      res.sendStatus(400);
+    }
+  },
+
+  deleteAuthor: async (req: Request, res: Response) => {
+    const readerId = req.params.id;
+    const { bookId, authorList } = req.body;
+    try {
+      await db.query(queryDeleteAuthor(bookId, authorList));
+      res.sendStatus(204);
+    } catch(err) {
+      console.error(err);
+      res.sendStatus(400);
+    }
+  },
+
+  putBookFormat: async (req: Request, res: Response) => {
+    const readerId = req.params.id;
+    const { bookId, format } = req.body;
+    try {
+      await db.query(`Update book SET book_format='${format}' WHERE book.id=${bookId}`);
+      res.sendStatus(204);
+    } catch(err) {
+      console.error(err);
+      res.sendStatus(400);
+    }
+  },
+
+  putTotalPages: async (req: Request, res: Response) => {
+    const readerId = req.params.id;
+    const { bookId, totalPages} = req.body;
+    //change to totalPages require update to readEntry currentPercent
     res.sendStatus(200);
   },
 
-  postBookFormat: async (req: Request, res: Response) => {
+  putPublishedDate: async (req: Request, res: Response) => {
     const readerId = req.params.id;
-    const { b_id, book_format } = req.body;
-    console.log(b_id, book_format);
-    res.sendStatus(200);
+    const { bookId, publishedDate } = req.body;
+    try {
+      await db.query(`UPDATE book SET published_date='${publishedDate}' WHERE book.id=${bookId}`);
+      res.sendStatus(204);
+    } catch(err) {
+      console.error(err);
+      res.sendStatus(400);
+    }
   },
 
-  postTotalPages: async (req: Request, res: Response) => {
+  putEditionDate: async (req: Request, res: Response) => {
     const readerId = req.params.id;
-    const { b_id, total_pages} = req.body;
-    console.log(b_id, total_pages);
-    res.sendStatus(200);
+    const { bookId, editionDate } = req.body;
+    try {
+      await db.query(`UPDATE book SET edition_date='${editionDate}' WHERE book.id=${bookId}`);
+      res.sendStatus(204);
+    } catch(err) {
+      console.error(err);
+      res.sendStatus(400);
+    }
   },
 
-  postPublishedDate: async (req: Request, res: Response) => {
+  putPictureUrl: async (req: Request, res: Response) => {
     const readerId = req.params.id;
-    const { b_id, published_date } = req.body;
-    console.log(b_id, published_date);
-    res.sendStatus(200);
+    const { bookId, pictureUrl } = req.body;
+    try {
+      await db.query(`UPDATE book SET picture_url='${pictureUrl}' WHERE book.id=${bookId}`);
+      res.sendStatus(204);
+    } catch(err) {
+      console.error(err);
+      res.sendStatus(400);
+    }
   },
 
-  postEditionDate: async (req: Request, res: Response) => {
+  putBlurb: async (req: Request, res: Response) => {
     const readerId = req.params.id;
-    const { b_id, edition_date } = req.body;
-    console.log(b_id, edition_date);
-    res.sendStatus(200);
-  },
-
-  postPictureUrl: async (req: Request, res: Response) => {
-    const readerId = req.params.id;
-    const { b_id, picture_url } = req.body;
-    console.log(b_id, picture_url);
-    res.sendStatus(200);
-  },
-
-  postBlurb: async (req: Request, res: Response) => {
-    const readerId = req.params.id;
-    const { b_id, blurb } = req.body;
-    console.log(b_id, blurb);
-    res.sendStatus(200);
+    const { bookId, blurb } = req.body;
+    try {
+      const result = await db.query(`UPDATE book SET blurb='${blurb}' WHERE book.id=${bookId}`);
+      console.log(result)
+      res.sendStatus(204);
+    } catch(err) {
+      console.log(err);
+      res.sendStatus(400);
+    }
   }
 }
 
