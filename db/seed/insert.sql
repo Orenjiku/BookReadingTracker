@@ -91,7 +91,7 @@ $$ LANGUAGE plpgsql;
 
 -- DECLARE book information
 \set book_1_title 'Xenos'
-\set book_1_title_sort 'Xenos'
+\set book_1_title_sort 'xenos'
 \set book_1_published_date '2001/05/01'
 \set book_1_edition_date '2015/07/21'
 \set book_1_book_format 'Paperback'
@@ -100,7 +100,7 @@ $$ LANGUAGE plpgsql;
 \set book_1_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1424053669l/23492371.jpg'
 
 \set book_2_title 'Malleus'
-\set book_2_title_sort 'Malleus'
+\set book_2_title_sort 'malleus'
 \set book_2_published_date '2001/12/27'
 \set book_2_edition_date '2015/08/11'
 \set book_2_book_format 'Paperback'
@@ -109,7 +109,7 @@ $$ LANGUAGE plpgsql;
 \set book_2_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1427161165l/23492350.jpg'
 
 \set book_3_title 'Hereticus'
-\set book_3_title_sort 'Hereticus'
+\set book_3_title_sort 'hereticus'
 \set book_3_published_date '2002/07/30'
 \set book_3_edition_date '2015/09/15'
 \set book_3_book_format 'Paperback'
@@ -118,7 +118,7 @@ $$ LANGUAGE plpgsql;
 \set book_3_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1430084067l/23492348.jpg'
 
 \set book_4_title 'Ravenor: The Omnibus'
-\set book_4_title_sort 'Ravenor: The Omnibus'
+\set book_4_title_sort 'ravenor: the omnibus'
 \set book_4_published_date '2009/07/28'
 \set book_4_edition_date '2019/07/23'
 \set book_4_book_format 'Paperback'
@@ -127,7 +127,7 @@ $$ LANGUAGE plpgsql;
 \set book_4_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1545478110l/42641133._SY475_.jpg'
 
 \set book_5_title 'The Magos'
-\set book_5_title_sort 'Magos, The'
+\set book_5_title_sort 'magos, the'
 \set book_5_published_date '2018/02/24'
 \set book_5_edition_date '2018/03/06'
 \set book_5_book_format 'Paperback'
@@ -136,7 +136,7 @@ $$ LANGUAGE plpgsql;
 \set book_5_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1506373817l/36304173._SY475_.jpg'
 
 \set book_6_title 'Honourbound'
-\set book_6_title_sort 'Honourbound'
+\set book_6_title_sort 'honourbound'
 \set book_6_published_date '2019/02/23'
 \set book_6_edition_date '2019/09/03'
 \set book_6_book_format 'Paperback'
@@ -145,7 +145,7 @@ $$ LANGUAGE plpgsql;
 \set book_6_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1545477896l/42789259._SY475_.jpg'
 
 \set book_7_title 'Cadia Stands'
-\set book_7_title_sort 'Cadia Stands'
+\set book_7_title_sort 'cadia stands'
 \set book_7_published_date '2017/09/23'
 \set book_7_edition_date '2018/03/06'
 \set book_7_book_format 'Paperback'
@@ -154,7 +154,7 @@ $$ LANGUAGE plpgsql;
 \set book_7_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1497083669l/35297654._SY475_.jpg'
 
 \set book_8_title 'Maledictions: A Horror Anthology'
-\set book_8_title_sort 'Maledictions: A Horror Anthology'
+\set book_8_title_sort 'maledictions: a horror anthology'
 \set book_8_published_date '2019/03/30'
 \set book_8_edition_date '2019/04/02'
 \set book_8_book_format 'Paperback'
@@ -163,7 +163,7 @@ $$ LANGUAGE plpgsql;
 \set book_8_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1548642309l/40744548.jpg'
 
 \set book_9_title 'Cadian Honour'
-\set book_9_title_sort 'Cadian Honour'
+\set book_9_title_sort 'cadian honour'
 \set book_9_published_date '2018/12/26'
 \set book_9_edition_date '2019/09/17'
 \set book_9_book_format 'Paperback'
@@ -172,7 +172,7 @@ $$ LANGUAGE plpgsql;
 \set book_9_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1552227521l/44180913.jpg'
 
 \set book_10_title 'The Uriel Ventris Chronicles: Volume One'
-\set book_10_title_sort 'Uriel Ventris Chronicles: Volume One, The'
+\set book_10_title_sort 'uriel ventris chronicles: volume one, the'
 \set book_10_published_date '2016/11/15'
 \set book_10_edition_date '2019/01/08'
 \set book_10_book_format 'Paperback'
@@ -181,7 +181,7 @@ $$ LANGUAGE plpgsql;
 \set book_10_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1626758004l/58593308.jpg'
 
 \set book_11_title 'The Uriel Ventris Chronicles: Volume Two'
-\set book_11_title_sort 'The Uriel Ventris Chronicles: Volume Two, The'
+\set book_11_title_sort 'the uriel ventris chronicles: volume two, the'
 \set book_11_published_date '2016/11/15'
 \set book_11_edition_date '2019/08/20'
 \set book_11_book_format 'Paperback'
@@ -190,7 +190,7 @@ $$ LANGUAGE plpgsql;
 \set book_11_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561287919l/44180905.jpg'
 
 \set book_12_title 'Iron Warriors: The Omnibus'
-\set book_12_title_sort 'Iron Warriors: The Omnibus'
+\set book_12_title_sort 'iron warriors: the omnibus'
 \set book_12_published_date '2016/11/15'
 \set book_12_edition_date '2019/08/20'
 \set book_12_book_format 'Paperback'
@@ -199,7 +199,7 @@ $$ LANGUAGE plpgsql;
 \set book_12_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1625358426l/58481729.jpg'
 
 \set book_13_title 'The Swords of Calth'
-\set book_13_title_sort 'Swords of Calth, The'
+\set book_13_title_sort 'swords of calth, the'
 \set book_13_published_date '2021/02/27'
 \set book_13_edition_date '2021/02/27'
 \set book_13_book_format 'Hardcover'
@@ -208,7 +208,7 @@ $$ LANGUAGE plpgsql;
 \set book_13_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1628695156l/58749658._SY475_.jpg'
 
 \set book_14_title 'Warden of the Blade'
-\set book_14_title_sort 'Warden of the Blade'
+\set book_14_title_sort 'warden of the blade'
 \set book_14_published_date '2016/11/12'
 \set book_14_edition_date '2018/01/23'
 \set book_14_book_format 'Paperback'
@@ -217,7 +217,7 @@ $$ LANGUAGE plpgsql;
 \set book_14_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1497084986l/34466775._SY475_.jpg'
 
 \set book_15_title 'Deathwatch'
-\set book_15_title_sort 'Deathwatch'
+\set book_15_title_sort 'deathwatch'
 \set book_15_published_date '2013/04/11'
 \set book_15_edition_date '2019/10/15'
 \set book_15_book_format 'Paperback'
@@ -226,7 +226,7 @@ $$ LANGUAGE plpgsql;
 \set book_15_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561288604l/52357292._SX318_SY475_.jpg'
 
 \set book_16_title 'The Carrion Throne'
-\set book_16_title_sort 'Carrion Throne, The'
+\set book_16_title_sort 'carrion throne, the'
 \set book_16_published_date '2017/04/05'
 \set book_16_edition_date '2018/05/18'
 \set book_16_book_format 'Paperback'
@@ -235,7 +235,7 @@ $$ LANGUAGE plpgsql;
 \set book_16_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1507457967l/36373739._SY475_.jpg'
 
 \set book_17_title 'The Hollow Mountain'
-\set book_17_title_sort 'Hollow Mountain, The'
+\set book_17_title_sort 'hollow mountain, the'
 \set book_17_published_date '2019/07/20'
 \set book_17_edition_date '2020/02/04'
 \set book_17_book_format 'Paperback'
@@ -244,7 +244,7 @@ $$ LANGUAGE plpgsql;
 \set book_17_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1563199563l/51086449._SX318_SY475_.jpg'
 
 \set book_18_title 'Kingsblade'
-\set book_18_title_sort 'Kingsblade'
+\set book_18_title_sort 'kingsblade'
 \set book_18_published_date '2017/02/01'
 \set book_18_edition_date '2017/08/22'
 \set book_18_book_format 'Paperback'
@@ -253,7 +253,7 @@ $$ LANGUAGE plpgsql;
 \set book_18_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1478803265l/32902466.jpg'
 
 \set book_19_title 'Blood Angels: The Complete Rafen Omnibus'
-\set book_19_title_sort 'Blood Angels: The Complete Rafen Omnibus'
+\set book_19_title_sort 'blood angels: the complete rafen omnibus'
 \set book_19_published_date '2019/01/19'
 \set book_19_edition_date '2019/01/19'
 \set book_19_book_format 'Paperback'
@@ -262,7 +262,7 @@ $$ LANGUAGE plpgsql;
 \set book_19_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1587322079l/53208413.jpg'
 
 \set book_20_title 'Belisarius Cawl: The Great Work'
-\set book_20_title_sort 'Belisarius Cawl: The Great Work'
+\set book_20_title_sort 'belisarius cawl: the great work'
 \set book_20_published_date '2019/09/21'
 \set book_20_edition_date '2020/03/17'
 \set book_20_book_format 'Paperback'
@@ -271,7 +271,7 @@ $$ LANGUAGE plpgsql;
 \set book_20_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1562505193l/51085980._SX318_SY475_.jpg'
 
 \set book_21_title 'Deathwatch: The Omnibus'
-\set book_21_title_sort 'Deathwatch: The Omnibus'
+\set book_21_title_sort 'deathwatch: the omnibus'
 \set book_21_published_date '2017/11/28'
 \set book_21_edition_date '2017/11/28'
 \set book_21_book_format 'Paperback'
@@ -279,6 +279,14 @@ $$ LANGUAGE plpgsql;
 \set book_21_blurb 'New omnibus of novels and short stories featuring the Deathwatch, alien-hunting Space Marines who undertake special ops-style missions in the 41st millennium. \n\nThe Deathwatch are the elite. Recruited from numerous Space Marine Chapters, their mission is simple: exterminate any xenos threat to the Imperium. Assembled into kill-teams, the Deathwatch are expert alien hunters, equipped to undertake any mission in any environment. None are as dedicated or as skilled in the brutal art of alien annihilation. This action-packed omnibus contains three separate novels written by Steve Parker, Ian St Martin and Justin D Hill, along with a dozen of the best short stories ever written about the Imperium''s premier xenos hunters.'
 \set book_21_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1502692222l/34466780.jpg'
 
+\set book_22_title 'Sagas of the Space Wolves: The Omnibus'
+\set book_22_title_sort 'sagas of the space wolves: the omnibus'
+\set book_22_published_date '2020/03/28'
+\set book_22_edition_date '2020/03/31'
+\set book_22_book_format 'Paperback'
+\set book_22_total_pages 944
+\set book_22_blurb 'Bumper Omnibus collecting together some of Black Library''s most loved Space Wolves stories for the first time. \n\nBorn on the icy world of Fenris, few amongst the brotherhoods of the Adeptus Astartes are as fierce or as noble as the Space Wolves. Long are their tales, told around mead halls or the flickering glow of a hungry fire. Heed them well, for they speak of legends like the Young King Ragnar Blackmane, whose thirst for battle is only matched by his heroism, or the Wolf Lord Logan Grimnar that most venerable and fearsome of warriors, he who leads the Chapter itself. So listen hard and listen carefully to the skald as he holds forth around the burning fire, because there is darkness in these sagas as well as light. \n\nThis omnibus edition collects together for the first time the novels Ragnar Blackmane, Curse of the Wulfen, Legacy of Russ and The Hunt for Logan Grimnar as well as the novellas Blood on the Mountain and Arjac Rockfist, and a host of short stories.'
+\set book_22_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1635095980l/59442363.jpg'
 
 -- INSERT book using previously declared variables
 SELECT insert_book(:'book_1_title', :'book_1_title_sort', :'book_1_published_date', :'book_1_edition_date', :'book_1_book_format', :'book_1_total_pages', :'book_1_blurb', :'book_1_picture_url');
@@ -302,6 +310,7 @@ SELECT insert_book(:'book_18_title', :'book_18_title_sort', :'book_18_published_
 SELECT insert_book(:'book_19_title', :'book_19_title_sort', :'book_19_published_date', :'book_19_edition_date', :'book_19_book_format', :'book_19_total_pages', :'book_19_blurb', :'book_19_picture_url');
 SELECT insert_book(:'book_20_title', :'book_20_title_sort', :'book_20_published_date', :'book_20_edition_date', :'book_20_book_format', :'book_20_total_pages', :'book_20_blurb', :'book_20_picture_url');
 SELECT insert_book(:'book_21_title', :'book_21_title_sort', :'book_21_published_date', :'book_21_edition_date', :'book_21_book_format', :'book_21_total_pages', :'book_21_blurb', :'book_21_picture_url');
+SELECT insert_book(:'book_22_title', :'book_22_title_sort', :'book_22_published_date', :'book_22_edition_date', :'book_22_book_format', :'book_22_total_pages', :'book_22_blurb', :'book_22_picture_url');
 
 
 /* --------------------------------------------------- INSERT reader_book --------------------------------------------------- */
@@ -339,6 +348,7 @@ SELECT insert_reader_book(:'username_1', :'book_18_title');
 SELECT insert_reader_book(:'username_1', :'book_19_title');
 SELECT insert_reader_book(:'username_1', :'book_20_title');
 SELECT insert_reader_book(:'username_1', :'book_21_title');
+SELECT insert_reader_book(:'username_1', :'book_22_title');
 
 
 /* --------------------------------------------- INSERT read_instance --------------------------------------------- */
@@ -375,6 +385,7 @@ SELECT insert_read_instance(:'username_1', :'book_18_title');
 SELECT insert_read_instance(:'username_1', :'book_19_title');
 SELECT insert_read_instance(:'username_1', :'book_20_title');
 SELECT insert_read_instance(:'username_1', :'book_21_title');
+SELECT insert_read_instance(:'username_1', :'book_22_title');
 
 
 /* --------------------------------------------- INSERT read_entry --------------------------------------------- */
@@ -585,6 +596,21 @@ SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-13', 100, 802
 SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-14', 105, 907, 94.48);
 SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-15', 53, 960, 100);
 
+-- INSERT book_22
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-16', 51, 51, 5.4);
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-17', 84, 135, 14.3);
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-18', 74, 209, 22.14);
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-19', 44, 253, 26.8);
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-20', 43, 296, 31.36);
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-21', 62, 358, 37.92);
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-22', 71, 429, 45.44);
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-23', 114, 543, 57.52);
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-24', 74, 617, 65.36);
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-25', 66, 683, 72.35);
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-26', 108, 791, 83.79);
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-27', 88, 879, 93.11);
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-28', 65, 944, 100);
+
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
 -- FUNCTION insert_author
@@ -754,6 +780,47 @@ $$ LANGUAGE plpgsql;
 \set book_21_author_12_first_name 'Anthony'
 \set book_21_author_12_last_name 'Reynolds'
 \set book_21_author_12_full_name 'Anthony Reynolds'
+-- book 22 authors
+\set book_22_author_1_first_name 'Aaron'
+\set book_22_author_1_last_name 'Dembski-Bowden'
+\set book_22_author_1_full_name 'Aaron Dembski-Bowden'
+\set book_22_author_2_first_name 'David'
+\set book_22_author_2_last_name 'Annandale'
+\set book_22_author_2_full_name 'David Annandale'
+\set book_22_author_3_first_name 'Robbie'
+\set book_22_author_3_last_name 'MacNiven'
+\set book_22_author_3_full_name 'Robbie MacNiven'
+\set book_22_author_4_first_name 'Ben'
+\set book_22_author_4_last_name 'Counter'
+\set book_22_author_4_full_name 'Ben Counter'
+\set book_22_author_5_first_name 'Steve'
+\set book_22_author_5_last_name 'Lyons'
+\set book_22_author_5_full_name 'Steve Lyons'
+\set book_22_author_6_first_name 'Rob'
+\set book_22_author_6_last_name 'Sanders'
+\set book_22_author_6_full_name 'Rob Sanders'
+\set book_22_author_7_first_name 'C'
+\set book_22_author_7_middle_name 'L'
+\set book_22_author_7_last_name 'Werner'
+\set book_22_author_7_full_name 'C L Werner'
+\set book_22_author_8_first_name 'Nick'
+\set book_22_author_8_last_name 'Kyme'
+\set book_22_author_8_full_name 'Nick Kyme'
+\set book_22_author_9_first_name 'Andy'
+\set book_22_author_9_last_name 'Smillie'
+\set book_22_author_9_full_name 'Andy Smillie'
+\set book_22_author_10_first_name 'Cavan'
+\set book_22_author_10_last_name 'Scott'
+\set book_22_author_10_full_name 'Cavan Scott'
+\set book_22_author_11_first_name 'Mark'
+\set book_22_author_11_last_name 'Clapham'
+\set book_22_author_11_full_name 'Mark Clapham'
+\set book_22_author_12_first_name 'Lee'
+\set book_22_author_12_last_name 'Lightner'
+\set book_22_author_12_full_name 'Lee Lightner'
+\set book_22_author_13_first_name 'Alec'
+\set book_22_author_13_last_name 'Worley'
+\set book_22_author_13_full_name 'Alec Worley'
 
 -- INSERT author using FUNCTION insert_author and DECLARED author variables as arguments, CHECK UNIQUE full_name (middle_name argument is optional)
 -- book 1 author
@@ -819,6 +886,20 @@ SELECT insert_author(:'book_21_author_9_full_name', :'book_21_author_9_first_nam
 SELECT insert_author(:'book_21_author_10_full_name', :'book_21_author_10_first_name', :'book_21_author_10_last_name');
 SELECT insert_author(:'book_21_author_11_full_name', :'book_21_author_11_first_name', :'book_21_author_11_last_name');
 SELECT insert_author(:'book_21_author_12_full_name', :'book_21_author_12_first_name', :'book_21_author_12_last_name');
+-- book 22 author
+SELECT insert_author(:'book_22_author_1_full_name', :'book_22_author_1_first_name', :'book_22_author_1_last_name');
+SELECT insert_author(:'book_22_author_2_full_name', :'book_22_author_2_first_name', :'book_22_author_2_last_name');
+SELECT insert_author(:'book_22_author_3_full_name', :'book_22_author_3_first_name', :'book_22_author_3_last_name');
+SELECT insert_author(:'book_22_author_4_full_name', :'book_22_author_4_first_name', :'book_22_author_4_last_name');
+SELECT insert_author(:'book_22_author_5_full_name', :'book_22_author_5_first_name', :'book_22_author_5_last_name');
+SELECT insert_author(:'book_22_author_6_full_name', :'book_22_author_6_first_name', :'book_22_author_6_last_name');
+SELECT insert_author(:'book_22_author_7_full_name', :'book_22_author_7_first_name', :'book_22_author_7_last_name', :'book_22_author_7_middle_name');
+SELECT insert_author(:'book_22_author_8_full_name', :'book_22_author_8_first_name', :'book_22_author_8_last_name');
+SELECT insert_author(:'book_22_author_9_full_name', :'book_22_author_9_first_name', :'book_22_author_9_last_name');
+SELECT insert_author(:'book_22_author_10_full_name', :'book_22_author_10_first_name', :'book_22_author_10_last_name');
+SELECT insert_author(:'book_22_author_11_full_name', :'book_22_author_11_first_name', :'book_22_author_11_last_name');
+SELECT insert_author(:'book_22_author_12_full_name', :'book_22_author_12_first_name', :'book_22_author_12_last_name');
+SELECT insert_author(:'book_22_author_13_full_name', :'book_22_author_13_first_name', :'book_22_author_13_last_name');
 
 
 /* --------------------------------------------- INSERT book_author (JOIN TABLE) --------------------------------------------- */
@@ -898,6 +979,20 @@ SELECT join_book_author(:'book_21_title', :'book_21_author_9_full_name');
 SELECT join_book_author(:'book_21_title', :'book_21_author_10_full_name');
 SELECT join_book_author(:'book_21_title', :'book_21_author_11_full_name');
 SELECT join_book_author(:'book_21_title', :'book_21_author_12_full_name');
+-- book 22 author
+SELECT join_book_author(:'book_22_title', :'book_22_author_1_full_name');
+SELECT join_book_author(:'book_22_title', :'book_22_author_2_full_name');
+SELECT join_book_author(:'book_22_title', :'book_22_author_3_full_name');
+SELECT join_book_author(:'book_22_title', :'book_22_author_4_full_name');
+SELECT join_book_author(:'book_22_title', :'book_22_author_5_full_name');
+SELECT join_book_author(:'book_22_title', :'book_22_author_6_full_name');
+SELECT join_book_author(:'book_22_title', :'book_22_author_7_full_name');
+SELECT join_book_author(:'book_22_title', :'book_22_author_8_full_name');
+SELECT join_book_author(:'book_22_title', :'book_22_author_9_full_name');
+SELECT join_book_author(:'book_22_title', :'book_22_author_10_full_name');
+SELECT join_book_author(:'book_22_title', :'book_22_author_11_full_name');
+SELECT join_book_author(:'book_22_title', :'book_22_author_12_full_name');
+SELECT join_book_author(:'book_22_title', :'book_22_author_13_full_name');
 
 
 /* --------------------------------------------- UPDATE read_instance --------------------------------------------- */
@@ -960,6 +1055,7 @@ SELECT update_read_instance(:'username_1', :'book_19_title', FALSE, TRUE, FALSE)
 -- UPDATE read_instance.is_reading to true
 SELECT update_read_instance(:'username_1', :'book_20_title', TRUE, FALSE, FALSE);
 SELECT update_read_instance(:'username_1', :'book_21_title', TRUE, FALSE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_22_title', TRUE, FALSE, FALSE);
 
 
 /* --------------------------------------------- UPDATE reader_book  --------------------------------------------- */
@@ -1001,6 +1097,7 @@ SELECT update_reader_book(:'username_1', :'book_18_title');
 SELECT update_reader_book(:'username_1', :'book_19_title');
 SELECT update_reader_book(:'username_1', :'book_20_title');
 SELECT update_reader_book(:'username_1', :'book_21_title');
+SELECT update_reader_book(:'username_1', :'book_22_title');
 
 
 /* --------------------------------------------- ADD 2nd read_instance to Book 19 Blood Angels Omnibus for testing --------------------------------------------- */
