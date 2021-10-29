@@ -4,6 +4,7 @@ import { CSSTransition } from 'react-transition-group';
 import { BookDetailsITF } from '../../interfaces/interface';
 import useYOverflow from '../../hooks/useYOverflow';
 import { StyledButton } from './styled';
+import { sortByLastName } from './utils';
 import FormLabel from './FormLabel';
 import AuthorTag from './AuthorTag';
 import { BsPlusSquare, BsChevronDown, BsChevronUp } from 'react-icons/bs';
@@ -86,7 +87,7 @@ const BlurbContainer = styled.div<{$blurbSlideTimer: number}>`
 `;
 
 const StyledBsPlusSquare = styled(BsPlusSquare)`
-  ${tw`mb-0.5 stroke-current text-trueGray-100 cursor-pointer`};
+  ${tw`stroke-current text-trueGray-100 cursor-pointer`};
   &:hover {
     ${tw`text-teal-500`};
   }
@@ -113,7 +114,7 @@ const SaveButton = styled(StyledButton)<{$isStartSubmit?: boolean; $submitHoldTi
 
 const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handleUpdateBookDetails, handleUpdateAuthorDetails }: CardBackPropsITF) => {
   const [ title, setTitle ] = useState(bookDetails.title);
-  const [ authorList, setAuthorList ] = useState<string[]>(author);
+  const [ authorList, setAuthorList ] = useState(author);
   const [ newAuthor, setNewAuthor ] = useState('');
   const [ newAuthorList, setNewAuthorList ] = useState<string[]>([]);
   const [ deleteAuthorList, setDeleteAuthorList ] = useState<string[]>([]);
@@ -146,6 +147,30 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
   //isSubmitComplete needed for useEffect trigger for updating local inputs after API calls.
   const [ isSubmitComplete, setIsSubmitComplete ] = useState(false);
 
+  //Triggers for feedback text indication on FormLabels.
+  const [ titleFeedbackText, setTitleFeedbackText ] = useState('');
+  const [ authorFeedbackText, setAuthorFeedbackText ] = useState('');
+  const [ totalPagesFeedbackText, setTotalPagesFeedbackText ] = useState('');
+  const titleFeedbackTextOptions = {
+    errorDuplicateTitle: 'Title already exists in collection.'
+  }
+  const authorFeedbackTextOptions = {
+    errorDuplicateAuthor: 'Author name is duplicated.',
+    errorEmptyAuthor: 'Input cannot be empty.',
+    errorPostAndDeleteAuthor: 'Connection. Retry Save.',
+    errorPostAuthor: 'Connection. Retry Save.',
+    errorDeleteAuthor: 'Connection. Reselect authors and retry save.'
+  }
+  const totalPagesFeedbackTextOptions = {
+    errorTotalPagesNaN: 'Invalid #.'
+  }
+
+  const resetFeedbackText = () => {
+    setTitleFeedbackText('');
+    setAuthorFeedbackText('');
+    setTotalPagesFeedbackText('');
+  };
+
   //Handle editing inputs
   const inputFunctionsList: {[key: string]: Function[]} = {
     title: [ setTitle, setIsSubmitTitleSuccess, setIsSubmitTitleFail ],
@@ -175,37 +200,50 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     inputFunctionsList[e.target.name][0](e.target.value);
-    resetInputSubmitStates(e.target.name);
-    setIsNewAuthorDuplicate(false);
+    resetInputSubmitStates(e.target.name); //removes FormLabel successIndicator for target input
+    resetFeedbackText(); //removes FormLabel feedbackText
   };
   //---
 
   //handle editing author
-  const [ isNewAuthorDuplicate, setIsNewAuthorDuplicate ] = useState(false);
-
   const handleAddAuthor = () => {
-    if (newAuthor !== '' && !authorList.includes(newAuthor.trim()) && !newAuthorList.includes(newAuthor.trim())) {
-      setNewAuthorList([...newAuthorList, newAuthor.trim()]);
+    const normalizedNewAuthor = newAuthor.replace(/\s+/g, ' ').trim(); //removes odd spacing. '    John     Smith   ' => 'John Smith'.
+
+    //checks exact matches
+    const isExistInInitialAuthorList = author.reduce((acc, cur) => cur === normalizedNewAuthor ? true : acc, false);
+    const isExistInDeleteAuthorList = deleteAuthorList.reduce((acc, cur) => cur === normalizedNewAuthor ? true : acc, false);
+
+    //checks authorList and newAuthorList for newAuthor without case sensitivity.
+    const isExistInAuthorList = authorList.reduce((acc, cur) => cur.toLowerCase() === normalizedNewAuthor.toLowerCase() ? true : acc, false);
+    const isExistInNewAuthorList = newAuthorList.reduce((acc, cur) => cur.toLowerCase() === normalizedNewAuthor.toLowerCase() ? true : acc, false);
+
+    if (isExistInInitialAuthorList && isExistInDeleteAuthorList) {
+      //edge case: User deletes author provided by initial API call and then adds the same author back. Author must be removed from deleteAuthorList and returned to authorList instead of added to newAuthorList. This is to prevent sending an unnecessary author POST API call for an author that is already connected with the book in the database.
+      const deleteAuthorListCopy = [...deleteAuthorList];
+      const idx = deleteAuthorListCopy.indexOf(normalizedNewAuthor);
+      deleteAuthorListCopy.splice(idx, 1);
+      setDeleteAuthorList(deleteAuthorListCopy);
+      //add author back to authorList and sort. Don't add to newAuthorList. (authorList isn't part of update API call)
+      setAuthorList(prevAuthorList => sortByLastName([...prevAuthorList, normalizedNewAuthor]));
+    } else if (normalizedNewAuthor !== '' && !isExistInAuthorList && !isExistInNewAuthorList) {
+      setNewAuthorList(prevNewAuthorList => [...prevNewAuthorList, normalizedNewAuthor]);
       setNewAuthor('');
-    } else if (newAuthor !== '') {
-      setIsNewAuthorDuplicate(true);
+    } else if (normalizedNewAuthor !== '') {
+      setAuthorFeedbackText(authorFeedbackTextOptions.errorDuplicateAuthor);
+    } else if (normalizedNewAuthor === '') {
+      setAuthorFeedbackText(authorFeedbackTextOptions.errorEmptyAuthor);
     }
   };
 
-  const handleEnterAuthor = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleAddAuthor();
-    }
-  };
+  const handleAddAuthorWithEnter = (e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleAddAuthor();
 
   const handleDeleteAuthor = (authorName: string, fromList: 'author' | 'newAuthor') => {
-    const authorListCopy = fromList === 'author' ? [...authorList] : [...newAuthorList];
-    const idx = authorListCopy.indexOf(authorName);
-    authorListCopy.splice(idx, 1);
-    fromList === 'author' ? setAuthorList(authorListCopy) : setNewAuthorList(authorListCopy);
-    setDeleteAuthorList([...deleteAuthorList, authorName]);
-    resetInputSubmitStates('author');
-    if (isNewAuthorDuplicate && newAuthor.trim() === authorName) setIsNewAuthorDuplicate(false);
+    //authorName isn't entered by author, therefore doesn't require normalization used in handleAddAuthor.
+    const authorListCopy = fromList === 'author' ? [...authorList] : [...newAuthorList]; //determine which list the author to be deleted is from.
+    const idx = authorListCopy.indexOf(authorName); //find index of author to be deleted in list
+    authorListCopy.splice(idx, 1); //remove author from list
+    fromList === 'author' ? setAuthorList(authorListCopy) : setNewAuthorList(authorListCopy); //update state with new list
+    if (fromList === 'author') setDeleteAuthorList(prevDeleteAuthorList => [...prevDeleteAuthorList, authorName]); //only add author to deleteAuthorList if it was part of initial author API call.
   };
   //---
 
@@ -243,8 +281,8 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
 
   const handleReset = () => {
     setTitle(bookDetails.title);
-    setNewAuthor('')
     setAuthorList(author);
+    setNewAuthor('')
     setNewAuthorList([]);
     setDeleteAuthorList([]);
     setFormat(bookDetails.book_format);
@@ -253,7 +291,7 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
     setEditionDate(bookDetails.edition_date);
     setPictureUrl(bookDetails.picture_url);
     setBlurb(bookDetails.blurb);
-    setIsNewAuthorDuplicate(false);
+    resetFeedbackText();
     for (let input in inputFunctionsList) {
       resetInputSubmitStates(input);
     }
@@ -286,48 +324,65 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
 
   //handle submit
   useEffect(() => {
+    //update bookDetails state in parent Card component.
     if (isSubmitComplete) {
-      //update local bookDetails and author state stored in parent Card component.
-      handleUpdateBookDetails({
-        title,
-        book_format: format,
-        total_pages: isNaN(totalPages) ? bookDetails.total_pages : totalPages,
-        published_date: isValidDate(publishedDate) ? publishedDate : bookDetails.published_date,
-        edition_date: isValidDate(editionDate) ? editionDate : bookDetails.edition_date,
-        picture_url: pictureUrl,
-        blurb
-      });
-      handleUpdateAuthorDetails([...authorList, ...newAuthorList]);
-      setIsSubmitComplete(false); //at end of submit sequence reset isSubmitComplete.
+      const newBookDetails: {[key: string]: string | number | {[key: string]: string[]}} = {};
+      if (isSubmitTitleSuccess) newBookDetails['title'] = title;
+      if (isSubmitFormatSuccess) newBookDetails['book_format'] = format;
+      if (isSubmitTotalPagesSuccess) newBookDetails['total_pages'] = totalPages;
+      if (isSubmitPublishedDateSuccess) newBookDetails['published_date'] = publishedDate;
+      if (isSubmitEditionDateSuccess) newBookDetails['edition_date'] = editionDate;
+      if (isSubmitPictureUrlSuccess) newBookDetails['picture_url'] = pictureUrl;
+      if (isSubmitBlurbSuccess) newBookDetails['blurb'] = blurb;
+      handleUpdateBookDetails(newBookDetails);
+
+      if (isSubmitAuthorSuccess) { //isSubmitAuthorFail operations handled in authorSubmit function.
+        handleUpdateAuthorDetails([...authorList, ...newAuthorList]);
+        setNewAuthorList([]);
+        setDeleteAuthorList([]);
+      }
+
+      setIsSubmitComplete(false);
     }
   }, [isSubmitComplete]);
 
+  //useEffect hook required to update local authorList after isSubmitAuthorSuccess updates parent Card component author.
+  useEffect(() => {
+    setAuthorList(author);
+  }, [author])
+
   const isValidDate = (s: string) => {
     if ( ! /^\d{4}-\d{2}-\d{2}$/.test(s) ) return false;
-
     let [ yyyy, mm, dd ] = s.split('-').map((p: string) => parseInt(p, 10));
-    mm -= 1; //subtract 1 from month because checkDate.getMonth() starts at 0
-    const checkDate = new Date(yyyy, mm, dd);
-    return checkDate.getFullYear() === yyyy && checkDate.getMonth() === mm && checkDate.getDate() === dd;
+    const compareDate = new Date(`${yyyy}-${mm}-${dd}`);
+    return compareDate.getFullYear() === yyyy && compareDate.getMonth() + 1 === mm && compareDate.getDate() === dd; //add 1 tp compareDate.getMonth() because it starts at 0 (January).
   };
 
+  //API calls only update database, not React state. State changes are handled with useEffect once API calls completed.
   const handleSubmitAll = async () => {
+    //checks if current input value changed from original value before submitInput
     if (title.trim() !== bookDetails.title) await submitInput({title});
-    if (newAuthorList.length > 0 || deleteAuthorList.length > 0) await submitInput({author: {newAuthorList, deleteAuthorList}});
+    if (newAuthorList.length > 0 || deleteAuthorList.length > 0) await submitAuthor({newAuthorList, deleteAuthorList});
     if (format.trim() !== bookDetails.book_format) await submitInput({format});
-    if (totalPages !== bookDetails.total_pages) isNaN(totalPages) ? toggleInputSubmitFailState('totalPages') : await submitInput({totalPages});
+    if (totalPages !== bookDetails.total_pages) {
+      if (!isNaN(totalPages)) await submitInput({totalPages});
+      else {
+        toggleInputSubmitFailState('totalPages');
+        setTotalPagesFeedbackText(totalPagesFeedbackTextOptions.errorTotalPagesNaN);
+      }
+    }
     if (publishedDate !== bookDetails.published_date) isValidDate(publishedDate) ? await submitInput({publishedDate}) : toggleInputSubmitFailState('publishedDate');
     if (editionDate !== bookDetails.edition_date) isValidDate(editionDate) ? await submitInput({editionDate}) : toggleInputSubmitFailState('editionDate');
     if (pictureUrl.trim() !== bookDetails.picture_url) await submitInput({pictureUrl});
     if (blurb.trim() !== bookDetails.blurb) await submitInput({blurb});
-    setIsSubmitComplete(true); //useEffect trigger for local state book updates.
+    setIsSubmitComplete(true); //wait for all API calls, then trigger useEffect to update Card state.
   };
 
-  const submitInput = async (data: {[key: string]: string | number | {[key: string]: string[]}}) => {
-    const key: string = Object.keys(data)[0];
+  const submitInput = async (inputObj: {[key: string]: string | number | {[key: string]: string[]}}) => {
+    const key: string = Object.keys(inputObj)[0];
+    const value = inputObj[key];
     const resource: {[key: string]: string} = {
       title: 'title',
-      author: 'author',
       format: 'book_format',
       totalPages: 'total_pages',
       publishedDate: 'published_date',
@@ -337,20 +392,91 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
     };
     try {
       const response = await fetch(`http://localhost:3000/1/book/${resource[key]}`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({b_id: bookDetails.b_id, [resource[key]]: data[key]})
+        body: JSON.stringify({bookId: bookDetails.b_id, [key]: value})
       });
       if (response.ok) {
-        toggleInputSubmitSuccessState(key); //trigger success state display success indicator.
+        toggleInputSubmitSuccessState(key)
       } else {
-        toggleInputSubmitFailState(key); //trigger fail state to display fail indicator.
+        toggleInputSubmitFailState(key);
+        const err = await response.json();
+        if (err === `Key (title)=(${value}) already exists.`) setTitleFeedbackText(titleFeedbackTextOptions.errorDuplicateTitle);
       }
     } catch(err) {
-      console.log(err);
+      console.error(err);
     }
   };
   //---
+
+  const submitAuthor = async (authorObj: {[key: string]: string[]}) => {
+    const postAuthorRequest = new Request(`http://localhost:3000/1/book/author`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({bookId: bookDetails.b_id, authorList: authorObj.newAuthorList})
+    });
+
+    const deleteAuthorRequest = new Request(`http://localhost:3000/1/book/author`, {
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({bookId: bookDetails.b_id, authorList: authorObj.deleteAuthorList})
+    });
+
+    if (authorObj.newAuthorList.length > 0 && authorObj.deleteAuthorList.length > 0) {
+      try {
+        const deleteAuthorResponse = await fetch(deleteAuthorRequest);
+        const postAuthorResponse = await fetch(postAuthorRequest);
+
+        if (postAuthorResponse.ok && deleteAuthorResponse.ok) {
+          toggleInputSubmitSuccessState('author');
+        } else {
+          toggleInputSubmitFailState('author');
+          if (!postAuthorResponse.ok && !deleteAuthorResponse.ok) {
+            setAuthorFeedbackText(authorFeedbackTextOptions.errorPostAndDeleteAuthor);
+            //if both post and delete fails, do nothing. User can retry save or reset to return local state to original state from parent Card component.
+          } else if (deleteAuthorResponse.ok) { //meaning POST API request failed
+            setAuthorFeedbackText(authorFeedbackTextOptions.errorPostAuthor);
+            handleUpdateAuthorDetails(authorList); //update parent Card component with current authorList i.e. with selected authors deleted. useEffect updates local state.
+            setDeleteAuthorList([]);
+          } else if (postAuthorResponse.ok) { //meaning DELETE API request failed
+            setAuthorFeedbackText(authorFeedbackTextOptions.errorDeleteAuthor);
+            handleUpdateAuthorDetails([...author, ...newAuthorList]); //updated parent Card component with original author list and newAuthorList. Ask user to reselect authors to delete using feedbackText.
+          }
+        }
+      } catch(err) {
+          console.error(err);
+      }
+    } else if (authorObj.newAuthorList.length > 0) {
+      try {
+        const postAuthorResponse = await fetch(postAuthorRequest);
+
+        if (postAuthorResponse.ok) {
+          toggleInputSubmitSuccessState('author');
+        } else {
+          toggleInputSubmitFailState('author');
+          setAuthorFeedbackText(authorFeedbackTextOptions.errorPostAuthor);
+          //if post fails, do nothing. Maintain newAuthorList and tell user to retry save with feedbackText.
+        }
+      } catch(err) {
+        console.error(err);
+      }
+    } else if (authorObj.deleteAuthorList.length > 0) {
+      try {
+        const deleteAuthorResponse = await fetch(deleteAuthorRequest);
+
+        if (deleteAuthorResponse.ok) {
+          toggleInputSubmitSuccessState('author');
+        } else {
+          toggleInputSubmitFailState('author');
+          setAuthorFeedbackText(authorFeedbackTextOptions.errorDeleteAuthor);
+          setAuthorList(author); //if delete fails, reset local authorList with original list of authors for user to reselect authors to delete.
+          setDeleteAuthorList([]);
+        }
+      } catch(err) {
+        console.error(err);
+      }
+    }
+  };
 
   return (
     <CardBackContainer $isFlipped={isFlipped} $flipTimer={flipTimer}>
@@ -360,20 +486,19 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
           <CSSTransition in={!isShowBlurb} timeout={blurbSlideTimer} classNames='slide' nodeRef={mainRef}>
             <MainInputContainer ref={mainRef} $blurbSlideTimer={blurbSlideTimer}>
               <div ref={scrollContainerRef} className='h-full w-full overflow-y-scroll scrollbar-hide'>
-                <FormLabel type='input' label={'Title'} name={'title'} value={title} placeholder={''} submitStatus={[isSubmitTitleSuccess, isSubmitTitleFail]} handleInputChange={handleInputChange} />
-
-                <div className='flex gap-x-2'>
-                  <FormLabel type='input' label={'Format'} name={'format'} value={format} placeholder={''} submitStatus={[isSubmitFormatSuccess, isSubmitFormatFail]} handleInputChange={handleInputChange} />
-                  <FormLabel type='input' label={'Total Pages'} name={'totalPages'} value={totalPages} placeholder={''} submitStatus={[isSubmitTotalPagesSuccess, isSubmitTotalPagesFail]} handleInputChange={handleInputChange} />
+                <div className='relative my-1'>
+                  <FormLabel type='input' label={'Title'} name={'title'} value={title} placeholder={''} submitStatus={[isSubmitTitleSuccess, isSubmitTitleFail]} feedbackText={titleFeedbackText} handleInputChange={handleInputChange} />
                 </div>
 
-                <div className='relative flex'>
-                  <FormLabel type='input' label={'Author'} name={'author'} value={newAuthor} placeholder={''} submitStatus={[isSubmitAuthorSuccess, isSubmitAuthorFail]} handleInputChange={handleInputChange} optionalFunction={handleEnterAuthor} />
-                  <div className='flex items-end ml-2'>
+                <div className='flex gap-x-2 my-1'>
+                  <FormLabel type='input' label={'Format'} name={'format'} value={format} placeholder={''} submitStatus={[isSubmitFormatSuccess, isSubmitFormatFail]} feedbackText='' handleInputChange={handleInputChange} />
+                  <FormLabel type='input' label={'Total Pages'} name={'totalPages'} value={totalPages} placeholder={''} submitStatus={[isSubmitTotalPagesSuccess, isSubmitTotalPagesFail]} feedbackText={totalPagesFeedbackText} handleInputChange={handleInputChange} />
+                </div>
+
+                <div className='relative flex my-1'>
+                  <FormLabel type='input' label={'Author'} name={'author'} value={newAuthor} placeholder={''} submitStatus={[isSubmitAuthorSuccess, isSubmitAuthorFail]} feedbackText={authorFeedbackText} handleInputChange={handleInputChange} optionalFunction={handleAddAuthorWithEnter} />
+                  <div className='ml-2 mb-0.5 flex items-end'>
                     <StyledBsPlusSquare size={25} onClick={handleAddAuthor}/>
-                    {isNewAuthorDuplicate && <div className='absolute top-1.5 left-14 text-xs text-red-500 select-none'>
-                      Duplicated author
-                    </div>}
                   </div>
                 </div>
                 <div className='flex flex-wrap mt-1'>
@@ -387,12 +512,14 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
                   )}
                 </div>
 
-                <div className='flex gap-x-2'>
-                  <FormLabel type='input' label={'Date Published'} name={'publishedDate'} value={publishedDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitPublishedDateSuccess, isSubmitPublishedDateFail]} handleInputChange={handleInputChange} />
-                  <FormLabel type='input' label={'Edition Published'} name={'editionDate'} value={editionDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitEditionDateSuccess, isSubmitEditionDateFail]} handleInputChange={handleInputChange} />
+                <div className='flex gap-x-2 my-1'>
+                  <FormLabel type='input' label={'Date Published'} name={'publishedDate'} value={publishedDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitPublishedDateSuccess, isSubmitPublishedDateFail]} feedbackText='' handleInputChange={handleInputChange} />
+                  <FormLabel type='input' label={'Edition Published'} name={'editionDate'} value={editionDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitEditionDateSuccess, isSubmitEditionDateFail]} feedbackText='' handleInputChange={handleInputChange} />
                 </div>
 
-                <FormLabel type='input' label={'Picture URL'} name={'pictureUrl'} value={pictureUrl} placeholder={''} submitStatus={[isSubmitPictureUrlSuccess, isSubmitPictureUrlFail]} handleInputChange={handleInputChange} />
+                <div className='mt-1 mb-2'>
+                  <FormLabel type='input' label={'Picture URL'} name={'pictureUrl'} value={pictureUrl} placeholder={''} submitStatus={[isSubmitPictureUrlSuccess, isSubmitPictureUrlFail]} feedbackText='' handleInputChange={handleInputChange} />
+                </div>
               </div>
 
               {!refYScrollBegin && <BsChevronUp className='absolute w-full top-0 left-0' />}
@@ -402,7 +529,7 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
 
           <CSSTransition in={isShowBlurb} timeout={blurbSlideTimer} classNames='slide' nodeRef={blurbRef} unmountOnExit>
             <BlurbContainer ref={blurbRef} $blurbSlideTimer={blurbSlideTimer}>
-              <FormLabel type='textarea' label={'Blurb'} name={'blurb'} value={blurb} placeholder={''} submitStatus={[isSubmitBlurbSuccess, isSubmitBlurbFail]} handleInputChange={handleInputChange} />
+              <FormLabel type='textarea' label={'Blurb'} name={'blurb'} value={blurb} placeholder={''} submitStatus={[isSubmitBlurbSuccess, isSubmitBlurbFail]} feedbackText='' handleInputChange={handleInputChange} />
             </BlurbContainer>
           </CSSTransition>
 
