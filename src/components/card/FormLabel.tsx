@@ -1,5 +1,5 @@
-import React from 'react';
-import tw, { styled } from 'twin.macro';
+import React, { useState, useEffect } from 'react';
+import tw, { styled, css } from 'twin.macro';
 import SuccessIndicator from './SuccessIndicator'
 
 
@@ -10,6 +10,7 @@ interface FormLabelPropsITF {
   value: string | number;
   placeholder: string;
   submitStatus: boolean[];
+  feedbackText: string;
   handleInputChange: Function;
   optionalFunction?: Function;
 }
@@ -54,16 +55,33 @@ const TextArea = styled.textarea`
   }
 `;
 
-const FormLabel = ({type, label, name, value, placeholder, submitStatus, handleInputChange, optionalFunction}: FormLabelPropsITF) => {
+const FeedbackTextContainer = styled.div<{$isFeedbackText: boolean; $indicatorTransitionTimer: number}>`
+  ${tw`absolute whitespace-nowrap -top-2 ml-4 text-xs text-red-500 select-none opacity-0`};
+  --duration: ${({ $indicatorTransitionTimer }) => `${$indicatorTransitionTimer}ms`};
+  transition: opacity var(--duration) linear var(--duration);
+  ${({ $isFeedbackText }) => $isFeedbackText && css`
+    ${tw`opacity-100`}
+  `}
+`;
+
+const FormLabel = ({type, label, name, value, placeholder, submitStatus, feedbackText, handleInputChange, optionalFunction}: FormLabelPropsITF) => {
   const [ isSubmitSuccess, isSubmitFail ] = submitStatus;
-  const indicatorFlipTimer = 300;
+  const [ isFeedbackText, setIsFeedbackText ] = useState(false);
+  const indicatorTransitionTimer = 300;
+
+  useEffect(() => {
+    feedbackText === '' ? setIsFeedbackText(false) : setIsFeedbackText(true);
+  }, [feedbackText]);
 
   return (
     <div className='mb-0.5' {...(type === 'textarea' && {className: 'h-full w-full'})}>
       <Label onClick={e => e.preventDefault()}>
-        {label}:
-        <div className='absolute top-0 -right-0.5 mt-0.5'>
-          <SuccessIndicator size={13} isSuccess={isSubmitSuccess} isFail={isSubmitFail} indicatorFlipTimer={indicatorFlipTimer} />
+        <div className='flex items-center'>
+          <p className='mr-0.5'>{label}:</p>
+          <div className='relative'>
+            <SuccessIndicator size={13} isSuccess={isSubmitSuccess} isFail={isSubmitFail} indicatorTransitionTimer={indicatorTransitionTimer} />
+            <FeedbackTextContainer $isFeedbackText={isFeedbackText} $indicatorTransitionTimer={indicatorTransitionTimer}>{feedbackText}</FeedbackTextContainer>
+          </div>
         </div>
         <div className='flex flex-row-reverse' {...(type === 'textarea' && {style: {height: '90%'}})}>
           {type === 'input'
