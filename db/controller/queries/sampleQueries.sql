@@ -152,3 +152,12 @@ INSERT INTO book_author (book_id, author_id) VALUES (19, (SELECT COALESCE(val.id
 
 -- GET book titles based on author full_name
 SELECT b.title FROM book As b INNER JOIN book_author AS ba ON ba.book_id=b.id AND ba.author_id=(SELECT id FROM author WHERE full_name='Dan Abnett');
+
+-- GET all read_entry columns from reader_book, i.e. read_enties from every read_instance based on reader_book id.
+SELECT * FROM read_entry AS re INNER JOIN read_instance AS ri ON ri.reader_book_id=19 AND re.read_instance_id=ri.id;
+
+-- UPDATE total_pages
+UPDATE book AS b SET total_pages=400 WHERE b.id=19;
+
+--UPDATE all read_entry current_percent from reader_book.
+UPDATE read_entry AS re SET current_percent=TRUNC(current_page::DECIMAL/400*100, 2) FROM read_instance AS ri WHERE re.read_instance_id=ri.id AND ri.reader_book_id=19;

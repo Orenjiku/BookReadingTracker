@@ -19,6 +19,7 @@ interface CardBackPropsITF {
   handleFlip: Function;
   handleUpdateBookDetails: Function;
   handleUpdateAuthorDetails: Function;
+  handleUpdateReadEntryCurrentPercent: Function;
 }
 
 const CardBackContainer = styled.div<{ $isFlipped: boolean; $flipTimer: number }>`
@@ -112,7 +113,7 @@ const SaveButton = styled(StyledButton)<{$isStartSubmit?: boolean; $submitHoldTi
   }
 `;
 
-const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handleUpdateBookDetails, handleUpdateAuthorDetails }: CardBackPropsITF) => {
+const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handleUpdateBookDetails, handleUpdateAuthorDetails, handleUpdateReadEntryCurrentPercent }: CardBackPropsITF) => {
   const [ title, setTitle ] = useState(bookDetails.title);
   const [ authorList, setAuthorList ] = useState(author);
   const [ newAuthor, setNewAuthor ] = useState('');
@@ -213,7 +214,7 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
     const isExistInInitialAuthorList = author.reduce((acc, cur) => cur === normalizedNewAuthor ? true : acc, false);
     const isExistInDeleteAuthorList = deleteAuthorList.reduce((acc, cur) => cur === normalizedNewAuthor ? true : acc, false);
 
-    //checks authorList and newAuthorList for newAuthor without case sensitivity.
+    //checks authorList and newAuthorList for newAuthor after removing case sensitivity.
     const isExistInAuthorList = authorList.reduce((acc, cur) => cur.toLowerCase() === normalizedNewAuthor.toLowerCase() ? true : acc, false);
     const isExistInNewAuthorList = newAuthorList.reduce((acc, cur) => cur.toLowerCase() === normalizedNewAuthor.toLowerCase() ? true : acc, false);
 
@@ -329,14 +330,17 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
       const newBookDetails: {[key: string]: string | number | {[key: string]: string[]}} = {};
       if (isSubmitTitleSuccess) newBookDetails['title'] = title;
       if (isSubmitFormatSuccess) newBookDetails['book_format'] = format;
-      if (isSubmitTotalPagesSuccess) newBookDetails['total_pages'] = totalPages;
+      if (isSubmitTotalPagesSuccess) {
+        newBookDetails['total_pages'] = totalPages;
+        handleUpdateReadEntryCurrentPercent(totalPages); //need to recalculate all read_entry.current_percent based on new totalPages.
+      }
       if (isSubmitPublishedDateSuccess) newBookDetails['published_date'] = publishedDate;
       if (isSubmitEditionDateSuccess) newBookDetails['edition_date'] = editionDate;
       if (isSubmitPictureUrlSuccess) newBookDetails['picture_url'] = pictureUrl;
       if (isSubmitBlurbSuccess) newBookDetails['blurb'] = blurb;
       handleUpdateBookDetails(newBookDetails);
 
-      if (isSubmitAuthorSuccess) { //isSubmitAuthorFail operations handled in authorSubmit function.
+      if (isSubmitAuthorSuccess) { //fail operations handled in authorSubmit function.
         handleUpdateAuthorDetails([...authorList, ...newAuthorList]);
         setNewAuthorList([]);
         setDeleteAuthorList([]);
@@ -432,15 +436,17 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
         } else {
           toggleInputSubmitFailState('author');
           if (!postAuthorResponse.ok && !deleteAuthorResponse.ok) {
+            //if both requests fail, no additional changes necessary. Provide feedback to user to retry save.
             setAuthorFeedbackText(authorFeedbackTextOptions.errorPostAndDeleteAuthor);
-            //if both post and delete fails, do nothing. User can retry save or reset to return local state to original state from parent Card component.
-          } else if (deleteAuthorResponse.ok) { //meaning POST API request failed
+          } else if (deleteAuthorResponse.ok) {
+            //if post request fails, update parent Card component with current authorList i.e. with selected authors deleted. Local useEffect will update local state.
             setAuthorFeedbackText(authorFeedbackTextOptions.errorPostAuthor);
-            handleUpdateAuthorDetails(authorList); //update parent Card component with current authorList i.e. with selected authors deleted. useEffect updates local state.
+            handleUpdateAuthorDetails(authorList);
             setDeleteAuthorList([]);
-          } else if (postAuthorResponse.ok) { //meaning DELETE API request failed
+          } else if (postAuthorResponse.ok) {
+            //if delete request fails, update parent Card component with original author list and newAuthorList. Notify user to reselect authors for deletion.
             setAuthorFeedbackText(authorFeedbackTextOptions.errorDeleteAuthor);
-            handleUpdateAuthorDetails([...author, ...newAuthorList]); //updated parent Card component with original author list and newAuthorList. Ask user to reselect authors to delete using feedbackText.
+            handleUpdateAuthorDetails([...author, ...newAuthorList]);
           }
         }
       } catch(err) {
@@ -453,9 +459,9 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
         if (postAuthorResponse.ok) {
           toggleInputSubmitSuccessState('author');
         } else {
+          //if post request fails, provide feedback to retry save. Maintain newAuthorList.
           toggleInputSubmitFailState('author');
           setAuthorFeedbackText(authorFeedbackTextOptions.errorPostAuthor);
-          //if post fails, do nothing. Maintain newAuthorList and tell user to retry save with feedbackText.
         }
       } catch(err) {
         console.error(err);
@@ -468,8 +474,9 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
           toggleInputSubmitSuccessState('author');
         } else {
           toggleInputSubmitFailState('author');
+          //if request delete fails, reset local authorList state to initial author list. Notify user to reselect authors for deletion.
           setAuthorFeedbackText(authorFeedbackTextOptions.errorDeleteAuthor);
-          setAuthorList(author); //if delete fails, reset local authorList with original list of authors for user to reselect authors to delete.
+          setAuthorList(author);
           setDeleteAuthorList([]);
         }
       } catch(err) {

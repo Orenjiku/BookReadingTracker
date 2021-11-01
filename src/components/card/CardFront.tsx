@@ -212,6 +212,11 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
   }, []);
 
   useEffect(() => {
+    //update required whenever totalPages is changed on CardBack.
+    setReadInstanceList(readerBook.read_instance);
+  }, [readerBook.read_instance]);
+
+  useEffect(() => {
     const newOverallAvgDailyRead = overallDaysRead > 0 ? Math.round(overallPagesRead / overallDaysRead) : 0;
     setOverallAvgDailyRead(newOverallAvgDailyRead);
   }, [overallPagesRead, overallDaysRead]);
@@ -222,7 +227,7 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
   const handleDeleteReadEntry = (readEntryInput: ReadEntryITF) => {
     //first call API to delete readEntry from database then update locally
     const currentReadInstance = [...readInstanceList][readInstanceIdx]; //create copy of current readInstance to update properties before updating readInstanceList.
-    const currentReadEntryList = currentReadInstance!.read_entry!;
+    const currentReadEntryList = currentReadInstance.read_entry;
     const deleteReadEntryIdx = currentReadEntryList.findIndex(readEntry => readEntry.re_id === readEntryInput.re_id);
 
     //Update overall pages_read (i.e. read_instance.pages_read) or readEntry pages_read. readEntry listed by date DESC order, therefore "next" is index - 1, "prev" is index + 1.
@@ -241,7 +246,7 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
     const deleteReadEntryDate = new Date(readEntryInput.date_read).toDateString();
     const duplicates = currentReadEntryList.filter(readEntry => new Date(readEntry.date_read).toDateString() === deleteReadEntryDate).length;
     if (duplicates === 1) {
-      setOverallDaysRead(prevOverallDaysRead => prevOverallDaysRead - 1); //read_instance.total_days_read is a calculated value on API call. Not necessary to update database.
+      setOverallDaysRead(prevOverallDaysRead => prevOverallDaysRead - 1); //read_instance.total_days_read is a calculated value from API call. Not necessary to update database.
       currentReadInstance.days_read -= 1;
     }
 
@@ -254,7 +259,7 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
     //update read_instance.max_daily_read
     currentReadInstance.max_daily_read = currentReadEntryList.reduce((acc, cur, i) => cur.pages_read > acc && i !== deleteReadEntryIdx ? cur.pages_read : acc, 0);
 
-    const newReadEntryList = currentReadEntryList.filter((readEntry: ReadEntryITF) => readEntry.re_id !== readEntryInput.re_id); //create newReadEntryList with deleteReadEntry removed.
+    const newReadEntryList = currentReadEntryList.filter(readEntry => readEntry.re_id !== readEntryInput.re_id); //create newReadEntryList with deleteReadEntry removed.
     const newReadInstance = {...currentReadInstance, read_entry: newReadEntryList}; //create newReadInstance with updated newReadEntryList
     const newReadInstanceList = [...readInstanceList]; //copy newReadInstanceList and replace readInstance with newReadInstance
     newReadInstanceList.splice(readInstanceIdx, 1, newReadInstance);

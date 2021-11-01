@@ -77,7 +77,7 @@ const controller = {
     const readerId = req.params.id;
     const { bookId, format } = req.body;
     try {
-      await db.query(`Update book SET book_format='${format}' WHERE book.id=${bookId}`);
+      await db.query(`UPDATE book SET book_format='${format}' WHERE book.id=${bookId}`);
       res.sendStatus(204);
     } catch(err) {
       console.error(err);
@@ -87,9 +87,19 @@ const controller = {
 
   putTotalPages: async (req: Request, res: Response) => {
     const readerId = req.params.id;
-    const { bookId, totalPages} = req.body;
-    //change to totalPages require update to readEntry currentPercent
-    res.sendStatus(200);
+    const { bookId, totalPages } = req.body;
+    try {
+      await db.query(`
+        BEGIN;
+        UPDATE book AS b SET total_pages=${totalPages} WHERE b.id=${bookId};
+        UPDATE read_entry AS re SET current_percent=TRUNC(current_page::DECIMAL/${totalPages}*100, 2) FROM read_instance AS ri WHERE re.read_instance_id=ri.id AND ri.reader_book_id=(SELECT id FROM reader_book AS rb WHERE rb.reader_id=${readerId} AND rb.book_id=${bookId});
+        COMMIT;
+      `);
+      res.sendStatus(204);
+    } catch(err) {
+      console.error(err);
+      res.sendStatus(400);
+    }
   },
 
   putPublishedDate: async (req: Request, res: Response) => {
