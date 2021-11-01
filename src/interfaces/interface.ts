@@ -15,7 +15,7 @@ export interface ReadInstanceITF {
   is_reading: boolean;
   is_finished: boolean;
   is_dnf: boolean;
-  read_entry?: ReadEntryITF[];
+  read_entry: ReadEntryITF[];
 }
 
 export interface ReaderBookITF {
