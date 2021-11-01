@@ -64,8 +64,7 @@ CREATE TABLE read_entry (
   current_percent DECIMAL NOT NULL,
   read_instance_id INT,
   CONSTRAINT fk_read_instance_read_entry
-    FOREIGN KEY (read_instance_id) REFERENCES read_instance (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT ck_current_percent CHECK (current_percent >= 0.00 AND current_percent <= 100.00)
+    FOREIGN KEY (read_instance_id) REFERENCES read_instance (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE INDEX ix_read_entry_read_instance_id ON read_entry (read_instance_id);
