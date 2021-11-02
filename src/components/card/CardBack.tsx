@@ -358,54 +358,43 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
   const isValidDate = (s: string) => {
     if ( ! /^\d{4}-\d{2}-\d{2}$/.test(s) ) return false;
     let [ yyyy, mm, dd ] = s.split('-').map((p: string) => parseInt(p, 10));
-    const compareDate = new Date(`${yyyy}-${mm}-${dd}`);
-    return compareDate.getFullYear() === yyyy && compareDate.getMonth() + 1 === mm && compareDate.getDate() === dd; //add 1 tp compareDate.getMonth() because it starts at 0 (January).
+    const compareDate = new Date(`${mm}-${dd}-${yyyy}`); //arrange mm-dd-yyyy because new Date(yyyy-mm-dd) modifies the date based on the time zone.
+    return compareDate.getFullYear() === yyyy && compareDate.getMonth() === mm - 1 && compareDate.getDate() === dd; //subtract 1 from mm because .getMonth() starts at 0, January.
   };
 
-  //API calls only update database, not React state. State changes are handled with useEffect once API calls completed.
   const handleSubmitAll = async () => {
     //checks if current input value changed from original value before submitInput
-    if (title.trim() !== bookDetails.title) await submitInput({title});
+    if (title.trim() !== bookDetails.title) await submitInput('title', 'title', title);
     if (newAuthorList.length > 0 || deleteAuthorList.length > 0) await submitAuthor({newAuthorList, deleteAuthorList});
-    if (format.trim() !== bookDetails.book_format) await submitInput({format});
+    if (format.trim() !== bookDetails.book_format) await submitInput('format', 'book_format', format);
     if (totalPages !== bookDetails.total_pages) {
-      if (!isNaN(totalPages)) await submitInput({totalPages});
+      if (!isNaN(totalPages)) await submitInput('totalPages', 'total_pages', totalPages);
       else {
         toggleInputSubmitFailState('totalPages');
         setTotalPagesFeedbackText(totalPagesFeedbackTextOptions.errorTotalPagesNaN);
       }
     }
-    if (publishedDate !== bookDetails.published_date) isValidDate(publishedDate) ? await submitInput({publishedDate}) : toggleInputSubmitFailState('publishedDate');
-    if (editionDate !== bookDetails.edition_date) isValidDate(editionDate) ? await submitInput({editionDate}) : toggleInputSubmitFailState('editionDate');
-    if (pictureUrl.trim() !== bookDetails.picture_url) await submitInput({pictureUrl});
-    if (blurb.trim() !== bookDetails.blurb) await submitInput({blurb});
+    if (publishedDate !== bookDetails.published_date) isValidDate(publishedDate) ? await submitInput('publishedDate', 'published_date', publishedDate) : toggleInputSubmitFailState('publishedDate');
+    if (editionDate !== bookDetails.edition_date)
+      isValidDate(editionDate) ? await submitInput('editionDate', 'edition_date', editionDate) : toggleInputSubmitFailState('editionDate');
+    if (pictureUrl.trim() !== bookDetails.picture_url) await submitInput('pictureUrl', 'picture_url', pictureUrl);
+    if (blurb.trim() !== bookDetails.blurb) await submitInput('blurb', 'blurb', blurb);
     setIsSubmitComplete(true); //wait for all API calls, then trigger useEffect to update Card state.
   };
 
-  const submitInput = async (inputObj: {[key: string]: string | number | {[key: string]: string[]}}) => {
-    const key: string = Object.keys(inputObj)[0];
-    const value = inputObj[key];
-    const resource: {[key: string]: string} = {
-      title: 'title',
-      format: 'book_format',
-      totalPages: 'total_pages',
-      publishedDate: 'published_date',
-      editionDate: 'edition_date',
-      pictureUrl: 'picture_url',
-      blurb: 'blurb'
-    };
+  const submitInput = async (inputName: string, resourceName: string, inputValue: string | number) => {
     try {
-      const response = await fetch(`http://localhost:3000/1/book/${resource[key]}`, {
+      const response = await fetch(`http://localhost:3000/1/book/${resourceName}`, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({bookId: bookDetails.b_id, [key]: value})
+        body: JSON.stringify({bookId: bookDetails.b_id, [inputName]: inputValue})
       });
       if (response.ok) {
-        toggleInputSubmitSuccessState(key)
+        toggleInputSubmitSuccessState(inputName)
       } else {
-        toggleInputSubmitFailState(key);
+        toggleInputSubmitFailState(inputName);
         const err = await response.json();
-        if (err === `Key (title)=(${value}) already exists.`) setTitleFeedbackText(titleFeedbackTextOptions.errorDuplicateTitle);
+        if (err === `Key (title)=(${inputValue}) already exists.`) setTitleFeedbackText(titleFeedbackTextOptions.errorDuplicateTitle);
       }
     } catch(err) {
       console.error(err);
