@@ -36,4 +36,20 @@ const StyledButton = styled.button`
   }
 `;
 
-export { StyledText, StyledOverflowText, StyledButton }
+const SaveButton = styled(StyledButton)<{$isStartSubmit?: boolean; $submitHoldTimer?: number}>`
+  &:active{
+    ${tw`bg-blueGray-300 bg-opacity-40`};
+  }
+  &::after {
+    content: '';
+    ${tw`absolute h-full w-0 left-0 bg-teal-500 bg-opacity-40`};
+    z-index: -1;
+    transition: all 50ms linear;
+    ${({ $isStartSubmit, $submitHoldTimer }) => $isStartSubmit && css`
+      ${tw`h-full w-full`};
+      transition: all ${$submitHoldTimer}ms linear;
+    `}
+  }
+`;
+
+export { StyledText, StyledOverflowText, StyledButton, SaveButton }
