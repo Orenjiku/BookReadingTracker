@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 import { BookDetailsITF, ReaderBookITF, ReadEntryITF } from '../../interfaces/interface';
+import { dateDiffInDays } from './utils';
 import BookImage from './BookImage';
 import CardHeader from './CardHeader';
 import CompletionSlider from './CompletionSlider';
@@ -19,7 +20,8 @@ interface CardFrontPropsITF {
   readerBook: ReaderBookITF;
   isFlipped: boolean;
   flipTimer: number;
-  handleFlip: Function
+  handleFlip: Function;
+  handleAddReadEntry: Function
 }
 
 const CardFrontContainer = styled.div<{ $isFlipped: boolean; $flipTimer: number }>`
@@ -159,7 +161,7 @@ const StyledEditIcon = styled(Edit)<{ $isEdit: boolean, $editTimer: number }>`
   `}
 `;
 
-const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, handleFlip }: CardFrontPropsITF) => {
+const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, handleFlip, handleAddReadEntry }: CardFrontPropsITF) => {
   // const [ isAnyReading, setIsAnyReading ] = useState(readerBook.is_any_reading);
   // const [ isAnyFinished, setIsAnyFinished ] = useState(readerBook.is_any_finished);
   // const [ isAllDnf, setIsAllDnf ] = useState(readerBook.is_all_dnf);
@@ -244,16 +246,19 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
 
     //update totalDaysRead. check if deleteReadEntryDate is the only entry on that date.
     const deleteReadEntryDate = new Date(readEntryInput.date_read).toDateString();
-    const duplicates = currentReadEntryList.filter(readEntry => new Date(readEntry.date_read).toDateString() === deleteReadEntryDate).length;
-    if (duplicates === 1) {
+    const duplicateDateCount = currentReadEntryList.filter(readEntry => new Date(readEntry.date_read).toDateString() === deleteReadEntryDate).length;
+    if (duplicateDateCount === 1) {
       setOverallDaysRead(prevOverallDaysRead => prevOverallDaysRead - 1); //read_instance.total_days_read is a calculated value from API call. Not necessary to update database.
       currentReadInstance.days_read -= 1;
     }
-
-    //readEntry listed by date DESC order, therefore update totalDays only if deleteReadEntry is the only entry, the most recent entry, or the oldest entry.
-    if (deleteReadEntryIdx === 0 || deleteReadEntryIdx === currentReadEntryList.length - 1) {
-      setOverallDaysTotal(prevOverallDaysTotal => prevOverallDaysTotal - 1);
-      currentReadInstance.days_total -= 1;
+    if (duplicateDateCount === 1 && (deleteReadEntryIdx === 0 || deleteReadEntryIdx === currentReadEntryList.length - 1)) {
+      //if deleteIdx is 0, find the span of days between idx 1 and idx last, if deleteIdx is last, find the span of days between idx 0 and idx 2nd to last
+      const newSpanInDays = deleteReadEntryIdx === 0
+        ? dateDiffInDays(currentReadEntryList[1].date_read, currentReadEntryList[currentReadEntryList.length - 1].date_read) + 1  //+1 for inclusive span of days.
+        : dateDiffInDays(currentReadEntryList[0].date_read, currentReadEntryList[currentReadEntryList.length - 2].date_read) + 1; //+1 for inclusive span of days.
+        const totalDaysDeleted = currentReadInstance.days_total - newSpanInDays;
+        currentReadInstance.days_total = newSpanInDays;
+        setOverallDaysTotal(prevOverallDaysTotal => prevOverallDaysTotal - totalDaysDeleted);
     }
 
     //update read_instance.max_daily_read
@@ -313,7 +318,7 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
 
           <CSSTransition in={isEdit} timeout={editTimer} classNames='slide' nodeRef={editViewRef} unmountOnExit>
             <EditViewContainer ref={editViewRef} $editTimer={editTimer} $isExpanded={isExpanded} $expandTimer={expandTimer}>
-              <EditView />
+              <EditView readInstanceId={readInstanceList[readInstanceIdx].ri_id} totalPages={bookDetails.total_pages} isEdit={isEdit} handleAddReadEntry={handleAddReadEntry} />
             </EditViewContainer>
           </CSSTransition>
 
