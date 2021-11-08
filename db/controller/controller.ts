@@ -167,9 +167,9 @@ const controller = {
 
   deleteReadEntry: async (req: Request, res: Response) => {
     const readerId: string = req.params.id;
-    const { readerBookId, readInstanceId, readEntryId }: { readerBookId: number, readInstanceId: number, readEntryId: number } = req.body;
+    const { readerBookId, readInstanceId, readEntryId, readEntryPagesRead }: { readerBookId: number, readInstanceId: number, readEntryId: number, readEntryPagesRead: number } = req.body;
     try {
-      await db.query(`BEGIN; ${queryDeleteReadEntry(readerBookId, readInstanceId, readEntryId)} COMMIT;`);
+      await db.query(`BEGIN; ${queryDeleteReadEntry(readerBookId, readInstanceId, readEntryId, readEntryPagesRead)} COMMIT;`);
       const result = await db.query(queryGetReaderBook(readerBookId));
       res.status(200).json(result.rows[0].reader_book);
     } catch(err) {

@@ -112,7 +112,7 @@ const ReadEntry = ({ readEntry, readerBookId, readInstanceId, isEdit, editTimer,
       const response = await fetch(`http://localhost:3000/1/book/read_entry`, {
         method: 'DELETE',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ readerBookId, readInstanceId, readEntryId: readEntry.re_id })
+        body: JSON.stringify({ readerBookId, readInstanceId, readEntryId: readEntry.re_id, readEntryPagesRead: readEntry.pages_read })
       });
       if (response.ok) {
         toggleReadEntrySubmitSuccessState();

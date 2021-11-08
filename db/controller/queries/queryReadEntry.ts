@@ -66,34 +66,24 @@ const queryPostReadEntry = (readerBookId: number, readInstanceId: number, dateSt
   `
 }
 
-const queryDeleteReadEntry = (readerBookId: number, readInstanceId: number, readEntryId: number) => {
-  //1. insert new read_entry. Calculate new read_entry.pages_read by subtracting previous entry's current_page from currentPage.
-  //2. update next read_entry.pages_read. Recalculate pages_read by subtracting currentPage from its current_page.
-  //3. update read_instance meta using aggregation functions. Does not update read_instance is_reading or is_finished in this step.
-  //4. update read_instance is_reading and is_finished in separate step because it depends on the updated read_instance.pages_read value from step 3.
+const queryDeleteReadEntry = (readerBookId: number, readInstanceId: number, readEntryId: number, readEntryPagesRead: number) => {
+  //1. update next read_entry.pages_read. Recalculate pages_read by adding next read_entry.pages_read and readEntryPagesRead (pages read from read entry to be deleted).
+  //2. delete read_entry
+  //3. update read_instance meta data using aggregation functions. Does not update read_instance is_reading or is_finished in this step.
+  //4. update read_instance is_reading and is_finished in separate step because it depends on the updated values from step 3.
   //5. update reader_book using aggregation functions. Same function as queryPostReadEntry.
   return `
     WITH next_re AS (
-            SELECT      re.id, re.current_page, re.read_instance_id
+            SELECT      re.id, re.pages_read
             FROM        read_entry AS re
             INNER JOIN  read_instance AS ri
             ON          re.read_instance_id = ${readInstanceId}
             AND         re.date_read > (SELECT date_read FROM read_entry AS re WHERE re.id = ${readEntryId})
             ORDER BY    date_read ASC
-            LIMIT 1),
-    prev_re AS (
-            SELECT      re.id, re.current_page, re.read_instance_id
-            FROM        read_entry AS re
-            INNER JOIN  read_instance AS ri
-            ON          re.read_instance_id=${readInstanceId}
-            AND         re.date_read < (SELECT date_read FROM read_entry AS re WHERE re.id = ${readEntryId})
-            ORDER BY    date_read DESC
             LIMIT 1)
     UPDATE      read_entry
-    SET         pages_read = next_re.current_page - prev_re.current_page
+    SET         pages_read = next_re.pages_read + ${readEntryPagesRead}
     FROM        next_re
-    INNER JOIN  prev_re
-    ON          next_re.read_instance_id = prev_re.read_instance_id
     WHERE       read_entry.id = next_re.id;
 
     DELETE FROM read_entry AS re WHERE re.id = ${readEntryId};
