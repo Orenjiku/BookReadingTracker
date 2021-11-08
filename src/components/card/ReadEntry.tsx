@@ -133,7 +133,7 @@ const ReadEntry = ({ readEntry, readerBookId, readInstanceId, isEdit, editTimer,
   return (
     <div>
 
-      <div className={`relative px-1 pb-0.5 ${isEdit && 'cursor-pointer hover:bg-blueGray-300 hover:bg-opacity-50'}`} onClick={() => { handleEntrySelect(); handleReadEntrySelectToggle() }}>
+      <div className={`relative px-1 pb-0.5 ${isEdit && 'cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30'}`} onClick={() => { handleEntrySelect(); handleReadEntrySelectToggle() }}>
         <EntryBar $isEdit={isEdit} $before={entryDate} $after={isEdit ? readEntry.current_page : readEntry.pages_read}>{`${currentPercent}%`}</EntryBar>
         <ProgressBar isEdit={isEdit} editTimer={editTimer} currentPercent={currentPercent} />
       </div>
