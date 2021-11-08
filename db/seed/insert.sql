@@ -80,11 +80,11 @@ CREATE OR REPLACE FUNCTION insert_book(
   arg_book_format VARCHAR,
   arg_total_pages INT,
   arg_blurb TEXT,
-  arg_picture_url VARCHAR
+  arg_book_cover_url VARCHAR
 )
 RETURNS VOID AS $$
 BEGIN
-  INSERT INTO book (title, title_sort, published_date, edition_date, book_format, total_pages, blurb, picture_url)
+  INSERT INTO book (title, title_sort, published_date, edition_date, book_format, total_pages, blurb, book_cover_url)
   VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
 END;
 $$ LANGUAGE plpgsql;
@@ -97,7 +97,7 @@ $$ LANGUAGE plpgsql;
 \set book_1_book_format 'Paperback'
 \set book_1_total_pages 416
 \set book_1_blurb 'The Inquisition moves amongst mankind like an avenging shadow, striking down the enemies of humanity with uncompromising ruthlessness. When he finally corners an old foe, Inquisitor Gregor Eisenhorn is drawn into a sinister conspiracy. As events unfold and he gathers allies – and enemies – Eisenhorn faces a vast interstellar cabal and the dark power of daemons, all racing to recover an arcane text of abominable power: an ancient tome known as the Necroteuch.'
-\set book_1_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1424053669l/23492371.jpg'
+\set book_1_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1424053669l/23492371.jpg'
 
 \set book_2_title 'Malleus'
 \set book_2_title_sort 'malleus'
@@ -106,7 +106,7 @@ $$ LANGUAGE plpgsql;
 \set book_2_book_format 'Paperback'
 \set book_2_total_pages 416
 \set book_2_blurb 'Part two of the epic Eisenhorn trilogy returns. \n\nA century after his recovery of the alien Necroteuch, Gregor Eisenhorn is one of the Imperial Inquisition’s most celebrated agents. But when a face from his past returns to haunt him, and he is implicated in a great tragedy that devastates the world of Thracian Primaris, Eisenhorn’s universe crumbles around him. The daemon Cherubael is back, and seeks to bring the inquisitor to ruin – either by his death, or by turning him to the service of the Dark Gods.'
-\set book_2_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1427161165l/23492350.jpg'
+\set book_2_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1427161165l/23492350.jpg'
 
 \set book_3_title 'Hereticus'
 \set book_3_title_sort 'hereticus'
@@ -115,7 +115,7 @@ $$ LANGUAGE plpgsql;
 \set book_3_book_format 'Paperback'
 \set book_3_total_pages 416
 \set book_3_blurb 'Part three of the epic Eisenhorn trilogy returns. \n\nHunted by his former allies as a radical and enemy of the Imperium, Inquisitor Gregor Eisenhorn must fight to prove that he remains loyal as he tracks down a dangerous heretic whom the Inquisition believes dead – the dread former Inquisitor Quixos. As he grows more desperate for victory, Eisenhorn uses ever darker means to achieve his goals – but how far can he go using the weapons of the enemy until he becomes that very enemy – and no different to the traitor he hunts?'
-\set book_3_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1430084067l/23492348.jpg'
+\set book_3_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1430084067l/23492348.jpg'
 
 \set book_4_title 'Ravenor: The Omnibus'
 \set book_4_title_sort 'ravenor: the omnibus'
@@ -124,7 +124,7 @@ $$ LANGUAGE plpgsql;
 \set book_4_book_format 'Paperback'
 \set book_4_total_pages 880
 \set book_4_blurb 'Inquisitor Ravenor and his followers investigate a daemonic conspiracy that stretches across space and time in three classic novels by Dan Abnett. \n\nIn the war-torn future of the 41st millennium, the Inquisition fights a secret war against the darkest enemies of mankind – the alien, the heretic and the daemon. The three stories in this omnibus tell the tale of Inquisitor Gideon Ravenor and his lethal band of operatives, whose investigations take them from the heart of the Scarus Sector to the wildest regions of space beyond, and even through time itself. Wherever they go, and whatever dangers they face, they will never give up until their mission succeeds. \n\nContains the novels Ravenor, Ravenor Returned and Ravenor Regue, plus three short stories.'
-\set book_4_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1545478110l/42641133._SY475_.jpg'
+\set book_4_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1545478110l/42641133._SY475_.jpg'
 
 \set book_5_title 'The Magos'
 \set book_5_title_sort 'magos, the'
@@ -133,7 +133,7 @@ $$ LANGUAGE plpgsql;
 \set book_5_book_format 'Paperback'
 \set book_5_total_pages 720
 \set book_5_blurb 'Inquisitor Eisenhorn returns in a stunning new novel that pits him against his oldest foe, forcing him to finally confront the growing darkness within his own soul. \n\nInquisitor Gregor Eisenhorn has spent his life stalking the darkest and most dangerous corners of the galaxy in pursuit of heresy and Chaos, but how long can a man walk that path without succumbing to the lure of the warp? Pursuing heretics in the remote worlds of the Imperium, Eisenhorn must confront the truth about himself. Is he still a champion of the Throne? Or has he been seduced by the very evil that he hunts? The Magos is the brand new, full-length fourth novel in the hugely popular Eisenhorn series. This paperback edition also includes the definitive casebook of Gregor Eisenhorn, collecting together all twelve of Dan Abnett’s Inquisition short stories, several of which have never been in print before. These additional stories have been compiled by the author to act as an essential prologue to this long-awaited new novel, while also serving as an indispensable companion to the original Eisenhorn trilogy.'
-\set book_5_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1506373817l/36304173._SY475_.jpg'
+\set book_5_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1506373817l/36304173._SY475_.jpg'
 
 \set book_6_title 'Honourbound'
 \set book_6_title_sort 'honourbound'
@@ -142,7 +142,7 @@ $$ LANGUAGE plpgsql;
 \set book_6_book_format 'Paperback'
 \set book_6_total_pages 496
 \set book_6_blurb 'Uncompromising and fierce, Commissar Severina Raine has always served the Imperium with the utmost distinction. Attached to the Eleventh Antari Rifles, she instills order and courage in the face of utter horror. The Chaos cult, the Sighted, have swept throughout the Bale Stars and a shadow has fallen across its benighted worlds. A great campaign led by the vaunted hero Lord-General Militant Alar Serek is underway to free the system from tyranny and enslavement but the price of victory must be paid in blood. But what secrets do the Sighted harbour, secrets that might cast a light onto Raine’s own troubled past? Only by embracing her duty and staying true to her belief in the Imperium and the commissar’s creed can she hope to survive this crucible, but even then will that be enough?'
-\set book_6_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1545477896l/42789259._SY475_.jpg'
+\set book_6_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1545477896l/42789259._SY475_.jpg'
 
 \set book_7_title 'Cadia Stands'
 \set book_7_title_sort 'cadia stands'
@@ -151,7 +151,7 @@ $$ LANGUAGE plpgsql;
 \set book_7_book_format 'Paperback'
 \set book_7_total_pages 320
 \set book_7_blurb 'The brutal war for Cadia is decided, as Lord Castellan Ursarkar Creed and the armies of the Imperium fight to halt the Thirteenth Black Crusade and prevent a calamity on a galactic scale. \n\nUnder almost constant besiegement by the daemonic hosts pouring from the Eye of Terror, Cadia stands as a bulwark against tyranny and death. Its fortresses and armies have held back the hordes of Chaos for centuries, but that grim defiance is about to reach its end. As Abaddon’s Thirteenth Black Crusade batters Cadia’s defences and the armies of the Imperium flock to reinforce this crucial world, a terrible ritual long in the making comes to fruition, and the delicate balance of this brutal war shifts… From the darkness, a hero rises to lead the beleaguered defenders, Lord Castellan Ursarkar Creed, but even with the armoured might of the Astra Militarum and the strength of the Adeptus Astartes at his side, it may not be enough to avert disaster and prevent the fall of Cadia. While Creed lives, there is hope. While there is breath in the body of a single defender, Cadia Stands… but for how much longer?'
-\set book_7_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1497083669l/35297654._SY475_.jpg'
+\set book_7_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1497083669l/35297654._SY475_.jpg'
 
 \set book_8_title 'Maledictions: A Horror Anthology'
 \set book_8_title_sort 'maledictions: a horror anthology'
@@ -160,7 +160,7 @@ $$ LANGUAGE plpgsql;
 \set book_8_book_format 'Paperback'
 \set book_8_total_pages 352
 \set book_8_blurb 'A eclectic collection of gut wrenching tales to spook and scare. \n\nHorror is no stranger to the worlds of Warhammer. Its very fabric is infested with the arcane, the strange and the downright terrifying. From the cold, vastness of the 41st millenium to the creeping evil at large in the Mortal Realms, this anthology of short stories explores the sinister side of Warhammer in a way it never has been before. Psychological torment, visceral horrors, harrowing tales of the supernatural and the nightmares buried within, this collection brings together some of the best horror writing from the Black Library. \n\nFeaturing stories from Graham McNeill, Cassandra Khaw, Alec Worley, David Annandale and more.'
-\set book_8_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1548642309l/40744548.jpg'
+\set book_8_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1548642309l/40744548.jpg'
 
 \set book_9_title 'Cadian Honour'
 \set book_9_title_sort 'cadian honour'
@@ -169,7 +169,7 @@ $$ LANGUAGE plpgsql;
 \set book_9_book_format 'Paperback'
 \set book_9_total_pages 496
 \set book_9_blurb 'Sent to the capital world of Potence, Sergeant Minka Lesk and the Cadian 101st discover that though Cadia may have fallen, their duty continues. \n\nFor ten thousand years, Cadia stood as a bastion against the daemonic tide spewing forth from the Eye of Terror. But now the Fortress World lies in ruins, its armies decimated in the wake of Abaddon the Despoiler and his Thirteenth Black Crusade. Those who survived, though haunted by the loss of their beloved homeworld, remain bloodied and unbarred, fighting ruthlessly in the Emperor’s name. \n\nAmongst them is the indomitable Sergeant Minka Lesk. Sent to the capital world of Potence, Lesk and the Cadian 101st company soon discover that a rot runs through the very heart of the seemingly peaceful world. Lesk knows she must excise this taint of Chaos, for it is not only her life and those of her company at stake, but also the honour of Cadia itself.'
-\set book_9_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1552227521l/44180913.jpg'
+\set book_9_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1552227521l/44180913.jpg'
 
 \set book_10_title 'The Uriel Ventris Chronicles: Volume One'
 \set book_10_title_sort 'uriel ventris chronicles: volume one, the'
@@ -178,7 +178,7 @@ $$ LANGUAGE plpgsql;
 \set book_10_book_format 'Paperback'
 \set book_10_total_pages 800
 \set book_10_blurb 'The Ultramarines are a byword for loyalty and courage, their martial prowess is legendary and is second only to the God-Emperor. Graham McNeill’s epic trilogy of Ultramarines novels is a masterpiece of non-stop action! Containing the novels Nightbringer, Warriors of Ultramar and Dead Sky, Black Sun, the series follows the adventures of Space Marine Captain Uriel Ventris and the Ultramarines as they battle against the enemies of mankind. From their home world of Macragge, into the dreaded Eye of Terror and beyond, Graham McNeill’s prose rattles like gunfire and brings the Space Marines to life like never before.'
-\set book_10_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1626758004l/58593308.jpg'
+\set book_10_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1626758004l/58593308.jpg'
 
 \set book_11_title 'The Uriel Ventris Chronicles: Volume Two'
 \set book_11_title_sort 'the uriel ventris chronicles: volume two, the'
@@ -187,7 +187,7 @@ $$ LANGUAGE plpgsql;
 \set book_11_book_format 'Paperback'
 \set book_11_total_pages 848
 \set book_11_blurb 'The second omnibus of stories featuring one of Warhammer 40,000''s most prominent characters, Ultramarine Captain Uriel Ventris. \n\nThe Ultramarines are the epitome of a Space Marine Chapter. Warriors without peer, their name is a byword for discipline and honour, and their heroic deeds are legendary. \n\nCaptain Uriel Ventris fights to prove his worth and return to the hallowed ranks of the Chapter after his exile to the Eye of Terror. But as the Iron Warriors move against Ultramar, a grim premonition comes to light: Ventris will have a part to play in the coming war... for good or ill. The ongoing story of the Uriel Ventris continues in this omnibus edition, featuring the novels The Killing Ground, Courage and Honour and The Chapter''s Due, as well as several short stories and the classic comic ''Black Bone Road''.'
-\set book_11_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561287919l/44180905.jpg'
+\set book_11_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561287919l/44180905.jpg'
 
 \set book_12_title 'Iron Warriors: The Omnibus'
 \set book_12_title_sort 'iron warriors: the omnibus'
@@ -196,7 +196,7 @@ $$ LANGUAGE plpgsql;
 \set book_12_book_format 'Paperback'
 \set book_12_total_pages 688
 \set book_12_blurb 'The Iron Warriors are Chaos Space Marines with unrivalled expertise in the art of siege warfare. With great batteries of artillery and all the favours of the Ruinous Powers at their command, there is no fortress in the galaxy that can stand against them for long. \n\nThis omnibus follows the schemes of the embittered Warsmith Honsou in his struggles against the hated Space Marines of the Imperium. Drawing upon characters and events from author Graham McNeill’s popular Ultramarines series and for the first time in a single publication, Storm of Iron and the novella Iron Warrior are gathered along with short stories The Enemy of My Enemy, The Heraclitus Effect and The Skull Harvest.'
-\set book_12_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1625358426l/58481729.jpg'
+\set book_12_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1625358426l/58481729.jpg'
 
 \set book_13_title 'The Swords of Calth'
 \set book_13_title_sort 'swords of calth, the'
@@ -205,7 +205,7 @@ $$ LANGUAGE plpgsql;
 \set book_13_book_format 'Hardcover'
 \set book_13_total_pages 258
 \set book_13_blurb 'A Uriel Ventris novel \n\nUriel Ventris returns! Newly ascended to the ranks of the Primaris Space Marines, Ventris leads the Ultramarines Fourth Company – the famed Swords of Calth – to war against the ancient necrons. Old enemies arise, as Ventris'' past and present collide in brutal battle. \n\nREAD IT BECAUSE \nOne of Black Library''s longest-running series continues – and the hero''s been given a new lease of life as a Primaris Space Marine. Discover how Ventris adapts to his new life even as his past comes back to haunt him. \n\nTHE STORY \nUriel Ventris, newly ascended to the ranks of the Primaris, leads warriors of the Fourth Company from the Indomitus Crusade of Roboute Guilliman to a world on the frontiers of Ultramar. Once a battleground against the orks, Sycorax is now under furious assault from an enemy of ancient times – the necrons. The Ultramarines have faced these baleful xenos before, but Uriel senses the hand of a foe from his past at work on Sycorax, a tally unfinished and a debt to the Imperium finally come due. \n\nTrapped deep in a devastated city, Uriel leads the Swords of Calth into battle, and must adapt to his new incarnation as one of the Primaris – a challenge that will test his soul as much as it will test him as a warrior.'
-\set book_13_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1628695156l/58749658._SY475_.jpg'
+\set book_13_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1628695156l/58749658._SY475_.jpg'
 
 \set book_14_title 'Warden of the Blade'
 \set book_14_title_sort 'warden of the blade'
@@ -214,7 +214,7 @@ $$ LANGUAGE plpgsql;
 \set book_14_book_format 'Paperback'
 \set book_14_total_pages 320
 \set book_14_blurb 'The noble Castellan Crowe of the Grey Knights Chapter must wield the cursed Blade of Antwyr, an indestructable weapon imbued with evil daemonic power. \n\nCastellan Crowe, Brotherhood Champion of the Purifier order of the Grey Knights, bears a heavy burden – to be the warden of the dread Blade of Antwyr. Its malevolent voice is forever in his head, trying to crack his resolve, urging him to unleash a power he must never use. The toll is terrible – how long before the incorruptible Crowe is at last defeated? Under the command of Castellan Gavallan, Crowe and his brother Purifiers bring purging flame to a daemonic incursion that threatens to consume the world of Sandava I. However, what awaits them there is more insidious and more powerful than they imagine, and they must reckon too with the machinations of the Blade, as it seeks to destroy its guardian and drown the galaxy in blood.'
-\set book_14_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1497084986l/34466775._SY475_.jpg'
+\set book_14_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1497084986l/34466775._SY475_.jpg'
 
 \set book_15_title 'Deathwatch'
 \set book_15_title_sort 'deathwatch'
@@ -223,7 +223,7 @@ $$ LANGUAGE plpgsql;
 \set book_15_book_format 'Paperback'
 \set book_15_total_pages 512
 \set book_15_blurb 'Action packed novel featuring the galaxies foremost alien hunting taskforce, the Deathwatch. Led by Librarian Karras, the elite alien-hunting Talon Squad must penetrate a genestealer lair and put the abominations to the flame or face the consequences of an entire planet''s extinction. \n\nGathered from the many Chapters of Space Marines, the Deathwatch are elite, charged with defending the Imperium of Man from aliens. Six Space Marines, strangers from different words, make up Talon Squad. On 31-Caro, a new terror has emerged, a murderous shadow that stalks the dark, and only the Deathwatch can stop it. Under the direction of a mysterious Inquisitor Lord known only as Sigma, they must cleanse this planet or die in the attempt.'
-\set book_15_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561288604l/52357292._SX318_SY475_.jpg'
+\set book_15_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561288604l/52357292._SX318_SY475_.jpg'
 
 \set book_16_title 'The Carrion Throne'
 \set book_16_title_sort 'carrion throne, the'
@@ -232,7 +232,7 @@ $$ LANGUAGE plpgsql;
 \set book_16_book_format 'Paperback'
 \set book_16_total_pages 384
 \set book_16_blurb 'Inquisitor Erasmus Crowl and his acolyte Spinoza follow the trail of a shadowy conspiracy on Holy Terra itself, the capital world of the Imperium. \n\nIn the hellish sprawl of Imperial Terra, Ordo Hereticus Inquisitor Erasmus Crowl serves as a stalwart and vigilant protector, for even the Throneworld is not immune to the predations of its enemies. In the course of his Emperor-sworn duty, Crowl becomes embroiled in a dark conspiracy, one that leads all the way to the halls of the Imperial Palace. As he plunges deeper into the shadowy underbelly of the many palace districts, his investigation attracts the attention of hidden forces, and soon he and his acolyte Spinoza are being hunted – by heretics, xenos, servants of the Dark Powers, or perhaps even rival elements of the Inquisition itself. Soon they discover a terrible truth, one that if allowed to get out could undermine the very fabric of the Imperium itself.'
-\set book_16_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1507457967l/36373739._SY475_.jpg'
+\set book_16_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1507457967l/36373739._SY475_.jpg'
 
 \set book_17_title 'The Hollow Mountain'
 \set book_17_title_sort 'hollow mountain, the'
@@ -241,7 +241,7 @@ $$ LANGUAGE plpgsql;
 \set book_17_book_format 'Paperback'
 \set book_17_total_pages 352
 \set book_17_blurb 'Book 2 in the Vaults of Terra mini-series. Discover what happens when Chaos comes to the Throneworld itself for the first time in ten millennia..... \n\nInquisitor Erasmus Crowl has discovered a terrible plot, its roots firmly planted in the very highest levels of Terra. Pursuing it is fraught with risk, but Crowl’s sense of duty compels him to persevere. He and his acolyte Spinoza run down their leads in secret, knowing that their every move invites danger, but even as they begin to reveal the truth, a greater peril is unfolding in the skies – the Great Rift is becoming manifest. During the madness that threatens to tear Terra asunder, Crowl’s Inquisitorial base of operations comes under attack and is badly ravaged. As his world begins to unravel and a new, bloody age dawns, can Crowl stay true to his course and expose the horror that lies at the heart of the Hollow Mountain?'
-\set book_17_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1563199563l/51086449._SX318_SY475_.jpg'
+\set book_17_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1563199563l/51086449._SX318_SY475_.jpg'
 
 \set book_18_title 'Kingsblade'
 \set book_18_title_sort 'kingsblade'
@@ -250,7 +250,7 @@ $$ LANGUAGE plpgsql;
 \set book_18_book_format 'Paperback'
 \set book_18_total_pages 368
 \set book_18_blurb 'Imperial Knight Titans clash as an internecine war ravages the Knights of Adrastapol. \n\nThe Knight Houses of Adrastapol are both noble and righteous, and when the Imperial world of Donatos falls to the heresy of the Word Bearers, they are foremost in the vanguard to retake it. Led by High King Tolwyn Draconis, the Knights are peerless in battle and strike deep into the enemy’s ranks. But the war soon turns when a terrible tragedy strikes, casting the Imperial campaign into anarchy. As desperation grows, unblooded Knights Errant Danial and Luk must quickly learn the ways of war to prevent an unholy ritual, or Donatos will be lost and all the noble Houses of Adrastapol with it.'
-\set book_18_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1478803265l/32902466.jpg'
+\set book_18_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1478803265l/32902466.jpg'
 
 \set book_19_title 'Blood Angels: The Complete Rafen Omnibus'
 \set book_19_title_sort 'blood angels: the complete rafen omnibus'
@@ -258,8 +258,8 @@ $$ LANGUAGE plpgsql;
 \set book_19_edition_date '2019/01/19'
 \set book_19_book_format 'Paperback'
 \set book_19_total_pages 828
-\set book_19_blurb 'This omnibus edition collects together for the first time the four Blood Angels novels of author James Swallow and includes several bonus short stories. The full story of Blood Angels Brother Rafen. From humble battle-brother to war-hardened sergeant, Rafen survives civil war, Chaos plots and the calling of destiny in four novels by James Swallow. \n\nIn this epic tale of brotherhood and darkness, the Blood Angels face strife from within when Brother Arkio claims to be a reincarnation of Sanguinius, the Blood Angels’ spiritual father. His message is clear: follow me or die. With no other choice, his brother Rafen kneels before this prophet of the Blood and swears an oath of devotion. But in his heart, Rafen knows that Arkio cannot be allowed to lead the Chapter into darkness. A reckoning is coming, one that they will not both survive. \nAs the ashes settle on the devastating by civil war, the Blood Angels face a dire crisis and must call together their Successor Chapters or face extinction. But the sons of Sanguinius have many enemies, and this audacious scheme to rebuild their ranks comes under threat by the machinations of the arch-traitor Fabius Bile.'
-\set book_19_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1587322079l/53208413.jpg'
+\set book_19_blurb 'This omnibus edition collects together for the first time the four Blood Angels novels of author James Swallow and includes several bonus short stories. The full story of Blood Angels Brother Rafen. From humble battle-brother to war-hardened sergeant, Rafen survives civil war, Chaos plots and the calling of destiny in four novels by James Swallow. \n\nIn this epic tale of brotherhood and darkness, the Blood Angels face strife from within when Brother Arkio claims to be a reincarnation of Sanguinius, the Blood Angels’ spiritual father. His message is clear: follow me or die. With no other choice, his brother Rafen kneels before this prophet of the Blood and swears an oath of devotion. But in his heart, Rafen knows that Arkio cannot be allowed to lead the Chapter into darkness. A reckoning is coming, one that they will not both survive. As the ashes settle on the devastating by civil war, the Blood Angels face a dire crisis and must call together their Successor Chapters or face extinction. But the sons of Sanguinius have many enemies, and this audacious scheme to rebuild their ranks comes under threat by the machinations of the arch-traitor Fabius Bile.'
+\set book_19_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1587322079l/53208413.jpg'
 
 \set book_20_title 'Belisarius Cawl: The Great Work'
 \set book_20_title_sort 'belisarius cawl: the great work'
@@ -268,7 +268,7 @@ $$ LANGUAGE plpgsql;
 \set book_20_book_format 'Paperback'
 \set book_20_total_pages 416
 \set book_20_blurb 'Warhammer 40,000 fans rejoice - Belisarius Cawl has his own novel! Join him on his journey to the abandoned world of Sotha which hides a long-buried secret… and an ancient evil. \n\nBelisarius Cawl, Archmagos Dominus of the Adeptus Mechanicus is the most brilliant mind alive. For 10,000 years he has furthered the cause of mankind, working under the aegis of the Emperor and Lord Commander Roboute Guilliman to prevent the inexorable march of the alien and the traitor. Many call him heretic, but all must recognise the magnitude of his achievements, for who else but he was entrusted to create a new generation of Space Marines? Who else but the great Belisarius Cawl could even accomplish such a task? \n\nNow, in the wake of the Great Rift and the Indomitus Crusade, his ambitions bring him to the long-dead world of Sotha, once home to the Scythes of the Emperor, now a barren wasteland devoured by the vile Tyranids. Accompanied by Tetrarch Felix and his elite warriors, it is here that Cawl believes the lynchpin of his mysterious Great Work lies. But uncovering it is a near impossible task, one in which the Archmagos must overcome an ancient evil that threatens to extinguish the last hope of humanity.'
-\set book_20_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1562505193l/51085980._SX318_SY475_.jpg'
+\set book_20_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1562505193l/51085980._SX318_SY475_.jpg'
 
 \set book_21_title 'Deathwatch: The Omnibus'
 \set book_21_title_sort 'deathwatch: the omnibus'
@@ -277,7 +277,7 @@ $$ LANGUAGE plpgsql;
 \set book_21_book_format 'Paperback'
 \set book_21_total_pages 960
 \set book_21_blurb 'New omnibus of novels and short stories featuring the Deathwatch, alien-hunting Space Marines who undertake special ops-style missions in the 41st millennium. \n\nThe Deathwatch are the elite. Recruited from numerous Space Marine Chapters, their mission is simple: exterminate any xenos threat to the Imperium. Assembled into kill-teams, the Deathwatch are expert alien hunters, equipped to undertake any mission in any environment. None are as dedicated or as skilled in the brutal art of alien annihilation. This action-packed omnibus contains three separate novels written by Steve Parker, Ian St Martin and Justin D Hill, along with a dozen of the best short stories ever written about the Imperium''s premier xenos hunters.'
-\set book_21_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1502692222l/34466780.jpg'
+\set book_21_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1502692222l/34466780.jpg'
 
 \set book_22_title 'Sagas of the Space Wolves: The Omnibus'
 \set book_22_title_sort 'sagas of the space wolves: the omnibus'
@@ -286,31 +286,52 @@ $$ LANGUAGE plpgsql;
 \set book_22_book_format 'Paperback'
 \set book_22_total_pages 944
 \set book_22_blurb 'Bumper Omnibus collecting together some of Black Library''s most loved Space Wolves stories for the first time. \n\nBorn on the icy world of Fenris, few amongst the brotherhoods of the Adeptus Astartes are as fierce or as noble as the Space Wolves. Long are their tales, told around mead halls or the flickering glow of a hungry fire. Heed them well, for they speak of legends like the Young King Ragnar Blackmane, whose thirst for battle is only matched by his heroism, or the Wolf Lord Logan Grimnar that most venerable and fearsome of warriors, he who leads the Chapter itself. So listen hard and listen carefully to the skald as he holds forth around the burning fire, because there is darkness in these sagas as well as light. \n\nThis omnibus edition collects together for the first time the novels Ragnar Blackmane, Curse of the Wulfen, Legacy of Russ and The Hunt for Logan Grimnar as well as the novellas Blood on the Mountain and Arjac Rockfist, and a host of short stories.'
-\set book_22_picture_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1635095980l/59442363.jpg'
+\set book_22_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1580054595l/51085946._SX318_SY475_.jpg'
+
+\set book_23_title 'Infernal Requiem'
+\set book_23_title_sort 'infernal requiem'
+\set book_23_published_date '2019/04/13'
+\set book_23_edition_date '2019/10/15'
+\set book_23_book_format 'Paperback'
+\set book_23_total_pages 400
+\set book_23_blurb 'An Adepta Sororitas novel \n\nOn a distant world, an obscure order of the Adepta Sororitas study their founder''s visions. They live in solitude… which is about to be broken as danger approaches. \n\nREAD IT BECAUSE \nPeter Fehervari brings a tale of an unusual order of the Sisters of Battle, a sister breaking her self-imposed exile and an Astra Militarum unit seeking respite from their woes… and it''s every bit as weird and wonderful as you''d hope. \n\nTHE STORY \nThe Adepta Sororitas of the Last Candle have stood vigil over their sanctuary world for centuries, striving to decipher their founder''s tormented visions. Outsiders are unwelcome… yet still they come. \n\nDecimated by an encounter with a lethal xenos entity, the survivors of an elite Astra Militarum company have journeyed to the Candleworld in search of healing, escorted by a woman who is no stranger there – Sister Hospitaller Asenath Hyades, who turned her back on the order decades ago. \n\nAs the seekers near the sect''s bastion, malign forces begin to stir among the planet''s storm-wracked spires, but the most insidious shadows lie in their own souls.'
+\set book_23_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1572780052l/44180899._SY475_.jpg'
+
+\set book_24_title 'Dark Imperium'
+\set book_24_title_sort 'dark imperium'
+\set book_24_published_date '2017/06/23'
+\set book_24_edition_date '2020/05/29'
+\set book_24_book_format 'Hardcover'
+\set book_24_total_pages 322
+\set book_24_blurb 'A Warhammer 40,000 novel \nThe galaxy has changed. Darkness spreads, warp storms split reality and Chaos is everywhere – even Ultramar. As Roboute Guilliman''s Indomitus Crusade draws to a close, he must brave the perils of the warp to reach his home and save it from the depredations of the Plague God. \n\nTHE STORY \nFell times have come to the galaxy. Cadia has fallen, destroyed by the onslaught of Chaos. A Great Rift in the warp has opened and from its depths spew daemons and the horrors of Old Night. But all hope is not lost... A hero, long absent, has returned and with him comes the wrath of the Ultramarines reborn. Roboute Guilliman has arisen to lead the Imperium out of darkness on a crusade the likes of which has not been seen since the fabled days of the Emperor. But never before have the forces of Ruin amassed in such numbers, and nowhere is safe from despoliation. From the dreaded Scourge Stars come the hordes of the Plaguefather, Lord Nurgle, and their pustulent eye is fixed on Macragge. As the Indomitas Crusade draws to an end, Guilliman races to Ultramar and a confrontation with the Death Guard.'
+\set book_24_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1634956122l/59433670.jpg'
+
 
 -- INSERT book using previously declared variables
-SELECT insert_book(:'book_1_title', :'book_1_title_sort', :'book_1_published_date', :'book_1_edition_date', :'book_1_book_format', :'book_1_total_pages', :'book_1_blurb', :'book_1_picture_url');
-SELECT insert_book(:'book_2_title', :'book_2_title_sort', :'book_2_published_date', :'book_2_edition_date', :'book_2_book_format', :'book_2_total_pages', :'book_2_blurb', :'book_2_picture_url');
-SELECT insert_book(:'book_3_title', :'book_3_title_sort', :'book_3_published_date', :'book_3_edition_date', :'book_3_book_format', :'book_3_total_pages', :'book_3_blurb', :'book_3_picture_url');
-SELECT insert_book(:'book_4_title', :'book_4_title_sort', :'book_4_published_date', :'book_4_edition_date', :'book_4_book_format', :'book_4_total_pages', :'book_4_blurb', :'book_4_picture_url');
-SELECT insert_book(:'book_5_title', :'book_5_title_sort', :'book_5_published_date', :'book_5_edition_date', :'book_5_book_format', :'book_5_total_pages', :'book_5_blurb', :'book_5_picture_url');
-SELECT insert_book(:'book_6_title', :'book_6_title_sort', :'book_6_published_date', :'book_6_edition_date', :'book_6_book_format', :'book_6_total_pages', :'book_6_blurb', :'book_6_picture_url');
-SELECT insert_book(:'book_7_title', :'book_7_title_sort', :'book_7_published_date', :'book_7_edition_date', :'book_7_book_format', :'book_7_total_pages', :'book_7_blurb', :'book_7_picture_url');
-SELECT insert_book(:'book_8_title', :'book_8_title_sort', :'book_8_published_date', :'book_8_edition_date', :'book_8_book_format', :'book_8_total_pages', :'book_8_blurb', :'book_8_picture_url');
-SELECT insert_book(:'book_9_title', :'book_9_title_sort', :'book_9_published_date', :'book_9_edition_date', :'book_9_book_format', :'book_9_total_pages', :'book_9_blurb', :'book_9_picture_url');
-SELECT insert_book(:'book_10_title', :'book_10_title_sort', :'book_10_published_date', :'book_10_edition_date', :'book_10_book_format', :'book_10_total_pages', :'book_10_blurb', :'book_10_picture_url');
-SELECT insert_book(:'book_11_title', :'book_11_title_sort', :'book_11_published_date', :'book_11_edition_date', :'book_11_book_format', :'book_11_total_pages', :'book_11_blurb', :'book_11_picture_url');
-SELECT insert_book(:'book_12_title', :'book_12_title_sort', :'book_12_published_date', :'book_12_edition_date', :'book_12_book_format', :'book_12_total_pages', :'book_12_blurb', :'book_12_picture_url');
-SELECT insert_book(:'book_13_title', :'book_13_title_sort', :'book_13_published_date', :'book_13_edition_date', :'book_13_book_format', :'book_13_total_pages', :'book_13_blurb', :'book_13_picture_url');
-SELECT insert_book(:'book_14_title', :'book_14_title_sort', :'book_14_published_date', :'book_14_edition_date', :'book_14_book_format', :'book_14_total_pages', :'book_14_blurb', :'book_14_picture_url');
-SELECT insert_book(:'book_15_title', :'book_15_title_sort', :'book_15_published_date', :'book_15_edition_date', :'book_15_book_format', :'book_15_total_pages', :'book_15_blurb', :'book_15_picture_url');
-SELECT insert_book(:'book_16_title', :'book_16_title_sort', :'book_16_published_date', :'book_16_edition_date', :'book_16_book_format', :'book_16_total_pages', :'book_16_blurb', :'book_16_picture_url');
-SELECT insert_book(:'book_17_title', :'book_17_title_sort', :'book_17_published_date', :'book_17_edition_date', :'book_17_book_format', :'book_17_total_pages', :'book_17_blurb', :'book_17_picture_url');
-SELECT insert_book(:'book_18_title', :'book_18_title_sort', :'book_18_published_date', :'book_18_edition_date', :'book_18_book_format', :'book_18_total_pages', :'book_18_blurb', :'book_18_picture_url');
-SELECT insert_book(:'book_19_title', :'book_19_title_sort', :'book_19_published_date', :'book_19_edition_date', :'book_19_book_format', :'book_19_total_pages', :'book_19_blurb', :'book_19_picture_url');
-SELECT insert_book(:'book_20_title', :'book_20_title_sort', :'book_20_published_date', :'book_20_edition_date', :'book_20_book_format', :'book_20_total_pages', :'book_20_blurb', :'book_20_picture_url');
-SELECT insert_book(:'book_21_title', :'book_21_title_sort', :'book_21_published_date', :'book_21_edition_date', :'book_21_book_format', :'book_21_total_pages', :'book_21_blurb', :'book_21_picture_url');
-SELECT insert_book(:'book_22_title', :'book_22_title_sort', :'book_22_published_date', :'book_22_edition_date', :'book_22_book_format', :'book_22_total_pages', :'book_22_blurb', :'book_22_picture_url');
+SELECT insert_book(:'book_1_title', :'book_1_title_sort', :'book_1_published_date', :'book_1_edition_date', :'book_1_book_format', :'book_1_total_pages', :'book_1_blurb', :'book_1_book_cover_url');
+SELECT insert_book(:'book_2_title', :'book_2_title_sort', :'book_2_published_date', :'book_2_edition_date', :'book_2_book_format', :'book_2_total_pages', :'book_2_blurb', :'book_2_book_cover_url');
+SELECT insert_book(:'book_3_title', :'book_3_title_sort', :'book_3_published_date', :'book_3_edition_date', :'book_3_book_format', :'book_3_total_pages', :'book_3_blurb', :'book_3_book_cover_url');
+SELECT insert_book(:'book_4_title', :'book_4_title_sort', :'book_4_published_date', :'book_4_edition_date', :'book_4_book_format', :'book_4_total_pages', :'book_4_blurb', :'book_4_book_cover_url');
+SELECT insert_book(:'book_5_title', :'book_5_title_sort', :'book_5_published_date', :'book_5_edition_date', :'book_5_book_format', :'book_5_total_pages', :'book_5_blurb', :'book_5_book_cover_url');
+SELECT insert_book(:'book_6_title', :'book_6_title_sort', :'book_6_published_date', :'book_6_edition_date', :'book_6_book_format', :'book_6_total_pages', :'book_6_blurb', :'book_6_book_cover_url');
+SELECT insert_book(:'book_7_title', :'book_7_title_sort', :'book_7_published_date', :'book_7_edition_date', :'book_7_book_format', :'book_7_total_pages', :'book_7_blurb', :'book_7_book_cover_url');
+SELECT insert_book(:'book_8_title', :'book_8_title_sort', :'book_8_published_date', :'book_8_edition_date', :'book_8_book_format', :'book_8_total_pages', :'book_8_blurb', :'book_8_book_cover_url');
+SELECT insert_book(:'book_9_title', :'book_9_title_sort', :'book_9_published_date', :'book_9_edition_date', :'book_9_book_format', :'book_9_total_pages', :'book_9_blurb', :'book_9_book_cover_url');
+SELECT insert_book(:'book_10_title', :'book_10_title_sort', :'book_10_published_date', :'book_10_edition_date', :'book_10_book_format', :'book_10_total_pages', :'book_10_blurb', :'book_10_book_cover_url');
+SELECT insert_book(:'book_11_title', :'book_11_title_sort', :'book_11_published_date', :'book_11_edition_date', :'book_11_book_format', :'book_11_total_pages', :'book_11_blurb', :'book_11_book_cover_url');
+SELECT insert_book(:'book_12_title', :'book_12_title_sort', :'book_12_published_date', :'book_12_edition_date', :'book_12_book_format', :'book_12_total_pages', :'book_12_blurb', :'book_12_book_cover_url');
+SELECT insert_book(:'book_13_title', :'book_13_title_sort', :'book_13_published_date', :'book_13_edition_date', :'book_13_book_format', :'book_13_total_pages', :'book_13_blurb', :'book_13_book_cover_url');
+SELECT insert_book(:'book_14_title', :'book_14_title_sort', :'book_14_published_date', :'book_14_edition_date', :'book_14_book_format', :'book_14_total_pages', :'book_14_blurb', :'book_14_book_cover_url');
+SELECT insert_book(:'book_15_title', :'book_15_title_sort', :'book_15_published_date', :'book_15_edition_date', :'book_15_book_format', :'book_15_total_pages', :'book_15_blurb', :'book_15_book_cover_url');
+SELECT insert_book(:'book_16_title', :'book_16_title_sort', :'book_16_published_date', :'book_16_edition_date', :'book_16_book_format', :'book_16_total_pages', :'book_16_blurb', :'book_16_book_cover_url');
+SELECT insert_book(:'book_17_title', :'book_17_title_sort', :'book_17_published_date', :'book_17_edition_date', :'book_17_book_format', :'book_17_total_pages', :'book_17_blurb', :'book_17_book_cover_url');
+SELECT insert_book(:'book_18_title', :'book_18_title_sort', :'book_18_published_date', :'book_18_edition_date', :'book_18_book_format', :'book_18_total_pages', :'book_18_blurb', :'book_18_book_cover_url');
+SELECT insert_book(:'book_19_title', :'book_19_title_sort', :'book_19_published_date', :'book_19_edition_date', :'book_19_book_format', :'book_19_total_pages', :'book_19_blurb', :'book_19_book_cover_url');
+SELECT insert_book(:'book_20_title', :'book_20_title_sort', :'book_20_published_date', :'book_20_edition_date', :'book_20_book_format', :'book_20_total_pages', :'book_20_blurb', :'book_20_book_cover_url');
+SELECT insert_book(:'book_21_title', :'book_21_title_sort', :'book_21_published_date', :'book_21_edition_date', :'book_21_book_format', :'book_21_total_pages', :'book_21_blurb', :'book_21_book_cover_url');
+SELECT insert_book(:'book_22_title', :'book_22_title_sort', :'book_22_published_date', :'book_22_edition_date', :'book_22_book_format', :'book_22_total_pages', :'book_22_blurb', :'book_22_book_cover_url');
+SELECT insert_book(:'book_23_title', :'book_23_title_sort', :'book_23_published_date', :'book_23_edition_date', :'book_23_book_format', :'book_23_total_pages', :'book_23_blurb', :'book_23_book_cover_url');
+SELECT insert_book(:'book_24_title', :'book_24_title_sort', :'book_24_published_date', :'book_24_edition_date', :'book_24_book_format', :'book_24_total_pages', :'book_24_blurb', :'book_24_book_cover_url');
 
 
 /* --------------------------------------------------- INSERT reader_book --------------------------------------------------- */
@@ -349,6 +370,8 @@ SELECT insert_reader_book(:'username_1', :'book_19_title');
 SELECT insert_reader_book(:'username_1', :'book_20_title');
 SELECT insert_reader_book(:'username_1', :'book_21_title');
 SELECT insert_reader_book(:'username_1', :'book_22_title');
+SELECT insert_reader_book(:'username_1', :'book_23_title');
+SELECT insert_reader_book(:'username_1', :'book_24_title');
 
 
 /* --------------------------------------------- INSERT read_instance --------------------------------------------- */
@@ -386,6 +409,8 @@ SELECT insert_read_instance(:'username_1', :'book_19_title');
 SELECT insert_read_instance(:'username_1', :'book_20_title');
 SELECT insert_read_instance(:'username_1', :'book_21_title');
 SELECT insert_read_instance(:'username_1', :'book_22_title');
+SELECT insert_read_instance(:'username_1', :'book_23_title');
+SELECT insert_read_instance(:'username_1', :'book_24_title');
 
 
 /* --------------------------------------------- INSERT read_entry --------------------------------------------- */
@@ -611,6 +636,19 @@ SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-26', 108, 791
 SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-27', 88, 879, 93.11);
 SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-28', 65, 944, 100);
 
+-- INSERT book_23
+SELECT insert_read_entry(:'username_1', :'book_23_title', '2021-10-29', 137, 137, 34.25);
+SELECT insert_read_entry(:'username_1', :'book_23_title', '2021-10-30', 130, 267, 66.75);
+SELECT insert_read_entry(:'username_1', :'book_23_title', '2021-10-31', 133, 400, 100);
+
+-- INSERT book_24
+SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-01', 55, 55, 17.08);
+SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-02', 50, 105, 32.61);
+SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-03', 48, 153, 47.52);
+SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-04', 56, 209, 64.91);
+SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-05', 36, 245, 76.09);
+SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-06', 77, 322, 100);
+
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
 -- FUNCTION insert_author
@@ -821,6 +859,15 @@ $$ LANGUAGE plpgsql;
 \set book_22_author_13_first_name 'Alec'
 \set book_22_author_13_last_name 'Worley'
 \set book_22_author_13_full_name 'Alec Worley'
+-- book 23 author
+\set book_23_author_1_first_name 'Peter'
+\set book_23_author_1_last_name 'Fehervari'
+\set book_23_author_1_full_name 'Peter Fehervari'
+-- book 24 author
+\set book_24_author_1_first_name 'Guy'
+\set book_24_author_1_last_name 'Haley'
+\set book_24_author_1_full_name 'Guy Haley'
+
 
 -- INSERT author using FUNCTION insert_author and DECLARED author variables as arguments, CHECK UNIQUE full_name (middle_name argument is optional)
 -- book 1 author
@@ -900,6 +947,10 @@ SELECT insert_author(:'book_22_author_10_full_name', :'book_22_author_10_first_n
 SELECT insert_author(:'book_22_author_11_full_name', :'book_22_author_11_first_name', :'book_22_author_11_last_name');
 SELECT insert_author(:'book_22_author_12_full_name', :'book_22_author_12_first_name', :'book_22_author_12_last_name');
 SELECT insert_author(:'book_22_author_13_full_name', :'book_22_author_13_first_name', :'book_22_author_13_last_name');
+-- book 23 author
+SELECT insert_author(:'book_23_author_1_full_name', :'book_23_author_1_first_name', :'book_23_author_1_last_name');
+-- book 24 author
+SELECT insert_author(:'book_24_author_1_full_name', :'book_24_author_1_first_name', :'book_24_author_1_last_name');
 
 
 /* --------------------------------------------- INSERT book_author (JOIN TABLE) --------------------------------------------- */
@@ -993,6 +1044,10 @@ SELECT join_book_author(:'book_22_title', :'book_22_author_10_full_name');
 SELECT join_book_author(:'book_22_title', :'book_22_author_11_full_name');
 SELECT join_book_author(:'book_22_title', :'book_22_author_12_full_name');
 SELECT join_book_author(:'book_22_title', :'book_22_author_13_full_name');
+-- book 23 author
+SELECT join_book_author(:'book_23_title', :'book_23_author_1_full_name');
+-- book 24 author
+SELECT join_book_author(:'book_24_title', :'book_24_author_1_full_name');
 
 
 /* --------------------------------------------- UPDATE read_instance --------------------------------------------- */
@@ -1056,6 +1111,8 @@ SELECT update_read_instance(:'username_1', :'book_19_title', FALSE, TRUE, FALSE)
 SELECT update_read_instance(:'username_1', :'book_20_title', TRUE, FALSE, FALSE);
 SELECT update_read_instance(:'username_1', :'book_21_title', TRUE, FALSE, FALSE);
 SELECT update_read_instance(:'username_1', :'book_22_title', TRUE, FALSE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_23_title', TRUE, FALSE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_24_title', TRUE, FALSE, FALSE);
 
 
 /* --------------------------------------------- UPDATE reader_book  --------------------------------------------- */
@@ -1098,6 +1155,8 @@ SELECT update_reader_book(:'username_1', :'book_19_title');
 SELECT update_reader_book(:'username_1', :'book_20_title');
 SELECT update_reader_book(:'username_1', :'book_21_title');
 SELECT update_reader_book(:'username_1', :'book_22_title');
+SELECT update_reader_book(:'username_1', :'book_23_title');
+SELECT update_reader_book(:'username_1', :'book_24_title');
 
 
 /* --------------------------------------------- ADD 2nd read_instance to Book 19 Blood Angels Omnibus for testing --------------------------------------------- */
@@ -1125,7 +1184,7 @@ BEGIN
 
   --Update read_instance meta data based on previously added read_entries
   UPDATE read_instance
-  SET   days_read =   (SELECT Count(DISTINCT Date(re.date_read)) AS days_read
+  SET   days_read =   (SELECT COUNT(DISTINCT Date(re.date_read)) AS days_read
                       FROM   read_instance AS ri
                       INNER JOIN read_entry AS re
                       ON re.read_instance_id = var_read_instance_id),
@@ -1142,7 +1201,7 @@ BEGIN
         is_reading = FALSE,
         is_finished = TRUE,
         is_dnf = FALSE
-  WHERE  read_instance.reader_book_id = var_reader_book_id
+  WHERE read_instance.reader_book_id = var_reader_book_id
   AND read_instance.id = var_read_instance_id;
 
   --Update meta data for reader_book based on previously added read_intance

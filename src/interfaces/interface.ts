@@ -15,6 +15,7 @@ export interface ReadInstanceITF {
   is_reading: boolean;
   is_finished: boolean;
   is_dnf: boolean;
+  reader_book_id: number;
   read_entry: ReadEntryITF[];
 }
 
@@ -38,6 +39,6 @@ export interface BookDetailsITF {
   total_pages: number;
   published_date: string;
   edition_date: string;
-  picture_url: string;
+  book_cover_url: string;
   blurb: string;
 }

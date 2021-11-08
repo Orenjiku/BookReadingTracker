@@ -17,7 +17,7 @@ CREATE TABLE book (
   total_pages INT,
   published_date DATE,
   edition_date DATE,
-  picture_url VARCHAR,
+  book_cover_url VARCHAR,
   blurb TEXT,
   CONSTRAINT ck_book_total_pages CHECK (total_pages > 0)
 );

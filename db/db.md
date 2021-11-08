@@ -48,7 +48,7 @@
 3.  Set book variables used for insert_book function in next step.  
     **_Note:_** Use same { number } for all related variables related to the book.  
       _Example_: \set book_1_title 'Name book here'
-    | title | title_sort | published_date | published_date_edition | book_format | total_pages | blurb | picture_link |
+    | title | title_sort | published_date | published_date_edition | book_format | total_pages | blurb | book_cover_url |
     | ----- | ---------- | -------------- | ---------------------- | ----------- | ----------- | ----- | ------------ |
     | string | string | string | string | string | string | string | string | string |
      ~~~~sql
@@ -59,13 +59,13 @@
      \set book_{number}_book_format {book_format}
      \set book_{number}_total_pages {total_pages}
      \set book_{number}_blurb {blurb}
-     \set book_{number}_picture_link {picture_link}
+     \set book_{number}_book_cover_url {book_cover_url}
      ~~~~
 
 4.  INSERT book using variables defined in previous step.  
     **_Reminder:_** Change { number } in variable to corresponding book
     ~~~~sql
-    SELECT insert_book(:'book_{number}_title', :'book_{number}_title_sort', :'book_{number}_published_date', :'book_{number}_published_date_edition', :'book_{number}_book_format', :'book_{number}_total_pages', :'book_{number}_blurb', :'book_{number}_picture_link');
+    SELECT insert_book(:'book_{number}_title', :'book_{number}_title_sort', :'book_{number}_published_date', :'book_{number}_published_date_edition', :'book_{number}_book_format', :'book_{number}_total_pages', :'book_{number}_blurb', :'book_{number}_book_cover_url');
     ~~~~
 
 5.  INSERT reader_book  
@@ -165,7 +165,7 @@ Retrieves a list of books that are currently being read.
     "book_format": "Paperback"
     "total_pages": 512,
     "blurb":  "Action packed novel featuring the galaxies foremost alien hunting taskforce, the Deathwatch. Led by Librarian Karras, the elite alien-hunting Talon Squad must penetrate a genestealer lair and put the abominations to the flame or face the consequences of an entire planet's extinction.//n//nGathered from the many Chapters of Space Marines, the Deathwatch are elite, charged with defending the Imperium of Man from aliens. Six Space Marines, strangers from different words, make up Talon Squad. On 31-Caro, a new terror has emerged, a murderous shadow that stalks the dark, and only the Deathwatch can stop it. Under the direction of a mysterious Inquisitor Lord known only as Sigma, they must cleanse this planet or die in the attempt.",
-    "picture_link": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561288604l/52357292._SX318_SY475_.jpg",
+    "book_cover_url": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1561288604l/52357292._SX318_SY475_.jpg",
     "reader_book": {
       "rb_id": 15,
       "is_any_reading": true,
@@ -180,6 +180,8 @@ Retrieves a list of books that are currently being read.
           "max_daily_read": 131,
           "is_reading": true,
           "is_finished": false,
+          "is_dnf": false,
+          "reader_book_id": 15,
           "read_entry": [
             {
               "re_id": 121,
@@ -213,6 +215,7 @@ Retrieves a list of books that are currently being read.
           "is_reading": false,
           "is_finished": true,
           "is_dnf": false,
+          "reader_book_id": 15,
           "read_entry": [
             {
               "re_id": 90,
@@ -280,7 +283,7 @@ Retrieves a list of books that reader has finished reading.
     "book_format": "Paperback",
     "total_pages": 352,
     "blurb": "A eclectic collection of gut wrenching tales to spook and scare.\n\nHorror is no stranger to the worlds of Warhammer. Its very fabric is infested with the arcane, the strange and the downright terrifying. From the cold, vastness of the 41st millenium to the creeping evil at large in the Mortal Realms, this anthology of short stories explores the sinister side of Warhammer in a way it never has been before. Psychological torment, visceral horrors, harrowing tales of the supernatural and the nightmares buried within, this collection brings together some of the best horror writing from the Black Library.\n\nFeaturing stories from Graham McNeill, Cassandra Khaw, Alec Worley, David Annandale and more.",
-    "picture_link": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1548642309l/40744548.jpg",
+    "book_cover_url": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1548642309l/40744548.jpg",
     "reader_book": {
       "rb_id": 8,
       "is_any_reading": false,
@@ -296,6 +299,7 @@ Retrieves a list of books that reader has finished reading.
           "is_reading": false,
           "is_finished": true,
           "is_dnf": false,
+          "reader_book_id": 8,
           "read_entry": [
             {
               "re_id": 43,
