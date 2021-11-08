@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import tw, { styled } from 'twin.macro';
-import { BookITF, /* ReaderBookITF */ } from '../../interfaces/interface';
+import { BookITF, ReaderBookITF } from '../../interfaces/interface';
 import { sortByLastName } from './utils';
 import CardFront from './CardFront';
 import CardBack from './CardBack';
-import { cloneDeep } from 'lodash';
 
 
 const CardContainer = styled.div`
@@ -38,20 +37,14 @@ const Card = ({ book }: { book: BookITF }) => {
     setAuthorDetails(sortedUpdatedAuthorDetails);
   };
 
-  const handleUpdateReadEntryCurrentPercent = (totalPages: number) => {
-    const readerBookCopy = cloneDeep(readerBook);
-    for (let readInstance of readerBookCopy.read_instance) {
-      for (let readEntry of readInstance.read_entry) {
-        readEntry.current_percent = Number((readEntry.current_page / totalPages * 100).toFixed(2));
-      }
-    }
-    setReaderBook(readerBookCopy);
+  const handleUpdateReaderBook = (readerBookAPI: ReaderBookITF) => {
+    setReaderBook(readerBookAPI);
   };
 
   return (
     <CardContainer>
-      <CardFront bookDetails={bookDetails} author={authorDetails} readerBook={readerBook} isFlipped={isFlipped} flipTimer={flipTimer} handleFlip={handleFlip} />
-      <CardBack bookDetails={bookDetails} author={authorDetails} isFlipped={isFlipped} flipTimer={flipTimer} handleFlip={handleFlip} handleUpdateBookDetails={handleUpdateBookDetails} handleUpdateAuthorDetails={handleUpdateAuthorDetails} handleUpdateReadEntryCurrentPercent={handleUpdateReadEntryCurrentPercent} />
+      <CardFront bookDetails={bookDetails} author={authorDetails} readerBook={readerBook} isFlipped={isFlipped} flipTimer={flipTimer} handleFlip={handleFlip} handleUpdateReaderBook={handleUpdateReaderBook} />
+      <CardBack bookDetails={bookDetails} author={authorDetails} readerBookId={readerBook.rb_id} isFlipped={isFlipped} flipTimer={flipTimer} handleFlip={handleFlip} handleUpdateBookDetails={handleUpdateBookDetails} handleUpdateAuthorDetails={handleUpdateAuthorDetails} handleUpdateReaderBook={handleUpdateReaderBook} />
     </CardContainer>
   )
 }

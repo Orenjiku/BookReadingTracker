@@ -5,6 +5,14 @@ import useCountdown from '../../hooks/useCountdown';
 import { ArrowRightSquare } from '@styled-icons/bootstrap/ArrowRightSquare';
 
 
+interface CompletionSliderPropsITF {
+  readerBookId: number;
+  readInstanceId: number;
+  totalPages: number;
+  isReading: boolean;
+  handleUpdateReaderBook: Function;
+}
+
 const SlideContainer = styled.div`
   ${tw`relative h-full w-full rounded-b-2xl border-t border-trueGray-50 overflow-hidden`}
   user-select: none;
@@ -77,7 +85,7 @@ const TextContainer = styled.div`
   }
 `;
 
-const CompletionSlider = ({ isReading }: { isReading: boolean }) => {
+const CompletionSlider = ({ readerBookId, readInstanceId, totalPages, isReading, handleUpdateReaderBook }: CompletionSliderPropsITF) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -92,8 +100,8 @@ const CompletionSlider = ({ isReading }: { isReading: boolean }) => {
   const sliderButtonWidth = 0.25;
   const offsetLeft = relativeSliderLeftBoundedCurrentPosition.current - relativeSliderLeftStartPosition.current;
 
-  const holdTimer = 3000;
-  const countdown = useCountdown(atEnd, holdTimer);
+  const holdTimer = 1800;
+  const countdownTimeRemaining = useCountdown(holdTimer, atEnd);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -132,6 +140,28 @@ const CompletionSlider = ({ isReading }: { isReading: boolean }) => {
     }
   };
 
+  //submit 100% completed read_entry when countdown hits 0.
+  const handleSubmitComplete = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/1/book/read_entry`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ readerBookId, readInstanceId, dateString: new Date(Date.now()).toISOString().slice(0, 10), currentPage: totalPages, totalPages })
+      });
+      if (response.ok) {
+        const result = await response.json();
+        handleUpdateReaderBook(result);
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    countdownTimeRemaining === 0 && handleSubmitComplete();
+  }, [countdownTimeRemaining])
+  //---
+
   return (
     <SlideContainer ref={containerRef}>
       <CSSTransition in={isReading} timeout={300} classNames='slide' nodeRef={sliderRef} unmountOnExit>
@@ -148,7 +178,7 @@ const CompletionSlider = ({ isReading }: { isReading: boolean }) => {
 
       <CSSTransition in={isReading && atEnd} timeout={300} classNames='fade' nodeRef={countdownTextRef} unmountOnExit>
         <TextContainer ref={countdownTextRef}>
-          <p className='w-20 text-left'>Hold: <span className='text-red-600'>{countdown}</span></p>
+          <p className='w-20 text-left'>Hold: <span className='text-red-600'>{countdownTimeRemaining}</span></p>
         </TextContainer>
       </CSSTransition>
     </SlideContainer>

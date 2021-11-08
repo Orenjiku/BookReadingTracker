@@ -1,32 +1,32 @@
 import { useState, useEffect } from 'react';
 
-const useCountdown = (atEnd: boolean, holdTimer: number): number => {
-  const [ countdown, setCountdown ] = useState(holdTimer / 1000);
+const useCountdown = (startTimer: number, trigger: boolean): number => {
+  const [ countdownTimeRemaining, setCountdownTimeRemaining ] = useState(startTimer / 1000);
   let interval: ReturnType<typeof setInterval>;
   let timeout: ReturnType<typeof setTimeout>;
 
   useEffect(() => {
-    if (atEnd) {
+    if (trigger) {
       interval = setInterval(() => {
-        setCountdown(countdown => Number((countdown - 0.1).toFixed(1)));
+        setCountdownTimeRemaining(countdown => Number((countdown - 0.1).toFixed(1)));
       }, 100);
       timeout = setTimeout(() => {
         clearInterval(interval);
         clearTimeout(timeout);
-      }, holdTimer);
+      }, startTimer);
     }
 
-    if (!atEnd) {
-      setCountdown(holdTimer / 1000);
+    if (!trigger) {
+      setCountdownTimeRemaining(startTimer / 1000);
     }
 
     return () => {
       clearInterval(interval);
       clearTimeout(timeout);
     }
-  }, [atEnd]);
+  }, [trigger]);
 
-  return countdown;
+  return countdownTimeRemaining;
 }
 
 export default useCountdown;

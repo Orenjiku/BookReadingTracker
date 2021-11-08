@@ -14,9 +14,8 @@ interface ReaderBookPropsITF {
   isExpanded: boolean;
   expandTimer: number;
   handleChangeReadInstanceIdx: Function;
-  handleIsReading: Function;
   handleIsExpanded: Function;
-  handleDeleteReadEntry: Function;
+  handleUpdateReaderBook: Function;
 }
 
 const ReaderBookHeader = styled.div`
@@ -59,7 +58,7 @@ const ReadInstanceContainer = styled.div`
   }
 `;
 
-const ReaderBook = ({ readInstanceList, readInstanceIdx, isEdit, editTimer, handleIsReading, isExpanded, expandTimer, handleIsExpanded, handleChangeReadInstanceIdx, handleDeleteReadEntry }: ReaderBookPropsITF) => {
+const ReaderBook = ({ readInstanceList, readInstanceIdx, isEdit, editTimer, isExpanded, expandTimer, handleIsExpanded, handleChangeReadInstanceIdx, handleUpdateReaderBook }: ReaderBookPropsITF) => {
   const readInstanceListLength = readInstanceList.length;
 
   const [ isIdxStart, setIsIdxStart ] = useState(true);
@@ -69,7 +68,6 @@ const ReaderBook = ({ readInstanceList, readInstanceIdx, isEdit, editTimer, hand
   // const readerBookRef = useRef(null);
 
   useEffect(() => {
-    handleIsReading(readInstanceList[readInstanceIdx].is_reading);
     readInstanceIdx === 0 ? setIsIdxStart(true) : setIsIdxStart(false);
     readInstanceIdx === readInstanceListLength - 1 ? setIsIdxEnd(true) : setIsIdxEnd(false);
   }, [readInstanceIdx]);
@@ -114,7 +112,7 @@ const ReaderBook = ({ readInstanceList, readInstanceIdx, isEdit, editTimer, hand
       <TransitionGroup component={null} childFactory={child => cloneElement(child, {classNames: transitionClassNames})}>
         <CSSTransition key={`ReadInstance-${readInstanceIdx}`} timeout={300} unmountOnExit /* nodeRef={readerBookRef} */>
           <ReadInstanceContainer /* ref={readerBookRef} */>
-            <ReadInstance key={readInstanceList[readInstanceIdx].ri_id} readInstance={readInstanceList[readInstanceIdx]} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} handleDeleteReadEntry={handleDeleteReadEntry}/>
+            <ReadInstance key={readInstanceList[readInstanceIdx].ri_id} readInstance={readInstanceList[readInstanceIdx]} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} handleUpdateReaderBook={handleUpdateReaderBook}/>
           </ReadInstanceContainer>
         </CSSTransition>
       </TransitionGroup>

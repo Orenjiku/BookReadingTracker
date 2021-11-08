@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
-import { BookDetailsITF, ReaderBookITF, ReadEntryITF } from '../../interfaces/interface';
-import { dateDiffInDays } from './utils';
+import { BookDetailsITF, ReaderBookITF } from '../../interfaces/interface';
 import BookImage from './BookImage';
 import CardHeader from './CardHeader';
 import CompletionSlider from './CompletionSlider';
@@ -13,7 +12,6 @@ import ReadInstance from './ReadInstance';
 import { Edit } from '@styled-icons/boxicons-regular/Edit';
 
 
-
 interface CardFrontPropsITF {
   bookDetails: BookDetailsITF;
   author: string[];
@@ -21,7 +19,7 @@ interface CardFrontPropsITF {
   isFlipped: boolean;
   flipTimer: number;
   handleFlip: Function;
-  handleAddReadEntry: Function
+  handleUpdateReaderBook: Function;
 }
 
 const CardFrontContainer = styled.div<{ $isFlipped: boolean; $flipTimer: number }>`
@@ -123,7 +121,9 @@ const SlideShowContainer = styled.div<{ $src?: string; $slideShowTimer: number }
 `;
 
 const BlurbContainer = styled.div`
-  ${tw`z-10 h-4/5 w-11/12 p-4 rounded-tl-2xl rounded-tr rounded-br overflow-y-scroll whitespace-pre-wrap select-text bg-trueGray-50 bg-opacity-60 text-xs`};
+  ${tw`z-10 p-4 rounded-tl-2xl rounded-tr rounded-br overflow-y-scroll whitespace-pre-wrap select-text bg-trueGray-50 bg-opacity-60 text-xs`};
+  height: 85%;
+  width: 90%;
   ::-webkit-scrollbar {
     ${tw`bg-trueGray-50 bg-opacity-60 w-2 rounded-r`};
   }
@@ -161,22 +161,15 @@ const StyledEditIcon = styled(Edit)<{ $isEdit: boolean, $editTimer: number }>`
   `}
 `;
 
-const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, handleFlip, handleAddReadEntry }: CardFrontPropsITF) => {
-  // const [ isAnyReading, setIsAnyReading ] = useState(readerBook.is_any_reading);
-  // const [ isAnyFinished, setIsAnyFinished ] = useState(readerBook.is_any_finished);
-  // const [ isAllDnf, setIsAllDnf ] = useState(readerBook.is_all_dnf);
-
-  const startIdx = readerBook.read_instance.length > 1 && readerBook.is_any_reading ? readerBook.read_instance.findIndex(readInstance => readInstance.is_reading === true) : 0;
+const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, handleFlip, handleUpdateReaderBook }: CardFrontPropsITF) => {
   const [ readInstanceList, setReadInstanceList ] = useState(readerBook.read_instance);
-  const [ readInstanceIdx, setReadInstanceIdx ] = useState(startIdx);
+  const [ readInstanceIdx, setReadInstanceIdx ] = useState(0);
 
-  const [ overallPagesRead, setOverallPagesRead ] = useState(readInstanceList.reduce((acc, cur) => acc + cur.pages_read, 0));
-  const [ overallDaysRead, setOverallDaysRead ] = useState(readInstanceList.reduce((acc, cur) => acc + cur.days_read, 0));
-  const [ overallDaysTotal, setOverallDaysTotal ] = useState(readInstanceList.reduce((acc, cur) => acc + cur.days_total, 0));
-  const [ overallAvgDailyRead, setOverallAvgDailyRead ] = useState(overallDaysRead > 0 ? Math.round(overallPagesRead / overallDaysRead) : 0);
-  const [ overallMaxDailyRead, setOverallMaxDailyRead ] = useState(Math.max(...readInstanceList.map(readInstance => readInstance.max_daily_read)));
-  const timesRead = readerBook.is_any_finished ? readInstanceList.reduce((acc, cur) => acc += cur.is_finished ? 1 : 0, 0) : 0;
-  // const [ timesRead, setTimesRead ] = useState(readerBook.is_any_finished ? readInstanceList.reduce((acc, cur) => acc += cur.is_finished ? 1 : 0, 0) : 0);
+  const [ overallDaysRead, setOverallDaysRead ] = useState(0);
+  const [ overallDaysTotal, setOverallDaysTotal ] = useState(0);
+  const [ overallAvgDailyRead, setOverallAvgDailyRead ] = useState(0);
+  const [ overallMaxDailyRead, setOverallMaxDailyRead ] = useState(0);
+  const [ timesRead, setTimesRead ] = useState(0);
 
   const viewDetails = [
     {key: 'Total Pages', value: bookDetails.total_pages},
@@ -190,113 +183,40 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
   //transition conditions
   const detailsViewRef = useRef<HTMLDivElement>(null);
   const editViewRef = useRef<HTMLDivElement>(null);
+  const slideShowRef = useRef<HTMLDivElement>(null);
 
   const [ isEdit, setIsEdit ] = useState(false);
-  const [ isSlideShow, setIsSlideShow ] = useState(false);
-  const [ isReading, setIsReading ] = useState(false);
   const [ isExpanded, setIsExpanded ] = useState(false);
+  const [ isSlideShow, setIsSlideShow ] = useState(false);
 
-  const slideShowRef = useRef(null);
-
-  const slideShowTimer = 800;
-  const expandTimer = 300;
   const editTimer = 300;
-
-  const handleShowSlideShow = () => setIsSlideShow(isSlideShow => !isSlideShow);
-  const handleIsEdit = () => setIsEdit(isEdit => !isEdit);
-  const handleIsExpanded = () => setIsExpanded(isExpanded => !isExpanded);
+  const expandTimer = 300;
+  const slideShowTimer = 800;
   //---
 
   useEffect(() => {
-    if (readerBook.read_instance.length === 1) {
-      setIsReading(readerBook.is_any_reading);
-    }
-  }, []);
+    const startIdx = readerBook.read_instance.length > 1 && readerBook.is_any_reading ? readerBook.read_instance.findIndex(readInstance => readInstance.is_reading === true) : 0;
+    setReadInstanceIdx(startIdx);
+  }, [])
 
   useEffect(() => {
-    //update required whenever totalPages is changed on CardBack.
+    const overallPagesRead = readInstanceList.reduce((acc, cur) => acc + cur.pages_read, 0);
+    const updatedOverallDaysRead = readInstanceList.reduce((acc, cur) => acc + cur.days_read, 0);
+    setOverallDaysRead(updatedOverallDaysRead);
+    setOverallAvgDailyRead(updatedOverallDaysRead > 0 ? Math.round(overallPagesRead / updatedOverallDaysRead) : 0);
+    setOverallDaysTotal(readInstanceList.reduce((acc, cur) => acc + cur.days_total, 0));
+    setTimesRead(readerBook.is_any_finished ? readInstanceList.reduce((acc, cur) => acc += cur.is_finished ? 1 : 0, 0) : 0);
     setReadInstanceList(readerBook.read_instance);
-  }, [readerBook.read_instance]);
+  }, [readerBook]);
 
   useEffect(() => {
-    const newOverallAvgDailyRead = overallDaysRead > 0 ? Math.round(overallPagesRead / overallDaysRead) : 0;
-    setOverallAvgDailyRead(newOverallAvgDailyRead);
-  }, [overallPagesRead, overallDaysRead]);
+    setOverallMaxDailyRead(Math.max(...readInstanceList.map(readInstance => readInstance.max_daily_read)));
+  }, [readInstanceList]);
 
-  const handleIsReading = (isReading: boolean) => setIsReading(isReading);
   const handleChangeReadInstanceIdx = (i: number) => setReadInstanceIdx(i);
-
-  const handleDeleteReadEntry = (readEntryInput: ReadEntryITF) => {
-    //first call API to delete readEntry from database then update locally
-    const currentReadInstance = [...readInstanceList][readInstanceIdx]; //create copy of current readInstance to update properties before updating readInstanceList.
-    const currentReadEntryList = currentReadInstance.read_entry;
-    const deleteReadEntryIdx = currentReadEntryList.findIndex(readEntry => readEntry.re_id === readEntryInput.re_id);
-
-    //Update overall pages_read (i.e. read_instance.pages_read) or readEntry pages_read. readEntry listed by date DESC order, therefore "next" is index - 1, "prev" is index + 1.
-    if (deleteReadEntryIdx === 0) {
-      const prevCurrentPage = currentReadEntryList.length === 1 ? 0 : currentReadEntryList[deleteReadEntryIdx + 1].current_page
-      setOverallPagesRead(prevOverallPagesRead => prevOverallPagesRead - currentReadEntryList[deleteReadEntryIdx].pages_read);
-      currentReadInstance.pages_read = prevCurrentPage; //set read_instance.pages_read to next most recent read_entry's current_page.
-      //call API update read_instance.pages_read with prevCurrentPage.
-    } else {
-      const nextReadEntry = currentReadEntryList[deleteReadEntryIdx - 1]; //deleteReadEntryIdx - 1 is the next readEntry by date. (i.e. more recent)
-      nextReadEntry.pages_read += readEntryInput.pages_read; //add pages_read of deleteReadEntry to next readEntry.
-      //call API, find nextReadEntry.re_id and update its pages_read with nextReadEntry.pages_read.
-    }
-
-    //update totalDaysRead. check if deleteReadEntryDate is the only entry on that date.
-    const deleteReadEntryDate = new Date(readEntryInput.date_read).toDateString();
-    const duplicateDateCount = currentReadEntryList.filter(readEntry => new Date(readEntry.date_read).toDateString() === deleteReadEntryDate).length;
-    if (duplicateDateCount === 1) {
-      setOverallDaysRead(prevOverallDaysRead => prevOverallDaysRead - 1); //read_instance.total_days_read is a calculated value from API call. Not necessary to update database.
-      currentReadInstance.days_read -= 1;
-    }
-    if (duplicateDateCount === 1 && (deleteReadEntryIdx === 0 || deleteReadEntryIdx === currentReadEntryList.length - 1)) {
-      //if deleteIdx is 0, find the span of days between idx 1 and idx last, if deleteIdx is last, find the span of days between idx 0 and idx 2nd to last
-      const newSpanInDays = deleteReadEntryIdx === 0
-        ? dateDiffInDays(currentReadEntryList[1].date_read, currentReadEntryList[currentReadEntryList.length - 1].date_read) + 1  //+1 for inclusive span of days.
-        : dateDiffInDays(currentReadEntryList[0].date_read, currentReadEntryList[currentReadEntryList.length - 2].date_read) + 1; //+1 for inclusive span of days.
-        const totalDaysDeleted = currentReadInstance.days_total - newSpanInDays;
-        currentReadInstance.days_total = newSpanInDays;
-        setOverallDaysTotal(prevOverallDaysTotal => prevOverallDaysTotal - totalDaysDeleted);
-    }
-
-    //update read_instance.max_daily_read
-    currentReadInstance.max_daily_read = currentReadEntryList.reduce((acc, cur, i) => cur.pages_read > acc && i !== deleteReadEntryIdx ? cur.pages_read : acc, 0);
-
-    const newReadEntryList = currentReadEntryList.filter(readEntry => readEntry.re_id !== readEntryInput.re_id); //create newReadEntryList with deleteReadEntry removed.
-    const newReadInstance = {...currentReadInstance, read_entry: newReadEntryList}; //create newReadInstance with updated newReadEntryList
-    const newReadInstanceList = [...readInstanceList]; //copy newReadInstanceList and replace readInstance with newReadInstance
-    newReadInstanceList.splice(readInstanceIdx, 1, newReadInstance);
-    setReadInstanceList(newReadInstanceList);
-
-    //overallMaxDailyRead must be updated last, using newReadInstanceList and updated readEntry.pages_read.
-    const combinedReadEntry = newReadInstanceList.reduce((acc, cur) => acc.concat(cur.read_entry || []), [] as ReadEntryITF[]);
-    const newOverallMaxDailyRead = Math.max(...combinedReadEntry.map(readEntry => readEntry.pages_read));
-    setOverallMaxDailyRead(newOverallMaxDailyRead); //read_instance.max_daily_read is a calculated value on API call. Not necessary to update database.
-  };
-
-  // const deleteReadEntry = async (re_id: number) => {
-  //   try {
-  //     const response = await fetch(`http://localhost:3000/1/read_entry`, {
-  //       method: 'DELETE',
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: JSON.stringify({re_id})
-  //     });
-  //     if (response.ok) {
-
-  //     }
-  //   } catch(err) {
-  //     console.log(err);
-  //   }
-  // }
-
-  // const handleAddReadEntry = (readEntry: ReadEntryITF) => {
-  //   //sort by date descending.
-  //   // const newReadEntryList = readInstance?.read_entry?.concat(readEntry).sort((a, b) => Number(new Date(b.date_read)) - Number(new Date(a.date_read)));
-  //   // setReadInstance({...readInstance, read_entry: newReadEntryList});
-  // };
-
+  const handleIsEdit = () => setIsEdit(isEdit => !isEdit);
+  const handleIsExpanded = () => setIsExpanded(isExpanded => !isExpanded);
+  const handleShowSlideShow = () => setIsSlideShow(isSlideShow => !isSlideShow);
 
   return (
     <CardFrontContainer $isFlipped={isFlipped} $flipTimer={flipTimer}>
@@ -305,7 +225,7 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
 
       <StyledEditIcon size={22} $isEdit={isEdit} $editTimer={editTimer} onClick={() => handleIsEdit()} />
 
-      <BookImage pictureUrl={bookDetails.picture_url} isEdit={isEdit} editTimer={editTimer} handleFlip={handleFlip} />
+      <BookImage bookCoverUrl={bookDetails.book_cover_url} isEdit={isEdit} editTimer={editTimer} handleFlip={handleFlip} />
 
       <div className='col-start-2 col-end-3 row-start-4 row-end-20 flex flex-col overflow-hidden'>
         <ViewExpandContainer $isExpanded={isExpanded} $expandTimer={expandTimer}>
@@ -318,24 +238,24 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
 
           <CSSTransition in={isEdit} timeout={editTimer} classNames='slide' nodeRef={editViewRef} unmountOnExit>
             <EditViewContainer ref={editViewRef} $editTimer={editTimer} $isExpanded={isExpanded} $expandTimer={expandTimer}>
-              <EditView readInstanceId={readInstanceList[readInstanceIdx].ri_id} totalPages={bookDetails.total_pages} isEdit={isEdit} handleAddReadEntry={handleAddReadEntry} />
+              <EditView readerBookId={readInstanceList[readInstanceIdx].reader_book_id} readInstanceId={readInstanceList[readInstanceIdx].ri_id} totalPages={bookDetails.total_pages} isEdit={isEdit} handleUpdateReaderBook={handleUpdateReaderBook} />
             </EditViewContainer>
           </CSSTransition>
 
         </ViewExpandContainer>
 
         {readInstanceList.length <= 1
-          ? <ReadInstance readInstance={readInstanceList[readInstanceIdx]} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} handleDeleteReadEntry={handleDeleteReadEntry}/>
-          : <ReaderBook readInstanceList={readInstanceList} readInstanceIdx={readInstanceIdx} isEdit={isEdit} editTimer={editTimer} handleIsReading={handleIsReading} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} handleChangeReadInstanceIdx={handleChangeReadInstanceIdx} handleDeleteReadEntry={handleDeleteReadEntry}/>
+          ? <ReadInstance readInstance={readInstanceList[readInstanceIdx]} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} handleUpdateReaderBook={handleUpdateReaderBook}/>
+          : <ReaderBook readInstanceList={readInstanceList} readInstanceIdx={readInstanceIdx} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} handleChangeReadInstanceIdx={handleChangeReadInstanceIdx} handleUpdateReaderBook={handleUpdateReaderBook}/>
         }
       </div>
 
       <div className='col-start-1 col-end-3 row-start-20 row-end-22'>
-        <CompletionSlider isReading={isReading} />
+        <CompletionSlider readerBookId={readerBook.rb_id} readInstanceId={readInstanceList[readInstanceIdx].ri_id} totalPages={bookDetails.total_pages} isReading={readInstanceList[readInstanceIdx].is_reading} handleUpdateReaderBook={handleUpdateReaderBook} />
       </div>
 
       <CSSTransition in={isSlideShow} timeout={slideShowTimer} classNames='slide' nodeRef={slideShowRef} unmountOnExit>
-        <SlideShowContainer ref={slideShowRef} $src={bookDetails.picture_url} $slideShowTimer={slideShowTimer}>
+        <SlideShowContainer ref={slideShowRef} $src={bookDetails.book_cover_url} $slideShowTimer={slideShowTimer}>
           <BlurbContainer>
             {bookDetails.blurb}
           </BlurbContainer>

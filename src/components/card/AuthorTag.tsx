@@ -7,6 +7,7 @@ interface AuthorTagPropsITF {
   author: string;
   fromList: 'author' | 'newAuthor'
   handleDeleteAuthor: Function;
+  resetInputSubmitStates: Function;
 }
 
 const StyledRiDeleteBack2Line = styled(RiDeleteBack2Line)<{ $hoverTimer: number }>`
@@ -37,7 +38,7 @@ const AuthorTagContainer = styled.div<{ $isMouseDown: boolean; $hoverTimer: numb
   }
 `;
 
-const AuthorTag = ({ author, fromList, handleDeleteAuthor }: AuthorTagPropsITF) => {
+const AuthorTag = ({ author, fromList, handleDeleteAuthor, resetInputSubmitStates }: AuthorTagPropsITF) => {
   const [ isMouseDown, setIsMouseDown ] = useState(false);
   const hoverTimer = 300;
   const holdTimer = 600;
@@ -61,7 +62,7 @@ const AuthorTag = ({ author, fromList, handleDeleteAuthor }: AuthorTagPropsITF) 
   };
 
   return (
-    <AuthorTagContainer $isMouseDown={isMouseDown} $hoverTimer={hoverTimer} $holdTimer={holdTimer} onMouseDown={handleStartDelete} onMouseUp={handleStopDelete} onMouseLeave={handleStopDelete}>
+    <AuthorTagContainer $isMouseDown={isMouseDown} $hoverTimer={hoverTimer} $holdTimer={holdTimer} onMouseDown={() => { handleStartDelete(); resetInputSubmitStates('author'); }} onMouseUp={handleStopDelete} onMouseLeave={handleStopDelete}>
       <p className='pr-1'>{author}</p>
       <StyledRiDeleteBack2Line $hoverTimer={hoverTimer} />
     </AuthorTagContainer>

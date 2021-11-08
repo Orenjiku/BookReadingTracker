@@ -4,7 +4,7 @@ import SuccessIndicator from './SuccessIndicator'
 
 
 interface FormLabelPropsITF {
-  type: 'input' | 'textarea';
+  type: 'text' | 'number' | 'textarea';
   label: string;
   name: string;
   value: string | number;
@@ -24,8 +24,13 @@ const FocusIndicator = styled.div`
   transition: all 100ms linear;
 `;
 
-const Input = styled.input`
+const Input = styled.input<{$type: 'text' | 'number'}>`
   ${tw`text-base rounded-tr rounded-br w-full pl-1 bg-trueGray-50 bg-opacity-20 border-b border-trueGray-50 outline-none`};
+  ${({ $type }) => $type === 'number' && css`
+    ::-webkit-inner-spin-button {
+      display: none;
+    }
+  `}
   transition: all 100ms linear;
   &:focus {
     ${tw`border-teal-500`};
@@ -73,6 +78,8 @@ const FormLabel = ({type, label, name, value, placeholder, submitStatus, feedbac
     feedbackText === '' ? setIsFeedbackText(false) : setIsFeedbackText(true);
   }, [feedbackText]);
 
+  const handleRemoveFeedbackText = () => setIsFeedbackText(false);
+
   return (
     <div className='mb-0.5' {...(type === 'textarea' && {className: 'h-full w-full'})}>
       <Label onClick={e => e.preventDefault()}>
@@ -84,9 +91,9 @@ const FormLabel = ({type, label, name, value, placeholder, submitStatus, feedbac
           </div>
         </div>
         <div className='flex flex-row-reverse' {...(type === 'textarea' && {style: {height: '90%'}})}>
-          {type === 'input'
-            ? <Input type='text' name={name} placeholder={placeholder} value={value} onChange={e => handleInputChange(e)} {...(optionalFunction && {onKeyDown: e => optionalFunction(e)})} spellCheck={false} autoComplete='off' />
-            : <TextArea name={name} placeholder={placeholder} value={value} onChange={e => handleInputChange(e)} spellCheck={false} autoComplete='off' />
+          {type === 'text' || type === 'number'
+            ? <Input $type={type} name={name} placeholder={placeholder} value={value} onChange={e => handleInputChange(e)} {...(optionalFunction && {onKeyDown: e => optionalFunction(e)})} spellCheck={false} autoComplete='off' />
+            : <TextArea name={name} placeholder={placeholder} value={value} onChange={e => handleInputChange(e)} onClick={handleRemoveFeedbackText} spellCheck={false} autoComplete='off' />
           }
           <FocusIndicator />
         </div>

@@ -3,8 +3,9 @@ import tw, { styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 import { BookDetailsITF } from '../../interfaces/interface';
 import useYOverflow from '../../hooks/useYOverflow';
-import { StyledButton } from './styled';
-import { sortByLastName } from './utils';
+import useHoldSubmit from '../../hooks/useHoldSubmit';
+import { StyledButton, SaveButton } from './styled';
+import { sortByLastName, isValidDate } from './utils';
 import FormLabel from './FormLabel';
 import AuthorTag from './AuthorTag';
 import { BsPlusSquare, BsChevronDown, BsChevronUp } from 'react-icons/bs';
@@ -14,12 +15,13 @@ import { MdFlip } from 'react-icons/md';
 interface CardBackPropsITF {
   bookDetails: BookDetailsITF;
   author: string[];
+  readerBookId: number;
   isFlipped: boolean;
   flipTimer: number;
   handleFlip: Function;
   handleUpdateBookDetails: Function;
   handleUpdateAuthorDetails: Function;
-  handleUpdateReadEntryCurrentPercent: Function;
+  handleUpdateReaderBook: Function;
 }
 
 const CardBackContainer = styled.div<{ $isFlipped: boolean; $flipTimer: number }>`
@@ -97,23 +99,7 @@ const StyledBsPlusSquare = styled(BsPlusSquare)`
   }
 `;
 
-const SaveButton = styled(StyledButton)<{$isStartSubmit?: boolean; $submitHoldTimer?: number}>`
-  &:active{
-    ${tw`bg-blueGray-300 bg-opacity-40`};
-  }
-  &::after {
-    content: '';
-    ${tw`absolute h-full w-0 left-0 bg-teal-500 bg-opacity-40`};
-    z-index: -1;
-    transition: all 50ms linear;
-    ${({ $isStartSubmit, $submitHoldTimer }) => $isStartSubmit && css`
-      ${tw`h-full w-full`};
-      transition: all ${$submitHoldTimer}ms linear;
-    `}
-  }
-`;
-
-const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handleUpdateBookDetails, handleUpdateAuthorDetails, handleUpdateReadEntryCurrentPercent }: CardBackPropsITF) => {
+const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, handleFlip, handleUpdateBookDetails, handleUpdateAuthorDetails, handleUpdateReaderBook }: CardBackPropsITF) => {
   const [ title, setTitle ] = useState(bookDetails.title);
   const [ authorList, setAuthorList ] = useState(author);
   const [ newAuthor, setNewAuthor ] = useState('');
@@ -123,7 +109,7 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
   const [ totalPages, setTotalPages ] = useState(bookDetails.total_pages);
   const [ publishedDate, setPublishedDate ] = useState(bookDetails.published_date);
   const [ editionDate, setEditionDate ] = useState(bookDetails.edition_date);
-  const [ pictureUrl, setPictureUrl ] = useState(bookDetails.picture_url);
+  const [ bookCoverUrl, setBookCoverUrl ] = useState(bookDetails.book_cover_url);
   const [ blurb, setBlurb ] = useState(bookDetails.blurb);
 
   //separate success and fail states required for success and fail indication for each individual input when submitted.
@@ -133,7 +119,7 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
   const [ isSubmitTotalPagesSuccess, setIsSubmitTotalPagesSuccess ]= useState(false);
   const [ isSubmitPublishedDateSuccess, setIsSubmitPublishedDateSuccess ] = useState(false);
   const [ isSubmitEditionDateSuccess, setIsSubmitEditionDateSuccess ] = useState(false);
-  const [ isSubmitPictureUrlSuccess, setIsSubmitPictureUrlSuccess ] = useState(false);
+  const [ isSubmitBookCoverUrlSuccess, setIsSubmitBookCoverUrlSuccess ] = useState(false);
   const [ isSubmitBlurbSuccess, setIsSubmitBlurbSuccess ] = useState(false);
 
   const [ isSubmitTitleFail, setIsSubmitTitleFail ] = useState(false);
@@ -142,7 +128,7 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
   const [ isSubmitTotalPagesFail, setIsSubmitTotalPagesFail ]= useState(false);
   const [ isSubmitPublishedDateFail, setIsSubmitPublishedDateFail ] = useState(false);
   const [ isSubmitEditionDateFail, setIsSubmitEditionDateFail ] = useState(false);
-  const [ isSubmitPictureUrlFail, setIsSubmitPictureUrlFail ] = useState(false);
+  const [ isSubmitBookCoverUrlFail, setIsSubmitBookCoverUrlFail ] = useState(false);
   const [ isSubmitBlurbFail, setIsSubmitBlurbFail ] = useState(false);
 
   //isSubmitComplete needed for useEffect trigger for updating local inputs after API calls.
@@ -151,9 +137,9 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
   //Triggers for feedback text indication on FormLabels.
   const [ titleFeedbackText, setTitleFeedbackText ] = useState('');
   const [ authorFeedbackText, setAuthorFeedbackText ] = useState('');
-  const [ totalPagesFeedbackText, setTotalPagesFeedbackText ] = useState('');
   const titleFeedbackTextOptions = {
-    errorDuplicateTitle: 'Title already exists in collection.'
+    errorDuplicateTitle: 'Title already exists in collection.',
+    errorEmptyTitle: 'Input cannot be empty.'
   }
   const authorFeedbackTextOptions = {
     errorDuplicateAuthor: 'Author name is duplicated.',
@@ -162,15 +148,12 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
     errorPostAuthor: 'Connection. Retry Save.',
     errorDeleteAuthor: 'Connection. Reselect authors and retry save.'
   }
-  const totalPagesFeedbackTextOptions = {
-    errorTotalPagesNaN: 'Invalid #.'
-  }
 
   const resetFeedbackText = () => {
     setTitleFeedbackText('');
     setAuthorFeedbackText('');
-    setTotalPagesFeedbackText('');
   };
+  //---
 
   //Handle editing inputs
   const inputFunctionsList: {[key: string]: Function[]} = {
@@ -180,7 +163,7 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
     totalPages: [ setTotalPages, setIsSubmitTotalPagesSuccess, setIsSubmitTotalPagesFail ],
     publishedDate: [ setPublishedDate, setIsSubmitPublishedDateSuccess, setIsSubmitPublishedDateFail ],
     editionDate: [ setEditionDate, setIsSubmitEditionDateSuccess, setIsSubmitEditionDateFail ],
-    pictureUrl: [ setPictureUrl, setIsSubmitPictureUrlSuccess, setIsSubmitPictureUrlFail ],
+    bookCoverUrl: [ setBookCoverUrl, setIsSubmitBookCoverUrlSuccess, setIsSubmitBookCoverUrlFail ],
     blurb: [ setBlurb, setIsSubmitBlurbSuccess, setIsSubmitBlurbFail ]
   };
 
@@ -206,7 +189,7 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
   };
   //---
 
-  //handle editing author
+  //handle adding and deleting authors from local state arrays, i.e. updating authorList, newAuthorList, deleteAuthorList.
   const handleAddAuthor = () => {
     const normalizedNewAuthor = newAuthor.replace(/\s+/g, ' ').trim(); //removes odd spacing. '    John     Smith   ' => 'John Smith'.
 
@@ -290,7 +273,7 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
     setTotalPages(bookDetails.total_pages);
     setPublishedDate(bookDetails.published_date);
     setEditionDate(bookDetails.edition_date);
-    setPictureUrl(bookDetails.picture_url);
+    setBookCoverUrl(bookDetails.book_cover_url);
     setBlurb(bookDetails.blurb);
     resetFeedbackText();
     for (let input in inputFunctionsList) {
@@ -299,49 +282,23 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
   };
   //---
 
-  //handle Save Button onMouseDown hold effect before submit.
-  const [ isStartSubmit, setIsStartSubmit ] = useState(false);
-  const submitHoldTimer = 500;
-  let submitTimeout: ReturnType<typeof setTimeout>;
-
-  useEffect(() => {
-    if (isStartSubmit) {
-      submitTimeout = setTimeout(() => {
-        handleSubmitAll();
-        setIsStartSubmit(false);
-      }, submitHoldTimer);
-    }
-    return () => clearTimeout(submitTimeout);
-  }, [isStartSubmit]);
-
-
-  const handleStartSubmit = () => setIsStartSubmit(true);
-
-  const handleStopSubmit = () => {
-    clearTimeout(submitTimeout);
-    setIsStartSubmit(false);
-  };
-  //--
-
-  //handle submit
+  //handle updating local state once all API requests are completed.
   useEffect(() => {
     //update bookDetails state in parent Card component.
     if (isSubmitComplete) {
       const newBookDetails: {[key: string]: string | number | {[key: string]: string[]}} = {};
       if (isSubmitTitleSuccess) newBookDetails['title'] = title;
       if (isSubmitFormatSuccess) newBookDetails['book_format'] = format;
-      if (isSubmitTotalPagesSuccess) {
-        newBookDetails['total_pages'] = totalPages;
-        handleUpdateReadEntryCurrentPercent(totalPages); //need to recalculate all read_entry.current_percent based on new totalPages.
-      }
+      if (isSubmitTotalPagesSuccess) newBookDetails['total_pages'] = totalPages;
       if (isSubmitPublishedDateSuccess) newBookDetails['published_date'] = publishedDate;
       if (isSubmitEditionDateSuccess) newBookDetails['edition_date'] = editionDate;
-      if (isSubmitPictureUrlSuccess) newBookDetails['picture_url'] = pictureUrl;
+      if (isSubmitBookCoverUrlSuccess) newBookDetails['picture_url'] = bookCoverUrl;
       if (isSubmitBlurbSuccess) newBookDetails['blurb'] = blurb;
       handleUpdateBookDetails(newBookDetails);
 
       if (isSubmitAuthorSuccess) { //fail operations handled in authorSubmit function.
         handleUpdateAuthorDetails([...authorList, ...newAuthorList]);
+        setAuthorList([...authorList, ...newAuthorList]);
         setNewAuthorList([]);
         setDeleteAuthorList([]);
       }
@@ -350,38 +307,25 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
     }
   }, [isSubmitComplete]);
 
-  //useEffect hook required to update local authorList after isSubmitAuthorSuccess updates parent Card component author.
-  useEffect(() => {
-    setAuthorList(author);
-  }, [author])
-
-  const isValidDate = (s: string) => {
-    if ( ! /^\d{4}-\d{2}-\d{2}$/.test(s) ) return false;
-    let [ yyyy, mm, dd ] = s.split('-').map((p: string) => parseInt(p, 10));
-    const compareDate = new Date(`${mm}-${dd}-${yyyy}`); //arrange mm-dd-yyyy because new Date(yyyy-mm-dd) modifies the date based on the time zone.
-    return compareDate.getFullYear() === yyyy && compareDate.getMonth() === mm - 1 && compareDate.getDate() === dd; //subtract 1 from mm because .getMonth() starts at 0, January.
-  };
-
   const handleSubmitAll = async () => {
     //checks if current input value changed from original value before submitInput
-    if (title.trim() !== bookDetails.title) await submitInput('title', 'title', title);
-    if (newAuthorList.length > 0 || deleteAuthorList.length > 0) await submitAuthor({newAuthorList, deleteAuthorList});
-    if (format.trim() !== bookDetails.book_format) await submitInput('format', 'book_format', format);
-    if (totalPages !== bookDetails.total_pages) {
-      if (!isNaN(totalPages)) await submitInput('totalPages', 'total_pages', totalPages);
-      else {
-        toggleInputSubmitFailState('totalPages');
-        setTotalPagesFeedbackText(totalPagesFeedbackTextOptions.errorTotalPagesNaN);
-      }
+    if (title.trim() !== bookDetails.title && title.trim() !== '') {
+      await submitInput('title', 'title', title.trim());
+    } else if (title.trim() === '') {
+      setTitleFeedbackText(titleFeedbackTextOptions.errorEmptyTitle);
     }
+    if (format.trim() !== bookDetails.book_format) await submitInput('format', 'book_format', format.trim());
+    if (totalPages !== bookDetails.total_pages) await submitTotalPages(readerBookId, totalPages);
+    if (newAuthorList.length > 0 || deleteAuthorList.length > 0) await submitAuthor({newAuthorList, deleteAuthorList});
     if (publishedDate !== bookDetails.published_date) isValidDate(publishedDate) ? await submitInput('publishedDate', 'published_date', publishedDate) : toggleInputSubmitFailState('publishedDate');
     if (editionDate !== bookDetails.edition_date)
       isValidDate(editionDate) ? await submitInput('editionDate', 'edition_date', editionDate) : toggleInputSubmitFailState('editionDate');
-    if (pictureUrl.trim() !== bookDetails.picture_url) await submitInput('pictureUrl', 'picture_url', pictureUrl);
-    if (blurb.trim() !== bookDetails.blurb) await submitInput('blurb', 'blurb', blurb);
+    if (bookCoverUrl.trim() !== bookDetails.book_cover_url) await submitInput('bookCoverUrl', 'book_cover_url', bookCoverUrl.trim());
+    if (blurb.trim() !== bookDetails.blurb) await submitInput('blurb', 'blurb', blurb.trim());
     setIsSubmitComplete(true); //wait for all API calls, then trigger useEffect to update Card state.
   };
 
+  //handles API request for all inputs except for totalPages and author.
   const submitInput = async (inputName: string, resourceName: string, inputValue: string | number) => {
     try {
       const response = await fetch(`http://localhost:3000/1/book/${resourceName}`, {
@@ -390,7 +334,7 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
         body: JSON.stringify({bookId: bookDetails.b_id, [inputName]: inputValue})
       });
       if (response.ok) {
-        toggleInputSubmitSuccessState(inputName)
+        toggleInputSubmitSuccessState(inputName);
       } else {
         toggleInputSubmitFailState(inputName);
         const err = await response.json();
@@ -398,6 +342,29 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
       }
     } catch(err) {
       console.error(err);
+      toggleInputSubmitFailState(inputName);
+    }
+  };
+  //---
+
+  //totalPages requires separate submit function to handle readerBook json response.
+  const submitTotalPages = async (readerBookId: number, totalPages: number) => {
+    try {
+      const response = await fetch(`http://localhost:3000/1/book/total_pages`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({bookId: bookDetails.b_id, readerBookId, totalPages})
+      });
+      if (response.ok) {
+        const result = await response.json();
+        handleUpdateReaderBook(result);
+        toggleInputSubmitSuccessState('totalPages');
+      } else {
+        toggleInputSubmitFailState('totalPages');
+      }
+    } catch(err) {
+      console.error(err);
+      toggleInputSubmitFailState('totalPages');
     }
   };
   //---
@@ -440,6 +407,7 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
         }
       } catch(err) {
           console.error(err);
+          toggleInputSubmitFailState('author');
       }
     } else if (authorObj.newAuthorList.length > 0) {
       try {
@@ -454,6 +422,7 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
         }
       } catch(err) {
         console.error(err);
+        toggleInputSubmitFailState('author');
       }
     } else if (authorObj.deleteAuthorList.length > 0) {
       try {
@@ -470,9 +439,15 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
         }
       } catch(err) {
         console.error(err);
+        toggleInputSubmitFailState('author');
       }
     }
   };
+
+  //handle Save Button onMouseDown hold effect before submit. handleSubmitAll needs to be declared before useHoldSubmit.
+  const submitHoldTimer = 500;
+  const [ isStartSubmit, handleStartSubmit, handleStopSubmit ] = useHoldSubmit(submitHoldTimer, handleSubmitAll)
+  //--
 
   return (
     <CardBackContainer $isFlipped={isFlipped} $flipTimer={flipTimer}>
@@ -483,38 +458,38 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
             <MainInputContainer ref={mainRef} $blurbSlideTimer={blurbSlideTimer}>
               <div ref={scrollContainerRef} className='h-full w-full overflow-y-scroll scrollbar-hide'>
                 <div className='relative my-1'>
-                  <FormLabel type='input' label={'Title'} name={'title'} value={title} placeholder={''} submitStatus={[isSubmitTitleSuccess, isSubmitTitleFail]} feedbackText={titleFeedbackText} handleInputChange={handleInputChange} />
+                  <FormLabel type='text' label={'Title'} name={'title'} value={title} placeholder={''} submitStatus={[isSubmitTitleSuccess, isSubmitTitleFail]} feedbackText={titleFeedbackText} handleInputChange={handleInputChange} />
                 </div>
 
                 <div className='flex gap-x-2 my-1'>
-                  <FormLabel type='input' label={'Format'} name={'format'} value={format} placeholder={''} submitStatus={[isSubmitFormatSuccess, isSubmitFormatFail]} feedbackText='' handleInputChange={handleInputChange} />
-                  <FormLabel type='input' label={'Total Pages'} name={'totalPages'} value={totalPages} placeholder={''} submitStatus={[isSubmitTotalPagesSuccess, isSubmitTotalPagesFail]} feedbackText={totalPagesFeedbackText} handleInputChange={handleInputChange} />
+                  <FormLabel type='text' label={'Format'} name={'format'} value={format} placeholder={''} submitStatus={[isSubmitFormatSuccess, isSubmitFormatFail]} feedbackText='' handleInputChange={handleInputChange} />
+                  <FormLabel type='number' label={'Total Pages'} name={'totalPages'} value={totalPages} placeholder={''} submitStatus={[isSubmitTotalPagesSuccess, isSubmitTotalPagesFail]} feedbackText='' handleInputChange={handleInputChange} />
                 </div>
 
                 <div className='relative flex my-1'>
-                  <FormLabel type='input' label={'Author'} name={'author'} value={newAuthor} placeholder={''} submitStatus={[isSubmitAuthorSuccess, isSubmitAuthorFail]} feedbackText={authorFeedbackText} handleInputChange={handleInputChange} optionalFunction={handleAddAuthorWithEnter} />
+                  <FormLabel type='text' label={'Author'} name={'author'} value={newAuthor} placeholder={''} submitStatus={[isSubmitAuthorSuccess, isSubmitAuthorFail]} feedbackText={authorFeedbackText} handleInputChange={handleInputChange} optionalFunction={handleAddAuthorWithEnter} />
                   <div className='ml-2 mb-0.5 flex items-end'>
                     <StyledBsPlusSquare size={25} onClick={handleAddAuthor}/>
                   </div>
                 </div>
                 <div className='flex flex-wrap mt-1'>
                   {newAuthorList.length > 0 && newAuthorList.map(author =>
-                    <AuthorTag key={author} author={author} fromList={'newAuthor'} handleDeleteAuthor={handleDeleteAuthor} />
+                    <AuthorTag key={author} author={author} fromList={'newAuthor'} handleDeleteAuthor={handleDeleteAuthor} resetInputSubmitStates={resetInputSubmitStates} />
                   )}
                 </div>
                 <div className='flex flex-wrap mt-0.5'>
                   {authorList.length > 0 && authorList.map(author =>
-                    <AuthorTag key={author} author={author} fromList={'author'} handleDeleteAuthor={handleDeleteAuthor} />
+                    <AuthorTag key={author} author={author} fromList={'author'} handleDeleteAuthor={handleDeleteAuthor} resetInputSubmitStates={resetInputSubmitStates} />
                   )}
                 </div>
 
                 <div className='flex gap-x-2 my-1'>
-                  <FormLabel type='input' label={'Date Published'} name={'publishedDate'} value={publishedDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitPublishedDateSuccess, isSubmitPublishedDateFail]} feedbackText='' handleInputChange={handleInputChange} />
-                  <FormLabel type='input' label={'Edition Published'} name={'editionDate'} value={editionDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitEditionDateSuccess, isSubmitEditionDateFail]} feedbackText='' handleInputChange={handleInputChange} />
+                  <FormLabel type='text' label={'Date Published'} name={'publishedDate'} value={publishedDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitPublishedDateSuccess, isSubmitPublishedDateFail]} feedbackText='' handleInputChange={handleInputChange} />
+                  <FormLabel type='text' label={'Edition Published'} name={'editionDate'} value={editionDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitEditionDateSuccess, isSubmitEditionDateFail]} feedbackText='' handleInputChange={handleInputChange} />
                 </div>
 
                 <div className='mt-1 mb-2'>
-                  <FormLabel type='input' label={'Picture URL'} name={'pictureUrl'} value={pictureUrl} placeholder={''} submitStatus={[isSubmitPictureUrlSuccess, isSubmitPictureUrlFail]} feedbackText='' handleInputChange={handleInputChange} />
+                  <FormLabel type='text' label={'Book Cover URL'} name={'bookCoverUrl'} value={bookCoverUrl} placeholder={''} submitStatus={[isSubmitBookCoverUrlSuccess, isSubmitBookCoverUrlFail]} feedbackText='' handleInputChange={handleInputChange} />
                 </div>
               </div>
 
@@ -535,7 +510,7 @@ const CardBack = ({ bookDetails, author, isFlipped, flipTimer, handleFlip, handl
           <MdFlip size={22} className='absolute left-4 cursor-pointer' onClick={() => handleFlip()}/>
           <StyledButton type='button' onClick={handleShowBlurb}>{isShowBlurb ? 'Main' : 'Blurb'}</StyledButton>
           <StyledButton type='button' onClick={handleReset}>Reset</StyledButton>
-          <SaveButton type='button' $isStartSubmit={isStartSubmit} $submitHoldTimer={submitHoldTimer} onMouseDown={handleStartSubmit} onMouseUp={handleStopSubmit} onMouseLeave={handleStopSubmit}>Save</SaveButton>
+          <SaveButton type='button' $isStartSubmit={isStartSubmit} $submitHoldTimer={submitHoldTimer} onMouseDown={() => handleStartSubmit()} onMouseUp={() => handleStopSubmit()} onMouseLeave={() => handleStopSubmit()}>Save</SaveButton>
         </div>
 
       </Form>

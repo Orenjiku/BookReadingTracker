@@ -5,7 +5,7 @@ import { FiSlash } from 'react-icons/fi';
 
 
 interface BookImagePropsITF {
-  pictureUrl: string;
+  bookCoverUrl: string;
   isEdit: boolean;
   editTimer: number;
   handleFlip: Function;
@@ -34,12 +34,12 @@ const EditBookButton = styled.button<{ $editTimer: number }>`
   }
 `;
 
-const BookImage = ({ pictureUrl, isEdit, editTimer, handleFlip }: BookImagePropsITF) => {
+const BookImage = ({ bookCoverUrl, isEdit, editTimer, handleFlip }: BookImagePropsITF) => {
   const bookImageRef = useRef(null);
 
   return (
     <div className='relative col-start-1 col-end-2 row-start-4 row-end-20'>
-      {pictureUrl === ''
+      {bookCoverUrl === ''
       ? <div className='rounded-tl-2xl  h-full w-full flex flex-col justify-center items-center border-t border-r border-blueGray-50'>
           <FiSlash className='text-red-500 opacity-40' size={75} />
           <p className='font-AdventPro-400 text-xl opacity-60'>No Picture</p>
@@ -47,7 +47,7 @@ const BookImage = ({ pictureUrl, isEdit, editTimer, handleFlip }: BookImageProps
             <EditBookButton ref={bookImageRef} $editTimer={editTimer} onClick={() => handleFlip()}>Edit Book</EditBookButton>
           </div>
         </div>
-      : <div className='rounded-tl-2xl h-full w-full flex justify-center items-center bg-cover bg-center' style={{backgroundImage: `url(${pictureUrl})`}}>
+      : <div className='rounded-tl-2xl h-full w-full flex justify-center items-center bg-cover bg-center' style={{backgroundImage: `url(${bookCoverUrl})`}}>
           <CSSTransition in={isEdit} timeout={editTimer} classNames='fade' nodeRef={bookImageRef} unmountOnExit>
             <EditBookButton ref={bookImageRef} $editTimer={editTimer} onClick={() => handleFlip()}>Edit Book</EditBookButton>
           </CSSTransition>

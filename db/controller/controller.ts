@@ -1,15 +1,19 @@
 import db from '../config/db';
-import queryCurrentlyReading from './queries/queryCurrentlyReading';
-import queryFinishedReading from './queries/queryFinishedReading';
-import queryDailyReads from './queries/queryDailyReads';
-import { queryPostAuthor, queryDeleteAuthor } from './queries/queryAuthor';
 import { Request, Response } from 'express';
+import queryReading from './queries/queryReading';
+import queryDailyReads from './queries/queryDailyReads';
+import { queryPutTotalPages } from './queries/queryTotalPages';
+import { queryPostAuthor, queryDeleteAuthor } from './queries/queryAuthor';
+import { queryPostReadEntry, queryDeleteReadEntry } from './queries/queryReadEntry';
+import { queryGetReaderBook } from './queries/queryReaderBook';
+
 
 const controller = {
     getCurrentlyReading: async (req: Request, res: Response) => {
     const readerId = req.params.id;
+    const isReading = true;
     try {
-      const result = await db.query(queryCurrentlyReading(readerId));
+      const result = await db.query(queryReading(readerId, isReading));
       res.status(200).json(result.rows[0].books);
     } catch (err) {
       res.sendStatus(400);
@@ -18,8 +22,9 @@ const controller = {
 
   getFinishedReading: async (req: Request, res: Response) => {
     const readerId = req.params.id;
+    const isReading = false;
     try {
-      const result = await db.query(queryFinishedReading(readerId));
+      const result = await db.query(queryReading(readerId, isReading));
       res.status(200).json(result.rows[0].books);
     } catch (err) {
       res.sendStatus(400);
@@ -37,11 +42,12 @@ const controller = {
   },
 
   putTitle: async (req: Request, res: Response) => {
-    const readerId = req.params.id;
-    const { bookId, title } = req.body;
-    console.log(bookId, title);
+    // const readerId = req.params.id;
+    const { bookId, title }: { bookId: number, title: string } = req.body;
+    const titleWords = title.toLowerCase().split(/\s+/);
+    const titleSort = titleWords[0] === 'the' ? `${titleWords.slice(1).join(' ')}, the` : titleWords.join(' ');
     try {
-      await db.query(`UPDATE book SET title='${title}' WHERE book.id=${bookId}`)
+      await db.query(`UPDATE book SET title='${title}', title_sort='${titleSort}' WHERE book.id=${bookId};`);
       res.sendStatus(204);
     } catch(err) {
       console.error(err);
@@ -50,10 +56,10 @@ const controller = {
   },
 
   postAuthor: async (req: Request, res: Response) => {
-    const readerId = req.params.id;
-    const { bookId, authorList } = req.body;
+    // const readerId = req.params.id;
+    const { bookId, authorList }: { bookId: number, authorList: string[] } = req.body;
     try {
-      await db.query(queryPostAuthor(bookId, authorList));
+      await db.query(`BEGIN; ${queryPostAuthor(bookId, authorList)} COMMIT`);
       res.sendStatus(204);
     } catch(err) {
       console.error(err);
@@ -62,10 +68,10 @@ const controller = {
   },
 
   deleteAuthor: async (req: Request, res: Response) => {
-    const readerId = req.params.id;
-    const { bookId, authorList } = req.body;
+    // const readerId = req.params.id;
+    const { bookId, authorList }: { bookId: number, authorList: string[] } = req.body;
     try {
-      await db.query(queryDeleteAuthor(bookId, authorList));
+      await db.query(`BEGIN; ${queryDeleteAuthor(bookId, authorList)} COMMIT;`);
       res.sendStatus(204);
     } catch(err) {
       console.error(err);
@@ -74,10 +80,10 @@ const controller = {
   },
 
   putBookFormat: async (req: Request, res: Response) => {
-    const readerId = req.params.id;
-    const { bookId, format } = req.body;
+    // const readerId = req.params.id;
+    const { bookId, format }: { bookId: number, format: string } = req.body;
     try {
-      await db.query(`UPDATE book SET book_format='${format}' WHERE book.id=${bookId}`);
+      await db.query(`UPDATE book SET book_format='${format}' WHERE book.id=${bookId};`);
       res.sendStatus(204);
     } catch(err) {
       console.error(err);
@@ -86,16 +92,12 @@ const controller = {
   },
 
   putTotalPages: async (req: Request, res: Response) => {
-    const readerId = req.params.id;
-    const { bookId, totalPages } = req.body;
+    // const readerId = req.params.id;
+    const { bookId, readerBookId, totalPages }: {bookId: number, readerBookId: number, totalPages: number} = req.body;
     try {
-      await db.query(`
-        BEGIN;
-        UPDATE book AS b SET total_pages=${totalPages} WHERE b.id=${bookId};
-        UPDATE read_entry AS re SET current_percent=TRUNC(current_page::DECIMAL/${totalPages}*100, 2) FROM read_instance AS ri WHERE re.read_instance_id=ri.id AND ri.reader_book_id=(SELECT id FROM reader_book AS rb WHERE rb.reader_id=${readerId} AND rb.book_id=${bookId});
-        COMMIT;
-      `);
-      res.sendStatus(204);
+      await db.query(`BEGIN; ${queryPutTotalPages( bookId, readerBookId, totalPages)} COMMIT;`);
+      const result = await db.query(queryGetReaderBook(readerBookId));
+      res.status(200).json(result.rows[0].reader_book);
     } catch(err) {
       console.error(err);
       res.sendStatus(400);
@@ -103,10 +105,10 @@ const controller = {
   },
 
   putPublishedDate: async (req: Request, res: Response) => {
-    const readerId = req.params.id;
-    const { bookId, publishedDate } = req.body;
+    // const readerId = req.params.id;
+    const { bookId, publishedDate }: { bookId: number, publishedDate: string } = req.body;
     try {
-      await db.query(`UPDATE book SET published_date='${publishedDate}' WHERE book.id=${bookId}`);
+      await db.query(`UPDATE book SET published_date='${publishedDate}' WHERE book.id=${bookId};`);
       res.sendStatus(204);
     } catch(err) {
       console.error(err);
@@ -115,10 +117,10 @@ const controller = {
   },
 
   putEditionDate: async (req: Request, res: Response) => {
-    const readerId = req.params.id;
-    const { bookId, editionDate } = req.body;
+    // const readerId = req.params.id;
+    const { bookId, editionDate }: { bookId: number, editionDate: string } = req.body;
     try {
-      await db.query(`UPDATE book SET edition_date='${editionDate}' WHERE book.id=${bookId}`);
+      await db.query(`UPDATE book SET edition_date='${editionDate}' WHERE book.id=${bookId};`);
       res.sendStatus(204);
     } catch(err) {
       console.error(err);
@@ -126,11 +128,11 @@ const controller = {
     }
   },
 
-  putPictureUrl: async (req: Request, res: Response) => {
-    const readerId = req.params.id;
-    const { bookId, pictureUrl } = req.body;
+  putBookCoverUrl: async (req: Request, res: Response) => {
+    // const readerId = req.params.id;
+    const { bookId, bookCoverUrl }: { bookId: number, bookCoverUrl: string } = req.body;
     try {
-      await db.query(`UPDATE book SET picture_url='${pictureUrl}' WHERE book.id=${bookId}`);
+      await db.query(`UPDATE book SET picture_url='${bookCoverUrl}' WHERE book.id=${bookId};`);
       res.sendStatus(204);
     } catch(err) {
       console.error(err);
@@ -139,14 +141,39 @@ const controller = {
   },
 
   putBlurb: async (req: Request, res: Response) => {
-    const readerId = req.params.id;
-    const { bookId, blurb } = req.body;
+    // const readerId = req.params.id;
+    const { bookId, blurb }: { bookId: number, blurb: string } = req.body;
     try {
-      const result = await db.query(`UPDATE book SET blurb='${blurb}' WHERE book.id=${bookId}`);
-      console.log(result)
+      const result = await db.query(`UPDATE book SET blurb='${blurb}' WHERE book.id=${bookId};`);
       res.sendStatus(204);
     } catch(err) {
-      console.log(err);
+      console.error(err);
+      res.sendStatus(400);
+    }
+  },
+
+  postReadEntry: async (req: Request, res: Response) => {
+    // const readerId: string = req.params.id;
+    const { readerBookId, readInstanceId, dateString, currentPage, totalPages }: { readerBookId: number, readInstanceId: number, dateString: string, currentPage: number, totalPages: number } = req.body;
+    try {
+      await db.query(`BEGIN; ${queryPostReadEntry(readerBookId, readInstanceId, dateString, currentPage, totalPages)} COMMIT;`);
+      const result = await db.query(queryGetReaderBook(readerBookId));
+      res.status(200).json(result.rows[0].reader_book);
+    } catch(err) {
+      console.error(err);
+      res.sendStatus(400);
+    }
+  },
+
+  deleteReadEntry: async (req: Request, res: Response) => {
+    const readerId: string = req.params.id;
+    const { readerBookId, readInstanceId, readEntryId }: { readerBookId: number, readInstanceId: number, readEntryId: number } = req.body;
+    try {
+      await db.query(`BEGIN; ${queryDeleteReadEntry(readerBookId, readInstanceId, readEntryId)} COMMIT;`);
+      const result = await db.query(queryGetReaderBook(readerBookId));
+      res.status(200).json(result.rows[0].reader_book);
+    } catch(err) {
+      console.error(err);
       res.sendStatus(400);
     }
   }

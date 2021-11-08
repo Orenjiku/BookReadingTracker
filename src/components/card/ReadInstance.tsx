@@ -15,7 +15,7 @@ interface ReadInstancePropsITF {
   isExpanded: boolean;
   expandTimer: number;
   handleIsExpanded: Function;
-  handleDeleteReadEntry: Function;
+  handleUpdateReaderBook: Function;
 }
 
 const ReadInstanceHeaderContainer = styled.div`
@@ -82,9 +82,9 @@ const ReadEntryContainer = styled.div<{ $readEntryListAppendTimer: number }>`
   }
 `;
 
-const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer, handleIsExpanded, handleDeleteReadEntry } : ReadInstancePropsITF) => {
+const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer, handleIsExpanded, handleUpdateReaderBook } : ReadInstancePropsITF) => {
   const readEntryList = readInstance.read_entry || [];
-  const [ readEntrySelectToggle, setReadEntrySelectToggle ] = useState(false);
+  const [ readEntrySelectToggle, setReadEntrySelectToggle ] = useState(false); //triggers overflow check whenever readEntry is clicked.
   const readEntryListAppendTimer = 500;
   const readEntrySelectTimer = 300;
 
@@ -101,7 +101,7 @@ const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer
   };
   const { refYOverflowing, refYScrollBegin, refYScrollEnd } = useYOverflow({scrollContainerRef, overflowTriggers});
 
-  const handleToggle = () => setReadEntrySelectToggle(readEntrySelectToggle => !readEntrySelectToggle);
+  const handleReadEntrySelectToggle = () => setReadEntrySelectToggle(readEntrySelectToggle => !readEntrySelectToggle);
 
   return (
     <div className='relative h-full w-full overflow-hidden'>
@@ -126,7 +126,7 @@ const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer
           {readEntryList.map(readEntry => (
             <CSSTransition key={`cssT-${readEntry.re_id}`} timeout={readEntryListAppendTimer} classNames='slideFade' /* nodeRef={bookReadRef} */ >
               <ReadEntryContainer $readEntryListAppendTimer={readEntryListAppendTimer} /* ref={bookReadRef} */>
-                <ReadEntry key={readEntry.re_id} readEntry={readEntry} isEdit={isEdit} editTimer={editTimer} readEntrySelectTimer={readEntrySelectTimer} handleToggle={handleToggle} handleDeleteReadEntry={handleDeleteReadEntry}/>
+                <ReadEntry key={readEntry.re_id} readEntry={readEntry} readerBookId={readInstance.reader_book_id} readInstanceId={readInstance.ri_id} isEdit={isEdit} editTimer={editTimer} readEntrySelectTimer={readEntrySelectTimer} handleReadEntrySelectToggle={handleReadEntrySelectToggle} handleUpdateReaderBook={handleUpdateReaderBook}/>
               </ReadEntryContainer>
             </CSSTransition>
           ))}
