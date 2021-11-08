@@ -238,7 +238,7 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
 
           <CSSTransition in={isEdit} timeout={editTimer} classNames='slide' nodeRef={editViewRef} unmountOnExit>
             <EditViewContainer ref={editViewRef} $editTimer={editTimer} $isExpanded={isExpanded} $expandTimer={expandTimer}>
-              <EditView readerBookId={readInstanceList[readInstanceIdx].reader_book_id} readInstanceId={readInstanceList[readInstanceIdx].ri_id} totalPages={bookDetails.total_pages} isEdit={isEdit} handleUpdateReaderBook={handleUpdateReaderBook} />
+              <EditView readerBookId={readInstanceList[readInstanceIdx].reader_book_id} readInstanceId={readInstanceList[readInstanceIdx].ri_id} totalPages={bookDetails.total_pages} isEdit={isEdit} editTimer={editTimer} isFlipped={isFlipped} flipTimer={flipTimer} handleUpdateReaderBook={handleUpdateReaderBook} />
             </EditViewContainer>
           </CSSTransition>
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import useHoldSubmit from '../../hooks/useHoldSubmit';
-import { SaveButton } from './styled';
+import { StyledButton } from './styled';
 import { isValidDate } from './utils';
 import FormLabel from './FormLabel';
 
@@ -10,10 +9,13 @@ interface EditViewPropsITF {
   readInstanceId: number;
   totalPages: number;
   isEdit: boolean;
+  editTimer: number;
+  isFlipped: boolean;
+  flipTimer: number;
   handleUpdateReaderBook: Function;
 }
 
-const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, handleUpdateReaderBook }: EditViewPropsITF) => {
+const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, editTimer, isFlipped, flipTimer, handleUpdateReaderBook }: EditViewPropsITF) => {
   const [ readEntryDate, setReadEntryDate ] = useState(new Date(Date.now()).toISOString().slice(0, 10));
   const [ readEntryCurrentPage, setReadEntryCurrentPage ] = useState('');
 
@@ -35,13 +37,33 @@ const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, handleUpda
     setIsSubmitReadEntryFail(false);
   };
 
+  //clear inputs ad submit status when edit state is changed to false.
   useEffect(() => {
+    let delayTimeout: ReturnType<typeof setTimeout>;
     if (!isEdit) {
-      setReadEntryDate(new Date(Date.now()).toISOString().slice(0, 10));
-      setReadEntryCurrentPage('');
-      resetReadEntrySubmitStates();
+      delayTimeout = setTimeout(() => {
+        setReadEntryDate(new Date(Date.now()).toISOString().slice(0, 10));
+        setReadEntryCurrentPage('');
+        resetReadEntrySubmitStates();
+      }, editTimer);
     }
-  }, [isEdit])
+    () => clearTimeout(delayTimeout);
+  }, [isEdit]);
+  //---
+
+  //clear inputs and submit status when card is flipped.
+  useEffect(() => {
+    let delayTimeout: ReturnType<typeof setTimeout>;
+    if (isFlipped) {
+      delayTimeout = setTimeout(() => {
+        setReadEntryDate(new Date(Date.now()).toISOString().slice(0, 10));
+        setReadEntryCurrentPage('');
+        resetReadEntrySubmitStates();
+      }, flipTimer / 2);
+    }
+    () => clearTimeout(delayTimeout);
+  }, [isFlipped]);
+  //---
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === 'readEntryDate') setReadEntryDate(e.target.value);
@@ -75,9 +97,6 @@ const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, handleUpda
     }
   };
 
-  const submitHoldTimer = 500;
-  const [ isStartSubmit, handleStartSubmit, handleStopSubmit ] = useHoldSubmit(submitHoldTimer, handleSubmitReadEntry);
-
   return (
     <div className='h-full w-full'>
       <form className='h-full w-full flex flex-col justify-center items-center'>
@@ -90,7 +109,7 @@ const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, handleUpda
           </div>
         </div>
         <div className='w-full mt-3 flex justify-center'>
-        <SaveButton type='button' $isStartSubmit={isStartSubmit} $submitHoldTimer={submitHoldTimer} onMouseDown={() => handleStartSubmit()} onMouseUp={() => handleStopSubmit()} onMouseLeave={() => handleStopSubmit()}>Add</SaveButton>
+        <StyledButton type='button' onClick={handleSubmitReadEntry}>Add</StyledButton>
         </div>
       </form>
     </div>
