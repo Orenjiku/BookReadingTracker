@@ -8,6 +8,7 @@ router.get('/:id/finished_reading', controller.getFinishedReading);
 router.get('/:id/daily_reads', controller.getDailyReads);
 
 router.post('/:id/book/author', controller.postAuthor);
+router.post('/:id/book/read_instance', controller.postReadInstance);
 router.post('/:id/book/read_entry', controller.postReadEntry);
 
 router.put('/:id/book/title', controller.putTitle);
@@ -19,6 +20,7 @@ router.put('/:id/book/book_cover_url', controller.putBookCoverUrl);
 router.put('/:id/book/blurb', controller.putBlurb);
 
 router.delete('/:id/book/author', controller.deleteAuthor);
+router.delete('/:id/book/read_instance', controller.deleteReadInstance);
 router.delete('/:id/book/read_entry', controller.deleteReadEntry);
 
 export default router;

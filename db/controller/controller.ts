@@ -2,10 +2,11 @@ import db from '../config/db';
 import { Request, Response } from 'express';
 import queryReading from './queries/queryReading';
 import queryDailyReads from './queries/queryDailyReads';
+import { queryGetReaderBook } from './queries/queryReaderBook';
 import { queryPutTotalPages } from './queries/queryTotalPages';
 import { queryPostAuthor, queryDeleteAuthor } from './queries/queryAuthor';
+import { queryPostReadInstance, queryDeleteReadInstance } from './queries/queryReadInstance';
 import { queryPostReadEntry, queryDeleteReadEntry } from './queries/queryReadEntry';
-import { queryGetReaderBook } from './queries/queryReaderBook';
 
 
 const controller = {
@@ -146,6 +147,30 @@ const controller = {
     try {
       const result = await db.query(`UPDATE book SET blurb='${blurb}' WHERE book.id=${bookId};`);
       res.sendStatus(204);
+    } catch(err) {
+      console.error(err);
+      res.sendStatus(400);
+    }
+  },
+
+  postReadInstance: async (req: Request, res: Response) => {
+    const { readerBookId }: { readerBookId: number } = req.body;
+    try {
+      await db.query(`BEGIN; ${queryPostReadInstance(readerBookId)} COMMIT;`);
+      const result = await db.query(queryGetReaderBook(readerBookId));
+      res.status(200).json(result.rows[0].reader_book);
+    } catch(err) {
+      console.error(err);
+      res.sendStatus(400);
+    }
+  },
+
+  deleteReadInstance: async (req: Request, res: Response) => {
+    const { readerBookId, readInstanceId }: { readerBookId: number, readInstanceId: number } = req.body;
+    try {
+      await db.query(`BEGIN; ${queryDeleteReadInstance(readerBookId, readInstanceId)} COMMIT;`);
+      const result = await db.query(queryGetReaderBook(readerBookId));
+      res.status(200).json(result.rows[0].reader_book);
     } catch(err) {
       console.error(err);
       res.sendStatus(400);
