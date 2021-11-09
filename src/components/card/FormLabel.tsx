@@ -12,7 +12,7 @@ interface FormLabelPropsITF {
   submitStatus: boolean[];
   feedbackText: string;
   handleInputChange: Function;
-  optionalFunction?: Function;
+  handleEnter?: Function;
 }
 
 const Label = styled.label`
@@ -67,7 +67,7 @@ const FeedbackTextContainer = styled.div<{$isFeedbackText: boolean; $indicatorTr
   `}
 `;
 
-const FormLabel = ({type, label, name, value, placeholder, submitStatus, feedbackText, handleInputChange, optionalFunction}: FormLabelPropsITF) => {
+const FormLabel = ({type, label, name, value, placeholder, submitStatus, feedbackText, handleInputChange, handleEnter}: FormLabelPropsITF) => {
   const [ isSubmitSuccess, isSubmitFail ] = submitStatus;
   const [ isFeedbackText, setIsFeedbackText ] = useState(false);
   const indicatorTransitionTimer = 300;
@@ -88,7 +88,7 @@ const FormLabel = ({type, label, name, value, placeholder, submitStatus, feedbac
         </div>
         <div className='flex flex-row-reverse' {...(type === 'textarea' && {style: {height: '90%'}})}>
           {type === 'text' || type === 'number'
-            ? <Input type={type} name={name} placeholder={placeholder} value={value} onChange={e => handleInputChange(e)} {...(optionalFunction && {onKeyDown: e => optionalFunction(e)})} spellCheck={false} autoComplete='off' />
+            ? <Input type={type} name={name} placeholder={placeholder} value={value} onChange={e => handleInputChange(e)} {...(handleEnter && {onKeyDown: e => handleEnter(e)})} spellCheck={false} autoComplete='off' />
             : <TextArea name={name} placeholder={placeholder} value={value} onChange={e => handleInputChange(e)} spellCheck={false} autoComplete='off' />
           }
           <FocusIndicator />
