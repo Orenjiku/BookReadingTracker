@@ -349,3 +349,86 @@ WHERE   read_instance.id=24;
 
 DELETE FROM       author
 WHERE NOT EXISTS  (SELECT author_id FROM book_author AS ba WHERE ba.author_id = (SELECT id FROM author AS a WHERE a.full_name='asd asd'));
+
+
+DELETE FROM author
+WHERE author.id = 54
+AND author.id NOT IN (SELECT ba.author_id FROM book_author AS ba);
+
+WITH cte_author AS (
+       SELECT  id
+       FROM    author
+       WHERE   author.full_name = 'Guy Haley')
+DELETE FROM   book_author AS ba
+USING         cte_author
+WHERE         ba.book_id = 24
+AND           ba.author_id = cte_author.id;
+
+
+SELECT
+       COALESCE(json_agg(row_to_json(read_entry_agg)), '[]'::json) AS read_entry
+FROM
+       (
+       SELECT
+              re.id AS re_id,
+              re.date_read,
+              re.pages_read,
+              re.current_page,
+              re.current_percent
+       FROM
+              read_entry AS re
+       WHERE
+              re.read_instance_id = 27
+       ORDER BY
+              re.date_read DESC,
+              re.current_page DESC
+       ) AS read_entry_agg;
+
+WITH prev_read_entry AS (
+SELECT         COALESCE(current_page, 0) AS current_page
+FROM           read_entry AS re
+INNER JOIN     read_instance AS ri
+ON             re.read_instance_id=ri.id
+WHERE          re.date_read < TO_TIMESTAMP('2021-11-08', 'YYYY-MM-DD HH24:MI:SS')
+AND            ri.id = 27
+ORDER BY       re.date_read DESC
+LIMIT 1)
+INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id)
+       (SELECT       TO_TIMESTAMP('2021-11-08', 'YYYY-MM-DD HH24:MI:SS'),
+                     300 - pre.current_page,
+                     300,
+                      TRUNC(300 / 944 * 100, 2),
+                      27
+       FROM prev_read_entry AS pre);
+
+--doesn't return any rows if there is no match, therefore COALESCE doesn't work.
+SELECT         COALESCE(current_page, 0) AS current_page
+FROM           read_entry AS re
+INNER JOIN     read_instance AS ri
+ON             re.read_instance_id=ri.id
+WHERE          re.date_read < TO_TIMESTAMP('2021-11-08', 'YYYY-MM-DD HH24:MI:SS')
+AND            ri.id = 27
+ORDER BY       re.date_read DESC
+LIMIT 1
+
+--COALESCE works here
+SELECT         COALESCE(MIN(current_page), 0) AS current_page
+FROM           read_entry AS re
+LEFT JOIN      read_instance AS ri
+ON             re.read_instance_id=ri.id
+WHERE          re.date_read < TO_TIMESTAMP('2021-11-08', 'YYYY-MM-DD HH24:MI:SS')
+AND            ri.id = 27
+ORDER BY       re.date_read DESC
+LIMIT 1;
+
+
+WITH cte AS (
+       SELECT COUNT(id) AS count
+       FROM read_instance AS ri
+       WHERE ri.reader_book_id=$24
+)
+IF (SELECT count FROM cte) > 1 THEN
+       DELETE FROM read_instance AS ri USING cte WHERE ri.id = 24
+ELSE
+       DELETE FROM read_entry AS re WHERE re.read_instance_id=24
+END IF;

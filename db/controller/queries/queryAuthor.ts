@@ -27,7 +27,7 @@ const queryPostAuthor = (bookId: number, authorList: string[]) => {
 
 const queryDeleteAuthor = (bookId: number, authorList: string[]) => {
   //1. delete row from book_author JOIN table based on author_id and book_id.
-  //2. delete author from author table if it is an orphaned entry.
+  //2. delete author from author table if it is orphaned from book_author table.
   const combinedQuery = authorList.map(author => `
     WITH cte_author AS (
             SELECT  id
