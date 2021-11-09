@@ -467,7 +467,7 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
                 </div>
 
                 <div className='relative flex my-1'>
-                  <FormLabel type='text' label={'Author'} name={'author'} value={newAuthor} placeholder={''} submitStatus={[isSubmitAuthorSuccess, isSubmitAuthorFail]} feedbackText={authorFeedbackText} handleInputChange={handleInputChange} optionalFunction={handleAddAuthorWithEnter} />
+                  <FormLabel type='text' label={'Author'} name={'author'} value={newAuthor} placeholder={''} submitStatus={[isSubmitAuthorSuccess, isSubmitAuthorFail]} feedbackText={authorFeedbackText} handleInputChange={handleInputChange} handleEnter={handleAddAuthorWithEnter} />
                   <div className='ml-2 mb-0.5 flex items-end'>
                     <StyledBsPlusSquare size={25} onClick={handleAddAuthor}/>
                   </div>
