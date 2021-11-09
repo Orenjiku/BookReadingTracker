@@ -200,7 +200,6 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
   }, [])
 
   useEffect(() => {
-    setTimesRead(readerBook.is_any_finished ? readInstanceList.reduce((acc, cur) => acc += cur.is_finished ? 1 : 0, 0) : 0);
     setReadInstanceList(readerBook.read_instance);
   }, [readerBook]);
 
@@ -211,6 +210,7 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
     setOverallAvgDailyRead(updatedOverallDaysRead > 0 ? Math.round(overallPagesRead / updatedOverallDaysRead) : 0);
     setOverallDaysRead(updatedOverallDaysRead);
     setOverallDaysTotal(readInstanceList.reduce((acc, cur) => acc + cur.days_total, 0));
+    setTimesRead(readInstanceList.reduce((acc, cur) => acc += cur.is_finished ? 1 : 0, 0));
   }, [readInstanceList]);
 
   const handleChangeReadInstanceIdx = (i: number) => setReadInstanceIdx(i);
