@@ -24,13 +24,8 @@ const FocusIndicator = styled.div`
   transition: all 100ms linear;
 `;
 
-const Input = styled.input<{$type: 'text' | 'number'}>`
+const inputStyle = css`
   ${tw`text-base rounded-tr rounded-br w-full pl-1 bg-trueGray-50 bg-opacity-20 border-b border-trueGray-50 outline-none`};
-  ${({ $type }) => $type === 'number' && css`
-    ::-webkit-inner-spin-button {
-      display: none;
-    }
-  `}
   transition: all 100ms linear;
   &:focus {
     ${tw`border-teal-500`};
@@ -40,15 +35,18 @@ const Input = styled.input<{$type: 'text' | 'number'}>`
   }
 `;
 
+const Input = styled.input<{type: 'text' | 'number'}>`
+  ${inputStyle}
+  ${({ type }) => type === 'number' && css`
+    ::-webkit-inner-spin-button {
+      display: none;
+    }
+  `}
+`;
+
 const TextArea = styled.textarea`
-  ${tw`rounded-tr rounded-br w-full p-1 bg-trueGray-50 bg-opacity-20 border-b border-trueGray-50 outline-none overflow-auto resize-none cursor-auto`};
-  transition: all 100ms linear;
-  &:focus {
-    ${tw`border-teal-500`};
-  }
-  &:focus + ${FocusIndicator} {
-    ${tw`bg-teal-500`};
-  }
+  ${inputStyle}
+  ${tw`text-sm`}
   ::-webkit-scrollbar {
     ${tw`bg-trueGray-50 bg-opacity-60 w-2 rounded-r`};
   }
@@ -78,8 +76,6 @@ const FormLabel = ({type, label, name, value, placeholder, submitStatus, feedbac
     feedbackText === '' ? setIsFeedbackText(false) : setIsFeedbackText(true);
   }, [feedbackText]);
 
-  const handleRemoveFeedbackText = () => setIsFeedbackText(false);
-
   return (
     <div className='mb-0.5' {...(type === 'textarea' && {className: 'h-full w-full'})}>
       <Label onClick={e => e.preventDefault()}>
@@ -92,8 +88,8 @@ const FormLabel = ({type, label, name, value, placeholder, submitStatus, feedbac
         </div>
         <div className='flex flex-row-reverse' {...(type === 'textarea' && {style: {height: '90%'}})}>
           {type === 'text' || type === 'number'
-            ? <Input $type={type} name={name} placeholder={placeholder} value={value} onChange={e => handleInputChange(e)} {...(optionalFunction && {onKeyDown: e => optionalFunction(e)})} spellCheck={false} autoComplete='off' />
-            : <TextArea name={name} placeholder={placeholder} value={value} onChange={e => handleInputChange(e)} onClick={handleRemoveFeedbackText} spellCheck={false} autoComplete='off' />
+            ? <Input type={type} name={name} placeholder={placeholder} value={value} onChange={e => handleInputChange(e)} {...(optionalFunction && {onKeyDown: e => optionalFunction(e)})} spellCheck={false} autoComplete='off' />
+            : <TextArea name={name} placeholder={placeholder} value={value} onChange={e => handleInputChange(e)} spellCheck={false} autoComplete='off' />
           }
           <FocusIndicator />
         </div>
