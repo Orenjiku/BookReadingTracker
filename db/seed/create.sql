@@ -46,7 +46,7 @@ CREATE TABLE read_instance (
   days_total INT DEFAULT 0,
   pages_read INT DEFAULT 0,
   max_daily_read INT DEFAULT 0,
-  is_reading BOOLEAN DEFAULT FALSE,
+  is_reading BOOLEAN DEFAULT TRUE,
   is_finished BOOLEAN DEFAULT FALSE,
   is_dnf BOOLEAN DEFAULT FALSE,
   reader_book_id INT,
