@@ -70,7 +70,7 @@ const ReaderBook = ({ readInstanceList, readInstanceIdx, isEdit, editTimer, isEx
   useEffect(() => {
     readInstanceIdx === 0 ? setIsIdxStart(true) : setIsIdxStart(false);
     readInstanceIdx === readInstanceListLength - 1 ? setIsIdxEnd(true) : setIsIdxEnd(false);
-  }, [readInstanceIdx]);
+  }, [readInstanceList, readInstanceIdx]);
 
   const prevSlide = () => {
     handleChangeReadInstanceIdx(readInstanceIdx - 1);
@@ -82,7 +82,6 @@ const ReaderBook = ({ readInstanceList, readInstanceIdx, isEdit, editTimer, isEx
     setTransitionClassNames('forward');
   };
 
-
   const convertToRoman = (num: number): string | number => {
     const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'];
     return num <= 11 ? roman[num - 1] : num;
@@ -92,7 +91,6 @@ const ReaderBook = ({ readInstanceList, readInstanceIdx, isEdit, editTimer, isEx
     <div className='h-full overflow-hidden'>
 
       <ReaderBookHeader>
-
         <p className='font-Alegreya-500 text-center text-xl'>{convertToRoman(readInstanceListLength - readInstanceIdx)}</p>
 
         {!isIdxStart &&
@@ -106,7 +104,6 @@ const ReaderBook = ({ readInstanceList, readInstanceIdx, isEdit, editTimer, isEx
             <BsChevronRight className='absolute right-1' />
           </div>
         }
-
       </ReaderBookHeader>
 
       <TransitionGroup component={null} childFactory={child => cloneElement(child, {classNames: transitionClassNames})}>
