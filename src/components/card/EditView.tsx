@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { CSSTransition } from 'react-transition-group';
+import tw, { styled, css } from 'twin.macro';
+import useHoldSubmit from '../../hooks/useHoldSubmit';
 import { StyledButton } from './styled';
 import { isValidDate } from './utils';
 import FormLabel from './FormLabel';
-
+import { BsChevronLeft, BsChevronRight, BsCircleFill } from 'react-icons/bs';
+import { CgPushChevronDownR } from 'react-icons/cg';
 
 interface EditViewPropsITF {
   readerBookId: number;
@@ -14,6 +18,68 @@ interface EditViewPropsITF {
   flipTimer: number;
   handleUpdateReaderBook: Function;
 }
+
+const ReadEntryEditContainer = styled.div<{ $slideTimer: number }>`
+  ${tw`absolute h-full w-full grid grid-cols-12 grid-rows-1`};
+  --slideDuration: ${({ $slideTimer }) => `${$slideTimer}ms`};
+  &.slide-enter {
+    transform: translateX(-100%);
+  }
+  &.slide-enter-active {
+    transform: translateX(0);
+    transition: transform var(--slideDuration) linear;
+  }
+  &.slide-exit {
+    transform: translateX(0);
+  }
+  &.slide-exit-active {
+    transform: translateX(-100%);
+    transition: transform var(--slideDuration) linear;
+  }
+`;
+
+const ReadInstanceEditContainer = styled.div<{ $slideTimer: number }>`
+  ${tw`absolute h-full w-full grid grid-cols-12 grid-rows-1`};
+  --slideDuration: ${({ $slideTimer }) => `${$slideTimer}ms`};
+  &.slide-enter {
+    transform: translateX(100%);
+  }
+  &.slide-enter-active {
+    transform: translateX(0);
+    transition: transform var(--slideDuration) linear;
+  }
+  &.slide-exit {
+    transform: translateX(0);
+  }
+  &.slide-exit-active {
+    transform: translateX(100%);
+    transition: transform var(--slideDuration) linear;
+  }
+`;
+
+const ReadInstanceEditSelectContainer = styled.div`
+  ${tw`relative h-1/2 flex justify-center items-center cursor-pointer overflow-hidden`};
+  ${tw`opacity-60 font-AllertaStencil-400 text-blueGray-200 whitespace-nowrap text-xl`};
+  text-shadow: 0px -1px 1px white, 0px -1px 1px white, 0px 1px 2px black;
+  &:hover {
+    ${tw`bg-blueGray-400 bg-opacity-30 opacity-80`}
+  }
+  `;
+
+const StyledBsCircle = styled(BsCircleFill)<{ $isStartSubmit: boolean, $submitHoldTimer: number}>`
+  ${tw`absolute bg-blueGray-900 opacity-0`};
+  --holdDuration: ${({ $submitHoldTimer}) => `${$submitHoldTimer}ms`};
+  height: 200px;
+  width: 200px;
+  border-radius: 50%;
+  z-index: -1;
+  transform-origin: center;
+  ${({ $isStartSubmit }) => $isStartSubmit && css`
+    ${tw`opacity-40`};
+    transform: scale(.1);
+    transition: transform var(--holdDuration) linear;
+  `}
+`;
 
 const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, editTimer, isFlipped, flipTimer, handleUpdateReaderBook }: EditViewPropsITF) => {
   const [ readEntryDate, setReadEntryDate ] = useState(new Date(Date.now()).toISOString().slice(0, 10));
@@ -97,21 +163,91 @@ const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, editTimer,
     }
   };
 
+  const handlePostReadInstance = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/1/book/read_instance', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ readerBookId })
+      })
+      if (response.ok) {
+        const result = await response.json();
+        handleUpdateReaderBook(result);
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  };
+
+  const handleDeleteReadInstance = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/1/book/read_instance', {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ readerBookId, readInstanceId })
+      })
+      if (response.ok) {
+        const result = await response.json();
+        handleUpdateReaderBook(result);
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  const [ isDefaultPage, setIsDefaultPage ] = useState(true);
+  const slideTimer = 300;
+  const readEntryEditContainerRef = useRef(null);
+  const readInstanceEditContainerRef = useRef(null);
+
+  const handleChangePage = () => setIsDefaultPage(prevIsDefaultPage => !prevIsDefaultPage);
+
+  const submitPostHoldTimer = 500;
+  const submitDeleteHoldTimer = 1000;
+  const [ isStartPostSubmit, handleStartPostSubmit, handleStopPostSubmit ] = useHoldSubmit(submitPostHoldTimer, handlePostReadInstance);
+  const [ isStartDeleteSubmit, handleStartDeleteSubmit, handleStopDeleteSubmit ] = useHoldSubmit(submitDeleteHoldTimer, handleDeleteReadInstance);
+
   return (
-    <div className='h-full w-full'>
-      <form className='h-full w-full flex flex-col justify-center items-center'>
-        <div className='flex justify-center mx-1'>
-          <div className='mr-0.5' style={{flexBasis: '66.66%'}}>
+    <div className='relative h-full w-full'>
+      <CSSTransition in={isDefaultPage} timeout={slideTimer} classNames='slide' nodeRef={readEntryEditContainerRef} unmountOnExit>
+        <ReadEntryEditContainer $slideTimer={slideTimer} ref={readEntryEditContainerRef}>
+          <form className='col-start-1 col-end-11 ml-2 mr-1 flex flex-col justify-center items-center'>
             <FormLabel type='text' label='Date' name='readEntryDate' value={readEntryDate} placeholder='yyyy-mm-dd' submitStatus={[isSubmitReadEntrySuccess, isSubmitReadEntryFail]} feedbackText='' handleInputChange={handleInputChange} />
+
+            <div className='flex'>
+              <FormLabel type='number' label='Page' name='readEntryCurrentPage' value={readEntryCurrentPage} placeholder='#' submitStatus={[isSubmitReadEntrySuccess, isSubmitReadEntryFail]} feedbackText='' handleInputChange={handleInputChange} />
+              <div className='mb-0.5 ml-1 flex items-end'>
+                <StyledButton type='button' onClick={handleSubmitReadEntry}>Add</StyledButton>
+              </div>
+            </div>
+          </form>
+
+          <div className='col-start-11 col-end-13 flex justify-center items-center cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30' onClick={handleChangePage}>
+            <BsChevronRight className='absolute right-0 stroke-current stroke-1 text-coolGray-50' />
           </div>
-          <div className='ml-0.5' style={{flexBasis: '33.33%'}}>
-            <FormLabel type='number' label='Page' name='readEntryCurrentPage' value={readEntryCurrentPage} placeholder='#' submitStatus={[isSubmitReadEntrySuccess, isSubmitReadEntryFail]} feedbackText='' handleInputChange={handleInputChange} />
+        </ReadEntryEditContainer>
+      </CSSTransition>
+
+      <CSSTransition in={!isDefaultPage} timeout={slideTimer} classNames='slide' nodeRef={readInstanceEditContainerRef} unmountOnExit>
+        <ReadInstanceEditContainer $slideTimer={slideTimer} ref={readInstanceEditContainerRef}>
+          <div className='col-start-1 col-end-3 flex justify-center items-center cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30' onClick={handleChangePage}>
+            <BsChevronLeft className='absolute left-0 stroke-current stroke-1 text-coolGray-50' />
           </div>
-        </div>
-        <div className='w-full mt-3 flex justify-center'>
-        <StyledButton type='button' onClick={handleSubmitReadEntry}>Add</StyledButton>
-        </div>
-      </form>
+          <div className='col-start-3 col-end-13 flex flex-col'>
+            <ReadInstanceEditSelectContainer onMouseDown={() => handleStartPostSubmit()} onMouseUp={() => handleStopPostSubmit()} onMouseLeave={() => handleStopPostSubmit()}>
+              <p>New Read</p>
+              <CgPushChevronDownR className='current-stroke text-blueGray-700' />
+              <StyledBsCircle $isStartSubmit={isStartPostSubmit} $submitHoldTimer={submitPostHoldTimer} />
+            </ReadInstanceEditSelectContainer>
+            <ReadInstanceEditSelectContainer onMouseDown={() => handleStartDeleteSubmit()} onMouseUp={() => handleStopDeleteSubmit()} onMouseLeave={() => handleStopDeleteSubmit()}>
+              <p>Delete Read</p>
+              <CgPushChevronDownR className='current-stroke text-blueGray-700' />
+              <StyledBsCircle $isStartSubmit={isStartDeleteSubmit} $submitHoldTimer={submitDeleteHoldTimer} />
+            </ReadInstanceEditSelectContainer>
+          </div>
+
+        </ReadInstanceEditContainer>
+      </CSSTransition>
     </div>
   )
 }
