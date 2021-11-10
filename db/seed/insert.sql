@@ -617,7 +617,7 @@ SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-09', 52, 559,
 SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-10', 52, 611, 63.65);
 SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-11', 52, 663, 69.06);
 SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-12', 38, 701, 73.02);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-13', 100, 802, 83.54);
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-13', 101, 802, 83.54);
 SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-14', 105, 907, 94.48);
 SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-15', 53, 960, 100);
 
@@ -1159,64 +1159,5 @@ SELECT update_reader_book(:'username_1', :'book_23_title');
 SELECT update_reader_book(:'username_1', :'book_24_title');
 
 
-/* --------------------------------------------- ADD 2nd read_instance to Book 19 Blood Angels Omnibus for testing --------------------------------------------- */
-
-CREATE OR REPLACE FUNCTION add_another_read_instance(arg_username VARCHAR, arg_book_title VARCHAR)
-RETURNS VOID AS $$
-DECLARE
-  var_reader_book_id INT = get_reader_book_id($1, $2);
-  --Find current max read_instance_id and add 1 for new read_instance_id
-  var_read_instance_id INT := (SELECT MAX(ri.id) FROM read_instance AS ri) + 1;
-BEGIN
-  --Add new read_instance and reference reader_book
-  INSERT INTO read_instance (reader_book_id) VALUES (var_reader_book_id);
-
-  --Add a few read_entries
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/1', 100, 100, 12.08, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/2', 100, 200, 24.15, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/3', 100, 300, 36.23, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/4', 100, 400, 48.31, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/5', 100, 500, 60.39, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/6', 100, 600, 72.46, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/7', 100, 700, 84.54, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/8', 100, 800, 96.61, var_read_instance_id);
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id) VALUES ('2021/9/9', 28, 828, 100, var_read_instance_id);
-
-  --Update read_instance meta data based on previously added read_entries
-  UPDATE read_instance
-  SET   days_read =   (SELECT COUNT(DISTINCT Date(re.date_read)) AS days_read
-                      FROM   read_instance AS ri
-                      INNER JOIN read_entry AS re
-                      ON re.read_instance_id = var_read_instance_id),
-        days_total =  (SELECT (MAX(Date(re.date_read)) - MIN(Date(re.date_read)) + 1) AS days_total
-                      FROM   read_entry AS re
-                      WHERE  re.read_instance_id = var_read_instance_id),
-        pages_read =      (SELECT SUM(re.pages_read) FROM read_entry AS re WHERE re.read_instance_id = var_read_instance_id),
-        max_daily_read = (SELECT MAX(daily_read.daily_pages_read)
-                          FROM   (SELECT SUM(pages_read) AS daily_pages_read
-                                  FROM   read_entry AS re
-                                  WHERE re.read_instance_id = var_read_instance_id
-                                  GROUP  BY Date(re.date_read))
-                          AS daily_read),
-        is_reading = FALSE,
-        is_finished = TRUE,
-        is_dnf = FALSE
-  WHERE read_instance.reader_book_id = var_reader_book_id
-  AND read_instance.id = var_read_instance_id;
-
-  --Update meta data for reader_book based on previously added read_intance
-  UPDATE reader_book AS rb
-  SET is_any_reading=(SELECT bool_or(ri.is_reading) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
-      is_any_finished=(SELECT bool_or(ri.is_finished) FROM read_instance aS ri WHERE ri.reader_book_id = var_reader_book_id),
-      is_all_dnf=(SELECT bool_and(ri.is_dnf) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id)
-  WHERE rb.reader_id = get_reader_id($1)
-  AND rb.book_id = get_book_id($2);
-END;
-$$ LANGUAGE plpgsql;
-
-
-SELECT add_another_read_instance(:'username_1', :'book_19_title');
-
-
 /* --------------------------------------------- DROP functions --------------------------------------------- */
-DROP FUNCTION get_reader_id, get_book_id, get_author_id, get_reader_book_id, get_read_instance_id, insert_reader, insert_book, insert_reader_book, insert_read_instance, insert_read_entry, insert_author, join_book_author, update_read_instance, update_reader_book, add_another_read_instance;
+DROP FUNCTION get_reader_id, get_book_id, get_author_id, get_reader_book_id, get_read_instance_id, insert_reader, insert_book, insert_reader_book, insert_read_instance, insert_read_entry, insert_author, join_book_author, update_read_instance, update_reader_book;
