@@ -10,6 +10,7 @@ import FormLabel from './FormLabel';
 import AuthorTag from './AuthorTag';
 import { BsPlusSquare, BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { MdFlip } from 'react-icons/md';
+import { CgPushChevronDownR } from 'react-icons/cg';
 
 
 interface CardBackPropsITF {
@@ -510,7 +511,10 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
           <MdFlip size={22} className='absolute left-4 cursor-pointer' onClick={() => handleFlip()}/>
           <StyledButton type='button' onClick={handleShowBlurb}>{isShowBlurb ? 'Main' : 'Blurb'}</StyledButton>
           <StyledButton type='button' onClick={handleReset}>Reset</StyledButton>
-          <SaveButton type='button' $isStartSubmit={isStartSubmit} $submitHoldTimer={submitHoldTimer} onMouseDown={() => handleStartSubmit()} onMouseUp={() => handleStopSubmit()} onMouseLeave={() => handleStopSubmit()}>Save</SaveButton>
+          <SaveButton type='button' $isStartSubmit={isStartSubmit} $submitHoldTimer={submitHoldTimer} onMouseDown={() => handleStartSubmit()} onMouseUp={() => handleStopSubmit()} onMouseLeave={() => handleStopSubmit()}>
+            <p>Save</p>
+            <CgPushChevronDownR className='ml-0.5 current-stroke text-blueGray-600' />
+          </SaveButton>
         </div>
 
       </Form>
