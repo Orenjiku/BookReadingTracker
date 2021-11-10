@@ -2,7 +2,7 @@ const queryPostAuthor = (bookId: number, authorList: string[]) => {
   const combinedQuery = authorList.map(author => {
     const authorArr = author.split(' ');
     const firstName = authorArr.slice(0, 1)[0];
-    const middleName = authorArr.slice(1, -1)[0] || '';
+    const middleName = authorArr.slice(1, -1).join(' ');
     const lastName = authorArr.slice(-1)[0];
     return `
       WITH val AS (
