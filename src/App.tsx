@@ -6,27 +6,40 @@ import Card from './components/card/Card';
 import image from './assets/pawel-czerwinski-Qiy4hr18aGs-unsplash.jpg';
 
 const App = () => {
-  const [finishedReading, setFinishedReading] = useState<BookITF[]>([]);
+  const [ currentlyReadingList, setCurrentlyReadingList ] = useState<BookITF[]>([]);
+  // const [ finishedReadingList, setFinishedReadingList ] = useState<BookITF[]>([]);
 
   useEffect(() => {
-    getFinishedReading();
+    getCurrentlyReadingList();
   }, []);
 
-  const getFinishedReading = async () => {
+  const getCurrentlyReadingList = async () => {
     try {
       const response = await fetch('http://localhost:3000/1/currently_reading');
       const result = await response.json();
-      setFinishedReading(result);
+      setCurrentlyReadingList(result);
     } catch(err) {
-      console.log(err);
+      console.error(err);
     }
-  }
+  };
+
+  // const getFinishedReadingList = async () => {
+  //   try {
+  //     const response = await fetch('http://localhost:3000/1/currently_reading');
+  //     const result = await response.json();
+  //     setFinishedReadingList(result);
+  //   } catch(err) {
+  //     console.error(err);
+  //   }
+  // };
 
   return (
-    <div className='flex flex-wrap justify-center' style={{backgroundImage: `url('${image}')`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundPosition: 'center'}}>
-      {finishedReading.map((book) => {
-        return <Card key={`${book.b_id}`} book={book} />
-      })}
+    <div style={{backgroundImage: `url('${image}')`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+      <div className='flex flex-wrap justify-center' >
+        {currentlyReadingList.map((book) => {
+          return <Card key={`${book.b_id}`} book={book} />
+        })}
+      </div>
     </div>
   )
 };
