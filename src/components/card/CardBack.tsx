@@ -5,7 +5,7 @@ import { BookDetailsITF } from '../../interfaces/interface';
 import useYOverflow from '../../hooks/useYOverflow';
 import useHoldSubmit from '../../hooks/useHoldSubmit';
 import { StyledButton, SaveButton } from './styled';
-import { sortByLastName, isValidDate } from './utils';
+import { sortByLastName, isValidDate, getTitleSort } from './utils';
 import FormLabel from './FormLabel';
 import AuthorTag from './AuthorTag';
 import { BsPlusSquare, BsChevronDown, BsChevronUp } from 'react-icons/bs';
@@ -311,7 +311,7 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
   const handleSubmitAll = async () => {
     //checks if current input value changed from original value before submitInput
     if (title.trim() !== bookDetails.title && title.trim() !== '') {
-      await submitInput('title', 'title', title.trim());
+      await submitTitle(title.trim());
     } else if (title.trim() === '') {
       setTitleFeedbackText(titleFeedbackTextOptions.errorEmptyTitle);
     }
@@ -338,8 +338,6 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
         toggleInputSubmitSuccessState(inputName);
       } else {
         toggleInputSubmitFailState(inputName);
-        const err = await response.json();
-        if (err === `Key (title)=(${inputValue}) already exists.`) setTitleFeedbackText(titleFeedbackTextOptions.errorDuplicateTitle);
       }
     } catch(err) {
       console.error(err);
@@ -347,6 +345,27 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
     }
   };
   //---
+
+  const submitTitle = async (title: string) => {
+    const titleSort = getTitleSort(title);
+    try {
+      const response = await fetch(`http://localhost:3000/1/book/title`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({bookId: bookDetails.b_id, title, titleSort})
+      });
+      if (response.ok) {
+        toggleInputSubmitSuccessState('title');
+      } else {
+        const err = await response.json();
+        if (err === `Key (title)=(${title}) already exists.`) setTitleFeedbackText(titleFeedbackTextOptions.errorDuplicateTitle);
+        toggleInputSubmitFailState('title');
+      }
+    } catch(err) {
+      console.error(err);
+      toggleInputSubmitFailState('title');
+    }
+  }
 
   //totalPages requires separate submit function to handle readerBook json response.
   const submitTotalPages = async (readerBookId: number, totalPages: number) => {

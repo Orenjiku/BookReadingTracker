@@ -13,7 +13,6 @@ const isValidDate = (s: string) => {
   return compareDate.getFullYear() === yyyy && compareDate.getMonth() === mm - 1 && compareDate.getDate() === dd; //subtract 1 from mm because .getMonth() starts at 0, January.
 };
 
-
 const dateDiffInDays = (a: Date, b: Date) => {
   const _MS_PER_DAY = 1000 * 60 * 60 * 24;
   // Discard the time and time-zone information.
@@ -25,7 +24,11 @@ const dateDiffInDays = (a: Date, b: Date) => {
   console.log(utc1, utc2);
   console.log(Math.abs(Math.floor((utc1 - utc2) / _MS_PER_DAY)))
   return Math.abs(Math.floor((utc1 - utc2) / _MS_PER_DAY));
-}
+};
 
+const getTitleSort = (title: string) => {
+  const titleWordsArr = title.toLowerCase().split(/\s+/);
+  return titleWordsArr[0] === 'the' ? `${titleWordsArr.slice(1).join(' ')}, the` : titleWordsArr.join(' ');
+};
 
-export { sortByLastName, isValidDate, dateDiffInDays }
+export { sortByLastName, isValidDate, dateDiffInDays, getTitleSort }
