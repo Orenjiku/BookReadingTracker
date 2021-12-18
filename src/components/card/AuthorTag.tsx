@@ -10,11 +10,6 @@ interface AuthorTagPropsITF {
   resetInputSubmitStates: Function;
 }
 
-const StyledRiDeleteBack2Line = styled(RiDeleteBack2Line)<{ $hoverTimer: number }>`
-  transform: rotateY(180deg);
-  transition: all ${({ $hoverTimer }) => $hoverTimer}ms linear;
-`;
-
 const AuthorTagContainer = styled.div<{ $isMouseDown: boolean; $hoverTimer: number; $holdTimer: number }>`
   ${tw`relative flex items-center font-Charm-400 text-sm border border-trueGray-50 rounded px-1 py-0.5 mr-1 my-0.5 cursor-pointer select-none overflow-hidden`};
   --hoverDuration: ${({ $hoverTimer }) => `${$hoverTimer}ms`};
@@ -22,9 +17,6 @@ const AuthorTagContainer = styled.div<{ $isMouseDown: boolean; $hoverTimer: numb
   transition: border var(--hoverDuration) linear;
   &:hover {
     ${tw`border-red-500 border-opacity-60`};
-  }
-  &:hover > ${StyledRiDeleteBack2Line} {
-    ${tw`stroke-current text-red-500 opacity-60`}
   }
   &::after {
     content: '';
@@ -35,6 +27,14 @@ const AuthorTagContainer = styled.div<{ $isMouseDown: boolean; $hoverTimer: numb
       ${tw`h-full w-full`};
       transition: all var(--holdDuration) linear;
     `}
+  }
+`;
+
+const StyledRiDeleteBack2Line = styled(RiDeleteBack2Line)<{ $hoverTimer: number }>`
+  transform: rotateY(180deg);
+  transition: all ${({ $hoverTimer }) => $hoverTimer}ms linear;
+  ${AuthorTagContainer}:hover & {
+    ${tw`stroke-current text-red-500 opacity-60`}
   }
 `;
 
