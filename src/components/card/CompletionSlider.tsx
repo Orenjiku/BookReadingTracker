@@ -142,14 +142,16 @@ const CompletionSlider = ({ readerBookId, readInstanceId, totalPages, isReading,
 
   //submit 100% completed read_entry when countdown hits 0.
   const handleSubmitComplete = async () => {
+    const dateString = `${new Date(Date.now()).toISOString().slice(0, 10)} ${new Date().toTimeString().slice(0, 8)}`;
     try {
       const response = await fetch(`http://localhost:3000/1/book/read_entry`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ readerBookId, readInstanceId, dateString: new Date(Date.now()).toISOString().slice(0, 10), currentPage: totalPages, totalPages })
+        body: JSON.stringify({ readerBookId, readInstanceId, dateString, currentPage: totalPages, totalPages })
       });
       if (response.ok) {
         const result = await response.json();
+        console.log(result)
         handleUpdateReaderBook(result);
       }
     } catch(err) {
