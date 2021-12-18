@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 import { BookDetailsITF, ReaderBookITF } from '../../interfaces/interface';
+import usePrevious from '../../hooks/usePrevious';
 import BookImage from './BookImage';
 import CardHeader from './CardHeader';
 import CompletionSlider from './CompletionSlider';
@@ -51,7 +52,7 @@ const ViewExpandContainer = styled.div<{ $isExpanded: boolean; $expandTimer: num
 `;
 
 const DetailsViewContainer = styled.div<{ $editTimer: number; $isExpanded: boolean; $expandTimer: number }>`
-  ${tw`relative h-full w-full bg-blueGray-500 bg-opacity-40 `};
+  ${tw`relative h-full w-full bg-blueGray-500 bg-opacity-40`};
   --expandDuration: ${({ $expandTimer }) => `${$expandTimer}ms`};
   transition: all calc(var(--expandDuration) * 0.5) linear var(--expandDuration);
   ${({ $isExpanded }) => $isExpanded && css`
@@ -164,6 +165,7 @@ const StyledEditIcon = styled(Edit)<{ $isEdit: boolean, $editTimer: number }>`
 const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, handleFlip, handleUpdateReaderBook }: CardFrontPropsITF) => {
   const [ readInstanceList, setReadInstanceList ] = useState(readerBook.read_instance);
   const [ readInstanceIdx, setReadInstanceIdx ] = useState(0);
+  const prevReadInstanceLen = usePrevious(readInstanceList.length);
 
   const [ overallDaysRead, setOverallDaysRead ] = useState(0);
   const [ overallDaysTotal, setOverallDaysTotal ] = useState(0);
@@ -195,11 +197,17 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
   //---
 
   useEffect(() => {
+    //on first render, display most recent currently reading readInstance if any.
     const startIdx = readerBook.read_instance.length > 1 && readerBook.is_any_reading ? readerBook.read_instance.findIndex(readInstance => readInstance.is_reading === true) : 0;
     setReadInstanceIdx(startIdx);
-  }, [])
+  }, []);
 
   useEffect(() => {
+    const readInstanceLen = readerBook.read_instance.length;
+    if (readInstanceLen !== prevReadInstanceLen) {
+      readInstanceLen < prevReadInstanceLen && readInstanceIdx > 0 ? setReadInstanceIdx(readInstanceIdx - 1) : 0;
+      readInstanceLen > prevReadInstanceLen && setReadInstanceIdx(0);
+    }
     setReadInstanceList(readerBook.read_instance);
   }, [readerBook]);
 
