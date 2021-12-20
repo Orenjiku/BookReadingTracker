@@ -40,12 +40,10 @@ const CardFrontContainer = styled.div<{ $isFlipped: boolean; $flipTimer: number 
 
 const ViewExpandContainer = styled.div<{ $isExpanded: boolean; $expandTimer: number }>`
   ${tw`relative h-full w-full overflow-hidden`};
-  min-height: 38%;
   max-height: 38%;
   --expandDuration: ${({ $expandTimer }) => `${$expandTimer}ms`};
   transition: all var(--expandDuration) ease-out;
   ${({ $isExpanded }) => $isExpanded && css`
-    min-height: 0;
     max-height: 0;
     transition: all var(--expandDuration) ease-out calc(var(--expandDuration) * 0.5);
   `}
@@ -54,12 +52,8 @@ const ViewExpandContainer = styled.div<{ $isExpanded: boolean; $expandTimer: num
 const DetailsViewContainer = styled.div<{ $editTimer: number; $isExpanded: boolean; $expandTimer: number }>`
   ${tw`relative h-full w-full bg-blueGray-500 bg-opacity-40`};
   --expandDuration: ${({ $expandTimer }) => `${$expandTimer}ms`};
-  transition: all calc(var(--expandDuration) * 0.5) linear var(--expandDuration);
-  ${({ $isExpanded }) => $isExpanded && css`
-    ${tw`opacity-0`};
-    transition: all calc(var(--expandDuration) * 0.5) linear;
-  `}
   --editDuration: ${({ $editTimer }) => `${$editTimer}ms`};
+  transition: all linear var(--expandDuration);
   &.slide-enter {
     transform: translateY(100%);
   }
@@ -79,12 +73,8 @@ const DetailsViewContainer = styled.div<{ $editTimer: number; $isExpanded: boole
 const EditViewContainer = styled.div<{ $isExpanded: boolean; $editTimer: number; $expandTimer: number }>`
   ${tw`absolute top-0 left-0 h-full w-full overflow-hidden`};
   -expandDuration: ${({ $expandTimer }) => `${$expandTimer}ms`};
-  transition: all calc(var(--expandDuration) * 0.5) linear var(--expandDuration);
-  ${({ $isExpanded }) => $isExpanded && css`
-    ${tw`opacity-0`};
-    transition: all calc(var(--expandDuration) * 0.5) linear;
-  `}
   --editDuration: ${({ $editTimer }) => `${$editTimer}ms`};
+  transition: all linear var(--expandDuration);
   &.slide-enter {
     transform: translateY(-100%);
   }

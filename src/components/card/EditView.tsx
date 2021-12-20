@@ -261,6 +261,11 @@ const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, editTimer,
     }
   }
 
+  const handleMassReset = () => {
+    resetSubmitDateStates();
+    resetSubmitPageStates();
+  };
+
   const submitPostHoldTimer = 600;
   const submitDeleteHoldTimer = 1000;
   const [ isStartPostSubmit, handleStartPostSubmit, handleStopPostSubmit ] = useHoldSubmit(submitPostHoldTimer, handlePostReadInstance);
@@ -270,30 +275,30 @@ const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, editTimer,
     <div className='relative h-full w-full'>
       <CSSTransition in={isReadEntryEditView} timeout={slideTimer} classNames='slide' nodeRef={readEntryEditContainerRef} unmountOnExit>
         <ReadEntryEditContainer $slideTimer={slideTimer} ref={readEntryEditContainerRef}>
-          <form className='col-start-1 col-end-11 ml-2 mr-1 flex flex-col justify-center items-center'>
-            <FormLabel type='text' label='Date' name='readEntryDate' value={readEntryDate} placeholder='yyyy-mm-dd' submitStatus={[isSubmitDateSuccess, isSubmitDateFail]} feedbackText='' handleInputChange={handleInputChange}  handleEnter={handleSubmitReadEntryWithEnter} />
+          <form className='col-start-1 col-end-11 ml-2 mr-1 mt-1'>
+            <FormLabel type='text' label='Date' name='readEntryDate' value={readEntryDate} placeholder='yyyy-mm-dd' submitStatus={[isSubmitDateSuccess, isSubmitDateFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={handleMassReset} handleEnter={handleSubmitReadEntryWithEnter} />
 
             <div className='flex'>
-              <FormLabel type='number' label='Page' name='readEntryCurrentPage' value={readEntryCurrentPage} placeholder='#' submitStatus={[isSubmitPageSuccess, isSubmitPageFail]} feedbackText='' handleInputChange={handleInputChange} handleEnter={handleSubmitReadEntryWithEnter} />
+              <FormLabel type='number' label='Page' name='readEntryCurrentPage' value={readEntryCurrentPage} placeholder='#' submitStatus={[isSubmitPageSuccess, isSubmitPageFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={handleMassReset} handleEnter={handleSubmitReadEntryWithEnter} />
               <div className='mb-0.5 ml-1 flex items-end'>
                 <StyledButton type='button' onClick={handleSubmitReadEntry}>Add</StyledButton>
               </div>
             </div>
           </form>
 
-          <div className='col-start-11 col-end-13 flex justify-center items-center cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30' onClick={handleChangeEditView}>
-            <BsChevronRight className='absolute right-0 stroke-current stroke-1 text-coolGray-50' />
+          <div className='col-start-11 col-end-13 cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30' onClick={handleChangeEditView}>
+            <BsChevronRight className='absolute top-12 right-0 stroke-current stroke-1 text-coolGray-50' />
           </div>
         </ReadEntryEditContainer>
       </CSSTransition>
 
       <CSSTransition in={!isReadEntryEditView} timeout={slideTimer} classNames='slide' nodeRef={readInstanceEditContainerRef} unmountOnExit>
         <ReadInstanceEditContainer $slideTimer={slideTimer} ref={readInstanceEditContainerRef}>
-          <div className='col-start-1 col-end-3 flex justify-center items-center cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30' onClick={handleChangeEditView}>
-            <BsChevronLeft className='absolute left-0 stroke-current stroke-1 text-coolGray-50' />
+          <div className='col-start-1 col-end-3 row-start-1 row-end-3 cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30' onClick={handleChangeEditView}>
+            <BsChevronLeft className='absolute top-12 left-0 stroke-current stroke-1 text-coolGray-50' />
           </div>
 
-          <div className='col-start-3 col-end-13 flex flex-col'>
+          <div style={{height: '109.14px'}} className='col-start-3 col-end-13 flex flex-col'>
             <ReadInstanceEditSelectContainer onMouseDown={() => handleStartPostSubmit()} onMouseUp={() => handleStopPostSubmit()} onMouseLeave={() => handleStopPostSubmit()}>
               <p>New Read</p>
               <StyledChevronDown />

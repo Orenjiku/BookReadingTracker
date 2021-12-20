@@ -12,6 +12,7 @@ interface FormLabelPropsITF {
   submitStatus: boolean[];
   feedbackText: string;
   handleInputChange: Function;
+  handleReset: Function;
   handleEnter?: Function;
 }
 
@@ -24,7 +25,7 @@ const FocusIndicator = styled.div`
   transition: all 100ms linear;
 `;
 
-const inputStyle = css`
+const textInputMixin = css`
   ${tw`text-base rounded-tr rounded-br w-full pl-1 bg-trueGray-50 bg-opacity-20 border-b border-trueGray-50 outline-none`};
   transition: all 100ms linear;
   &:focus {
@@ -36,7 +37,7 @@ const inputStyle = css`
 `;
 
 const Input = styled.input<{type: 'text' | 'number'}>`
-  ${inputStyle}
+  ${textInputMixin}
   ${({ type }) => type === 'number' && css`
     ::-webkit-inner-spin-button {
       display: none;
@@ -45,7 +46,7 @@ const Input = styled.input<{type: 'text' | 'number'}>`
 `;
 
 const TextArea = styled.textarea`
-  ${inputStyle}
+  ${textInputMixin}
   ${tw`text-sm`}
   ::-webkit-scrollbar {
     ${tw`bg-trueGray-50 bg-opacity-60 w-2 rounded-r`};
@@ -67,14 +68,14 @@ const FeedbackTextContainer = styled.div<{$isFeedbackText: boolean; $indicatorTr
   `}
 `;
 
-const FormLabel = ({type, label, name, value, placeholder, submitStatus, feedbackText, handleInputChange, handleEnter}: FormLabelPropsITF) => {
-  const [ isSubmitSuccess, isSubmitFail ] = submitStatus;
+const FormLabel = ({type, label, name, value, placeholder, submitStatus, feedbackText, handleInputChange, handleReset, handleEnter}: FormLabelPropsITF) => {
+  const [ isSuccess, isFail ] = submitStatus;
   const [ isFeedbackText, setIsFeedbackText ] = useState(false);
   const indicatorTransitionTimer = 300;
 
   useEffect(() => {
-    feedbackText === '' ? setIsFeedbackText(false) : setIsFeedbackText(true);
-  }, [feedbackText]);
+    isSuccess || isFail ? setIsFeedbackText(true) : setIsFeedbackText(false);
+  }, [isSuccess, isFail]);
 
   return (
     <div className='mb-0.5' {...(type === 'textarea' && {className: 'h-full w-full'})}>
@@ -82,14 +83,14 @@ const FormLabel = ({type, label, name, value, placeholder, submitStatus, feedbac
         <div className='flex items-center'>
           <p className='mr-0.5'>{label}:</p>
           <div className='relative'>
-            <SuccessIndicator size={13} isSuccess={isSubmitSuccess} isFail={isSubmitFail} indicatorTransitionTimer={indicatorTransitionTimer} />
+            <SuccessIndicator size={13} isSuccess={isSuccess} isFail={isFail} indicatorTransitionTimer={indicatorTransitionTimer} />
             <FeedbackTextContainer $isFeedbackText={isFeedbackText} $indicatorTransitionTimer={indicatorTransitionTimer}>{feedbackText}</FeedbackTextContainer>
           </div>
         </div>
         <div className='flex flex-row-reverse' {...(type === 'textarea' && {style: {height: '90%'}})}>
           {type === 'text' || type === 'number'
-            ? <Input type={type} name={name} placeholder={placeholder} value={value} onChange={e => handleInputChange(e)} {...(handleEnter && {onKeyDown: e => handleEnter(e)})} spellCheck={false} autoComplete='off' />
-            : <TextArea name={name} placeholder={placeholder} value={value} onChange={e => handleInputChange(e)} spellCheck={false} autoComplete='off' />
+            ? <Input type={type} name={name} placeholder={placeholder} value={value} onClick={() => handleReset(name)} onChange={e => handleInputChange(e)} {...(handleEnter && {onKeyDown: e => handleEnter(e)})} spellCheck={false} autoComplete='off' />
+            : <TextArea name={name} placeholder={placeholder} value={value} onClick={() => handleReset(name)} onChange={e => handleInputChange(e)} spellCheck={false} autoComplete='off' />
           }
           <FocusIndicator />
         </div>

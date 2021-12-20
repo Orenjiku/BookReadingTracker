@@ -141,22 +141,17 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
   const titleFeedbackTextOptions = {
     errorDuplicateTitle: 'Title already exists in collection.',
     errorEmptyTitle: 'Input cannot be empty.'
-  }
+  };
   const authorFeedbackTextOptions = {
     errorDuplicateAuthor: 'Author name is duplicated.',
     errorEmptyAuthor: 'Input cannot be empty.',
     errorPostAndDeleteAuthor: 'Connection. Retry Save.',
     errorPostAuthor: 'Connection. Retry Save.',
     errorDeleteAuthor: 'Connection. Reselect authors and retry save.'
-  }
-
-  const resetFeedbackText = () => {
-    setTitleFeedbackText('');
-    setAuthorFeedbackText('');
   };
   //---
 
-  //Handle editing inputs
+  //Handle updating and resetting input states
   const inputFunctionsList: {[key: string]: Function[]} = {
     title: [ setTitle, setIsSubmitTitleSuccess, setIsSubmitTitleFail ],
     author: [ setNewAuthor, setIsSubmitAuthorSuccess, setIsSubmitAuthorFail ],
@@ -185,8 +180,6 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     inputFunctionsList[e.target.name][0](e.target.value);
-    resetInputSubmitStates(e.target.name); //removes FormLabel successIndicator for target input
-    resetFeedbackText(); //removes FormLabel feedbackText
   };
   //---
 
@@ -214,8 +207,10 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
       setNewAuthorList(prevNewAuthorList => [...prevNewAuthorList, normalizedNewAuthor]);
       setNewAuthor('');
     } else if (normalizedNewAuthor !== '') {
+      setIsSubmitAuthorFail(true);
       setAuthorFeedbackText(authorFeedbackTextOptions.errorDuplicateAuthor);
     } else if (normalizedNewAuthor === '') {
+      setIsSubmitAuthorFail(true);
       setAuthorFeedbackText(authorFeedbackTextOptions.errorEmptyAuthor);
     }
   };
@@ -245,26 +240,24 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
   //Determine overflow up and down arrow indicators
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const overflowTriggers = {
-    // isShowBlurb,
-    // blurbSlideTimer,
     newAuthorList,
     deleteAuthorList
   };
   const { refYOverflowing, refYScrollBegin, refYScrollEnd } = useYOverflow({scrollContainerRef, overflowTriggers});
   //---
 
-  //When card flipped to front, reset all input values, return to Main Input Container and set scroll position to top
+  //When card flipped to front, reset all input values and set scroll position to top (if scrollable)
   let resetTimeout: ReturnType<typeof setTimeout>;
   useEffect(() => {
     resetTimeout = setTimeout(() => {
-      handleReset();
+      handleResetAll();
       setIsShowBlurb(false);
       scrollContainerRef?.current?.scrollTo(0, 0);
     }, flipTimer / 2);
     return () => clearTimeout(resetTimeout);
   }, [isFlipped]);
 
-  const handleReset = () => {
+  const handleResetAll = () => {
     setTitle(bookDetails.title);
     setAuthorList(author);
     setNewAuthor('')
@@ -276,7 +269,6 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
     setEditionDate(bookDetails.edition_date);
     setBookCoverUrl(bookDetails.book_cover_url);
     setBlurb(bookDetails.blurb);
-    resetFeedbackText();
     for (let input in inputFunctionsList) {
       resetInputSubmitStates(input);
     }
@@ -478,38 +470,38 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
             <MainInputContainer ref={mainRef} $blurbSlideTimer={blurbSlideTimer}>
               <div ref={scrollContainerRef} className='h-full w-full overflow-y-scroll scrollbar-hide'>
                 <div className='relative my-1'>
-                  <FormLabel type='text' label={'Title'} name={'title'} value={title} placeholder={''} submitStatus={[isSubmitTitleSuccess, isSubmitTitleFail]} feedbackText={titleFeedbackText} handleInputChange={handleInputChange} />
+                  <FormLabel type='text' label={'Title'} name={'title'} value={title} placeholder={''} submitStatus={[isSubmitTitleSuccess, isSubmitTitleFail]} feedbackText={titleFeedbackText} handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
                 </div>
 
                 <div className='flex gap-x-2 my-1'>
-                  <FormLabel type='text' label={'Format'} name={'format'} value={format} placeholder={''} submitStatus={[isSubmitFormatSuccess, isSubmitFormatFail]} feedbackText='' handleInputChange={handleInputChange} />
-                  <FormLabel type='number' label={'Total Pages'} name={'totalPages'} value={totalPages} placeholder={''} submitStatus={[isSubmitTotalPagesSuccess, isSubmitTotalPagesFail]} feedbackText='' handleInputChange={handleInputChange} />
+                  <FormLabel type='text' label={'Format'} name={'format'} value={format} placeholder={''} submitStatus={[isSubmitFormatSuccess, isSubmitFormatFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
+                  <FormLabel type='number' label={'Total Pages'} name={'totalPages'} value={totalPages} placeholder={''} submitStatus={[isSubmitTotalPagesSuccess, isSubmitTotalPagesFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
                 </div>
 
                 <div className='relative flex my-1'>
-                  <FormLabel type='text' label={'Author'} name={'author'} value={newAuthor} placeholder={''} submitStatus={[isSubmitAuthorSuccess, isSubmitAuthorFail]} feedbackText={authorFeedbackText} handleInputChange={handleInputChange} handleEnter={handleAddAuthorWithEnter} />
+                  <FormLabel type='text' label={'Author'} name={'author'} value={newAuthor} placeholder={''} submitStatus={[isSubmitAuthorSuccess, isSubmitAuthorFail]} feedbackText={authorFeedbackText} handleInputChange={handleInputChange} handleEnter={handleAddAuthorWithEnter} handleReset={resetInputSubmitStates} />
                   <div className='ml-2 mb-0.5 flex items-end'>
                     <StyledBsPlusSquare size={25} onClick={handleAddAuthor}/>
                   </div>
                 </div>
                 <div className='flex flex-wrap mt-1'>
                   {newAuthorList.length > 0 && newAuthorList.map(author =>
-                    <AuthorTag key={author} author={author} fromList={'newAuthor'} handleDeleteAuthor={handleDeleteAuthor} resetInputSubmitStates={resetInputSubmitStates} />
+                    <AuthorTag key={author} author={author} fromList={'newAuthor'} handleDeleteAuthor={handleDeleteAuthor} handleResetFormLabel={resetInputSubmitStates} />
                   )}
                 </div>
                 <div className='flex flex-wrap mt-0.5'>
                   {authorList.length > 0 && authorList.map(author =>
-                    <AuthorTag key={author} author={author} fromList={'author'} handleDeleteAuthor={handleDeleteAuthor} resetInputSubmitStates={resetInputSubmitStates} />
+                    <AuthorTag key={author} author={author} fromList={'author'} handleDeleteAuthor={handleDeleteAuthor} handleResetFormLabel={resetInputSubmitStates} />
                   )}
                 </div>
 
                 <div className='flex gap-x-2 my-1'>
-                  <FormLabel type='text' label={'Date Published'} name={'publishedDate'} value={publishedDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitPublishedDateSuccess, isSubmitPublishedDateFail]} feedbackText='' handleInputChange={handleInputChange} />
-                  <FormLabel type='text' label={'Edition Published'} name={'editionDate'} value={editionDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitEditionDateSuccess, isSubmitEditionDateFail]} feedbackText='' handleInputChange={handleInputChange} />
+                  <FormLabel type='text' label={'Date Published'} name={'publishedDate'} value={publishedDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitPublishedDateSuccess, isSubmitPublishedDateFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
+                  <FormLabel type='text' label={'Edition Published'} name={'editionDate'} value={editionDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitEditionDateSuccess, isSubmitEditionDateFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
                 </div>
 
                 <div className='mt-1 mb-2'>
-                  <FormLabel type='text' label={'Book Cover URL'} name={'bookCoverUrl'} value={bookCoverUrl} placeholder={''} submitStatus={[isSubmitBookCoverUrlSuccess, isSubmitBookCoverUrlFail]} feedbackText='' handleInputChange={handleInputChange} />
+                  <FormLabel type='text' label={'Book Cover URL'} name={'bookCoverUrl'} value={bookCoverUrl} placeholder={''} submitStatus={[isSubmitBookCoverUrlSuccess, isSubmitBookCoverUrlFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
                 </div>
               </div>
 
@@ -520,7 +512,7 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
 
           <CSSTransition in={isShowBlurb} timeout={blurbSlideTimer} classNames='slide' nodeRef={blurbRef} unmountOnExit>
             <BlurbContainer ref={blurbRef} $blurbSlideTimer={blurbSlideTimer}>
-              <FormLabel type='textarea' label={'Blurb'} name={'blurb'} value={blurb} placeholder={''} submitStatus={[isSubmitBlurbSuccess, isSubmitBlurbFail]} feedbackText='' handleInputChange={handleInputChange} />
+              <FormLabel type='textarea' label={'Blurb'} name={'blurb'} value={blurb} placeholder={''} submitStatus={[isSubmitBlurbSuccess, isSubmitBlurbFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
             </BlurbContainer>
           </CSSTransition>
 
@@ -529,7 +521,7 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
         <div className='relative row-start-19 row-end-22 col-start-1 col-end-3 pr-5 flex items-center justify-end'>
           <MdFlip size={22} className='absolute left-4 cursor-pointer' onClick={() => handleFlip()}/>
           <StyledButton type='button' onClick={handleShowBlurb}>{isShowBlurb ? 'Main' : 'Blurb'}</StyledButton>
-          <StyledButton type='button' onClick={handleReset}>Reset</StyledButton>
+          <StyledButton type='button' onClick={handleResetAll}>Reset</StyledButton>
           <SaveButton type='button' $isStartSubmit={isStartSubmit} $submitHoldTimer={submitHoldTimer} onMouseDown={() => handleStartSubmit()} onMouseUp={() => handleStopSubmit()} onMouseLeave={() => handleStopSubmit()}>
             <p>Save</p>
             <CgPushChevronDownR className='ml-0.5 current-stroke text-blueGray-600' />

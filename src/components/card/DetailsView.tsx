@@ -74,7 +74,7 @@ const ValueDisplay = styled.p<{ $value: number }>`
 `;
 
 const GradientPane = styled.div<{ $left?: boolean; $right?: boolean }>`
-  ${tw`relative h-full cursor-pointer`};
+  ${tw`h-full cursor-pointer`};
   min-width: 200%;
   --transition: transform 100ms linear;
   transition: var(--transition);
@@ -139,7 +139,7 @@ const DetailsView = ({ viewDetails }: DetailsViewPropsITF) => {
   const prevSlide = () => setCurrIdx((currIdx + length - 1) % length);
 
   return (
-    <div className='h-full w-full'>
+    <div className='relative h-full w-full'>
 
       <TransitionGroup component={null} childFactory={child => cloneElement(child, {classNames})}>
         <CSSTransition timeout={200} key={`view-${currIdx}`} unmountOnExit /* nodeRef={detailsViewRef} */>
@@ -150,17 +150,17 @@ const DetailsView = ({ viewDetails }: DetailsViewPropsITF) => {
         </CSSTransition>
       </TransitionGroup>
 
-      <div className='absolute left-0 h-full w-1/3 flex items-center overflow-hidden'>
-        <BsChevronLeft className='absolute left-0 stroke-current stroke-1 text-coolGray-50' />
+      <div className='absolute left-0 h-full w-1/3 flex overflow-hidden'>
+        <BsChevronLeft className='absolute top-12 left-0 stroke-current stroke-1 text-coolGray-50' />
         <GradientPane $left onClick={() => prevSlide()} />
       </div>
 
-      <div className='absolute right-0 h-full w-1/3 flex items-center overflow-hidden'>
-        <BsChevronRight className='absolute right-0 stroke-current stroke-1 text-coolGray-50' />
+      <div className='absolute right-0 h-full w-1/3 flex overflow-hidden'>
+        <BsChevronRight className='absolute top-12 right-0 stroke-current stroke-1 text-coolGray-50' />
         <GradientPane $right onClick={() => nextSlide()} />
       </div>
 
-      <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-1.5 flex'>
+      <div className='absolute top-24 left-1/2 transform -translate-x-1/2 mb-1.5 flex'>
         {viewDetails.map((_, i) => (
           <StyledBsCircleFill key={`BsCircleFill-${i}`} size={7} $selected={i === currIdx} {...(i !== currIdx && {onClick: () => setCurrIdx(i)})} />
           ))}
