@@ -12,7 +12,7 @@ interface BookImagePropsITF {
 }
 
 const EditBookButton = styled.button<{ $editTimer: number }>`
-  ${tw`py-1 px-4 rounded border border-coolGray-50`};
+  ${tw`absolute py-1 px-4 rounded border border-coolGray-50`};
   ${tw`bg-blueGray-300 bg-opacity-40 text-trueGray-50 font-Charm-400`};
   ${tw`backdrop-filter backdrop-blur`};
   --editDuration: ${({ $editTimer }) => `${$editTimer}ms`};
@@ -47,7 +47,10 @@ const BookImage = ({ bookCoverUrl, isEdit, editTimer, handleFlip }: BookImagePro
             <EditBookButton ref={bookImageRef} $editTimer={editTimer} onClick={() => handleFlip()}>Edit Book</EditBookButton>
           </div>
         </div>
+      // backgroundImage has a sharper image than using img
       : <div className='rounded-tl-2xl h-full w-full flex justify-center items-center bg-cover bg-center' style={{backgroundImage: `url(${bookCoverUrl})`}}>
+      {/* : <div className='rounded-tl-2xl h-full w-full flex justify-center items-center overflow-hidden'>
+          <img src={bookCoverUrl} alt='book image' className='h-full w-full object-cover object-center' loading='lazy' /> */}
           <CSSTransition in={isEdit} timeout={editTimer} classNames='fade' nodeRef={bookImageRef} unmountOnExit>
             <EditBookButton ref={bookImageRef} $editTimer={editTimer} onClick={() => handleFlip()}>Edit Book</EditBookButton>
           </CSSTransition>
