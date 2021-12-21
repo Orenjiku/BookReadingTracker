@@ -40,8 +40,7 @@ const queryGetReaderBook = ( readerBookId: number ) => {
                                           WHERE
                                               re.read_instance_id = ri.id
                                           ORDER BY
-                                              re.date_read DESC,
-                                              re.current_page DESC
+                                              re.date_read DESC
                                       ) AS read_entry_agg
                               )
                           FROM
