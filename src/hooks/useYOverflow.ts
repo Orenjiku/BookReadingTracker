@@ -11,8 +11,6 @@ interface useYOverflowITF {
     readEntrySelectToggle?: boolean;
     readEntrySelectTimer?: number;
     isEdit?: boolean;
-    // isShowBlurb?: boolean;
-    // blurbSlideTimer?: number;
     newAuthorList?: string[];
     deleteAuthorList?: string[];
   };
@@ -46,10 +44,12 @@ const useYOverflow = ({scrollContainerRef: ref, overflowTriggers}: useYOverflowI
 
     //delay scroll height measurement until end of readInstance expand transition
     useEffect(() => {
+      //need to add extra time to handle cases where scrollHeight is almost the height of the clientHeight.
+      const expandTimer = overflowTriggers.expandTimer ? overflowTriggers.expandTimer + 100 : 0;
       const scrollHeightMeasureDelay = setTimeout(() => {
         const isYOverflowing = ref.current && ref.current.scrollHeight > ref.current.clientHeight || false;
         setRefYOverflowing(isYOverflowing);
-      }, overflowTriggers.expandTimer);
+      }, expandTimer);
 
       return () => clearTimeout(scrollHeightMeasureDelay);
     }, [overflowTriggers.isExpanded]);
@@ -83,15 +83,6 @@ const useYOverflow = ({scrollContainerRef: ref, overflowTriggers}: useYOverflowI
 
       return () => clearTimeout(scrollHeightMeasureDelay);
     }, [overflowTriggers.isEdit]);
-
-    // useEffect(() => {
-    //   const scrollHeightMeasureDelay = setTimeout(() => {
-    //     const isYOverflowing = ref.current && ref.current.scrollHeight > ref.current.clientHeight || false;
-    //     setRefYOverflowing(isYOverflowing);
-    //   }, overflowTriggers.blurbSlideTimer);
-
-    //   return () => clearTimeout(scrollHeightMeasureDelay);
-    // }, [overflowTriggers.isShowBlurb]);
 
     //check overflow when adding or removing authors from CardBack.
     useEffect(() => {
