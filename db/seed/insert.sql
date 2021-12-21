@@ -300,12 +300,74 @@ $$ LANGUAGE plpgsql;
 \set book_24_title 'Dark Imperium'
 \set book_24_title_sort 'dark imperium'
 \set book_24_published_date '2017/06/23'
-\set book_24_edition_date '2020/05/29'
+\set book_24_edition_date '2021/05/29'
 \set book_24_book_format 'Hardcover'
 \set book_24_total_pages 322
 \set book_24_blurb 'A Warhammer 40,000 novel \nThe galaxy has changed. Darkness spreads, warp storms split reality and Chaos is everywhere – even Ultramar. As Roboute Guilliman''s Indomitus Crusade draws to a close, he must brave the perils of the warp to reach his home and save it from the depredations of the Plague God. \n\nTHE STORY \nFell times have come to the galaxy. Cadia has fallen, destroyed by the onslaught of Chaos. A Great Rift in the warp has opened and from its depths spew daemons and the horrors of Old Night. But all hope is not lost... A hero, long absent, has returned and with him comes the wrath of the Ultramarines reborn. Roboute Guilliman has arisen to lead the Imperium out of darkness on a crusade the likes of which has not been seen since the fabled days of the Emperor. But never before have the forces of Ruin amassed in such numbers, and nowhere is safe from despoliation. From the dreaded Scourge Stars come the hordes of the Plaguefather, Lord Nurgle, and their pustulent eye is fixed on Macragge. As the Indomitas Crusade draws to an end, Guilliman races to Ultramar and a confrontation with the Death Guard.'
 \set book_24_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1634956122l/59433670.jpg'
 
+\set book_25_title 'Plague War'
+\set book_25_title_sort 'plague war'
+\set book_25_published_date '2018/10/13'
+\set book_25_edition_date '2021/05/29'
+\set book_25_book_format 'Hardcover'
+\set book_25_total_pages 322
+\set book_25_blurb 'Intent on rebuilding Ultramar, the returned primarch Roboute Guilliman wages war on the treacherous Death Guard – but the intervention of a greater power threatens all he works for. \n\nIn the void and upon the worlds of Greater Ultramar, the battle for the Imperium continues. \n\nIntent on rebuilding his home realm and using it as base to reconstruct the ravaged stellar empire of mankind, the returned primarch Roboute Guilliman proceeds with his war to drive Mortarion and his Death Guard Traitor Legion from the domain of the Ultramarines. \n\nBut when Guilliman brings his brother to battle upon the diseased plains of Parmenio, the intervention of a greater power in their fraternal struggle threatens to upend the Imperial Regent’s understanding of the galaxy, and his place within it. \n\nPrimarchs and ideologies clash in this second, thrilling part of the Dark Imperium trilogy.'
+\set book_25_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1634957079l/59433720.jpg'
+
+\set book_26_title 'Godblight'
+\set book_26_title_sort 'godblight'
+\set book_26_published_date '2021/05/29'
+\set book_26_edition_date '2021/05/29'
+\set book_26_book_format 'Hardcover'
+\set book_26_total_pages 369
+\set book_26_blurb 'Book 3 of the Dark Imperium trilogy \n\nThe destinies of primarch and Imperial Regent Roboute Guilliman and his traitorous brother Mortarion come together for the climactic battle of the Plague Wars. \n\nREAD IT BECAUSE \nIt''s the throwdown you''ve been waiting for, as Guilliman and Mortarion work out ten thousand years of pent-up resentment in a clash for the ages. \n\nTHE STORY \nThe paths of Roboute Guilliman and his fallen brother Mortarion bring them inexorably together on Iax. Once a jewel of the Imperium, the garden world is dying as the plans of the Lord of Death to use it as a fulcrum to drag the stellar realm of Ultramar into the warp come to deadly fruition. \n\nWhile Guilliman attempts to prevent the destruction of his kingdom, Mortarion schemes to bring his brother low with the Godblight, a disease created in the Cauldron of Nurgle itself, made with the power to destroy a son of the Emperor. \n\nPrimarchs clash on the ravaged landscapes of Iax. The gods go to war and the wider galaxy balances on a knife-edge of destruction. As something powerful stirs in the sea of souls, only one thing is certain – no matter who wins the last great clash of the Plague War, the repercussions of victory will echo through eternity…'
+\set book_26_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1622242933l/58189507._SY475_.jpg'
+
+\set book_27_title 'Knights of Macragge'
+\set book_27_title_sort 'knights of macragge'
+\set book_27_published_date '2021/01/21'
+\set book_27_edition_date '2021/01/21'
+\set book_27_book_format 'Paperback'
+\set book_27_total_pages 432
+\set book_27_blurb 'The return of Captain Sicarius! Discover what befell Sicarius when he was lost in the warp, and how he survived. \n\nThe primarch Roboute Guilliman of the Ultramarines has returned in the galaxy’s hour of need, and all muster to his Indomitus Crusade to hold back the darkness. Amongst these heroes is Cato Sicarius, Master of the Watch and vaunted captain of Second Company. Disaster befalls Sicarius and his brave warriors as their ship, the Emperor’s Will, is lost to the hellish warp, its entire crew believed slain. But Sicarius endures, though he and his men are fighting for their very survival against the denizens of the Great Rift – the daemons and renegades of Chaos. Cast adrift and war-weary, hope appears too distant to grasp until the storm breaks at last and a strange world beckons. As the captain and a band of his chosen warriors descend to the surface seeking aid, they find an isolated land seemingly from an ancient era, one plagued by a terrible enemy. Sicarius will not see this world suffer, and pledges his warriors to the world’s cause, determined to save it, whatever the cost… But what is the dark secret harboured here, and what will it mean for the Ultramarines if they uncover it?'
+\set book_27_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1562505171l/51086035._SX318_SY475_.jpg'
+
+\set book_28_title 'Indomitus'
+\set book_28_title_sort 'indomitus'
+\set book_28_published_date '2020/08/04'
+\set book_28_edition_date '2020/08/04'
+\set book_28_book_format 'Hardcover'
+\set book_28_total_pages 384
+\set book_28_blurb 'The Indomitus Crusade begins! \n\nFor nearly ten years, the Indomitus Crusade has waged a war of defiance and reconquest in the war-torn Imperium. Attached to Crusade Fleet Quintus – dubbed the Cursed Fleet by many – the Ultramarines of the Ithraca’s Vengeance are drawn to a stricken world. With millions enslaved, a malign necron technology siphons the souls of the innocent and heralds the Silent Kingdom’s expansion. The Ultramarines face an impossible decision: mount a desperate last stand to destroy the Pariah Nexus, or break away and damn the entire sector to bring word of this ancient foe’s resurgence to the only being capable of halting it – the Lord Primarch Roboute Guilliman.'
+\set book_28_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1594563237l/54482281.jpg'
+
+\set book_29_title 'Mark of Faith'
+\set book_29_title_sort 'mark of faith'
+\set book_29_published_date '2020/05/26'
+\set book_29_edition_date '2020/05/26'
+\set book_29_book_format 'Paperback'
+\set book_29_total_pages 400
+\set book_29_blurb 'At long last - the Adepta Sororitas are back! \n\nWith the birth of the Cicatrix Maledictum the Imperium of Mankind suffers as never before. Conflict and corruption is rife on every front and precious little hope remains, save for those who hold to their faith when faced with destruction... \n\nDenied a martyr’s death during the battle for Ophelia VII, Sister Evangeline of the Order of Our Martyred Lady is blessed with a new and grave duty; to embark on a pilgrimage beyond the Great Rift to recover a precious and powerful artefact – the Shield of Saint Katherine. Accompanied by the enigmatic Inquisitor Ravara, who seeks her own closure in the veiled regions beyond the Rift, Evangeline must find a way to bear the weight of this unaskedfor destiny if she and her Sisters are to succeed in restoring a fragment of light to this new dark Imperium.'
+\set book_29_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1639506437l/59824608.jpg'
+
+\set book_30_title 'Ghost Warrior'
+\set book_30_title_sort 'ghost warrior'
+\set book_30_published_date '2018/05/15'
+\set book_30_edition_date '2018/05/15'
+\set book_30_book_format 'Paperback'
+\set book_30_total_pages 368
+\set book_30_blurb 'When the long-lost craftworld Ziasuthra reappears, Iyanna Arienal and Yvraine of the Ynnari lead an expedition to it in hope of retrieving the last cronesword. \n\nStill reeling from the advent of the Great Rift and the ravages of the tyranids, the aeldari inhabitants of Iyanden are shocked when they receive a message from a long-lost craftworld. Missing for millennia, the craftworld of Ziasuthra has suddenly reappeared from its sanctuary in the warp, and its denizens wish to make contact. Led by the Spiritseer Iyanna and Yvraine, the Emissary of Ynnead, a small force of craftworld aeldari head to Ziasuthra to open negotiations with their brethren. Behind their surface desire to help, however, Iyanna and Yvraine have a stronger motive: they are seeking the final cronesword, which could lie hidden behind ancient web portal on this craftworld. But how co-operative will the mysterious Ziasuthrans prove to be, or do they too have their own agenda?'
+\set book_30_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1507458237l/36373747._SY475_.jpg'
+
+\set book_31_title 'Wild Rider'
+\set book_31_title_sort 'wild rider'
+\set book_31_published_date '2018/11/10'
+\set book_31_edition_date '2018/11/10'
+\set book_31_book_format 'Paperback'
+\set book_31_total_pages 384
+\set book_31_blurb 'The Wild Riders of Saim Hann craftworld are renowned for their skill and daring, none more so than their headstrong Wild Lord, Nuadhu Fireheart. Having been approached by a representative of Yvraine, emissary of the Whispering God, Ynnead, Nuadhu has unwittingly awoken a slumbering threat – a tomb world of the aeons-old necrontyr. Now, Clan Fireheart must seek alliance with the Ynnari in order to combat the threat to their craftworld, and preserve their honour and the future of the family. The two forces return to Agarimethea to destroy the necrontyr before their strength becomes unassailable. But for what other purpose does Yvraine accompany Nuadhu and his kin, and what exactly is her interest in Naiall Fireheart, the ailing chieftain of the clan?'
+\set book_31_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1541808156l/42740946._SY475_.jpg'
 
 -- INSERT book using previously declared variables
 SELECT insert_book(:'book_1_title', :'book_1_title_sort', :'book_1_published_date', :'book_1_edition_date', :'book_1_book_format', :'book_1_total_pages', :'book_1_blurb', :'book_1_book_cover_url');
@@ -332,6 +394,13 @@ SELECT insert_book(:'book_21_title', :'book_21_title_sort', :'book_21_published_
 SELECT insert_book(:'book_22_title', :'book_22_title_sort', :'book_22_published_date', :'book_22_edition_date', :'book_22_book_format', :'book_22_total_pages', :'book_22_blurb', :'book_22_book_cover_url');
 SELECT insert_book(:'book_23_title', :'book_23_title_sort', :'book_23_published_date', :'book_23_edition_date', :'book_23_book_format', :'book_23_total_pages', :'book_23_blurb', :'book_23_book_cover_url');
 SELECT insert_book(:'book_24_title', :'book_24_title_sort', :'book_24_published_date', :'book_24_edition_date', :'book_24_book_format', :'book_24_total_pages', :'book_24_blurb', :'book_24_book_cover_url');
+SELECT insert_book(:'book_25_title', :'book_25_title_sort', :'book_25_published_date', :'book_25_edition_date', :'book_25_book_format', :'book_25_total_pages', :'book_25_blurb', :'book_25_book_cover_url');
+SELECT insert_book(:'book_26_title', :'book_26_title_sort', :'book_26_published_date', :'book_26_edition_date', :'book_26_book_format', :'book_26_total_pages', :'book_26_blurb', :'book_26_book_cover_url');
+SELECT insert_book(:'book_27_title', :'book_27_title_sort', :'book_27_published_date', :'book_27_edition_date', :'book_27_book_format', :'book_27_total_pages', :'book_27_blurb', :'book_27_book_cover_url');
+SELECT insert_book(:'book_28_title', :'book_28_title_sort', :'book_28_published_date', :'book_28_edition_date', :'book_28_book_format', :'book_28_total_pages', :'book_28_blurb', :'book_28_book_cover_url');
+SELECT insert_book(:'book_29_title', :'book_29_title_sort', :'book_29_published_date', :'book_29_edition_date', :'book_29_book_format', :'book_29_total_pages', :'book_29_blurb', :'book_29_book_cover_url');
+SELECT insert_book(:'book_30_title', :'book_30_title_sort', :'book_30_published_date', :'book_30_edition_date', :'book_30_book_format', :'book_30_total_pages', :'book_30_blurb', :'book_30_book_cover_url');
+SELECT insert_book(:'book_31_title', :'book_31_title_sort', :'book_31_published_date', :'book_31_edition_date', :'book_31_book_format', :'book_31_total_pages', :'book_31_blurb', :'book_31_book_cover_url');
 
 
 /* --------------------------------------------------- INSERT reader_book --------------------------------------------------- */
@@ -372,6 +441,13 @@ SELECT insert_reader_book(:'username_1', :'book_21_title');
 SELECT insert_reader_book(:'username_1', :'book_22_title');
 SELECT insert_reader_book(:'username_1', :'book_23_title');
 SELECT insert_reader_book(:'username_1', :'book_24_title');
+SELECT insert_reader_book(:'username_1', :'book_25_title');
+SELECT insert_reader_book(:'username_1', :'book_26_title');
+SELECT insert_reader_book(:'username_1', :'book_27_title');
+SELECT insert_reader_book(:'username_1', :'book_28_title');
+SELECT insert_reader_book(:'username_1', :'book_29_title');
+SELECT insert_reader_book(:'username_1', :'book_30_title');
+SELECT insert_reader_book(:'username_1', :'book_31_title');
 
 
 /* --------------------------------------------- INSERT read_instance --------------------------------------------- */
@@ -411,6 +487,13 @@ SELECT insert_read_instance(:'username_1', :'book_21_title');
 SELECT insert_read_instance(:'username_1', :'book_22_title');
 SELECT insert_read_instance(:'username_1', :'book_23_title');
 SELECT insert_read_instance(:'username_1', :'book_24_title');
+SELECT insert_read_instance(:'username_1', :'book_25_title');
+SELECT insert_read_instance(:'username_1', :'book_26_title');
+SELECT insert_read_instance(:'username_1', :'book_27_title');
+SELECT insert_read_instance(:'username_1', :'book_28_title');
+SELECT insert_read_instance(:'username_1', :'book_29_title');
+SELECT insert_read_instance(:'username_1', :'book_30_title');
+SELECT insert_read_instance(:'username_1', :'book_31_title');
 
 
 /* --------------------------------------------- INSERT read_entry --------------------------------------------- */
@@ -649,6 +732,52 @@ SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-04', 56, 209,
 SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-05', 36, 245, 76.09);
 SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-06', 77, 322, 100);
 
+-- INSERT book_25
+SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-07', 51, 51, 15.84);
+SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-08', 52, 103, 31.99);
+SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-09', 50, 153, 47.52);
+SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-10', 54, 207, 64.29);
+SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-11', 115, 322, 100);
+
+-- INSERT book_26
+SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-12', 49, 49, 14.20);
+SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-13', 58, 107, 31.01);
+SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-14', 50, 157, 45.51);
+SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-15', 44, 201, 58.26);
+SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-16', 48, 249, 72.17);
+SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-17', 96, 345, 100);
+
+-- INSERT book_27
+SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-18', 51, 51, 11.81);
+SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-19', 52, 103, 23.84);
+SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-23', 150, 253, 58.56);
+SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-24', 100, 353, 81.71);
+SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-25', 79, 432, 100);
+
+-- INSERT book_28
+SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-01', 57, 57, 14.84);
+SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-02', 54, 111, 28.91);
+SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-03', 56, 167, 43.49);
+SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-04', 54, 221, 57.55);
+SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-05', 67, 278, 72.4);
+SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-06', 106, 384, 100);
+
+-- INSERT book_29
+SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-09', 49, 49, 12.25);
+SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-10', 48, 97, 24.25);
+SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-11', 50, 147, 36.75);
+SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-12', 110, 257, 64.25);
+SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-13', 62, 319, 79.75);
+SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-14', 81, 400, 100);
+
+-- INSERT book_30
+SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-15', 49, 49, 13.32);
+SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-16', 97, 48, 26.36);
+SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-17', 56, 153, 41.58);
+SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-18', 54, 207, 56.25);
+SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-19', 96, 303, 82.34);
+SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-20', 96, 368, 100);
+
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
 -- FUNCTION insert_author
@@ -867,6 +996,34 @@ $$ LANGUAGE plpgsql;
 \set book_24_author_1_first_name 'Guy'
 \set book_24_author_1_last_name 'Haley'
 \set book_24_author_1_full_name 'Guy Haley'
+-- book 25 author
+\set book_25_author_1_first_name 'Guy'
+\set book_25_author_1_last_name 'Haley'
+\set book_25_author_1_full_name 'Guy Haley'
+-- book 26 author
+\set book_26_author_1_first_name 'Guy'
+\set book_26_author_1_last_name 'Haley'
+\set book_26_author_1_full_name 'Guy Haley'
+-- book 27 author
+\set book_27_author_1_first_name 'Nick'
+\set book_27_author_1_last_name 'Kyme'
+\set book_27_author_1_full_name 'Nick Kyme'
+-- book 28 author
+\set book_28_author_1_first_name 'Gav'
+\set book_28_author_1_last_name 'Thrope'
+\set book_28_author_1_full_name 'Gav Thorpe'
+-- book 29 author
+\set book_29_author_1_first_name 'Rachel'
+\set book_29_author_1_last_name 'Harrison'
+\set book_29_author_1_full_name 'Rachel Harrison'
+-- book 30 author
+\set book_30_author_1_first_name 'Gav'
+\set book_30_author_1_last_name 'Thrope'
+\set book_30_author_1_full_name 'Gav Thorpe'
+-- book 31 author
+\set book_31_author_1_first_name 'Gav'
+\set book_31_author_1_last_name 'Thrope'
+\set book_31_author_1_full_name 'Gav Thorpe'
 
 
 -- INSERT author using FUNCTION insert_author and DECLARED author variables as arguments, CHECK UNIQUE full_name (middle_name argument is optional)
@@ -951,6 +1108,20 @@ SELECT insert_author(:'book_22_author_13_full_name', :'book_22_author_13_first_n
 SELECT insert_author(:'book_23_author_1_full_name', :'book_23_author_1_first_name', :'book_23_author_1_last_name');
 -- book 24 author
 SELECT insert_author(:'book_24_author_1_full_name', :'book_24_author_1_first_name', :'book_24_author_1_last_name');
+-- book 25 author
+SELECT insert_author(:'book_25_author_1_full_name', :'book_25_author_1_first_name', :'book_25_author_1_last_name');
+-- book 26 author
+SELECT insert_author(:'book_26_author_1_full_name', :'book_26_author_1_first_name', :'book_26_author_1_last_name');
+-- book 27 author
+SELECT insert_author(:'book_27_author_1_full_name', :'book_27_author_1_first_name', :'book_27_author_1_last_name');
+-- book 28 author
+SELECT inert_author(:'book_28_author_1_full_name', :'book_28_author_1_first_name', :'book_28_author_1_last_name');
+-- book 29 author
+SELECT insert_author(:'book_29_author_1_full_name', :'book_29_author_1_first_name', :'book_29_author_1_last_name');
+-- book 30 author
+SELECT insert_author(:'book_30_author_1_full_name', :'book_30_author_1_first_name', :'book_30_author_1_last_name');
+-- book 31 author
+SELECT insert_author(:'book_31_author_1_full_name', :'book_31_author_1_first_name', :'book_31_author_1_last_name');
 
 
 /* --------------------------------------------- INSERT book_author (JOIN TABLE) --------------------------------------------- */
@@ -1048,6 +1219,20 @@ SELECT join_book_author(:'book_22_title', :'book_22_author_13_full_name');
 SELECT join_book_author(:'book_23_title', :'book_23_author_1_full_name');
 -- book 24 author
 SELECT join_book_author(:'book_24_title', :'book_24_author_1_full_name');
+-- book 25 author
+SELECT join_book_author(:'book_25_title', :'book_25_author_1_full_name');
+-- book 26 author
+SELECT join_book_author(:'book_26_title', :'book_26_author_1_full_name');
+-- book 27 author
+SELECT join_book_author(:'book_27_title', :'book_27_author_1_full_name');
+-- book 28 author
+SELECT join_book_author(:'book_28_title', :'book_28_author_1_full_name');
+-- book 29 author
+SELECT join_book_author(:'book_29_title', :'book_29_author_1_full_name');
+-- book 30 author
+SELECT join_book_author(:'book_30_title', :'book_30_author_1_full_name');
+-- book 31 author
+SELECT join_book_author(:'book_31_title', :'book_31_author_1_full_name');
 
 
 /* --------------------------------------------- UPDATE read_instance --------------------------------------------- */
@@ -1065,27 +1250,27 @@ DECLARE
   var_book_id INT = get_book_id($2);
   var_read_instance_id INT = get_read_instance_id($1, $2);
 BEGIN
-  UPDATE read_instance
-  SET   days_read =       (SELECT COUNT(DISTINCT Date(re.date_read)) AS days_read
-                          FROM   read_instance AS ri
-                          INNER JOIN read_entry AS re
-                          ON re.read_instance_id = var_read_instance_id),
-        days_total =      (SELECT (MAX(Date(re.date_read)) - MIN(Date(re.date_read)) + 1) AS days_total
-                          FROM   read_entry AS re
-                          WHERE  re.read_instance_id = var_read_instance_id),
-        pages_read =      (SELECT SUM(re.pages_read) FROM read_entry AS re WHERE re.read_instance_id = var_read_instance_id),
-        max_daily_read =  (SELECT MAX(daily_read.daily_pages_read)
-                          FROM   (SELECT SUM(pages_read) AS daily_pages_read
-                                  FROM   read_entry AS re
-                                  WHERE re.read_instance_id = var_read_instance_id
-                                  GROUP  BY Date(re.date_read))
-                                  AS daily_read),
-        is_reading = $3,
-        is_finished = $4,
-        is_dnf = $5
-  WHERE  read_instance.reader_book_id = get_reader_book_id($1, $2);
+    UPDATE    read_instance
+    SET       days_read =       t2.days_read,
+              days_total =      t2.days_total,
+              pages_read =      t2.pages_read,
+              max_daily_read =  (SELECT   COALESCE(MAX(daily_read.daily_pages_read), 0)
+                                FROM      (SELECT   SUM(pages_read) AS daily_pages_read
+                                          FROM      read_entry AS re
+                                          WHERE     re.read_instance_id = var_read_instance_id
+                                          GROUP     BY Date(re.date_read)) AS daily_read),
+              is_reading =      arg_is_reading,
+              is_finished =     arg_is_finished,
+              is_dnf =          arg_is_dnf
+    FROM      (SELECT     COUNT(DISTINCT Date(re.date_read)) AS days_read,
+                          COALESCE(MAX(Date(re.date_read)) - MIN(Date(re.date_read)) + 1, 0) AS days_total,
+                          COALESCE(SUM(re.pages_read), 0) AS pages_read
+              FROM        read_entry AS re
+              WHERE       re.read_instance_id = var_read_instance_id) AS t2
+    WHERE     read_instance.id = var_read_instance_id;
 END;
 $$ LANGUAGE plpgsql;
+
 
 -- UPDATE read_instance.is_finished to true
 SELECT update_read_instance(:'username_1', :'book_1_title', FALSE, TRUE, FALSE);
@@ -1107,12 +1292,19 @@ SELECT update_read_instance(:'username_1', :'book_16_title', FALSE, TRUE, FALSE)
 SELECT update_read_instance(:'username_1', :'book_17_title', FALSE, TRUE, FALSE);
 SELECT update_read_instance(:'username_1', :'book_18_title', FALSE, TRUE, FALSE);
 SELECT update_read_instance(:'username_1', :'book_19_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_20_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_21_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_22_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_23_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_24_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_25_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_26_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_27_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_28_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_29_title', FALSE, TRUE, FALSE);
 -- UPDATE read_instance.is_reading to true
-SELECT update_read_instance(:'username_1', :'book_20_title', TRUE, FALSE, FALSE);
-SELECT update_read_instance(:'username_1', :'book_21_title', TRUE, FALSE, FALSE);
-SELECT update_read_instance(:'username_1', :'book_22_title', TRUE, FALSE, FALSE);
-SELECT update_read_instance(:'username_1', :'book_23_title', TRUE, FALSE, FALSE);
-SELECT update_read_instance(:'username_1', :'book_24_title', TRUE, FALSE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_30_title', TRUE, FALSE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_31_title', TRUE, FALSE, FALSE);
 
 
 /* --------------------------------------------- UPDATE reader_book  --------------------------------------------- */
@@ -1124,14 +1316,21 @@ DECLARE
   var_book_id INT = get_book_id($2);
   var_reader_book_id INT = get_reader_book_id($1, $2);
 BEGIN
-  UPDATE reader_book AS rb
-  SET is_any_reading=(SELECT bool_or(ri.is_reading) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id),
-      is_any_finished=(SELECT bool_or(ri.is_finished) FROM read_instance aS ri WHERE ri.reader_book_id = var_reader_book_id),
-      is_all_dnf=(SELECT bool_and(ri.is_dnf) FROM read_instance AS ri WHERE ri.reader_book_id = var_reader_book_id)
-  WHERE rb.reader_id = get_reader_id($1)
-  AND rb.book_id = get_book_id($2);
+    UPDATE  reader_book
+    SET     is_any_reading =     t2.is_any_reading,
+            is_any_finished =    t2.is_any_finished,
+            is_all_dnf =         t2.is_any_dnf
+    FROM (SELECT  bool_or(ri.is_reading) AS is_any_reading,
+                  bool_or(ri.is_finished) AS is_any_finished,
+                  bool_and(ri.is_dnf) AS is_any_dnf
+                  FROM read_instance AS ri
+                  INNER JOIN reader_book AS rb
+                  ON ri.reader_book_id = rb.id
+                  AND rb.id = var_reader_book_id) AS t2
+    WHERE reader_book.id = var_reader_book_id;
 END;
 $$ LANGUAGE plpgsql;
+
 
 SELECT update_reader_book(:'username_1', :'book_1_title');
 SELECT update_reader_book(:'username_1', :'book_2_title');
@@ -1157,6 +1356,13 @@ SELECT update_reader_book(:'username_1', :'book_21_title');
 SELECT update_reader_book(:'username_1', :'book_22_title');
 SELECT update_reader_book(:'username_1', :'book_23_title');
 SELECT update_reader_book(:'username_1', :'book_24_title');
+SELECT update_reader_book(:'username_1', :'book_25_title');
+SELECT update_reader_book(:'username_1', :'book_26_title');
+SELECT update_reader_book(:'username_1', :'book_27_title');
+SELECT update_reader_book(:'username_1', :'book_28_title');
+SELECT update_reader_book(:'username_1', :'book_29_title');
+SELECT update_reader_book(:'username_1', :'book_30_title');
+SELECT update_reader_book(:'username_1', :'book_31_title');
 
 
 /* --------------------------------------------- DROP functions --------------------------------------------- */
