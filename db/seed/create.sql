@@ -4,6 +4,7 @@ CREATE TABLE reader (
   username VARCHAR CONSTRAINT uq_reader_username UNIQUE NOT NULL,
   email VARCHAR CONSTRAINT uq_reader_email UNIQUE NOT NULL,
   first_name VARCHAR NOT NULL,
+  middle_name VARCHAR DEFAULT '',
   last_name VARCHAR NOT NULL
 );
 
@@ -18,8 +19,7 @@ CREATE TABLE book (
   published_date DATE,
   edition_date DATE,
   book_cover_url VARCHAR,
-  blurb TEXT,
-  CONSTRAINT ck_book_total_pages CHECK (total_pages > 0)
+  blurb TEXT
 );
 
 CREATE INDEX ix_book_title ON book (title);
