@@ -127,8 +127,7 @@ const CompletionSlider = ({ readerBookId, readInstanceId, totalPages, isReading,
       const relativeSliderLeftCurrentPosition = (e.clientX - containerLeftPosition) - mouseDownSliderLeftOffset.current;
       relativeSliderLeftBoundedCurrentPosition.current = Math.min(Math.max(relativeSliderLeftStartPosition.current, relativeSliderLeftCurrentPosition), 0);
       sliderRef.current.style.left = `${relativeSliderLeftBoundedCurrentPosition.current}px`;
-      if (relativeSliderLeftCurrentPosition >= 0) setAtEnd(true);
-      else setAtEnd(false);
+      relativeSliderLeftCurrentPosition >= 0 ? setAtEnd(true) : setAtEnd(false);
     }
   };
 
