@@ -11,6 +11,7 @@ interface FormLabelPropsITF {
   placeholder: string;
   submitStatus: boolean[];
   feedbackText: string;
+  indicatorTransitionTimer: number;
   handleInputChange: Function;
   handleReset: Function;
   handleEnter?: Function;
@@ -68,10 +69,9 @@ const FeedbackTextContainer = styled.div<{$isFeedbackText: boolean; $indicatorTr
   `}
 `;
 
-const FormLabel = ({type, label, name, value, placeholder, submitStatus, feedbackText, handleInputChange, handleReset, handleEnter}: FormLabelPropsITF) => {
+const FormLabel = ({type, label, name, value, placeholder, submitStatus, feedbackText, indicatorTransitionTimer, handleInputChange, handleReset, handleEnter}: FormLabelPropsITF) => {
   const [ isSuccess, isFail ] = submitStatus;
   const [ isFeedbackText, setIsFeedbackText ] = useState(false);
-  const indicatorTransitionTimer = 300;
 
   useEffect(() => {
     isSuccess || isFail ? setIsFeedbackText(true) : setIsFeedbackText(false);
@@ -89,8 +89,8 @@ const FormLabel = ({type, label, name, value, placeholder, submitStatus, feedbac
         </div>
         <div className='flex flex-row-reverse' {...(type === 'textarea' && {style: {height: '90%'}})}>
           {type === 'text' || type === 'number'
-            ? <Input type={type} name={name} placeholder={placeholder} value={value} onClick={() => handleReset(name)} onChange={e => handleInputChange(e)} {...(handleEnter && {onKeyDown: e => handleEnter(e)})} spellCheck={false} autoComplete='off' />
-            : <TextArea name={name} placeholder={placeholder} value={value} onClick={() => handleReset(name)} onChange={e => handleInputChange(e)} spellCheck={false} autoComplete='off' />
+            ? <Input type={type} name={name} placeholder={placeholder} value={value} onMouseDown={() => handleReset(name)} onChange={e => handleInputChange(e)} {...(handleEnter && {onKeyDown: e => handleEnter(e)})} spellCheck={false} autoComplete='off' />
+            : <TextArea name={name} placeholder={placeholder} value={value} onMouseDown={() => handleReset(name)} onChange={e => handleInputChange(e)} spellCheck={false} autoComplete='off' />
           }
           <FocusIndicator />
         </div>

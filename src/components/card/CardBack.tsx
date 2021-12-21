@@ -19,6 +19,7 @@ interface CardBackPropsITF {
   readerBookId: number;
   isFlipped: boolean;
   flipTimer: number;
+  indicatorTransitionTimer: number;
   handleFlip: Function;
   handleUpdateBookDetails: Function;
   handleUpdateAuthorDetails: Function;
@@ -100,7 +101,7 @@ const StyledBsPlusSquare = styled(BsPlusSquare)`
   }
 `;
 
-const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, handleFlip, handleUpdateBookDetails, handleUpdateAuthorDetails, handleUpdateReaderBook }: CardBackPropsITF) => {
+const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, indicatorTransitionTimer, handleFlip, handleUpdateBookDetails, handleUpdateAuthorDetails, handleUpdateReaderBook }: CardBackPropsITF) => {
   const [ title, setTitle ] = useState(bookDetails.title);
   const [ authorList, setAuthorList ] = useState(author);
   const [ newAuthor, setNewAuthor ] = useState('');
@@ -138,6 +139,14 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
   //Triggers for feedback text indication on FormLabels.
   const [ titleFeedbackText, setTitleFeedbackText ] = useState('');
   const [ authorFeedbackText, setAuthorFeedbackText ] = useState('');
+  //only feedbackText for title and author. Other feedbackText states created for consistency in providing props to FormLabel.
+  const [ formatFeedbackText, setFormatFeedbackText ] = useState('');
+  const [ totalPagesFeedbackText, setTotalPagesFeedbackText ] = useState('');
+  const [ publishedDateFeedbackText, setPublishedDateFeedbackText ] = useState('');
+  const [ editionDateFeedbackText, setEditionDateFeedbackText ] = useState('');
+  const [ bookCoverUrlFeedbackText, setBookCoverUrlFeedbackText ] = useState('');
+  const [ blurbFeedbackText, setBlurbFeedbackText ] = useState('');
+
   const titleFeedbackTextOptions = {
     errorDuplicateTitle: 'Title already exists in collection.',
     errorEmptyTitle: 'Input cannot be empty.'
@@ -151,21 +160,27 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
   };
   //---
 
-  //Handle updating and resetting input states
+  //Handle updating and resetting states
   const inputFunctionsList: {[key: string]: Function[]} = {
-    title: [ setTitle, setIsSubmitTitleSuccess, setIsSubmitTitleFail ],
-    author: [ setNewAuthor, setIsSubmitAuthorSuccess, setIsSubmitAuthorFail ],
-    format: [ setFormat, setIsSubmitFormatSuccess, setIsSubmitFormatFail ],
-    totalPages: [ setTotalPages, setIsSubmitTotalPagesSuccess, setIsSubmitTotalPagesFail ],
-    publishedDate: [ setPublishedDate, setIsSubmitPublishedDateSuccess, setIsSubmitPublishedDateFail ],
-    editionDate: [ setEditionDate, setIsSubmitEditionDateSuccess, setIsSubmitEditionDateFail ],
-    bookCoverUrl: [ setBookCoverUrl, setIsSubmitBookCoverUrlSuccess, setIsSubmitBookCoverUrlFail ],
-    blurb: [ setBlurb, setIsSubmitBlurbSuccess, setIsSubmitBlurbFail ]
+    title: [ setTitle, setIsSubmitTitleSuccess, setIsSubmitTitleFail, setTitleFeedbackText ],
+    author: [ setNewAuthor, setIsSubmitAuthorSuccess, setIsSubmitAuthorFail, setAuthorFeedbackText ],
+    format: [ setFormat, setIsSubmitFormatSuccess, setIsSubmitFormatFail, setFormatFeedbackText ],
+    totalPages: [ setTotalPages, setIsSubmitTotalPagesSuccess, setIsSubmitTotalPagesFail, setTotalPagesFeedbackText ],
+    publishedDate: [ setPublishedDate, setIsSubmitPublishedDateSuccess, setIsSubmitPublishedDateFail, setPublishedDateFeedbackText ],
+    editionDate: [ setEditionDate, setIsSubmitEditionDateSuccess, setIsSubmitEditionDateFail, setEditionDateFeedbackText ],
+    bookCoverUrl: [ setBookCoverUrl, setIsSubmitBookCoverUrlSuccess, setIsSubmitBookCoverUrlFail, setBookCoverUrlFeedbackText ],
+    blurb: [ setBlurb, setIsSubmitBlurbSuccess, setIsSubmitBlurbFail, setBlurbFeedbackText ]
   };
 
   const resetInputSubmitStates = (input: string) => {
     inputFunctionsList[input][1](false);
     inputFunctionsList[input][2](false);
+    //setTimeout required to delay reset of feedbackText until after indicator transition in the FormLabel component.
+    let delayReset: ReturnType<typeof setTimeout>;
+    delayReset = setTimeout(() => {
+      inputFunctionsList[input][3]('');
+      () => clearTimeout(delayReset);
+    }, indicatorTransitionTimer * 2);
   };
 
   const toggleInputSubmitSuccessState = (input: string) => {
@@ -470,16 +485,16 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
             <MainInputContainer ref={mainRef} $blurbSlideTimer={blurbSlideTimer}>
               <div ref={scrollContainerRef} className='h-full w-full overflow-y-scroll scrollbar-hide'>
                 <div className='relative my-1'>
-                  <FormLabel type='text' label={'Title'} name={'title'} value={title} placeholder={''} submitStatus={[isSubmitTitleSuccess, isSubmitTitleFail]} feedbackText={titleFeedbackText} handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
+                  <FormLabel type='text' label={'Title'} name={'title'} value={title} placeholder={''} submitStatus={[isSubmitTitleSuccess, isSubmitTitleFail]} feedbackText={titleFeedbackText} indicatorTransitionTimer={indicatorTransitionTimer} handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
                 </div>
 
                 <div className='flex gap-x-2 my-1'>
-                  <FormLabel type='text' label={'Format'} name={'format'} value={format} placeholder={''} submitStatus={[isSubmitFormatSuccess, isSubmitFormatFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
-                  <FormLabel type='number' label={'Total Pages'} name={'totalPages'} value={totalPages} placeholder={''} submitStatus={[isSubmitTotalPagesSuccess, isSubmitTotalPagesFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
+                  <FormLabel type='text' label={'Format'} name={'format'} value={format} placeholder={''} submitStatus={[isSubmitFormatSuccess, isSubmitFormatFail]} feedbackText={formatFeedbackText} indicatorTransitionTimer={indicatorTransitionTimer} handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
+                  <FormLabel type='number' label={'Total Pages'} name={'totalPages'} value={totalPages} placeholder={''} submitStatus={[isSubmitTotalPagesSuccess, isSubmitTotalPagesFail]} feedbackText={totalPagesFeedbackText} indicatorTransitionTimer={indicatorTransitionTimer} handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
                 </div>
 
                 <div className='relative flex my-1'>
-                  <FormLabel type='text' label={'Author'} name={'author'} value={newAuthor} placeholder={''} submitStatus={[isSubmitAuthorSuccess, isSubmitAuthorFail]} feedbackText={authorFeedbackText} handleInputChange={handleInputChange} handleEnter={handleAddAuthorWithEnter} handleReset={resetInputSubmitStates} />
+                  <FormLabel type='text' label={'Author'} name={'author'} value={newAuthor} placeholder={''} submitStatus={[isSubmitAuthorSuccess, isSubmitAuthorFail]} feedbackText={authorFeedbackText} indicatorTransitionTimer={indicatorTransitionTimer} handleInputChange={handleInputChange} handleEnter={handleAddAuthorWithEnter} handleReset={resetInputSubmitStates} />
                   <div className='ml-2 mb-0.5 flex items-end'>
                     <StyledBsPlusSquare size={25} onClick={handleAddAuthor}/>
                   </div>
@@ -496,12 +511,12 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
                 </div>
 
                 <div className='flex gap-x-2 my-1'>
-                  <FormLabel type='text' label={'Date Published'} name={'publishedDate'} value={publishedDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitPublishedDateSuccess, isSubmitPublishedDateFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
-                  <FormLabel type='text' label={'Edition Published'} name={'editionDate'} value={editionDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitEditionDateSuccess, isSubmitEditionDateFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
+                  <FormLabel type='text' label={'Date Published'} name={'publishedDate'} value={publishedDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitPublishedDateSuccess, isSubmitPublishedDateFail]} feedbackText={publishedDateFeedbackText} indicatorTransitionTimer={indicatorTransitionTimer} handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
+                  <FormLabel type='text' label={'Edition Published'} name={'editionDate'} value={editionDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitEditionDateSuccess, isSubmitEditionDateFail]} feedbackText={editionDateFeedbackText} indicatorTransitionTimer={indicatorTransitionTimer} handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
                 </div>
 
                 <div className='mt-1 mb-2'>
-                  <FormLabel type='text' label={'Book Cover URL'} name={'bookCoverUrl'} value={bookCoverUrl} placeholder={''} submitStatus={[isSubmitBookCoverUrlSuccess, isSubmitBookCoverUrlFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
+                  <FormLabel type='text' label={'Book Cover URL'} name={'bookCoverUrl'} value={bookCoverUrl} placeholder={''} submitStatus={[isSubmitBookCoverUrlSuccess, isSubmitBookCoverUrlFail]} feedbackText={bookCoverUrlFeedbackText} indicatorTransitionTimer={indicatorTransitionTimer} handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
                 </div>
               </div>
 
@@ -512,7 +527,7 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, han
 
           <CSSTransition in={isShowBlurb} timeout={blurbSlideTimer} classNames='slide' nodeRef={blurbRef} unmountOnExit>
             <BlurbContainer ref={blurbRef} $blurbSlideTimer={blurbSlideTimer}>
-              <FormLabel type='textarea' label={'Blurb'} name={'blurb'} value={blurb} placeholder={''} submitStatus={[isSubmitBlurbSuccess, isSubmitBlurbFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
+              <FormLabel type='textarea' label={'Blurb'} name={'blurb'} value={blurb} placeholder={''} submitStatus={[isSubmitBlurbSuccess, isSubmitBlurbFail]} feedbackText={blurbFeedbackText} indicatorTransitionTimer={indicatorTransitionTimer} handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
             </BlurbContainer>
           </CSSTransition>
 

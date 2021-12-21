@@ -17,10 +17,11 @@ interface EditViewPropsITF {
   editTimer: number;
   isFlipped: boolean;
   flipTimer: number;
+  indicatorTransitionTimer: number;
   handleUpdateReaderBook: Function;
 }
 
-const ReadEntryEditContainer = styled.div<{ $slideTimer: number }>`
+const ReadEntryAddContainer = styled.div<{ $slideTimer: number }>`
   ${tw`absolute h-full w-full grid grid-cols-12 grid-rows-1`};
   --slideDuration: ${({ $slideTimer }) => `${$slideTimer}ms`};
   &.slide-enter {
@@ -109,7 +110,7 @@ const StyledChevronDown = styled(CgPushChevronDownR)`
   }
 `
 
-const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, editTimer, isFlipped, flipTimer, handleUpdateReaderBook }: EditViewPropsITF) => {
+const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, editTimer, isFlipped, flipTimer, indicatorTransitionTimer, handleUpdateReaderBook }: EditViewPropsITF) => {
   const [ readEntryDate, setReadEntryDate ] = useState(new Date(Date.now()).toISOString().slice(0, 10));
   const [ readEntryCurrentPage, setReadEntryCurrentPage ] = useState('');
 
@@ -166,6 +167,12 @@ const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, editTimer,
 
   useDelayReset(isEdit, false, editTimer, resetAllStates);
   useDelayReset(isFlipped, true, flipTimer / 2, resetAllStates);
+
+  //function sent to FormLabel to reset all success/fail indicator states related to EditView.
+  const handleMassReset = () => {
+    resetSubmitDateStates();
+    resetSubmitPageStates();
+  };
 
   //clear inputs and submit status when page change
   useEffect(() => {
@@ -261,44 +268,39 @@ const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, editTimer,
     }
   }
 
-  const handleMassReset = () => {
-    resetSubmitDateStates();
-    resetSubmitPageStates();
-  };
-
   const submitPostHoldTimer = 600;
   const submitDeleteHoldTimer = 1000;
   const [ isStartPostSubmit, handleStartPostSubmit, handleStopPostSubmit ] = useHoldSubmit(submitPostHoldTimer, handlePostReadInstance);
   const [ isStartDeleteSubmit, handleStartDeleteSubmit, handleStopDeleteSubmit ] = useHoldSubmit(submitDeleteHoldTimer, handleDeleteReadInstance);
 
   return (
-    <div className='relative h-full w-full'>
+    <div style={{height: '109.14px'}} className='relative w-full'>
       <CSSTransition in={isReadEntryEditView} timeout={slideTimer} classNames='slide' nodeRef={readEntryEditContainerRef} unmountOnExit>
-        <ReadEntryEditContainer $slideTimer={slideTimer} ref={readEntryEditContainerRef}>
-          <form className='col-start-1 col-end-11 ml-2 mr-1 mt-1'>
-            <FormLabel type='text' label='Date' name='readEntryDate' value={readEntryDate} placeholder='yyyy-mm-dd' submitStatus={[isSubmitDateSuccess, isSubmitDateFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={handleMassReset} handleEnter={handleSubmitReadEntryWithEnter} />
+        <ReadEntryAddContainer $slideTimer={slideTimer} ref={readEntryEditContainerRef}>
+          <form className='col-start-1 col-end-11 ml-2 mr-1 flex flex-col justify-center'>
+            <FormLabel type='text' label='Date' name='readEntryDate' value={readEntryDate} placeholder='yyyy-mm-dd' submitStatus={[isSubmitDateSuccess, isSubmitDateFail]} feedbackText='' indicatorTransitionTimer={indicatorTransitionTimer} handleInputChange={handleInputChange} handleReset={handleMassReset} handleEnter={handleSubmitReadEntryWithEnter} />
 
             <div className='flex'>
-              <FormLabel type='number' label='Page' name='readEntryCurrentPage' value={readEntryCurrentPage} placeholder='#' submitStatus={[isSubmitPageSuccess, isSubmitPageFail]} feedbackText='' handleInputChange={handleInputChange} handleReset={handleMassReset} handleEnter={handleSubmitReadEntryWithEnter} />
+              <FormLabel type='number' label='Page' name='readEntryCurrentPage' value={readEntryCurrentPage} placeholder='#' submitStatus={[isSubmitPageSuccess, isSubmitPageFail]} feedbackText='' indicatorTransitionTimer={indicatorTransitionTimer} handleInputChange={handleInputChange} handleReset={handleMassReset} handleEnter={handleSubmitReadEntryWithEnter} />
               <div className='mb-0.5 ml-1 flex items-end'>
                 <StyledButton type='button' onClick={handleSubmitReadEntry}>Add</StyledButton>
               </div>
             </div>
           </form>
 
-          <div className='col-start-11 col-end-13 cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30' onClick={handleChangeEditView}>
-            <BsChevronRight className='absolute top-12 right-0 stroke-current stroke-1 text-coolGray-50' />
+          <div className='col-start-11 col-end-13 flex items-center cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30' onClick={handleChangeEditView}>
+            <BsChevronRight className='absolute right-0 stroke-current stroke-1 text-coolGray-50' />
           </div>
-        </ReadEntryEditContainer>
+        </ReadEntryAddContainer>
       </CSSTransition>
 
       <CSSTransition in={!isReadEntryEditView} timeout={slideTimer} classNames='slide' nodeRef={readInstanceEditContainerRef} unmountOnExit>
         <ReadInstanceEditContainer $slideTimer={slideTimer} ref={readInstanceEditContainerRef}>
-          <div className='col-start-1 col-end-3 row-start-1 row-end-3 cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30' onClick={handleChangeEditView}>
-            <BsChevronLeft className='absolute top-12 left-0 stroke-current stroke-1 text-coolGray-50' />
+          <div className='col-start-1 col-end-3 row-start-1 row-end-3 flex items-center cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30' onClick={handleChangeEditView}>
+            <BsChevronLeft className='absolute left-0 stroke-current stroke-1 text-coolGray-50' />
           </div>
 
-          <div style={{height: '109.14px'}} className='col-start-3 col-end-13 flex flex-col'>
+          <div className='col-start-3 col-end-13 flex flex-col'>
             <ReadInstanceEditSelectContainer onMouseDown={() => handleStartPostSubmit()} onMouseUp={() => handleStopPostSubmit()} onMouseLeave={() => handleStopPostSubmit()}>
               <p>New Read</p>
               <StyledChevronDown />

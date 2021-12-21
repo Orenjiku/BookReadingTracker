@@ -19,6 +19,7 @@ interface CardFrontPropsITF {
   readerBook: ReaderBookITF;
   isFlipped: boolean;
   flipTimer: number;
+  indicatorTransitionTimer: number;
   handleFlip: Function;
   handleUpdateReaderBook: Function;
 }
@@ -152,7 +153,7 @@ const StyledEditIcon = styled(Edit)<{ $isEdit: boolean, $editTimer: number }>`
   `}
 `;
 
-const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, handleFlip, handleUpdateReaderBook }: CardFrontPropsITF) => {
+const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, indicatorTransitionTimer, handleFlip, handleUpdateReaderBook }: CardFrontPropsITF) => {
   const [ readInstanceList, setReadInstanceList ] = useState(readerBook.read_instance);
   const [ readInstanceIdx, setReadInstanceIdx ] = useState(0);
   const prevReadInstanceLen = usePrevious(readInstanceList.length);
@@ -236,7 +237,7 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, hand
 
           <CSSTransition in={isEdit} timeout={editTimer} classNames='slide' nodeRef={editViewRef} unmountOnExit>
             <EditViewContainer ref={editViewRef} $editTimer={editTimer} $isExpanded={isExpanded} $expandTimer={expandTimer}>
-              <EditView readerBookId={readInstanceList[readInstanceIdx].reader_book_id} readInstanceId={readInstanceList[readInstanceIdx].ri_id} totalPages={bookDetails.total_pages} isEdit={isEdit} editTimer={editTimer} isFlipped={isFlipped} flipTimer={flipTimer} handleUpdateReaderBook={handleUpdateReaderBook} />
+              <EditView readerBookId={readInstanceList[readInstanceIdx].reader_book_id} readInstanceId={readInstanceList[readInstanceIdx].ri_id} totalPages={bookDetails.total_pages} isEdit={isEdit} editTimer={editTimer} isFlipped={isFlipped} flipTimer={flipTimer} indicatorTransitionTimer={indicatorTransitionTimer} handleUpdateReaderBook={handleUpdateReaderBook} />
             </EditViewContainer>
           </CSSTransition>
 
