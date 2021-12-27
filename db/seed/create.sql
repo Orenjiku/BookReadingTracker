@@ -15,7 +15,7 @@ CREATE TABLE book (
   title VARCHAR CONSTRAINT uq_book_title UNIQUE NOT NULL,
   title_sort VARCHAR NOT NULL,
   book_format VARCHAR,
-  total_pages INT,
+  total_pages INT DEFAULT 0,
   published_date DATE,
   edition_date DATE,
   book_cover_url VARCHAR,
@@ -46,7 +46,7 @@ CREATE TABLE read_instance (
   days_total INT DEFAULT 0,
   pages_read INT DEFAULT 0,
   max_daily_read INT DEFAULT 0,
-  is_reading BOOLEAN DEFAULT TRUE,
+  is_reading BOOLEAN DEFAULT FALSE,
   is_finished BOOLEAN DEFAULT FALSE,
   is_dnf BOOLEAN DEFAULT FALSE,
   reader_book_id INT,
@@ -72,9 +72,9 @@ CREATE INDEX ix_read_entry_read_instance_id ON read_entry (read_instance_id);
 CREATE TABLE author (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_author PRIMARY KEY,
   full_name VARCHAR CONSTRAINT uq_author_full_name UNIQUE NOT NULL,
-  first_name VARCHAR NOT NULL,
+  first_name VARCHAR DEFAULT '',
   middle_name VARCHAR DEFAULT '',
-  last_name VARCHAR NOT NULL
+  last_name VARCHAR DEFAULT ''
 );
 
 CREATE INDEX ix_author_full_name ON author (full_name);
