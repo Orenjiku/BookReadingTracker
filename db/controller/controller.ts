@@ -44,7 +44,6 @@ const controller = {
   },
 
   putTitle: async (req: Request, res: Response) => {
-    // const readerId = req.params.id;
     const { bookId, title, titleSort }: { bookId: number, title: string, titleSort: string } = req.body;
     try {
       await db.query(`UPDATE book SET title='${title}', title_sort='${titleSort}' WHERE book.id=${bookId};`);
@@ -56,10 +55,10 @@ const controller = {
   },
 
   postAuthor: async (req: Request, res: Response) => {
-    // const readerId = req.params.id;
     const { bookId, authorList }: { bookId: number, authorList: string[] } = req.body;
     try {
-      await db.query(`BEGIN; ${queryPostAuthor(bookId, authorList)} COMMIT`);
+      await db.query(`${queryPostAuthor(bookId, authorList)}`); //Method 1: use plpgsql. See queryAuthor.ts
+      // await db.query(`BEGIN; ${queryPostAuthor(bookId, authorList)} COMMIT`); //Method 2: multiple CTE queries.
       res.sendStatus(204);
     } catch(err) {
       console.error(err);
@@ -68,10 +67,10 @@ const controller = {
   },
 
   deleteAuthor: async (req: Request, res: Response) => {
-    // const readerId = req.params.id;
     const { bookId, authorList }: { bookId: number, authorList: string[] } = req.body;
     try {
-      await db.query(`BEGIN; ${queryDeleteAuthor(bookId, authorList)} COMMIT;`);
+      await db.query(`${queryDeleteAuthor(bookId, authorList)}`); //Method 1:use plpgsql. See queryAuthor.ts
+      // await db.query(`BEGIN; ${queryDeleteAuthor(bookId, authorList)} COMMIT;`); //Method 2: multiple CTE queries.
       res.sendStatus(204);
     } catch(err) {
       console.error(err);
@@ -203,9 +202,10 @@ const controller = {
   },
 
   postBook : async (req: Request, res: Response) => {
+    const readerId = req.params.id;
     const { title, titleSort, format, totalPages, author, publishedDate, editionDate, bookCoverUrl, blurb } = req.body;
     try {
-      const result = await db.query(queryPostBook(title, titleSort, format, totalPages, author, publishedDate, editionDate, bookCoverUrl, blurb));
+      const result = await db.query(queryPostBook(readerId, title, titleSort, format, totalPages, author, publishedDate, editionDate, bookCoverUrl, blurb));
       // const result = await db.query();
       res.sendStatus(200);
     } catch(err) {

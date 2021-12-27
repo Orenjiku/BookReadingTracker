@@ -326,3 +326,185 @@ WITH cte_book AS (
        SELECT b.id, b.total_pages
        FROM book AS b, reader_book AS rb, read_instance AS ri
        WHERE ri.id=24 AND ri.reader_book_id=rb.id AND rb.book_id=b.id)
+
+
+CREATE OR REPLACE FUNCTION postBook(arg_reader_id INT, arg_book_title VARCHAR)
+RETURNS INT AS $$
+DECLARE
+    var_book_id INT = (SELECT id FROM book WHERE book.title=arg_book_title);
+    var_reader_book_id INT;
+BEGIN
+    RAISE NOTICE 'book_id: %', var_book_id;
+    IF var_book_id IS NOT NULL THEN
+        SELECT id INTO var_reader_book_id FROM reader_book AS rb WHERE rb.reader_id=1 AND rb.book_id=var_book_id;
+        RAISE NOTICE 'reader_book_id: %', var_reader_book_id;
+        IF var_reader_book_id IS NOT NULL THEN
+            RETURN var_reader_book_id;
+        ELSE
+            INSERT INTO reader_book (reader_id, book_id) VALUES (arg_reader_id, var_book_id) RETURNING id INTO var_reader_book_id;
+            INSERT INTO read_instance (reader_book_id) VALUES (var_reader_book_id);
+        END IF;
+    ELSE
+        RAISE NOTICE 'bleh';
+    END IF;
+    RETURN var_book_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION getReaderBookId(arg_reader_id INT, arg_book_title VARCHAR)
+RETURNS INT AS $$
+DECLARE
+    var_book_id INT = (SELECT id FROM book WHERE book.title=arg_book_title);
+    var_reader_book_id INT;
+BEGIN
+    IF var_book_id IS NULL THEN
+        INSERT INTO book (title, title_sort) VALUES (arg_book_title, arg_book_title) RETURNING id INTO var_book_id;
+    END IF;
+
+    SELECT id INTO var_reader_book_id FROM reader_book AS rb WHERE rb.reader_id=arg_reader_id AND rb.book_id=var_book_id;
+
+    IF var_reader_book_id IS NULL THEN
+        INSERT INTO reader_book (reader_id, book_id) VALUES (arg_reader_id, var_book_id) RETURNING id INTO var_reader_book_id;
+        INSERT INTO read_instance (reader_book_id) VALUES (var_reader_book_id);
+        RETURN 1;
+    ELSE
+        RETURN -1;
+    END IF;
+
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION getReaderBookId(arg_reader_id INT, arg_book_title VARCHAR)
+RETURNS INT AS $$
+DECLARE
+    var_book_id INT = (SELECT id FROM book WHERE book.title=arg_book_title);
+    var_reader_book_id INT = (SELECT id FROM reader_book AS rb WHERE rb.reader_id=arg_reader_id AND rb.book_id=var_book_id);
+BEGIN
+    IF var_book_id IS NULL THEN
+        INSERT INTO book (title, title_sort) VALUES (arg_book_title, arg_book_title) RETURNING id INTO var_book_id;
+    END IF;
+
+    IF var_reader_book_id IS NULL THEN
+        INSERT INTO reader_book (reader_id, book_id) VALUES (arg_reader_id, var_book_id) RETURNING id INTO var_reader_book_id;
+        INSERT INTO read_instance (reader_book_id) VALUES (var_reader_book_id);
+        RETURN 1;
+    ELSE
+        RETURN -1;
+    END IF;
+
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE PROCEDURE add_reader_book(arg_reader_id INT, arg_book_title VARCHAR)
+LANGUAGE plpgsql AS $$
+DECLARE
+    var_book_id INT = (SELECT id FROM book WHERE book.title=arg_book_title);
+    var_reader_book_id INT = (SELECT id FROM reader_book AS rb WHERE rb.reader_id=arg_reader_id AND rb.book_id=var_book_id);
+BEGIN
+    IF var_book_id IS NULL THEN
+        INSERT INTO book (title, title_sort) VALUES (arg_book_title, arg_book_title) RETURNING id INTO var_book_id;
+    END IF;
+
+    IF var_reader_book_id IS NULL THEN
+        INSERT INTO reader_book (reader_id, book_id, is_any_reading) VALUES (arg_reader_id, var_book_id, TRUE ) RETURNING id INTO var_reader_book_id;
+        INSERT INTO read_instance (reader_book_id, is_reading) VALUES (var_reader_book_id, TRUE);
+    END IF;
+END;
+$$;
+
+/* if var_reader_book_id is NULL, return book exists in collection. else success*/
+
+SELECT getReaderBookId(1, 'hello');
+
+CALL getReaderBookId(1, 'hello');
+
+
+CREATE OR REPLACE PROCEDURE post_author(author_array TEXT[])
+LANGUAGE plpgsql AS $$
+DECLARE
+    author VARCHAR;
+BEGIN
+    FOREACH author IN ARRAY author_array
+    LOOP
+        RAISE NOTICE 'firstname, %', regexp_matches(author, '^([^\s]+)');
+        IF regexp_matches(author, '^\w+\s.+\s(\w+)$') IS NOT NULL THEN
+            RAISE NOTICE 'middlename, %', regexp_matches(author, '^\w+\s(.*)\s\w+$');
+            RAISE NOTICE 'lastname, %', regexp_matches(author, '\s(\w+)$');
+        ELSE
+            RAISE NOTICE 'lastname, %', regexp_matches(author, '\s(\w+)$');
+        END IF;
+    END LOOP;
+END;
+$$;
+
+CALL post_author(ARRAY['Bill Nye', 'Will A B C DEFG', 'r2-d2', 'rb-16 hello']);
+
+
+CREATE OR REPLACE PROCEDURE post_author(author_array TEXT[])
+LANGUAGE plpgsql AS $$
+DECLARE
+    var_author VARCHAR;
+    var_author_id INT;
+    var_first_name VARCHAR = '';
+    var_middle_name VARCHAR = '';
+    var_last_name VARCHAR = '';
+BEGIN
+    FOREACH var_author IN ARRAY author_array
+    LOOP
+        SELECT id INTO var_author_id FROM author AS a WHERE a.full_name=var_author;
+        IF var_author_id IS NULL THEN
+            var_first_name = regexp_matches(author, '^([^\s]+)');
+            var_last_name = regexp_matches(author, '^\w+\s.+\s(\w+)$');
+            IF var_last_name IS NOT NULL THEN
+                var_middle_name = regexp_matches(author, '^\w+\s(.*)\s\w+$');
+            ELSE
+                var_last_name = regexp_matches(author, '\s(\w+)$');
+            END IF;
+            INSERT INTO author (full_name, first_name, middle_name, last_name) VALUES (var_author, var_first_name, var_middle_name, var_last_name) RETURNING id INTO var_author_id;
+        END IF;
+        INSERT INTO book_author (book_id, author_id) VALUES (${bookId}, var_author_id);
+        var_first_name = '';
+        var_middle_name = '';
+        var_last_name = '';
+        var_author_id = NULL;
+    END LOOP;
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE post_author(author_array TEXT[])
+LANGUAGE plpgsql AS $$
+DECLARE
+    var_author VARCHAR;
+    var_author_id INT;
+    var_first_name VARCHAR = '';
+    var_middle_name VARCHAR = '';
+    var_last_name VARCHAR = '';
+BEGIN
+    FOREACH var_author IN ARRAY author_array
+    LOOP
+        SELECT id INTO var_author_id FROM author AS a WHERE a.full_name=var_author;
+        IF NOT FOUND THEN
+            var_first_name = (regexp_matches(var_author, '^([^\s]+)'))[1];
+            var_last_name = (regexp_matches(var_author, '^\w+\s.+\s(\w+)$'))[1];
+            RAISE NOTICE 'outer first, %', var_first_name;
+            RAISE NOTICE 'outer last, %', var_last_name;
+            IF var_last_name IS NULL THEN
+                var_last_name = (regexp_matches(var_author, '\s(\w+)$'))[1];
+                RAISE NOTICE 'inner last, %', var_last_name;
+            ELSE
+                var_middle_name = (regexp_matches(var_author, '^\w+\s(.*)\s\w+$'))[1];
+            END IF;
+            INSERT INTO author (full_name, first_name, middle_name, last_name) VALUES (var_author, var_first_name, var_middle_name, var_last_name) RETURNING id INTO var_author_id;
+        END IF;
+        INSERT INTO book_author (book_id, author_id) VALUES (31, var_author_id);
+        var_first_name = '';
+        var_middle_name = '';
+        var_last_name = '';
+    END LOOP;
+END;
+$$;
+
+CALL post_author(ARRAY['Bill Nye', 'Will A B C DEFG', 'r2-d2', 'rb-16 hello']);
