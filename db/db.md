@@ -84,41 +84,23 @@
 7.  INSERT read_entry  
     Creates read_entry entry that is associated to book_read.id from previous step.  
     **_Reminder:_** Change { number } to a number.
-    | date_read | pages_read | current_page | current_percent |
-    | --------- | ---------- | ------------ | --------------- |
-    | string | number | number | number |
+    | date_read | current_page |
+    | --------- | ------------ |
+    | string | number |
     ~~~~sql
-    SELECT insert_read_entry(:'username_1' :'book_{number}_title', {date_read}, {pages_read}, {current_page}, {current_percent});
+    SELECT insert_read_entry(:'username_1' :'book_{number}_title', {date_read}, {current_page}, :'book_{number}_total_pages');
     ~~~~
 
-8.  Set book author(s) used for insert_author function in next step.  
-    | first_name | middle_name | last_name | full_name |
-    | ---------- | ----------- | --------- | --------- |
-    | string | string | string | string
-
-    **_Note:_** middle_name is optional.
-    **_Reminder_** Change { number } to a number.
-    ~~~~sql
-    \set book_{number}_author_{number}_first_name {first_name}
-    \set book_{number}_author_{number}_middle_name {middle_name}
-    \set book_{number}_author_{number}_last_name {last_name}
-    \set book_{number}_author_{number}_full_name {full_name}
-    ~~~~
-
-9.  INSERT author(s) using variables defined in previous step.  
+8.  INSERT author  
     **_Reminder:_** Change { number } to a number.
+    | author |
+    | ------ |
+    | string |
     ~~~~sql
-    SELECT insert_author(:'book_{number}_author_{number}_full_name', :'book_{number}_author_{number}_first_name', :'book_{number}_author_{number}_last_name');
+    SELECT insert_author(:'book_{number}_title', {author});
     ~~~~
 
-10. INSERT book_author (Join Table)  
-    Create relationship between book and author(s)  
-    **_Reminder:_** Change { number } to a number.
-    ~~~~sql
-    SELECT join_book_author(:'book_{number}_title', :'book_{number}_author_{number}_full_name');
-    ~~~~
-
-11. UPDATE read_instance  
+9. UPDATE read_instance  
     Update read_instance meta data based on its read_entry data.  
     **_Reminder:_** Change { number } to a number.
     | is_reading | is_finished | is_dnf |
@@ -128,7 +110,7 @@
     SELECT update_read_instance(:'username_1', :'book_{number}_title', {is_reading}, {is_finished}, {is_dnf});
     ~~~~
 
-12. UPDATE reader_book  
+10. UPDATE reader_book  
     Update reader_book meta data based on its read_instance data.  
     **_Reminder:_** Change { number } to a number.
     ~~~~sql

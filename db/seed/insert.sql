@@ -455,10 +455,10 @@ SELECT insert_reader_book(:'username_1', :'book_31_title');
 CREATE OR REPLACE FUNCTION insert_read_instance(arg_username VARCHAR, arg_book_title VARCHAR)
 RETURNS VOID AS $$
 DECLARE
-  var_reader_book_id INT = get_reader_book_id($1, $2);
+    var_reader_book_id INT = get_reader_book_id($1, $2);
 BEGIN
-  INSERT INTO read_instance (reader_book_id)
-  VALUES (var_reader_book_id);
+    INSERT INTO read_instance (reader_book_id)
+    VALUES (var_reader_book_id);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -497,758 +497,417 @@ SELECT insert_read_instance(:'username_1', :'book_31_title');
 
 
 /* --------------------------------------------- INSERT read_entry --------------------------------------------- */
--- FUNCTION insert_read_entry
-CREATE OR REPLACE FUNCTION insert_read_entry(
-  arg_username VARCHAR,
-  arg_book_title VARCHAR,
-  arg_date_read TIMESTAMP,
-  arg_pages_read INT,
-  arg_current_page INT,
-  arg_current_percent DECIMAL
-)
+--FUNCTION insert_read_entry
+CREATE OR REPLACE FUNCTION insert_read_entry(arg_username VARCHAR, arg_book_title VARCHAR, arg_date_read TIMESTAMP, arg_current_page INT, arg_total_pages INT)
 RETURNS VOID AS $$
 DECLARE
-  var_read_instance_id INT = get_read_instance_id($1, $2);
+    var_read_instance_id INT = get_read_instance_id($1, $2);
 BEGIN
-  INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id)
-  VALUES ($3, $4, $5, $6, var_read_instance_id);
+    WITH prev_read_entry AS (
+        SELECT COALESCE(
+              (SELECT     current_page
+              FROM        read_entry AS re
+              INNER JOIN  read_instance AS ri
+              ON          re.read_instance_id=var_read_instance_id
+              WHERE       re.date_read < arg_date_read
+              AND         ri.id = var_read_instance_id
+              ORDER BY    re.date_read DESC
+              LIMIT 1
+        ), 0) AS current_page)
+    INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id)
+        (SELECT     arg_date_read,
+                    arg_current_page - pre.current_page,
+                    arg_current_page,
+                    TRUNC(arg_current_page::DECIMAL / arg_total_pages * 100, 2),
+                    var_read_instance_id
+        FROM        prev_read_entry AS pre);
 END;
 $$ LANGUAGE plpgsql;
 
 -- INSERT read_entry data
 -- INSERT book_1
-SELECT insert_read_entry(:'username_1', :'book_1_title', '2021-05-29', 69, 69, 16.59);
-SELECT insert_read_entry(:'username_1', :'book_1_title', '2021-05-30', 122, 191, 45.91);
-SELECT insert_read_entry(:'username_1', :'book_1_title', '2021-05-31', 58, 249, 59.86);
-SELECT insert_read_entry(:'username_1', :'book_1_title', '2021-06-01', 104, 353, 84.86);
-SELECT insert_read_entry(:'username_1', :'book_1_title', '2021-06-02', 63, 416, 100);
+SELECT insert_read_entry(:'username_1', :'book_1_title', '2021-05-29', 69, :'book_1_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_1_title', '2021-05-30', 191, :'book_1_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_1_title', '2021-05-31', 249, :'book_1_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_1_title', '2021-06-01', 353, :'book_1_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_1_title', '2021-06-02', 416, :'book_1_total_pages');
 
 -- INSERT book_2
-SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-02', 41, 41, 9.86);
-SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-03', 30, 71, 17.07);
-SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-04', 36, 107, 25.72);
-SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-05', 70, 177, 42.55);
-SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-06', 180, 357, 85.82);
-SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-07', 59, 416, 100);
+SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-02', 41, :'book_2_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-03', 71, :'book_2_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-04', 107, :'book_2_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-05', 177, :'book_2_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-06', 357, :'book_2_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_2_title', '2021-06-07', 416, :'book_2_total_pages');
 
 -- INSERT book_3
-SELECT insert_read_entry(:'username_1', :'book_3_title', '2021-06-07', 43, 43, 10.34);
-SELECT insert_read_entry(:'username_1', :'book_3_title', '2021-06-08', 54, 97, 23.32);
-SELECT insert_read_entry(:'username_1', :'book_3_title', '2021-06-09', 80, 177, 42.55);
-SELECT insert_read_entry(:'username_1', :'book_3_title', '2021-06-10', 48, 225, 54.09);
-SELECT insert_read_entry(:'username_1', :'book_3_title', '2021-06-11', 42, 267, 64.18);
-SELECT insert_read_entry(:'username_1', :'book_3_title', '2021-06-12', 149, 416, 100);
+SELECT insert_read_entry(:'username_1', :'book_3_title', '2021-06-07', 43, :'book_3_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_3_title', '2021-06-08', 97, :'book_3_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_3_title', '2021-06-09', 177, :'book_3_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_3_title', '2021-06-10', 225, :'book_3_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_3_title', '2021-06-11', 267, :'book_3_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_3_title', '2021-06-12', 416, :'book_3_total_pages');
 
 -- INSERT book_4
-SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-13', 78, 78, 8.86);
-SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-14', 38, 116, 13.18);
-SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-16', 37, 153, 17.39);
-SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-19', 98, 251, 28.52);
-SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-20', 21, 272, 30.91);
-SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-21', 50, 324, 36.82);
-SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-22', 51, 375, 42.61);
-SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-23', 28, 403, 45.8);
-SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-24', 125, 528, 60);
-SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-25', 139, 667, 76.93);
-SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-26', 213, 880, 100);
+SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-13', 78, :'book_4_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-14', 116, :'book_4_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-16', 153, :'book_4_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-19', 251, :'book_4_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-20', 272, :'book_4_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-21', 324, :'book_4_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-22', 375, :'book_4_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-23', 403, :'book_4_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-24', 528, :'book_4_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-25', 667, :'book_4_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-26', 880, :'book_4_total_pages');
 
 -- INSERT book_5
-SELECT insert_read_entry(:'username_1', :'book_5_title', '2021-06-27', 210, 210, 29.17);
-SELECT insert_read_entry(:'username_1', :'book_5_title', '2021-06-28', 102, 312, 43.33);
-SELECT insert_read_entry(:'username_1', :'book_5_title', '2021-06-29', 339, 651, 90.42);
-SELECT insert_read_entry(:'username_1', :'book_5_title', '2021-06-29', 69, 720, 100);
+SELECT insert_read_entry(:'username_1', :'book_5_title', '2021-06-27', 210, :'book_5_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_5_title', '2021-06-28', 312, :'book_5_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_5_title', '2021-06-29', 651, :'book_5_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_5_title', '2021-06-29', 720, :'book_5_total_pages');
 
 -- INSERT book_6
-SELECT insert_read_entry(:'username_1', :'book_6_title', '2021-06-30', 117, 117, 23.59);
-SELECT insert_read_entry(:'username_1', :'book_6_title', '2021-07-01', 92, 209, 42.14);
-SELECT insert_read_entry(:'username_1', :'book_6_title', '2021-07-02', 104, 313, 63.1);
-SELECT insert_read_entry(:'username_1', :'book_6_title', '2021-07-03', 92, 405, 81.65);
-SELECT insert_read_entry(:'username_1', :'book_6_title', '2021-07-04', 91, 496, 100);
+SELECT insert_read_entry(:'username_1', :'book_6_title', '2021-06-30', 117, :'book_6_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_6_title', '2021-07-01', 209, :'book_6_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_6_title', '2021-07-02', 313, :'book_6_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_6_title', '2021-07-03', 405, :'book_6_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_6_title', '2021-07-04', 496, :'book_6_total_pages');
 
 -- INSERT book_7
-SELECT insert_read_entry(:'username_1', :'book_7_title', '2021-07-05', 115, 115, 35.94);
-SELECT insert_read_entry(:'username_1', :'book_7_title', '2021-07-06', 205, 320, 100);
+SELECT insert_read_entry(:'username_1', :'book_7_title', '2021-07-05', 115, :'book_7_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_7_title', '2021-07-06', 320, :'book_7_total_pages');
 
 -- INSERT book_8
-SELECT insert_read_entry(:'username_1', :'book_8_title', '2021-07-07', 81, 81, 23.01);
-SELECT insert_read_entry(:'username_1', :'book_8_title', '2021-07-08', 50, 131, 37.22);
-SELECT insert_read_entry(:'username_1', :'book_8_title', '2021-07-09', 152, 283, 80.4);
-SELECT insert_read_entry(:'username_1', :'book_8_title', '2021-07-10', 69, 352, 100);
+SELECT insert_read_entry(:'username_1', :'book_8_title', '2021-07-07', 81, :'book_8_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_8_title', '2021-07-08', 131, :'book_8_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_8_title', '2021-07-09', 283, :'book_8_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_8_title', '2021-07-10', 352, :'book_8_total_pages');
 
 -- INSERT book_9
-SELECT insert_read_entry(:'username_1', :'book_9_title', '2021-07-10', 99, 99, 19.96);
-SELECT insert_read_entry(:'username_1', :'book_9_title', '2021-07-11', 397, 496, 100);
+SELECT insert_read_entry(:'username_1', :'book_9_title', '2021-07-10', 99, :'book_9_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_9_title', '2021-07-11', 496, :'book_9_total_pages');
 
 -- INSERT book_10
-SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-12', 53, 53, 6.63);
-SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-13', 48, 101, 12.63);
-SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-14', 60, 161, 20.13);
-SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-15', 136, 297, 37.13);
-SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-16', 98, 395, 49.38);
-SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-17', 142, 537, 67.13);
-SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-18', 70, 607, 75.88);
-SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-19', 102, 709, 88.63);
-SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-19', 91, 800, 100);
+SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-12', 53, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-13', 101, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-14', 161, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-15', 297, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-16', 395, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-17', 537, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-18', 607, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-19', 709, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_10_title', '2021-07-19', 800, :'book_10_total_pages');
 
 -- INSERT book_11
-SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-20', 51, 51, 6.01);
-SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-21', 114, 165, 19.46);
-SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-22', 78, 243, 28.66);
-SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-23', 58, 301, 35.5);
-SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-24', 58, 359, 42.33);
-SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-25', 42, 401, 47.29);
-SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-26', 46, 447, 52.71);
-SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-27', 48, 495, 58.37);
-SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-08-06', 104, 599, 70.64);
-SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-08-07', 118, 717, 84.55);
-SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-08-08', 131, 848, 100);
+SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-20', 51, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-21', 165, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-22', 243, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-23', 301, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-24', 359, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-25', 401, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-26', 447, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-07-27', 495, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-08-06', 599, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-08-07', 717, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_11_title', '2021-08-08', 848, :'book_10_total_pages');
 
 -- INSERT book_12
-SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-07-28', 49, 49, 7.12);
-SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-07-29', 112, 161, 23.4);
-SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-07-30', 54, 215, 31.25);
-SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-07-31', 86, 301, 43.75);
-SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-08-01', 60, 361, 52.47);
-SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-08-02', 30, 391, 56.83);
-SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-08-03', 42, 433, 62.94);
-SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-08-04', 42, 475, 69.04);
-SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-08-05', 100, 575, 83.58);
-SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-08-08', 113, 688, 100);
+SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-07-28', 49, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-07-29', 161, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-07-30', 215, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-07-31', 301, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-08-01', 361, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-08-02', 391, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-08-03', 433, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-08-04', 475, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-08-05', 575, :'book_10_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_12_title', '2021-08-08', 688, :'book_10_total_pages');
 
 -- INSERT book_13
-SELECT insert_read_entry(:'username_1', :'book_13_title', '2021-08-08', 45, 45, 17.44);
-SELECT insert_read_entry(:'username_1', :'book_13_title', '2021-08-09', 74, 119, 46.12);
-SELECT insert_read_entry(:'username_1', :'book_13_title', '2021-08-10', 72, 191, 74.03);
-SELECT insert_read_entry(:'username_1', :'book_13_title', '2021-08-11', 67, 258, 100);
+SELECT insert_read_entry(:'username_1', :'book_13_title', '2021-08-08', 45, :'book_13_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_13_title', '2021-08-09', 119, :'book_13_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_13_title', '2021-08-10', 191, :'book_13_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_13_title', '2021-08-11', 258, :'book_13_total_pages');
 
 -- INSERT book_14
-SELECT insert_read_entry(:'username_1', :'book_14_title', '2021-08-11', 41, 41, 12.81);
-SELECT insert_read_entry(:'username_1', :'book_14_title', '2021-08-12', 92, 133, 41.56);
-SELECT insert_read_entry(:'username_1', :'book_14_title', '2021-08-13', 123, 256, 80.94);
-SELECT insert_read_entry(:'username_1', :'book_14_title', '2021-08-14', 64, 320, 100);
+SELECT insert_read_entry(:'username_1', :'book_14_title', '2021-08-11', 41, :'book_14_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_14_title', '2021-08-12', 133, :'book_14_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_14_title', '2021-08-13', 256, :'book_14_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_14_title', '2021-08-14', 320, :'book_14_total_pages');
 
 -- INSERT book_15
-SELECT insert_read_entry(:'username_1', :'book_15_title', '2021-08-14', 55, 55, 10.74);
-SELECT insert_read_entry(:'username_1', :'book_15_title', '2021-08-15', 58, 113, 22.07);
-SELECT insert_read_entry(:'username_1', :'book_15_title', '2021-08-16', 54, 167, 32.62);
-SELECT insert_read_entry(:'username_1', :'book_15_title', '2021-08-17', 56, 223, 42.55);
-SELECT insert_read_entry(:'username_1', :'book_15_title', '2021-08-18', 54, 277, 54.1);
-SELECT insert_read_entry(:'username_1', :'book_15_title', '2021-08-19', 52, 329, 64.26);
-SELECT insert_read_entry(:'username_1', :'book_15_title', '2021-08-20', 183, 512, 100);
+SELECT insert_read_entry(:'username_1', :'book_15_title', '2021-08-14', 55, :'book_15_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_15_title', '2021-08-15', 113, :'book_15_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_15_title', '2021-08-16', 167, :'book_15_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_15_title', '2021-08-17', 223, :'book_15_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_15_title', '2021-08-18', 277, :'book_15_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_15_title', '2021-08-19', 329, :'book_15_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_15_title', '2021-08-20', 512, :'book_15_total_pages');
 
 -- INSERT book_16
-SELECT insert_read_entry(:'username_1', :'book_16_title', '2021-08-21', 55, 55, 14.32);
-SELECT insert_read_entry(:'username_1', :'book_16_title', '2021-08-22', 58, 113, 29.43);
-SELECT insert_read_entry(:'username_1', :'book_16_title', '2021-08-23', 50, 163, 42.45);
-SELECT insert_read_entry(:'username_1', :'book_16_title', '2021-08-24', 52, 215, 55.99);
-SELECT insert_read_entry(:'username_1', :'book_16_title', '2021-08-25', 56, 271, 70.57);
-SELECT insert_read_entry(:'username_1', :'book_16_title', '2021-08-26', 113, 384, 100);
+SELECT insert_read_entry(:'username_1', :'book_16_title', '2021-08-21', 55, :'book_16_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_16_title', '2021-08-22', 113, :'book_16_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_16_title', '2021-08-23', 163, :'book_16_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_16_title', '2021-08-24', 215, :'book_16_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_16_title', '2021-08-25', 271, :'book_16_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_16_title', '2021-08-26', 384, :'book_16_total_pages');
 
 -- INSERT book_17
-SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-08-27', 58, 59, 16.76);
-SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-08-28', 54, 113, 32.1);
-SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-08-29', 52, 165, 46.88);
-SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-08-30', 58, 223, 63.35);
-SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-08-31', 56, 279, 79.26);
-SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-09-01', 73, 352, 100);
+SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-08-27', 59, :'book_17_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-08-28', 113, :'book_17_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-08-29', 165, :'book_17_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-08-30', 223, :'book_17_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-08-31', 279, :'book_17_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_17_title', '2021-09-01', 352, :'book_17_total_pages');
 
 -- INSERT book_18
-SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-02', 55, 55, 14.95);
-SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-03', 54, 109, 29.62);
-SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-04', 56, 165, 44.84);
-SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-05', 56, 221, 60.05);
-SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-06', 147, 368, 100);
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-02', 55, :'book_18_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-03', 109, :'book_18_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-04', 165, :'book_18_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-05', 221, :'book_18_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_18_title', '2021-09-06', 368, :'book_18_total_pages');
 
 -- INSERT book_19
-SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-07', 41, 41, 4.95);
-SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-08', 36, 77, 9.3);
-SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-09', 46, 123, 14.86);
-SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-10', 36, 159, 19.2);
-SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-11', 52, 211, 25.48);
-SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-12', 48, 259, 31.28);
-SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-13', 60, 319, 38.53);
-SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-14', 90, 409, 49.4);
-SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-15', 36, 445, 53.74);
-SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-16', 58, 503, 60.75);
-SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-17', 78, 581, 70.17);
-SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-18', 64, 645, 77.9);
-SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-19', 60, 705, 85.14);
-SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-20', 123, 828, 100);
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-07', 41, :'book_19_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-08', 77, :'book_19_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-09', 123, :'book_19_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-10', 159, :'book_19_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-11', 211, :'book_19_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-12', 259, :'book_19_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-13', 319, :'book_19_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-14', 409, :'book_19_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-15', 445, :'book_19_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-16', 503, :'book_19_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-17', 581, :'book_19_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-18', 645, :'book_19_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-19', 705, :'book_19_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_19_title', '2021-09-20', 828, :'book_19_total_pages');
 
 -- INSERT book_20
-SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-21', 35, 35, 8.41);
-SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-22', 56, 91, 21.88);
-SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 58, 149, 35.82);
-SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-24', 46, 195, 46.88);
-SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-25', 52, 247, 59.38);
-SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-26', 60, 307, 73.8);
-SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-27', 52, 359, 86.3);
-SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-28', 57, 416, 100);
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-21', 35, :'book_20_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-22', 91, :'book_20_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-23', 149, :'book_20_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-24', 195, :'book_20_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-25', 247, :'book_20_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-26', 307, :'book_20_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-27', 359, :'book_20_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_20_title', '2021-09-28', 416, :'book_20_total_pages');
 
 -- INSERT book_21
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-09-29', 49, 49, 5.1);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-09-30', 52, 101, 10.52);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-01', 51, 152, 15.83);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-02', 48, 200, 20.83);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-03', 52, 252, 26.25);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-04', 49, 301, 31.35);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-05', 49, 350, 36.46);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-06', 45, 395, 41.15);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-07', 64, 459, 47.81);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-08', 48, 507, 52.81);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-09', 52, 559, 58.23);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-10', 52, 611, 63.65);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-11', 52, 663, 69.06);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-12', 38, 701, 73.02);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-13', 101, 802, 83.54);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-14', 105, 907, 94.48);
-SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-15', 53, 960, 100);
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-09-29', 49, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-09-30', 101, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-01', 152, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-02', 200, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-03', 252, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-04', 301, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-05', 350, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-06', 395, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-07', 459, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-08', 507, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-09', 559, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-10', 611, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-11', 663, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-12', 701, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-13', 802, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-14', 907, :'book_21_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_21_title', '2021-10-15', 960, :'book_21_total_pages');
 
 -- INSERT book_22
-SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-16', 51, 51, 5.4);
-SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-17', 84, 135, 14.3);
-SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-18', 74, 209, 22.14);
-SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-19', 44, 253, 26.8);
-SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-20', 43, 296, 31.36);
-SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-21', 62, 358, 37.92);
-SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-22', 71, 429, 45.44);
-SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-23', 114, 543, 57.52);
-SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-24', 74, 617, 65.36);
-SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-25', 66, 683, 72.35);
-SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-26', 108, 791, 83.79);
-SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-27', 88, 879, 93.11);
-SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-28', 65, 944, 100);
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-16', 51, :'book_22_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-17', 135, :'book_22_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-18', 209, :'book_22_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-19', 253, :'book_22_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-20', 296, :'book_22_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-21', 358, :'book_22_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-22', 429, :'book_22_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-23', 543, :'book_22_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-24', 617, :'book_22_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-25', 683, :'book_22_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-26', 791, :'book_22_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-27', 879, :'book_22_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_22_title', '2021-10-28', 944, :'book_22_total_pages');
 
 -- INSERT book_23
-SELECT insert_read_entry(:'username_1', :'book_23_title', '2021-10-29', 137, 137, 34.25);
-SELECT insert_read_entry(:'username_1', :'book_23_title', '2021-10-30', 130, 267, 66.75);
-SELECT insert_read_entry(:'username_1', :'book_23_title', '2021-10-31', 133, 400, 100);
+SELECT insert_read_entry(:'username_1', :'book_23_title', '2021-10-29', 137, :'book_23_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_23_title', '2021-10-30', 267, :'book_23_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_23_title', '2021-10-31', 400, :'book_23_total_pages');
 
 -- INSERT book_24
-SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-01', 55, 55, 17.08);
-SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-02', 50, 105, 32.61);
-SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-03', 48, 153, 47.52);
-SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-04', 56, 209, 64.91);
-SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-05', 36, 245, 76.09);
-SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-06', 77, 322, 100);
+SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-01', 55, :'book_24_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-02', 105, :'book_24_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-03', 153, :'book_24_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-04', 209, :'book_24_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-05', 245, :'book_24_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_24_title', '2021-11-06', 322, :'book_24_total_pages');
 
 -- INSERT book_25
-SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-07', 51, 51, 15.84);
-SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-08', 52, 103, 31.99);
-SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-09', 50, 153, 47.52);
-SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-10', 54, 207, 64.29);
-SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-11', 115, 322, 100);
+SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-07', 51, :'book_25_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-08', 103, :'book_25_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-09', 153, :'book_25_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-10', 207, :'book_25_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_25_title', '2021-11-11', 322, :'book_25_total_pages');
 
 -- INSERT book_26
-SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-12', 49, 49, 14.20);
-SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-13', 58, 107, 31.01);
-SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-14', 50, 157, 45.51);
-SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-15', 44, 201, 58.26);
-SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-16', 48, 249, 72.17);
-SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-17', 96, 345, 100);
+SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-12', 49, :'book_26_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-13', 107, :'book_26_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-14', 157, :'book_26_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-15', 201, :'book_26_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-16', 249, :'book_26_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_26_title', '2021-11-17', 345, :'book_26_total_pages');
 
 -- INSERT book_27
-SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-18', 51, 51, 11.81);
-SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-19', 52, 103, 23.84);
-SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-23', 150, 253, 58.56);
-SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-24', 100, 353, 81.71);
-SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-25', 79, 432, 100);
+SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-18', 51, :'book_27_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-19', 103, :'book_27_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-23', 253, :'book_27_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-24', 353, :'book_27_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_27_title', '2021-11-25', 432, :'book_27_total_pages');
 
 -- INSERT book_28
-SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-01', 57, 57, 14.84);
-SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-02', 54, 111, 28.91);
-SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-03', 56, 167, 43.49);
-SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-04', 54, 221, 57.55);
-SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-05', 67, 278, 72.4);
-SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-06', 106, 384, 100);
+SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-01', 57, :'book_28_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-02', 111, :'book_28_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-03', 167, :'book_28_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-04', 221, :'book_28_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-05', 278, :'book_28_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_28_title', '2021-12-06', 384, :'book_28_total_pages');
 
 -- INSERT book_29
-SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-09', 49, 49, 12.25);
-SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-10', 48, 97, 24.25);
-SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-11', 50, 147, 36.75);
-SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-12', 110, 257, 64.25);
-SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-13', 62, 319, 79.75);
-SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-14', 81, 400, 100);
+SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-09', 49, :'book_29_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-10', 97, :'book_29_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-11', 147, :'book_29_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-12', 257, :'book_29_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-13', 319, :'book_29_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_29_title', '2021-12-14', 400, :'book_29_total_pages');
 
 -- INSERT book_30
-SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-15', 49, 49, 13.32);
-SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-16', 97, 48, 26.36);
-SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-17', 56, 153, 41.58);
-SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-18', 54, 207, 56.25);
-SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-19', 96, 303, 82.34);
-SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-20', 96, 368, 100);
+SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-15', 49, :'book_30_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-16', 97, :'book_30_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-17', 153, :'book_30_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-18', 207, :'book_30_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-19', 303, :'book_30_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_30_title', '2021-12-20', 368, :'book_30_total_pages');
+
+-- INSERT book_31
+SELECT insert_read_entry(:'username_1', :'book_31_title', '2021-12-21', 51, :'book_31_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_31_title', '2021-12-22', 93, :'book_31_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_31_title', '2021-12-23', 147, :'book_31_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_31_title', '2021-12-24', 211, :'book_31_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_31_title', '2021-12-25', 259, :'book_31_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_31_title', '2021-12-26', 307, :'book_31_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_31_title', '2021-12-27', 384, :'book_31_total_pages');
 
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
--- FUNCTION insert_author
-CREATE OR REPLACE FUNCTION insert_author(arg_full_name VARCHAR, arg_first_name VARCHAR, arg_last_name VARCHAR, arg_middle_name VARCHAR DEFAULT NULL)
-RETURNS VOID AS $$
-BEGIN
-  INSERT INTO
-    author (full_name, first_name, last_name, middle_name)
-  VALUES
-    ($1, $2, $3, $4)
-  ON CONFLICT (full_name)
-    DO NOTHING;
-END;
-$$ LANGUAGE plpgsql;
-
--- DECLARE author information
--- book 1 author
-\set book_1_author_1_first_name 'Dan'
-\set book_1_author_1_last_name 'Abnett'
-\set book_1_author_1_full_name 'Dan Abnett'
--- book 2 author
-\set book_2_author_1_first_name 'Dan'
-\set book_2_author_1_last_name 'Abnett'
-\set book_2_author_1_full_name 'Dan Abnett'
--- book 3 author
-\set book_3_author_1_first_name 'Dan'
-\set book_3_author_1_last_name 'Abnett'
-\set book_3_author_1_full_name 'Dan Abnett'
--- book 4 author
-\set book_4_author_1_first_name 'Dan'
-\set book_4_author_1_last_name 'Abnett'
-\set book_4_author_1_full_name 'Dan Abnett'
--- book 5 author
-\set book_5_author_1_first_name 'Dan'
-\set book_5_author_1_last_name 'Abnett'
-\set book_5_author_1_full_name 'Dan Abnett'
--- book 6 author
-\set book_6_author_1_first_name 'Rachel'
-\set book_6_author_1_middle_name 'D.'
-\set book_6_author_1_last_name 'Harrison'
-\set book_6_author_1_full_name 'Rachel D. Harrison'
--- book 7 author
-\set book_7_author_1_first_name 'Justin'
-\set book_7_author_1_middle_name 'D.'
-\set book_7_author_1_last_name 'Hill'
-\set book_7_author_1_full_name 'Justin D. Hill'
--- book 8 authors
-\set book_8_author_1_first_name 'Cassandra'
-\set book_8_author_1_last_name 'Khaw'
-\set book_8_author_1_full_name 'Cassandra Khaw'
-\set book_8_author_2_first_name 'Richard'
-\set book_8_author_2_last_name 'Strachan'
-\set book_8_author_2_full_name 'Richard Strachan'
-\set book_8_author_3_first_name 'Graham'
-\set book_8_author_3_last_name 'McNeill'
-\set book_8_author_3_full_name 'Graham McNeill'
-\set book_8_author_4_first_name 'Lora'
-\set book_8_author_4_last_name 'Gray'
-\set book_8_author_4_full_name 'Lora Gray'
-\set book_8_author_5_first_name 'C'
-\set book_8_author_5_middle_name 'L'
-\set book_8_author_5_last_name 'Werner'
-\set book_8_author_5_full_name 'C L Werner'
-\set book_8_author_6_first_name 'Peter'
-\set book_8_author_6_last_name 'McLean'
-\set book_8_author_6_full_name 'Peter McLean'
-\set book_8_author_7_first_name 'David'
-\set book_8_author_7_last_name 'Annandale'
-\set book_8_author_7_full_name 'David Annandale'
-\set book_8_author_8_first_name 'Paul'
-\set book_8_author_8_last_name 'Kane'
-\set book_8_author_8_full_name 'Paul Kane'
-\set book_8_author_9_first_name 'Josh'
-\set book_8_author_9_last_name 'Reynolds'
-\set book_8_author_9_full_name 'Josh Reynolds'
-\set book_8_author_10_first_name 'J.C.'
-\set book_8_author_10_last_name 'Stearns'
-\set book_8_author_10_full_name 'J.C. Stearns'
-\set book_8_author_11_first_name 'Alec'
-\set book_8_author_11_last_name 'Worley'
-\set book_8_author_11_full_name 'Alec Worley'
--- book 9 author
-\set book_9_author_1_first_name 'Justin'
-\set book_9_author_1_middle_name 'D.'
-\set book_9_author_1_last_name 'Hill'
-\set book_9_author_1_full_name 'Justin D. Hill'
--- book 10 author
-\set book_10_author_1_first_name 'Graham'
-\set book_10_author_1_last_name 'McNeill'
-\set book_10_author_1_full_name 'Graham McNeill'
--- book 11 author
-\set book_11_author_1_first_name 'Graham'
-\set book_11_author_1_last_name 'McNeill'
-\set book_11_author_1_full_name 'Graham McNeill'
--- book 12 author
-\set book_12_author_1_first_name 'Graham'
-\set book_12_author_1_last_name 'McNeill'
-\set book_12_author_1_full_name 'Graham McNeill'
--- book 13 author
-\set book_13_author_1_first_name 'Graham'
-\set book_13_author_1_last_name 'McNeill'
-\set book_13_author_1_full_name 'Graham McNeill'
--- book 14 author
-\set book_14_author_1_first_name 'David'
-\set book_14_author_1_last_name 'Annandale'
-\set book_14_author_1_full_name 'David Annandale'
--- book 15 author
-\set book_15_author_1_first_name 'Steve'
-\set book_15_author_1_last_name 'Parker'
-\set book_15_author_1_full_name 'Steve Parker'
--- book 16 author
-\set book_16_author_1_first_name 'Chris'
-\set book_16_author_1_last_name 'Wraight'
-\set book_16_author_1_full_name 'Chris Wraight'
--- book 17 author
-\set book_17_author_1_first_name 'Chris'
-\set book_17_author_1_last_name 'Wraight'
-\set book_17_author_1_full_name 'Chris Wraight'
--- book 18 author
-\set book_18_author_1_first_name 'Andy'
-\set book_18_author_1_last_name 'Clark'
-\set book_18_author_1_full_name 'Andy Clark'
--- book 19 author
-\set book_19_author_1_first_name 'James'
-\set book_19_author_1_last_name 'Swallow'
-\set book_19_author_1_full_name 'James Swallow'
--- book 20 author
-\set book_20_author_1_first_name 'Guy'
-\set book_20_author_1_last_name 'Haley'
-\set book_20_author_1_full_name 'Guy Haley'
--- book 21 authors
-\set book_21_author_1_first_name 'Steve'
-\set book_21_author_1_last_name 'Parker'
-\set book_21_author_1_full_name 'Steve Parker'
-\set book_21_author_2_first_name 'Justin'
-\set book_21_author_2_middle_name 'D.'
-\set book_21_author_2_last_name 'Hill'
-\set book_21_author_2_full_name 'Justin D. Hill'
-\set book_21_author_3_first_name 'Ian'
-\set book_21_author_3_middle_name 'St.'
-\set book_21_author_3_last_name 'Martin'
-\set book_21_author_3_full_name 'Ian St. Martin'
-\set book_21_author_4_first_name 'Andy'
-\set book_21_author_4_last_name 'Chambers'
-\set book_21_author_4_full_name 'Andy Chambers'
-\set book_21_author_5_first_name 'Chris'
-\set book_21_author_5_last_name 'Wraight'
-\set book_21_author_5_full_name 'Chris Wraight'
-\set book_21_author_6_first_name 'Nick'
-\set book_21_author_6_last_name 'Kyme'
-\set book_21_author_6_full_name 'Nick Kyme'
-\set book_21_author_7_first_name 'Braden'
-\set book_21_author_7_last_name 'Campbell'
-\set book_21_author_7_full_name 'Braden Campbell'
-\set book_21_author_8_first_name 'Ben'
-\set book_21_author_8_last_name 'Counter'
-\set book_21_author_8_full_name 'Ben Counter'
-\set book_21_author_9_first_name 'David'
-\set book_21_author_9_last_name 'Annandale'
-\set book_21_author_9_full_name 'David Annandale'
-\set book_21_author_10_first_name 'Andy'
-\set book_21_author_10_last_name 'Clark'
-\set book_21_author_10_full_name 'Andy Clark'
-\set book_21_author_11_first_name 'Gav'
-\set book_21_author_11_last_name 'Thorpe'
-\set book_21_author_11_full_name 'Gav Thorpe'
-\set book_21_author_12_first_name 'Anthony'
-\set book_21_author_12_last_name 'Reynolds'
-\set book_21_author_12_full_name 'Anthony Reynolds'
--- book 22 authors
-\set book_22_author_1_first_name 'Aaron'
-\set book_22_author_1_last_name 'Dembski-Bowden'
-\set book_22_author_1_full_name 'Aaron Dembski-Bowden'
-\set book_22_author_2_first_name 'David'
-\set book_22_author_2_last_name 'Annandale'
-\set book_22_author_2_full_name 'David Annandale'
-\set book_22_author_3_first_name 'Robbie'
-\set book_22_author_3_last_name 'MacNiven'
-\set book_22_author_3_full_name 'Robbie MacNiven'
-\set book_22_author_4_first_name 'Ben'
-\set book_22_author_4_last_name 'Counter'
-\set book_22_author_4_full_name 'Ben Counter'
-\set book_22_author_5_first_name 'Steve'
-\set book_22_author_5_last_name 'Lyons'
-\set book_22_author_5_full_name 'Steve Lyons'
-\set book_22_author_6_first_name 'Rob'
-\set book_22_author_6_last_name 'Sanders'
-\set book_22_author_6_full_name 'Rob Sanders'
-\set book_22_author_7_first_name 'C'
-\set book_22_author_7_middle_name 'L'
-\set book_22_author_7_last_name 'Werner'
-\set book_22_author_7_full_name 'C L Werner'
-\set book_22_author_8_first_name 'Nick'
-\set book_22_author_8_last_name 'Kyme'
-\set book_22_author_8_full_name 'Nick Kyme'
-\set book_22_author_9_first_name 'Andy'
-\set book_22_author_9_last_name 'Smillie'
-\set book_22_author_9_full_name 'Andy Smillie'
-\set book_22_author_10_first_name 'Cavan'
-\set book_22_author_10_last_name 'Scott'
-\set book_22_author_10_full_name 'Cavan Scott'
-\set book_22_author_11_first_name 'Mark'
-\set book_22_author_11_last_name 'Clapham'
-\set book_22_author_11_full_name 'Mark Clapham'
-\set book_22_author_12_first_name 'Lee'
-\set book_22_author_12_last_name 'Lightner'
-\set book_22_author_12_full_name 'Lee Lightner'
-\set book_22_author_13_first_name 'Alec'
-\set book_22_author_13_last_name 'Worley'
-\set book_22_author_13_full_name 'Alec Worley'
--- book 23 author
-\set book_23_author_1_first_name 'Peter'
-\set book_23_author_1_last_name 'Fehervari'
-\set book_23_author_1_full_name 'Peter Fehervari'
--- book 24 author
-\set book_24_author_1_first_name 'Guy'
-\set book_24_author_1_last_name 'Haley'
-\set book_24_author_1_full_name 'Guy Haley'
--- book 25 author
-\set book_25_author_1_first_name 'Guy'
-\set book_25_author_1_last_name 'Haley'
-\set book_25_author_1_full_name 'Guy Haley'
--- book 26 author
-\set book_26_author_1_first_name 'Guy'
-\set book_26_author_1_last_name 'Haley'
-\set book_26_author_1_full_name 'Guy Haley'
--- book 27 author
-\set book_27_author_1_first_name 'Nick'
-\set book_27_author_1_last_name 'Kyme'
-\set book_27_author_1_full_name 'Nick Kyme'
--- book 28 author
-\set book_28_author_1_first_name 'Gav'
-\set book_28_author_1_last_name 'Thrope'
-\set book_28_author_1_full_name 'Gav Thorpe'
--- book 29 author
-\set book_29_author_1_first_name 'Rachel'
-\set book_29_author_1_last_name 'Harrison'
-\set book_29_author_1_full_name 'Rachel Harrison'
--- book 30 author
-\set book_30_author_1_first_name 'Gav'
-\set book_30_author_1_last_name 'Thrope'
-\set book_30_author_1_full_name 'Gav Thorpe'
--- book 31 author
-\set book_31_author_1_first_name 'Gav'
-\set book_31_author_1_last_name 'Thrope'
-\set book_31_author_1_full_name 'Gav Thorpe'
-
-
--- INSERT author using FUNCTION insert_author and DECLARED author variables as arguments, CHECK UNIQUE full_name (middle_name argument is optional)
--- book 1 author
-SELECT insert_author(:'book_1_author_1_full_name', :'book_1_author_1_first_name', :'book_1_author_1_last_name');
--- book 2 author
-SELECT insert_author(:'book_2_author_1_full_name', :'book_2_author_1_first_name', :'book_2_author_1_last_name');
--- book 3 author
-SELECT insert_author(:'book_3_author_1_full_name', :'book_3_author_1_first_name', :'book_3_author_1_last_name');
--- book 4 author
-SELECT insert_author(:'book_4_author_1_full_name', :'book_4_author_1_first_name', :'book_4_author_1_last_name');
--- book 5 author
-SELECT insert_author(:'book_5_author_1_full_name', :'book_5_author_1_first_name', :'book_5_author_1_last_name');
--- book 6 author
-SELECT insert_author(:'book_6_author_1_full_name', :'book_6_author_1_first_name', :'book_6_author_1_last_name');
--- book 7 author
-SELECT insert_author(:'book_7_author_1_full_name', :'book_7_author_1_first_name', :'book_7_author_1_last_name', :'book_7_author_1_middle_name');
--- book 8 authors
-SELECT insert_author(:'book_8_author_1_full_name', :'book_8_author_1_first_name', :'book_8_author_1_last_name');
-SELECT insert_author(:'book_8_author_2_full_name', :'book_8_author_2_first_name', :'book_8_author_2_last_name');
-SELECT insert_author(:'book_8_author_3_full_name', :'book_8_author_3_first_name', :'book_8_author_3_last_name');
-SELECT insert_author(:'book_8_author_4_full_name', :'book_8_author_4_first_name', :'book_8_author_4_last_name');
-SELECT insert_author(:'book_8_author_5_full_name', :'book_8_author_5_first_name', :'book_8_author_5_last_name', :'book_8_author_5_middle_name');
-SELECT insert_author(:'book_8_author_6_full_name', :'book_8_author_6_first_name', :'book_8_author_6_last_name');
-SELECT insert_author(:'book_8_author_7_full_name', :'book_8_author_7_first_name', :'book_8_author_7_last_name');
-SELECT insert_author(:'book_8_author_8_full_name', :'book_8_author_8_first_name', :'book_8_author_8_last_name');
-SELECT insert_author(:'book_8_author_9_full_name', :'book_8_author_9_first_name', :'book_8_author_9_last_name');
-SELECT insert_author(:'book_8_author_10_full_name', :'book_8_author_10_first_name', :'book_8_author_10_last_name');
-SELECT insert_author(:'book_8_author_11_full_name', :'book_8_author_11_first_name', :'book_8_author_11_last_name');
--- book 9 author
-SELECT insert_author(:'book_9_author_1_full_name', :'book_9_author_1_first_name', :'book_9_author_1_last_name', :'book_9_author_1_middle_name');
--- book 10 author
-SELECT insert_author(:'book_10_author_1_full_name', :'book_10_author_1_first_name', :'book_10_author_1_last_name');
--- book 11 author
-SELECT insert_author(:'book_11_author_1_full_name', :'book_11_author_1_first_name', :'book_11_author_1_last_name');
--- book 12 author
-SELECT insert_author(:'book_12_author_1_full_name', :'book_12_author_1_first_name', :'book_12_author_1_last_name');
--- book 13 author
-SELECT insert_author(:'book_13_author_1_full_name', :'book_13_author_1_first_name', :'book_13_author_1_last_name');
--- book 14 author
-SELECT insert_author(:'book_14_author_1_full_name', :'book_14_author_1_first_name', :'book_14_author_1_last_name');
--- book 15 author
-SELECT insert_author(:'book_15_author_1_full_name', :'book_15_author_1_first_name', :'book_15_author_1_last_name');
--- book 16 author
-SELECT insert_author(:'book_16_author_1_full_name', :'book_16_author_1_first_name', :'book_16_author_1_last_name');
--- book 17 author
-SELECT insert_author(:'book_17_author_1_full_name', :'book_17_author_1_first_name', :'book_17_author_1_last_name');
--- book 18 author
-SELECT insert_author(:'book_18_author_1_full_name', :'book_18_author_1_first_name', :'book_18_author_1_last_name');
--- book 19 author
-SELECT insert_author(:'book_19_author_1_full_name', :'book_19_author_1_first_name', :'book_19_author_1_last_name');
--- book 20 author
-SELECT insert_author(:'book_20_author_1_full_name', :'book_20_author_1_first_name', :'book_20_author_1_last_name');
--- book 21 author
-SELECT insert_author(:'book_21_author_1_full_name', :'book_21_author_1_first_name', :'book_21_author_1_last_name');
-SELECT insert_author(:'book_21_author_2_full_name', :'book_21_author_2_first_name', :'book_21_author_2_last_name', :'book_21_author_2_middle_name');
-SELECT insert_author(:'book_21_author_3_full_name', :'book_21_author_3_first_name', :'book_21_author_3_last_name', :'book_21_author_3_middle_name');
-SELECT insert_author(:'book_21_author_4_full_name', :'book_21_author_4_first_name', :'book_21_author_4_last_name');
-SELECT insert_author(:'book_21_author_5_full_name', :'book_21_author_5_first_name', :'book_21_author_5_last_name');
-SELECT insert_author(:'book_21_author_6_full_name', :'book_21_author_6_first_name', :'book_21_author_6_last_name');
-SELECT insert_author(:'book_21_author_7_full_name', :'book_21_author_7_first_name', :'book_21_author_7_last_name');
-SELECT insert_author(:'book_21_author_8_full_name', :'book_21_author_8_first_name', :'book_21_author_8_last_name');
-SELECT insert_author(:'book_21_author_9_full_name', :'book_21_author_9_first_name', :'book_21_author_9_last_name');
-SELECT insert_author(:'book_21_author_10_full_name', :'book_21_author_10_first_name', :'book_21_author_10_last_name');
-SELECT insert_author(:'book_21_author_11_full_name', :'book_21_author_11_first_name', :'book_21_author_11_last_name');
-SELECT insert_author(:'book_21_author_12_full_name', :'book_21_author_12_first_name', :'book_21_author_12_last_name');
--- book 22 author
-SELECT insert_author(:'book_22_author_1_full_name', :'book_22_author_1_first_name', :'book_22_author_1_last_name');
-SELECT insert_author(:'book_22_author_2_full_name', :'book_22_author_2_first_name', :'book_22_author_2_last_name');
-SELECT insert_author(:'book_22_author_3_full_name', :'book_22_author_3_first_name', :'book_22_author_3_last_name');
-SELECT insert_author(:'book_22_author_4_full_name', :'book_22_author_4_first_name', :'book_22_author_4_last_name');
-SELECT insert_author(:'book_22_author_5_full_name', :'book_22_author_5_first_name', :'book_22_author_5_last_name');
-SELECT insert_author(:'book_22_author_6_full_name', :'book_22_author_6_first_name', :'book_22_author_6_last_name');
-SELECT insert_author(:'book_22_author_7_full_name', :'book_22_author_7_first_name', :'book_22_author_7_last_name', :'book_22_author_7_middle_name');
-SELECT insert_author(:'book_22_author_8_full_name', :'book_22_author_8_first_name', :'book_22_author_8_last_name');
-SELECT insert_author(:'book_22_author_9_full_name', :'book_22_author_9_first_name', :'book_22_author_9_last_name');
-SELECT insert_author(:'book_22_author_10_full_name', :'book_22_author_10_first_name', :'book_22_author_10_last_name');
-SELECT insert_author(:'book_22_author_11_full_name', :'book_22_author_11_first_name', :'book_22_author_11_last_name');
-SELECT insert_author(:'book_22_author_12_full_name', :'book_22_author_12_first_name', :'book_22_author_12_last_name');
-SELECT insert_author(:'book_22_author_13_full_name', :'book_22_author_13_first_name', :'book_22_author_13_last_name');
--- book 23 author
-SELECT insert_author(:'book_23_author_1_full_name', :'book_23_author_1_first_name', :'book_23_author_1_last_name');
--- book 24 author
-SELECT insert_author(:'book_24_author_1_full_name', :'book_24_author_1_first_name', :'book_24_author_1_last_name');
--- book 25 author
-SELECT insert_author(:'book_25_author_1_full_name', :'book_25_author_1_first_name', :'book_25_author_1_last_name');
--- book 26 author
-SELECT insert_author(:'book_26_author_1_full_name', :'book_26_author_1_first_name', :'book_26_author_1_last_name');
--- book 27 author
-SELECT insert_author(:'book_27_author_1_full_name', :'book_27_author_1_first_name', :'book_27_author_1_last_name');
--- book 28 author
-SELECT inert_author(:'book_28_author_1_full_name', :'book_28_author_1_first_name', :'book_28_author_1_last_name');
--- book 29 author
-SELECT insert_author(:'book_29_author_1_full_name', :'book_29_author_1_first_name', :'book_29_author_1_last_name');
--- book 30 author
-SELECT insert_author(:'book_30_author_1_full_name', :'book_30_author_1_first_name', :'book_30_author_1_last_name');
--- book 31 author
-SELECT insert_author(:'book_31_author_1_full_name', :'book_31_author_1_first_name', :'book_31_author_1_last_name');
-
-
-/* --------------------------------------------- INSERT book_author (JOIN TABLE) --------------------------------------------- */
--- FUNCTION join_book_author
-CREATE OR REPLACE FUNCTION join_book_author(arg_book_title VARCHAR, arg_author_full_name VARCHAR)
+CREATE OR REPLACE FUNCTION insert_author(arg_book_title VARCHAR, arg_full_name VARCHAR)
 RETURNS VOID AS $$
 DECLARE
-  var_book_id INT = get_book_id($1);
-  var_author_id INT = get_author_id($2);
+    var_book_id INT = get_book_id($1);
+    var_author_id INT;
+    var_first_name VARCHAR;
+    var_middle_name VARCHAR;
+    var_last_name VARCHAR;
 BEGIN
-  INSERT INTO book_author (book_id, author_id)
-  VALUES (var_book_id, var_author_id);
+    SELECT id INTO var_author_id FROM author WHERE author.full_name=arg_full_name;
+    IF NOT FOUND THEN
+        var_first_name = (regexp_matches(arg_full_name, '^([^\s]+)'))[1];
+        var_middle_name = (regexp_matches(arg_full_name, '^[^\s]+\s(.+)\s[^\s]+$'))[1];
+        IF var_middle_name IS NULL THEN
+            var_last_name = (regexp_matches(arg_full_name, '\s(.+)$'))[1];
+        ELSE
+            var_last_name = (regexp_matches(arg_full_name, '^[^\s]+\s.+\s(.+)$'))[1];
+        END IF;
+        INSERT INTO author (full_name, first_name, middle_name, last_name) VALUES (arg_full_name, var_first_name, var_middle_name, var_last_name) RETURNING id INTO var_author_id;
+    END IF;
+    INSERT INTO book_author (book_id, author_id) VALUES (var_book_id, var_author_id);
 END;
 $$ LANGUAGE plpgsql;
 
--- INSERT relationship between book and author
--- book 1 author
-SELECT join_book_author(:'book_1_title', :'book_1_author_1_full_name');
--- book 2 author
-SELECT join_book_author(:'book_2_title', :'book_2_author_1_full_name');
--- book 3 author
-SELECT join_book_author(:'book_3_title', :'book_3_author_1_full_name');
--- book 4 author
-SELECT join_book_author(:'book_4_title', :'book_4_author_1_full_name');
--- book 5 author
-SELECT join_book_author(:'book_5_title', :'book_5_author_1_full_name');
--- book 6 author
-SELECT join_book_author(:'book_6_title', :'book_6_author_1_full_name');
--- book 7 author
-SELECT join_book_author(:'book_7_title', :'book_7_author_1_full_name');
+-- INSERT author and INSERT book_author tables
+SELECT insert_author(:'book_1_title', 'Dan Abnett');
+SELECT insert_author(:'book_2_title', 'Dan Abnett');
+SELECT insert_author(:'book_3_title', 'Dan Abnett');
+SELECT insert_author(:'book_4_title', 'Dan Abnett');
+SELECT insert_author(:'book_5_title', 'Dan Abnett');
+SELECT insert_author(:'book_6_title', 'Rachel Harrison');
+SELECT insert_author(:'book_7_title', 'Justin D. Hill');
 -- book 8 authors
-SELECT join_book_author(:'book_8_title', :'book_8_author_1_full_name');
-SELECT join_book_author(:'book_8_title', :'book_8_author_2_full_name');
-SELECT join_book_author(:'book_8_title', :'book_8_author_3_full_name');
-SELECT join_book_author(:'book_8_title', :'book_8_author_4_full_name');
-SELECT join_book_author(:'book_8_title', :'book_8_author_5_full_name');
-SELECT join_book_author(:'book_8_title', :'book_8_author_6_full_name');
-SELECT join_book_author(:'book_8_title', :'book_8_author_7_full_name');
-SELECT join_book_author(:'book_8_title', :'book_8_author_8_full_name');
-SELECT join_book_author(:'book_8_title', :'book_8_author_9_full_name');
-SELECT join_book_author(:'book_8_title', :'book_8_author_10_full_name');
-SELECT join_book_author(:'book_8_title', :'book_8_author_11_full_name');
--- book 9 author
-SELECT join_book_author(:'book_9_title', :'book_9_author_1_full_name');
--- book 10 author
-SELECT join_book_author(:'book_10_title', :'book_10_author_1_full_name');
--- book 11 author
-SELECT join_book_author(:'book_11_title', :'book_11_author_1_full_name');
--- book 12 author
-SELECT join_book_author(:'book_12_title', :'book_12_author_1_full_name');
--- book 13 author
-SELECT join_book_author(:'book_13_title', :'book_13_author_1_full_name');
--- book 14 author
-SELECT join_book_author(:'book_14_title', :'book_14_author_1_full_name');
--- book 15 author
-SELECT join_book_author(:'book_15_title', :'book_15_author_1_full_name');
--- book 16 author
-SELECT join_book_author(:'book_16_title', :'book_16_author_1_full_name');
--- book 17 author
-SELECT join_book_author(:'book_17_title', :'book_17_author_1_full_name');
--- book 18 author
-SELECT join_book_author(:'book_18_title', :'book_18_author_1_full_name');
--- book 19 author
-SELECT join_book_author(:'book_19_title', :'book_19_author_1_full_name');
--- book 20 author
-SELECT join_book_author(:'book_20_title', :'book_20_author_1_full_name');
+SELECT insert_author(:'book_8_title', 'Cassandra Khaw');
+SELECT insert_author(:'book_8_title', 'Richard Strachan');
+SELECT insert_author(:'book_8_title', 'Graham McNeill');
+SELECT insert_author(:'book_8_title', 'Lora Gray');
+SELECT insert_author(:'book_8_title', 'C L Werner');
+SELECT insert_author(:'book_8_title', 'Peter McLean');
+SELECT insert_author(:'book_8_title', 'David Annandale');
+SELECT insert_author(:'book_8_title', 'Paul Kane');
+SELECT insert_author(:'book_8_title', 'Josh Reynolds');
+SELECT insert_author(:'book_8_title', 'J.C. Stearns');
+SELECT insert_author(:'book_8_title', 'Alec Worley');
+--
+SELECT insert_author(:'book_9_title', 'Justin D. Hill');
+SELECT insert_author(:'book_10_title', 'Graham McNeill');
+SELECT insert_author(:'book_11_title', 'Graham McNeill');
+SELECT insert_author(:'book_12_title', 'Graham McNeill');
+SELECT insert_author(:'book_13_title', 'Graham McNeill');
+SELECT insert_author(:'book_14_title', 'David Annandale');
+SELECT insert_author(:'book_15_title', 'Steve Parker');
+SELECT insert_author(:'book_16_title', 'Chris Wraight');
+SELECT insert_author(:'book_17_title', 'Chris Wraight');
+SELECT insert_author(:'book_18_title', 'Andy Clark');
+SELECT insert_author(:'book_19_title', 'James Swallow');
+SELECT insert_author(:'book_20_title', 'Guy Haley');
 -- book 21 author
-SELECT join_book_author(:'book_21_title', :'book_21_author_1_full_name');
-SELECT join_book_author(:'book_21_title', :'book_21_author_2_full_name');
-SELECT join_book_author(:'book_21_title', :'book_21_author_3_full_name');
-SELECT join_book_author(:'book_21_title', :'book_21_author_4_full_name');
-SELECT join_book_author(:'book_21_title', :'book_21_author_5_full_name');
-SELECT join_book_author(:'book_21_title', :'book_21_author_6_full_name');
-SELECT join_book_author(:'book_21_title', :'book_21_author_7_full_name');
-SELECT join_book_author(:'book_21_title', :'book_21_author_8_full_name');
-SELECT join_book_author(:'book_21_title', :'book_21_author_9_full_name');
-SELECT join_book_author(:'book_21_title', :'book_21_author_10_full_name');
-SELECT join_book_author(:'book_21_title', :'book_21_author_11_full_name');
-SELECT join_book_author(:'book_21_title', :'book_21_author_12_full_name');
+SELECT insert_author(:'book_21_title', 'Steve Parker');
+SELECT insert_author(:'book_21_title', 'Justin D. Hill');
+SELECT insert_author(:'book_21_title', 'Ian St. Martin');
+SELECT insert_author(:'book_21_title', 'Andy Chambers');
+SELECT insert_author(:'book_21_title', 'Chris Wraight');
+SELECT insert_author(:'book_21_title', 'Nick Kyme');
+SELECT insert_author(:'book_21_title', 'Braden Campbell');
+SELECT insert_author(:'book_21_title', 'Ben Counter');
+SELECT insert_author(:'book_21_title', 'David Annandale');
+SELECT insert_author(:'book_21_title', 'Andy Clark');
+SELECT insert_author(:'book_21_title', 'Gav Thorpe');
+SELECT insert_author(:'book_21_title', 'Anthony Reynolds');
 -- book 22 author
-SELECT join_book_author(:'book_22_title', :'book_22_author_1_full_name');
-SELECT join_book_author(:'book_22_title', :'book_22_author_2_full_name');
-SELECT join_book_author(:'book_22_title', :'book_22_author_3_full_name');
-SELECT join_book_author(:'book_22_title', :'book_22_author_4_full_name');
-SELECT join_book_author(:'book_22_title', :'book_22_author_5_full_name');
-SELECT join_book_author(:'book_22_title', :'book_22_author_6_full_name');
-SELECT join_book_author(:'book_22_title', :'book_22_author_7_full_name');
-SELECT join_book_author(:'book_22_title', :'book_22_author_8_full_name');
-SELECT join_book_author(:'book_22_title', :'book_22_author_9_full_name');
-SELECT join_book_author(:'book_22_title', :'book_22_author_10_full_name');
-SELECT join_book_author(:'book_22_title', :'book_22_author_11_full_name');
-SELECT join_book_author(:'book_22_title', :'book_22_author_12_full_name');
-SELECT join_book_author(:'book_22_title', :'book_22_author_13_full_name');
--- book 23 author
-SELECT join_book_author(:'book_23_title', :'book_23_author_1_full_name');
--- book 24 author
-SELECT join_book_author(:'book_24_title', :'book_24_author_1_full_name');
--- book 25 author
-SELECT join_book_author(:'book_25_title', :'book_25_author_1_full_name');
--- book 26 author
-SELECT join_book_author(:'book_26_title', :'book_26_author_1_full_name');
--- book 27 author
-SELECT join_book_author(:'book_27_title', :'book_27_author_1_full_name');
--- book 28 author
-SELECT join_book_author(:'book_28_title', :'book_28_author_1_full_name');
--- book 29 author
-SELECT join_book_author(:'book_29_title', :'book_29_author_1_full_name');
--- book 30 author
-SELECT join_book_author(:'book_30_title', :'book_30_author_1_full_name');
--- book 31 author
-SELECT join_book_author(:'book_31_title', :'book_31_author_1_full_name');
+SELECT insert_author(:'book_22_title', 'Aaron Dembski-Bowden');
+SELECT insert_author(:'book_22_title', 'David Annandale');
+SELECT insert_author(:'book_22_title', 'Robbie MacNiven');
+SELECT insert_author(:'book_22_title', 'Ben Counter');
+SELECT insert_author(:'book_22_title', 'Steve Lyons');
+SELECT insert_author(:'book_22_title', 'Rob Sanders');
+SELECT insert_author(:'book_22_title', 'C L Werner');
+SELECT insert_author(:'book_22_title', 'Nick Kyme');
+SELECT insert_author(:'book_22_title', 'Andy Smillie');
+SELECT insert_author(:'book_22_title', 'Cavan Scott');
+SELECT insert_author(:'book_22_title', 'Mark Clapham');
+SELECT insert_author(:'book_22_title', 'Lee Lightner');
+SELECT insert_author(:'book_22_title', 'Alec Worley');
+--
+SELECT insert_author(:'book_23_title', 'Peter Fehervari');
+SELECT insert_author(:'book_24_title', 'Guy Haley');
+SELECT insert_author(:'book_25_title', 'Guy Haley');
+SELECT insert_author(:'book_26_title', 'Guy Haley');
+SELECT insert_author(:'book_27_title', 'Nick Kyme');
+SELECT insert_author(:'book_28_title', 'Gav Thorpe');
+SELECT insert_author(:'book_29_title', 'Rachel Harrison');
+SELECT insert_author(:'book_30_title', 'Gav Thorpe');
+SELECT insert_author(:'book_31_title', 'Gav Thorpe');
 
 
 /* --------------------------------------------- UPDATE read_instance --------------------------------------------- */
 -- FUNCTION UPDATE read_instance
 CREATE OR REPLACE FUNCTION update_read_instance(
-  arg_username VARCHAR,
-  arg_book_title VARCHAR,
-  arg_is_reading BOOLEAN,
-  arg_is_finished BOOLEAN,
-  arg_is_dnf BOOLEAN
+    arg_username VARCHAR,
+    arg_book_title VARCHAR,
+    arg_is_reading BOOLEAN,
+    arg_is_finished BOOLEAN,
+    arg_is_dnf BOOLEAN
 )
 RETURNS VOID AS $$
 DECLARE
-  var_reader_id INT = get_reader_id($1);
-  var_book_id INT = get_book_id($2);
-  var_read_instance_id INT = get_read_instance_id($1, $2);
+    var_reader_id INT = get_reader_id($1);
+    var_book_id INT = get_book_id($2);
+    var_read_instance_id INT = get_read_instance_id($1, $2);
 BEGIN
     UPDATE    read_instance
     SET       days_read =       t2.days_read,
@@ -1312,9 +971,9 @@ SELECT update_read_instance(:'username_1', :'book_31_title', TRUE, FALSE, FALSE)
 CREATE OR REPLACE FUNCTION update_reader_book(arg_username VARCHAR, arg_book_title VARCHAR)
 RETURNS VOID AS $$
 DECLARE
-  var_reader_id INT = get_reader_id($1);
-  var_book_id INT = get_book_id($2);
-  var_reader_book_id INT = get_reader_book_id($1, $2);
+    var_reader_id INT = get_reader_id($1);
+    var_book_id INT = get_book_id($2);
+    var_reader_book_id INT = get_reader_book_id($1, $2);
 BEGIN
     UPDATE  reader_book
     SET     is_any_reading =     t2.is_any_reading,
@@ -1366,4 +1025,4 @@ SELECT update_reader_book(:'username_1', :'book_31_title');
 
 
 /* --------------------------------------------- DROP functions --------------------------------------------- */
-DROP FUNCTION get_reader_id, get_book_id, get_author_id, get_reader_book_id, get_read_instance_id, insert_reader, insert_book, insert_reader_book, insert_read_instance, insert_read_entry, insert_author, join_book_author, update_read_instance, update_reader_book;
+DROP FUNCTION get_reader_id, get_book_id, get_author_id, get_reader_book_id, get_read_instance_id, insert_reader, insert_book, insert_reader_book, insert_read_instance, insert_read_entry, insert_author, update_read_instance, update_reader_book;
