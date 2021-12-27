@@ -10,10 +10,10 @@ const queryPostReadInstance = (readerBookId: number) => {
 };
 
 const queryDeleteReadInstance = (readerBookId: number, readInstanceId: number) => {
-  //1. if read_instance isn't the last one, delete read_instance
-  //2. if read_instance is the last one, do not delete read_instance, delete all read_entries associated with the read_instance.
-  //3. update read_instance.
-  //4. update reader_book.
+  //1. if the number of read_instances > 1, delete read_instance.
+  //2. if the number of read_instances === 1, delete read_entries of the read_instance.
+  //3. update read_instance based on read_entry data.
+  //4. update reader_book based on read_instance data.
   return `
     WITH cte AS (
             SELECT COUNT(id) AS count
