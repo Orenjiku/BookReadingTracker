@@ -7,6 +7,7 @@ router.get('/:id/currently_reading', controller.getCurrentlyReading);
 router.get('/:id/finished_reading', controller.getFinishedReading);
 router.get('/:id/daily_reads', controller.getDailyReads);
 
+router.post('/:id/book', controller.postBook);
 router.post('/:id/book/author', controller.postAuthor);
 router.post('/:id/book/read_instance', controller.postReadInstance);
 router.post('/:id/book/read_entry', controller.postReadEntry);
