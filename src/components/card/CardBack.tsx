@@ -160,7 +160,7 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, ind
   };
   //---
 
-  //Handle updating and resetting states
+  //Handle updating and resetting states.
   const inputFunctionsList: {[key: string]: Function[]} = {
     title: [ setTitle, setIsSubmitTitleSuccess, setIsSubmitTitleFail, setTitleFeedbackText ],
     author: [ setNewAuthor, setIsSubmitAuthorSuccess, setIsSubmitAuthorFail, setAuthorFeedbackText ],
@@ -172,6 +172,7 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, ind
     blurb: [ setBlurb, setIsSubmitBlurbSuccess, setIsSubmitBlurbFail, setBlurbFeedbackText ]
   };
 
+  //passed as props to FormLabel component for resetting inputSubmitStates onMouseDown in the input field.
   const resetInputSubmitStates = (input: string) => {
     inputFunctionsList[input][1](false);
     inputFunctionsList[input][2](false);
@@ -181,6 +182,13 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, ind
       inputFunctionsList[input][3]('');
       () => clearTimeout(delayReset);
     }, indicatorTransitionTimer * 2);
+  };
+
+  //used in handleResetAll and Save Button onMouseDown.
+  const resetAllInputSubmitStates = () => {
+    for (let input in inputFunctionsList) {
+      resetInputSubmitStates(input);
+    }
   };
 
   const toggleInputSubmitSuccessState = (input: string) => {
@@ -284,9 +292,7 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, ind
     setEditionDate(bookDetails.edition_date);
     setBookCoverUrl(bookDetails.book_cover_url);
     setBlurb(bookDetails.blurb);
-    for (let input in inputFunctionsList) {
-      resetInputSubmitStates(input);
-    }
+    resetAllInputSubmitStates();
   };
   //---
 
@@ -316,7 +322,7 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, ind
   }, [isSubmitComplete]);
 
   const handleSubmitAll = async () => {
-    //checks if current input value changed from original value before submitInput
+    //checks if current input value changed from original value before submitInput.
     if (title.trim() !== bookDetails.title && title.trim() !== '') {
       await submitTitle(title.trim());
     } else if (title.trim() === '') {
@@ -537,7 +543,7 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, ind
           <MdFlip size={22} className='absolute left-4 cursor-pointer' onClick={() => handleFlip()}/>
           <StyledButton type='button' onClick={handleShowBlurb}>{isShowBlurb ? 'Main' : 'Blurb'}</StyledButton>
           <StyledButton type='button' onClick={handleResetAll}>Reset</StyledButton>
-          <SaveButton type='button' $isStartSubmit={isStartSubmit} $submitHoldTimer={submitHoldTimer} onMouseDown={() => handleStartSubmit()} onMouseUp={() => handleStopSubmit()} onMouseLeave={() => handleStopSubmit()}>
+          <SaveButton type='button' $isStartSubmit={isStartSubmit} $submitHoldTimer={submitHoldTimer} onMouseDown={() => {handleStartSubmit(); resetAllInputSubmitStates()}} onMouseUp={() => handleStopSubmit()} onMouseLeave={() => handleStopSubmit()}>
             <p>Save</p>
             <CgPushChevronDownR className='ml-0.5 current-stroke text-blueGray-600' />
           </SaveButton>
