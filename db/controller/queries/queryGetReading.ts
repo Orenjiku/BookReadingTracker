@@ -1,4 +1,4 @@
-const queryGetReading = (reader_id: string, isReading: boolean) => {
+const queryGetReading = (readerId: string, isReading: boolean) => {
     return `
         SELECT
             COALESCE(json_agg(row_to_json(books_agg)), '[]'::json) AS books
@@ -86,7 +86,7 @@ const queryGetReading = (reader_id: string, isReading: boolean) => {
                     INNER JOIN reader_book AS rb ON r.id = rb.reader_id
                     INNER JOIN book AS b ON rb.book_id = b.id
                 WHERE
-                    r.id = ${reader_id}
+                    r.id = '${readerId}'
                     ${isReading
                         ? 'AND rb.is_any_reading = TRUE'
                         : 'AND rb.is_any_reading = FALSE AND rb.is_any_finished = TRUE'}
