@@ -63,9 +63,10 @@ const TextArea = styled.textarea`
 const FeedbackTextContainer = styled.div<{$isFeedbackText: boolean; $indicatorTransitionTimer: number}>`
   ${tw`absolute whitespace-nowrap -top-2 ml-4 text-xs text-red-500 select-none opacity-0`};
   --duration: ${({ $indicatorTransitionTimer }) => `${$indicatorTransitionTimer}ms`};
-  transition: opacity var(--duration) linear var(--duration);
+  transition: all var(--duration) linear;
   ${({ $isFeedbackText }) => $isFeedbackText && css`
     ${tw`opacity-100`}
+    transition: all var(--duration) linear var(--duration);
   `}
 `;
 
