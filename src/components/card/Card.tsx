@@ -6,6 +6,10 @@ import CardFront from './CardFront';
 import CardBack from './CardBack';
 
 
+interface CardPropsITF {
+  book: BookITF;
+  handleUpdateBookList: Function;
+}
 const CardContainer = styled.div`
   ${tw`relative m-5`};
   --card-width: 360px;
@@ -17,7 +21,7 @@ const CardContainer = styled.div`
   transform-style: preserve-3d;
 `;
 
-const Card = ({ book }: { book: BookITF }) => {
+const Card = ({ book, handleUpdateBookList }: CardPropsITF) => {
   const [ isFlipped, setIsFlipped ] = useState<boolean>(false);
   const handleFlip = () => setIsFlipped(isFlipped => !isFlipped);
   const flipTimer = 600;
@@ -44,7 +48,7 @@ const Card = ({ book }: { book: BookITF }) => {
 
   return (
     <CardContainer>
-      <CardFront bookDetails={bookDetails} author={authorDetails} readerBook={readerBook} isFlipped={isFlipped} flipTimer={flipTimer} indicatorTransitionTimer={indicatorTransitionTimer} handleFlip={handleFlip} handleUpdateReaderBook={handleUpdateReaderBook} />
+      <CardFront bookDetails={bookDetails} author={authorDetails} readerBook={readerBook} isFlipped={isFlipped} flipTimer={flipTimer} indicatorTransitionTimer={indicatorTransitionTimer} handleFlip={handleFlip} handleUpdateReaderBook={handleUpdateReaderBook} handleUpdateBookList={handleUpdateBookList} />
       <CardBack bookDetails={bookDetails} author={authorDetails} readerBookId={readerBook.rb_id} isFlipped={isFlipped} flipTimer={flipTimer} handleFlip={handleFlip} indicatorTransitionTimer={indicatorTransitionTimer} handleUpdateBookDetails={handleUpdateBookDetails} handleUpdateAuthorDetails={handleUpdateAuthorDetails} handleUpdateReaderBook={handleUpdateReaderBook} />
     </CardContainer>
   )

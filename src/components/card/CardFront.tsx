@@ -22,6 +22,7 @@ interface CardFrontPropsITF {
   indicatorTransitionTimer: number;
   handleFlip: Function;
   handleUpdateReaderBook: Function;
+  handleUpdateBookList: Function;
 }
 
 const CardFrontContainer = styled.div<{ $isFlipped: boolean; $flipTimer: number }>`
@@ -153,7 +154,7 @@ const StyledEditIcon = styled(Edit)<{ $isEdit: boolean, $editTimer: number }>`
   `}
 `;
 
-const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, indicatorTransitionTimer, handleFlip, handleUpdateReaderBook }: CardFrontPropsITF) => {
+const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, indicatorTransitionTimer, handleFlip, handleUpdateReaderBook, handleUpdateBookList }: CardFrontPropsITF) => {
   const [ readInstanceList, setReadInstanceList ] = useState(readerBook.read_instance);
   const [ readInstanceIdx, setReadInstanceIdx ] = useState(0);
   const prevReadInstanceLen = usePrevious(readInstanceList.length);
@@ -209,6 +210,7 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, indi
     setOverallAvgDailyRead(updatedOverallDaysRead > 0 ? Math.round(overallPagesRead / updatedOverallDaysRead) : 0);
     setOverallDaysRead(updatedOverallDaysRead);
     setOverallDaysTotal(readInstanceList.reduce((acc, cur) => acc + cur.days_total, 0));
+    console.log(readInstanceList)
     setTimesRead(readInstanceList.reduce((acc, cur) => acc += cur.is_finished ? 1 : 0, 0));
   }, [readInstanceList]);
 
@@ -224,7 +226,7 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, indi
 
       <StyledEditIcon size={22} $isEdit={isEdit} $editTimer={editTimer} onClick={() => handleIsEdit()} />
 
-      <BookImage bookCoverUrl={bookDetails.book_cover_url} isEdit={isEdit} editTimer={editTimer} handleFlip={handleFlip} />
+      <BookImage bookId={bookDetails.b_id} bookCoverUrl={bookDetails.book_cover_url} category={bookDetails.category} isEdit={isEdit} editTimer={editTimer} handleFlip={handleFlip} handleUpdateBookList={handleUpdateBookList} />
 
       <div className='col-start-2 col-end-3 row-start-4 row-end-20 flex flex-col overflow-hidden'>
         <ViewExpandContainer $isExpanded={isExpanded} $expandTimer={expandTimer}>

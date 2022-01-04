@@ -150,7 +150,6 @@ const CompletionSlider = ({ readerBookId, readInstanceId, totalPages, isReading,
       });
       if (response.ok) {
         const result = await response.json();
-        console.log(result)
         handleUpdateReaderBook(result);
       }
     } catch(err) {

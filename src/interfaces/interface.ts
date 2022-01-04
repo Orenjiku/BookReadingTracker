@@ -39,10 +39,10 @@ export interface BookDetailsITF {
   edition_date: string;
   book_cover_url: string;
   blurb: string;
+  category: BookListCategory; //property mapped as props to Card components from routes files.
 }
 
 export interface BookITF extends BookDetailsITF {
   author: string[];
   reader_book: ReaderBookITF;
-  category: BookListCategory; //property mapped as props to Card components from routes files.
 }

@@ -5,6 +5,7 @@ import { ReadEntryITF } from '../../interfaces/interface';
 import useHoldSubmit from '../../hooks/useHoldSubmit';
 import ProgressBar from './ProgressBar';
 import SuccessIndicator from './SuccessIndicator';
+import { CgPushChevronDownR } from 'react-icons/cg';
 import { Trash } from '@styled-icons/bootstrap/Trash';
 
 
@@ -142,7 +143,8 @@ const ReadEntry = ({ readEntry, readerBookId, readInstanceId, isEdit, editTimer,
         <DeleteContainer ref={readEntryDeleteRef} $readEntrySelectTimer={readEntrySelectTimer}>
           <div className='flex items-end'>
             <DeleteButton $isStartSubmit={isStartSubmit} onMouseDown={() => { handleStartSubmit(); resetReadEntrySubmitStates()}} onMouseUp={() => handleStopSubmit()} onMouseLeave={() => handleStopSubmit()}>
-              <p className='mr-2'>Hold for 1 second</p>
+              <CgPushChevronDownR />
+              <p className='mx-2'>Hold for 1 second</p>
               <Trash size={13} />
             </DeleteButton>
           </div>

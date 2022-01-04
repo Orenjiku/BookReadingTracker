@@ -1,45 +1,26 @@
-import React, { useState, useEffect } from 'react';
-// import { Book, ReadEntry } from '../interfaces/interface';
-import { BookITF } from './interfaces/interface';
-import Card from './components/card/Card';
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Header from '../src/components/header/Header';
+import CurrentlyReading from './routes/CurrentlyReading';
+import FinishedReading from './routes/FinishedReading'
 // import image from './assets/scott-webb-UjupleczBOY-unsplash.jpg';
-import image from './assets/pawel-czerwinski-Qiy4hr18aGs-unsplash.jpg';
+// import image from './assets/pawel-czerwinski-Qiy4hr18aGs-unsplash.jpg';
+import image from './assets/pawel-czerwinski-Qiy4hr18aGs-unsplash__1636577204_69.127.44.115.jpg';
 
 const App = () => {
-  const [ currentlyReadingList, setCurrentlyReadingList ] = useState<BookITF[]>([]);
-  // const [ finishedReadingList, setFinishedReadingList ] = useState<BookITF[]>([]);
-
-  useEffect(() => {
-    getCurrentlyReadingList();
-  }, []);
-
-  const getCurrentlyReadingList = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/1/currently_reading');
-      const result = await response.json();
-      setCurrentlyReadingList(result);
-    } catch(err) {
-      console.error(err);
-    }
-  };
-
-  // const getFinishedReadingList = async () => {
-  //   try {
-  //     const response = await fetch('http://localhost:3000/1/currently_reading');
-  //     const result = await response.json();
-  //     setFinishedReadingList(result);
-  //   } catch(err) {
-  //     console.error(err);
-  //   }
-  // };
+  const userId = 1;
 
   return (
-    <div style={{backgroundImage: `url('${image}')`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundPosition: 'center'}}>
-      <div className='flex flex-wrap justify-center' >
-        {currentlyReadingList.map((book) => {
-          return <Card key={`${book.b_id}`} book={book} />
-        })}
-      </div>
+    <div className='min-h-screen' style={{backgroundImage: `url('${image}')`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+      <Header userId={userId} />
+      <main>
+        <Routes>
+          {/* <Route path='/' element={<FinishedReading />} /> */}
+          <Route path='/' element={<Navigate to ='/:id/currentlyReading' />} />
+          <Route path='/:id/currentlyReading' element={<CurrentlyReading />} />
+          <Route path='/:id/finishedReading' element={<FinishedReading />} />
+        </Routes>
+      </main>
     </div>
   )
 };

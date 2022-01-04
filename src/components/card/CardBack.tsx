@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group';
 import { BookDetailsITF } from '../../interfaces/interface';
 import useYOverflow from '../../hooks/useYOverflow';
 import useHoldSubmit from '../../hooks/useHoldSubmit';
-import { StyledButton, SaveButton } from './styled';
+import { StyledButton, HoldDownButton } from './styled';
 import { sortByLastName, isValidDate, getTitleSort } from './utils';
 import FormLabel from './FormLabel';
 import AuthorTag from './AuthorTag';
@@ -176,12 +176,12 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, ind
   const resetInputSubmitStates = (input: string) => {
     inputFunctionsList[input][1](false);
     inputFunctionsList[input][2](false);
-    //setTimeout required to delay reset of feedbackText until after indicator transition in the FormLabel component.
+    //delay reset of feedbackText to show fade out transition.
     let delayReset: ReturnType<typeof setTimeout>;
     delayReset = setTimeout(() => {
       inputFunctionsList[input][3]('');
       () => clearTimeout(delayReset);
-    }, indicatorTransitionTimer * 2);
+    }, indicatorTransitionTimer);
   };
 
   //used in handleResetAll and Save Button onMouseDown.
@@ -230,10 +230,10 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, ind
       setNewAuthorList(prevNewAuthorList => [...prevNewAuthorList, normalizedNewAuthor]);
       setNewAuthor('');
     } else if (normalizedNewAuthor !== '') {
-      setIsSubmitAuthorFail(true);
+      toggleInputSubmitFailState('author');
       setAuthorFeedbackText(authorFeedbackTextOptions.errorDuplicateAuthor);
     } else if (normalizedNewAuthor === '') {
-      setIsSubmitAuthorFail(true);
+      toggleInputSubmitFailState('author');
       setAuthorFeedbackText(authorFeedbackTextOptions.errorEmptyAuthor);
     }
   };
@@ -306,11 +306,11 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, ind
       if (isSubmitTotalPagesSuccess) newBookDetails['total_pages'] = totalPages;
       if (isSubmitPublishedDateSuccess) newBookDetails['published_date'] = publishedDate;
       if (isSubmitEditionDateSuccess) newBookDetails['edition_date'] = editionDate;
-      if (isSubmitBookCoverUrlSuccess) newBookDetails['picture_url'] = bookCoverUrl;
+      if (isSubmitBookCoverUrlSuccess) newBookDetails['book_cover_url'] = bookCoverUrl;
       if (isSubmitBlurbSuccess) newBookDetails['blurb'] = blurb;
       handleUpdateBookDetails(newBookDetails);
 
-      if (isSubmitAuthorSuccess) { //fail operations handled in authorSubmit function.
+      if (isSubmitAuthorSuccess) { //fail operations handled in submitAuthor function.
         handleUpdateAuthorDetails([...authorList, ...newAuthorList]);
         setAuthorList([...authorList, ...newAuthorList]);
         setNewAuthorList([]);
@@ -324,14 +324,16 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, ind
   const handleSubmitAll = async () => {
     //checks if current input value changed from original value before submitInput.
     if (title.trim() !== bookDetails.title && title.trim() !== '') {
-      await submitTitle(title.trim());
+      await submitInput('title', 'title', title.trim());
     } else if (title.trim() === '') {
       setTitleFeedbackText(titleFeedbackTextOptions.errorEmptyTitle);
+      toggleInputSubmitFailState('title');
     }
     if (format.trim() !== bookDetails.book_format) await submitInput('format', 'book_format', format.trim());
-    if (totalPages !== bookDetails.total_pages) await submitTotalPages(readerBookId, totalPages);
+    if (totalPages !== bookDetails.total_pages) await submitInput('totalPages', 'total_pages', totalPages);
     if (newAuthorList.length > 0 || deleteAuthorList.length > 0) await submitAuthor({newAuthorList, deleteAuthorList});
-    if (publishedDate !== bookDetails.published_date) isValidDate(publishedDate) ? await submitInput('publishedDate', 'published_date', publishedDate) : toggleInputSubmitFailState('publishedDate');
+    if (publishedDate !== bookDetails.published_date)
+      isValidDate(publishedDate) ? await submitInput('publishedDate', 'published_date', publishedDate) : toggleInputSubmitFailState('publishedDate');
     if (editionDate !== bookDetails.edition_date)
       isValidDate(editionDate) ? await submitInput('editionDate', 'edition_date', editionDate) : toggleInputSubmitFailState('editionDate');
     if (bookCoverUrl.trim() !== bookDetails.book_cover_url) await submitInput('bookCoverUrl', 'book_cover_url', bookCoverUrl.trim());
@@ -339,65 +341,34 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, ind
     setIsSubmitComplete(true); //wait for all API calls, then trigger useEffect to update Card state.
   };
 
-  //handles API request for all inputs except for totalPages and author.
+  //handles API request for all inputs except for author.
   const submitInput = async (inputName: string, resourceName: string, inputValue: string | number) => {
+    const titleSort = getTitleSort(title.trim());
     try {
       const response = await fetch(`http://localhost:3000/1/book/${resourceName}`, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({bookId: bookDetails.b_id, [inputName]: inputValue})
+        body: JSON.stringify({
+          bookId: bookDetails.b_id,
+          [inputName]: inputValue,
+          ...(inputName === 'title' && {titleSort}),
+          ...(inputName === 'totalPages' && {readerBookId})
+        })
       });
       if (response.ok) {
+        if (inputName === 'totalPages') {
+          const result = await response.json();
+          handleUpdateReaderBook(result);
+        }
         toggleInputSubmitSuccessState(inputName);
       } else {
+        const err = await response.json();
+        err === `Key (title_sort)=(${titleSort}) already exists.` && setTitleFeedbackText(titleFeedbackTextOptions.errorDuplicateTitle);
         toggleInputSubmitFailState(inputName);
       }
     } catch(err) {
       console.error(err);
       toggleInputSubmitFailState(inputName);
-    }
-  };
-  //---
-
-  const submitTitle = async (title: string) => {
-    const titleSort = getTitleSort(title);
-    try {
-      const response = await fetch(`http://localhost:3000/1/book/title`, {
-        method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({bookId: bookDetails.b_id, title, titleSort})
-      });
-      if (response.ok) {
-        toggleInputSubmitSuccessState('title');
-      } else {
-        const err = await response.json();
-        if (err === `Key (title)=(${title}) already exists.`) setTitleFeedbackText(titleFeedbackTextOptions.errorDuplicateTitle);
-        toggleInputSubmitFailState('title');
-      }
-    } catch(err) {
-      console.error(err);
-      toggleInputSubmitFailState('title');
-    }
-  }
-
-  //totalPages requires separate submit function to handle readerBook json response.
-  const submitTotalPages = async (readerBookId: number, totalPages: number) => {
-    try {
-      const response = await fetch(`http://localhost:3000/1/book/total_pages`, {
-        method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({bookId: bookDetails.b_id, readerBookId, totalPages})
-      });
-      if (response.ok) {
-        const result = await response.json();
-        handleUpdateReaderBook(result);
-        toggleInputSubmitSuccessState('totalPages');
-      } else {
-        toggleInputSubmitFailState('totalPages');
-      }
-    } catch(err) {
-      console.error(err);
-      toggleInputSubmitFailState('totalPages');
     }
   };
   //---
@@ -518,7 +489,7 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, ind
 
                 <div className='flex gap-x-2 my-1'>
                   <FormLabel type='text' label={'Date Published'} name={'publishedDate'} value={publishedDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitPublishedDateSuccess, isSubmitPublishedDateFail]} feedbackText={publishedDateFeedbackText} indicatorTransitionTimer={indicatorTransitionTimer} handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
-                  <FormLabel type='text' label={'Edition Published'} name={'editionDate'} value={editionDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitEditionDateSuccess, isSubmitEditionDateFail]} feedbackText={editionDateFeedbackText} indicatorTransitionTimer={indicatorTransitionTimer} handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
+                  <FormLabel type='text' label={'Edition Pubished'} name={'editionDate'} value={editionDate} placeholder={'yyyy-mm-dd'} submitStatus={[isSubmitEditionDateSuccess, isSubmitEditionDateFail]} feedbackText={editionDateFeedbackText} indicatorTransitionTimer={indicatorTransitionTimer} handleInputChange={handleInputChange} handleReset={resetInputSubmitStates} />
                 </div>
 
                 <div className='mt-1 mb-2'>
@@ -543,10 +514,10 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, ind
           <MdFlip size={22} className='absolute left-4 cursor-pointer' onClick={() => handleFlip()}/>
           <StyledButton type='button' onClick={handleShowBlurb}>{isShowBlurb ? 'Main' : 'Blurb'}</StyledButton>
           <StyledButton type='button' onClick={handleResetAll}>Reset</StyledButton>
-          <SaveButton type='button' $isStartSubmit={isStartSubmit} $submitHoldTimer={submitHoldTimer} onMouseDown={() => {handleStartSubmit(); resetAllInputSubmitStates()}} onMouseUp={() => handleStopSubmit()} onMouseLeave={() => handleStopSubmit()}>
+          <HoldDownButton type='button' $blue $isStartSubmit={isStartSubmit} $submitHoldTimer={submitHoldTimer} onMouseDown={() => {resetAllInputSubmitStates(); handleStartSubmit();}} onMouseUp={() => handleStopSubmit()} onMouseLeave={() => handleStopSubmit()}>
             <p>Save</p>
-            <CgPushChevronDownR className='ml-0.5 current-stroke text-blueGray-600' />
-          </SaveButton>
+            <CgPushChevronDownR className='ml-1 current-stroke text-blueGray-600' />
+          </HoldDownButton>
         </div>
 
       </Form>

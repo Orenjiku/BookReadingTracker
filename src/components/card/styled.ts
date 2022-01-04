@@ -40,20 +40,22 @@ const StyledButton = styled.button`
 `;
 
 //SaveButton active bg color should match StyledButton hover bg color to prevent bg color change on active. On hold slide bar will indicate active.
-const SaveButton = styled(StyledButton)<{$isStartSubmit?: boolean; $submitHoldTimer?: number}>`
+const HoldDownButton = styled(StyledButton)<{$isStartSubmit?: boolean; $submitHoldTimer?: number; $blue?: true; $red?: true}>`
   &:active {
     ${tw`bg-blueGray-400 bg-opacity-30`};
   }
   &::after {
     content: '';
     ${tw`absolute h-full w-0 left-0 bg-teal-500 bg-opacity-40`};
+    ${({ $blue }) => $blue && css`${tw`bg-teal-500`};`};
+    ${({ $red }) => $red && css`${tw`bg-red-500`};`};
     z-index: -1;
     transition: all 100ms linear;
     ${({ $isStartSubmit, $submitHoldTimer }) => $isStartSubmit && css`
       ${tw`h-full w-full`};
       transition: all ${$submitHoldTimer}ms linear;
-    `}
+    `};
   }
 `;
 
-export { StyledText, StyledOverflowText, StyledButton, SaveButton }
+export { StyledText, StyledOverflowText, StyledButton, HoldDownButton }
