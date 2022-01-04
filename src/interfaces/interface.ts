@@ -27,18 +27,22 @@ export interface ReaderBookITF {
   read_instance: ReadInstanceITF[];
 }
 
-export interface BookITF extends BookDetailsITF {
-  author: string[];
-  reader_book: ReaderBookITF;
-}
+export type BookListCategory = 'isReading' | 'isFinished' | 'isDNF' | 'isCollection';
 
 export interface BookDetailsITF {
   b_id: number;
   title: string;
+  titleSort: string;
   book_format: string;
   total_pages: number;
   published_date: string;
   edition_date: string;
   book_cover_url: string;
   blurb: string;
+}
+
+export interface BookITF extends BookDetailsITF {
+  author: string[];
+  reader_book: ReaderBookITF;
+  category: BookListCategory; //property mapped as props to Card components from routes files.
 }
