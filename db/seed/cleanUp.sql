@@ -1,0 +1,2 @@
+/* --------------------------------------------- DROP functions --------------------------------------------- */
+DROP FUNCTION get_reader_id, get_book_id, get_author_id, get_reader_book_id, get_read_instance_id, insert_reader, insert_book, insert_reader_book, insert_read_instance, insert_read_entry, insert_author, update_read_instance, update_reader_book;

@@ -7,5 +7,9 @@ CREATE DATABASE :my_db;
 \c :my_db
 
 -- run sql script files
-\i ./create.sql;
-\i ./insert.sql;
+\i ./createTables.sql;
+\i ./createFunctions.sql;
+\i ./insertReader.sql;
+\i ./insert2021.sql;
+\i ./insert2022.sql;
+\i ./cleanUp.sql;

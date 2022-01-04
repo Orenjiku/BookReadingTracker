@@ -1,94 +1,4 @@
-/* --------------------------------------------- CLEAR EXISTING TABLES --------------------------------------------- */
-TRUNCATE TABLE reader, book, reader_book, read_instance, read_entry, book_author, author CASCADE;
-
-
-/* --------------------------------------------- HELPER FUNCTIONS --------------------------------------------- */
--- FUNCTION get_reader_id
-CREATE OR REPLACE FUNCTION get_reader_id(arg_username VARCHAR)
-RETURNS INT AS $$
-BEGIN
-  RETURN (SELECT reader.id FROM reader WHERE reader.username=$1);
-END;
-$$ LANGUAGE plpgsql;
-
--- FUNCTION get_book_id
-CREATE OR REPLACE FUNCTION get_book_id(arg_book_title VARCHAR)
-RETURNS INT AS $$
-BEGIN
-  RETURN (SELECT id FROM book WHERE title=$1);
-END;
-$$ LANGUAGE plpgsql;
-
--- FUNCTION get_author_id
-CREATE OR REPLACE FUNCTION get_author_id(arg_author_full_name VARCHAR)
-RETURNS INT AS $$
-BEGIN
-  RETURN (SELECT a.id FROM author AS a WHERE a.full_name=$1);
-END;
-$$ LANGUAGE plpgsql;
-
--- FUNCTION get_reader_book_id (JOIN table)
-CREATE OR REPLACE FUNCTION get_reader_book_id(arg_username VARCHAR, arg_book_title VARCHAR)
-RETURNS INT AS $$
-BEGIN
-  RETURN (
-    SELECT r.id FROM reader_book AS r
-    WHERE r.reader_id=get_reader_id($1)
-    AND r.book_id=get_book_id($2)
-  );
-END;
-$$ LANGUAGE plpgsql;
-
--- FUNCTION get_read_instance_id
-CREATE OR REPLACE FUNCTION get_read_instance_id(arg_username VARCHAR, arg_book_title VARCHAR)
-RETURNS INT AS $$
-BEGIN
-  RETURN (
-    SELECT ri.id FROM read_instance AS ri
-    WHERE ri.reader_book_id=get_reader_book_id($1, $2)
-  );
-END;
-$$ LANGUAGE plpgsql;
-
-/* --------------------------------------------- INSERT reader --------------------------------------------- */
--- FUNCTION insert_reader
-CREATE OR REPLACE FUNCTION insert_reader(arg_username VARCHAR, arg_first_name VARCHAR, arg_last_name VARCHAR, email VARCHAR)
-RETURNS VOID AS $$
-BEGIN
-  INSERT INTO reader (username, first_name, last_name, email)
-  VALUES ($1, $2, $3, $4);
-END;
-$$ LANGUAGE plpgsql;
-
--- DECLARE reader information
-\set username_1 'orenjiku'
-\set first_name_1 'william'
-\set last_name_1 'chang'
-\set email_1 'wdchang86@gmail.com'
-
--- INSERT data using FUNCTION insert_reader and DECLARED reader variables as arguments
-SELECT insert_reader(:'username_1', :'first_name_1', :'last_name_1', :'email_1');
-
-
 /* --------------------------------------------- INSERT book --------------------------------------------- */
--- FUNCTION insert_book
-CREATE OR REPLACE FUNCTION insert_book(
-  arg_title VARCHAR,
-  arg_title_sort VARCHAR,
-  arg_published_date DATE,
-  arg_edition_date DATE,
-  arg_book_format VARCHAR,
-  arg_total_pages INT,
-  arg_blurb TEXT,
-  arg_book_cover_url VARCHAR
-)
-RETURNS VOID AS $$
-BEGIN
-  INSERT INTO book (title, title_sort, published_date, edition_date, book_format, total_pages, blurb, book_cover_url)
-  VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
-END;
-$$ LANGUAGE plpgsql;
-
 -- DECLARE book information
 \set book_1_title 'Xenos'
 \set book_1_title_sort 'xenos'
@@ -369,6 +279,24 @@ $$ LANGUAGE plpgsql;
 \set book_31_blurb 'The Wild Riders of Saim Hann craftworld are renowned for their skill and daring, none more so than their headstrong Wild Lord, Nuadhu Fireheart. Having been approached by a representative of Yvraine, emissary of the Whispering God, Ynnead, Nuadhu has unwittingly awoken a slumbering threat – a tomb world of the aeons-old necrontyr. Now, Clan Fireheart must seek alliance with the Ynnari in order to combat the threat to their craftworld, and preserve their honour and the future of the family. The two forces return to Agarimethea to destroy the necrontyr before their strength becomes unassailable. But for what other purpose does Yvraine accompany Nuadhu and his kin, and what exactly is her interest in Naiall Fireheart, the ailing chieftain of the clan?'
 \set book_31_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1541808156l/42740946._SY475_.jpg'
 
+\set book_32_title 'The Antisocial Network: The True Story of a Ragtag of Amateur Investors, Gamers, and Internet Trolls Who Brought Wall Street to Its Knees'
+\set book_32_title_sort 'antisocial network: the true story of a ragtag of amateur investors, gamers, and internet trolls who brought wall street to its knees, the'
+\set book_32_published_date '2021/09/07'
+\set book_32_edition_date '2021/09/07'
+\set book_32_book_format 'Hardcover'
+\set book_32_total_pages 288
+\set book_32_blurb 'THE ANTISOCIAL NETWORK is the wild, true story of the subreddit WallStreetBets, a loosely affiliated group of private investors and internet trolls who took down one of the biggest hedge funds on Wall Street, and in so doing, fired the first shot in a revolution that threatens to upend the financial establishment. Told with deep access, from multiple intersecting angles, it examines the culmination of a populist movement that began with the intersection of social media and the growth of simplified, democratizing financial portals -- represented by the biggest upstart in the business, RobinHood, and its millions of mostly millennial devotees. \n\nThe unlikely focus of the battle: GameStop, a flailing brick and mortar dinosaur catering to teenagers and outsiders, that had somehow outlived forbearers like Blockbuster Video and Petsmart as the world rapidly moved online. The story comes to a head in a wild battle between Melvin Capital, a 13-billion-dollar hedge fund, one of the most respected and staid funds on the Street, and a disparate group of amateur day traders, video game nuts, and internet trolls on a subreddit calling itself WallStreetBets. At first, the subreddit was a joke -- a meme-filled, freewheeling place to share shoot-the-moon investment tips, laugh about big losses, and diamond hand emojis. Until some members noticed an opportunity -- and rode a rocket ship to tens of millions of dollars in earnings overnight. \n\nWith insider sources and testimonies from inside WallStreetBets, GameStop, the architects of Robinhood, Melvin Capital, and more, New York Times bestselling author Ben Mezrich brings to life one of the most striking, can''t-make-this-up moments in financial history.'
+\set book_32_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1626120233l/57796397.jpg'
+
+\set book_33_title 'A Shot to Save the World: The Inside Story of the Life-or-Death Race for a COVID-19 Vaccine'
+\set book_33_title_sort 'a shot to save the world: the inside story of the life-or-death race for a covid-19 vaccine'
+\set book_33_published_date '2021/10/26'
+\set book_33_edition_date '2021/10/26'
+\set book_33_book_format 'Hardcover'
+\set book_33_total_pages 384
+\set book_33_blurb 'Few were ready when a mysterious respiratory illness emerged in Wuhan, China in January 2020. Politicians, government officials, business leaders, and public-health professionals were unprepared for the most devastating pandemic in a century. Many of the world’s biggest drug and vaccine makers were slow to react or couldn’t muster an effective response. \n\nIt was up to a small group of unlikely and untested scientists and executives to save civilization. A French businessman dismissed by many as a fabulist. A Turkish immigrant with little virus experience. A quirky Midwesterner obsessed with insect cells. A Boston scientist employing questionable techniques. A British scientist despised by his peers. Far from the limelight, each had spent years developing innovative vaccine approaches. Their work was met with skepticism and scorn. By 2020, these individuals had little proof of progress. Yet they and their colleagues wanted to be the ones to stop the virus holding the world hostage. They scrambled to turn their life’s work into life-saving vaccines in a matter of months, each gunning to make the big breakthrough—and to beat each other for the glory that a vaccine guaranteed. \n\nA #1 New York Times bestselling author and award-winning Wall Street Journal investigative journalist, Zuckerman takes us inside the top-secret laboratories, corporate clashes, and high-stakes government negotiations that led to effective shots. Deeply reported and endlessly gripping, this is a dazzling, blow-by-blow chronicle of the most consequential scientific breakthrough of our time. It’s a story of courage, genius, and heroism. It’s also a tale of heated rivalries, unbridled ambitions, crippling insecurities, and unexpected drama. A Shot to Save the World is the story of how science saved the world.'
+\set book_33_book_cover_url 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1629113330l/58542860.jpg'
+
 -- INSERT book using previously declared variables
 SELECT insert_book(:'book_1_title', :'book_1_title_sort', :'book_1_published_date', :'book_1_edition_date', :'book_1_book_format', :'book_1_total_pages', :'book_1_blurb', :'book_1_book_cover_url');
 SELECT insert_book(:'book_2_title', :'book_2_title_sort', :'book_2_published_date', :'book_2_edition_date', :'book_2_book_format', :'book_2_total_pages', :'book_2_blurb', :'book_2_book_cover_url');
@@ -401,21 +329,10 @@ SELECT insert_book(:'book_28_title', :'book_28_title_sort', :'book_28_published_
 SELECT insert_book(:'book_29_title', :'book_29_title_sort', :'book_29_published_date', :'book_29_edition_date', :'book_29_book_format', :'book_29_total_pages', :'book_29_blurb', :'book_29_book_cover_url');
 SELECT insert_book(:'book_30_title', :'book_30_title_sort', :'book_30_published_date', :'book_30_edition_date', :'book_30_book_format', :'book_30_total_pages', :'book_30_blurb', :'book_30_book_cover_url');
 SELECT insert_book(:'book_31_title', :'book_31_title_sort', :'book_31_published_date', :'book_31_edition_date', :'book_31_book_format', :'book_31_total_pages', :'book_31_blurb', :'book_31_book_cover_url');
+SELECT insert_book(:'book_32_title', :'book_32_title_sort', :'book_32_published_date', :'book_32_edition_date', :'book_32_book_format', :'book_32_total_pages', :'book_32_blurb', :'book_32_book_cover_url');
 
 
 /* --------------------------------------------------- INSERT reader_book --------------------------------------------------- */
--- FUNCTION insert_reader_book
-CREATE OR REPLACE FUNCTION insert_reader_book(arg_username VARCHAR, arg_book_title VARCHAR)
-RETURNS VOID AS $$
-DECLARE
-  var_reader_id INT = get_reader_id($1);
-  var_book_id INT = get_book_id($2);
-BEGIN
-  INSERT INTO reader_book (reader_id, book_id)
-  VALUES (var_reader_id, var_book_id);
-END;
-$$ LANGUAGE plpgsql;
-
 -- INSERT relationship between reader and book
 SELECT insert_reader_book(:'username_1', :'book_1_title');
 SELECT insert_reader_book(:'username_1', :'book_2_title');
@@ -448,20 +365,11 @@ SELECT insert_reader_book(:'username_1', :'book_28_title');
 SELECT insert_reader_book(:'username_1', :'book_29_title');
 SELECT insert_reader_book(:'username_1', :'book_30_title');
 SELECT insert_reader_book(:'username_1', :'book_31_title');
+SELECT insert_reader_book(:'username_1', :'book_32_title');
+SELECT insert_reader_book(:'username_1', :'book_33_title');
 
 
 /* --------------------------------------------- INSERT read_instance --------------------------------------------- */
--- FUNCTION insert_read_instance
-CREATE OR REPLACE FUNCTION insert_read_instance(arg_username VARCHAR, arg_book_title VARCHAR)
-RETURNS VOID AS $$
-DECLARE
-    var_reader_book_id INT = get_reader_book_id($1, $2);
-BEGIN
-    INSERT INTO read_instance (reader_book_id)
-    VALUES (var_reader_book_id);
-END;
-$$ LANGUAGE plpgsql;
-
 -- INSERT relationship between reader_book and read_instance
 SELECT insert_read_instance(:'username_1', :'book_1_title');
 SELECT insert_read_instance(:'username_1', :'book_2_title');
@@ -494,36 +402,11 @@ SELECT insert_read_instance(:'username_1', :'book_28_title');
 SELECT insert_read_instance(:'username_1', :'book_29_title');
 SELECT insert_read_instance(:'username_1', :'book_30_title');
 SELECT insert_read_instance(:'username_1', :'book_31_title');
+SELECT insert_read_instance(:'username_1', :'book_32_title');
+SELECT insert_read_instance(:'username_1', :'book_33_title');
 
 
 /* --------------------------------------------- INSERT read_entry --------------------------------------------- */
---FUNCTION insert_read_entry
-CREATE OR REPLACE FUNCTION insert_read_entry(arg_username VARCHAR, arg_book_title VARCHAR, arg_date_read TIMESTAMP, arg_current_page INT, arg_total_pages INT)
-RETURNS VOID AS $$
-DECLARE
-    var_read_instance_id INT = get_read_instance_id($1, $2);
-BEGIN
-    WITH prev_read_entry AS (
-        SELECT COALESCE(
-              (SELECT     current_page
-              FROM        read_entry AS re
-              INNER JOIN  read_instance AS ri
-              ON          re.read_instance_id=var_read_instance_id
-              WHERE       re.date_read < arg_date_read
-              AND         ri.id = var_read_instance_id
-              ORDER BY    re.date_read DESC
-              LIMIT 1
-        ), 0) AS current_page)
-    INSERT INTO read_entry (date_read, pages_read, current_page, current_percent, read_instance_id)
-        (SELECT     arg_date_read,
-                    arg_current_page - pre.current_page,
-                    arg_current_page,
-                    TRUNC(arg_current_page::DECIMAL / arg_total_pages * 100, 2),
-                    var_read_instance_id
-        FROM        prev_read_entry AS pre);
-END;
-$$ LANGUAGE plpgsql;
-
 -- INSERT read_entry data
 -- INSERT book_1
 SELECT insert_read_entry(:'username_1', :'book_1_title', '2021-05-29', 69, :'book_1_total_pages');
@@ -564,7 +447,6 @@ SELECT insert_read_entry(:'username_1', :'book_4_title', '2021-06-26', 880, :'bo
 -- INSERT book_5
 SELECT insert_read_entry(:'username_1', :'book_5_title', '2021-06-27', 210, :'book_5_total_pages');
 SELECT insert_read_entry(:'username_1', :'book_5_title', '2021-06-28', 312, :'book_5_total_pages');
-SELECT insert_read_entry(:'username_1', :'book_5_title', '2021-06-29', 651, :'book_5_total_pages');
 SELECT insert_read_entry(:'username_1', :'book_5_title', '2021-06-29', 720, :'book_5_total_pages');
 
 -- INSERT book_6
@@ -796,32 +678,15 @@ SELECT insert_read_entry(:'username_1', :'book_31_title', '2021-12-25', 259, :'b
 SELECT insert_read_entry(:'username_1', :'book_31_title', '2021-12-26', 307, :'book_31_total_pages');
 SELECT insert_read_entry(:'username_1', :'book_31_title', '2021-12-27', 384, :'book_31_total_pages');
 
+-- INSERT book_32
+SELECT insert_read_entry(:'username_1', :'book_32_title', '2021-12-29', 288, :'book_32_total_pages');
+
+-- INSERT book_33
+SELECT insert_read_entry(:'username_1', :'book_33_title', '2021-12-30', 211, :'book_33_total_pages');
+SELECT insert_read_entry(:'username_1', :'book_33_title', '2021-12-31', 384, :'book_33_total_pages');
+
 
 /* --------------------------------------------- INSERT author --------------------------------------------- */
-CREATE OR REPLACE FUNCTION insert_author(arg_book_title VARCHAR, arg_full_name VARCHAR)
-RETURNS VOID AS $$
-DECLARE
-    var_book_id INT = get_book_id($1);
-    var_author_id INT;
-    var_first_name VARCHAR;
-    var_middle_name VARCHAR;
-    var_last_name VARCHAR;
-BEGIN
-    SELECT id INTO var_author_id FROM author WHERE author.full_name=arg_full_name;
-    IF NOT FOUND THEN
-        var_first_name = (regexp_matches(arg_full_name, '^([^\s]+)'))[1];
-        var_middle_name = (regexp_matches(arg_full_name, '^[^\s]+\s(.+)\s[^\s]+$'))[1];
-        IF var_middle_name IS NULL THEN
-            var_last_name = (regexp_matches(arg_full_name, '\s(.+)$'))[1];
-        ELSE
-            var_last_name = (regexp_matches(arg_full_name, '^[^\s]+\s.+\s(.+)$'))[1];
-        END IF;
-        INSERT INTO author (full_name, first_name, middle_name, last_name) VALUES (arg_full_name, var_first_name, var_middle_name, var_last_name) RETURNING id INTO var_author_id;
-    END IF;
-    INSERT INTO book_author (book_id, author_id) VALUES (var_book_id, var_author_id);
-END;
-$$ LANGUAGE plpgsql;
-
 -- INSERT author and INSERT book_author tables
 SELECT insert_author(:'book_1_title', 'Dan Abnett');
 SELECT insert_author(:'book_2_title', 'Dan Abnett');
@@ -892,45 +757,11 @@ SELECT insert_author(:'book_28_title', 'Gav Thorpe');
 SELECT insert_author(:'book_29_title', 'Rachel Harrison');
 SELECT insert_author(:'book_30_title', 'Gav Thorpe');
 SELECT insert_author(:'book_31_title', 'Gav Thorpe');
+SELECT insert_author(:'book_32_title', 'Ben Mezrich');
+SELECT insert_author(:'book_33_title', 'Gregory Zuckerman');
 
 
 /* --------------------------------------------- UPDATE read_instance --------------------------------------------- */
--- FUNCTION UPDATE read_instance
-CREATE OR REPLACE FUNCTION update_read_instance(
-    arg_username VARCHAR,
-    arg_book_title VARCHAR,
-    arg_is_reading BOOLEAN,
-    arg_is_finished BOOLEAN,
-    arg_is_dnf BOOLEAN
-)
-RETURNS VOID AS $$
-DECLARE
-    var_reader_id INT = get_reader_id($1);
-    var_book_id INT = get_book_id($2);
-    var_read_instance_id INT = get_read_instance_id($1, $2);
-BEGIN
-    UPDATE    read_instance
-    SET       days_read =       t2.days_read,
-              days_total =      t2.days_total,
-              pages_read =      t2.pages_read,
-              max_daily_read =  (SELECT   COALESCE(MAX(daily_read.daily_pages_read), 0)
-                                FROM      (SELECT   SUM(pages_read) AS daily_pages_read
-                                          FROM      read_entry AS re
-                                          WHERE     re.read_instance_id = var_read_instance_id
-                                          GROUP     BY Date(re.date_read)) AS daily_read),
-              is_reading =      arg_is_reading,
-              is_finished =     arg_is_finished,
-              is_dnf =          arg_is_dnf
-    FROM      (SELECT     COUNT(DISTINCT Date(re.date_read)) AS days_read,
-                          COALESCE(MAX(Date(re.date_read)) - MIN(Date(re.date_read)) + 1, 0) AS days_total,
-                          COALESCE(SUM(re.pages_read), 0) AS pages_read
-              FROM        read_entry AS re
-              WHERE       re.read_instance_id = var_read_instance_id) AS t2
-    WHERE     read_instance.id = var_read_instance_id;
-END;
-$$ LANGUAGE plpgsql;
-
-
 -- UPDATE read_instance.is_finished to true
 SELECT update_read_instance(:'username_1', :'book_1_title', FALSE, TRUE, FALSE);
 SELECT update_read_instance(:'username_1', :'book_2_title', FALSE, TRUE, FALSE);
@@ -961,36 +792,13 @@ SELECT update_read_instance(:'username_1', :'book_26_title', FALSE, TRUE, FALSE)
 SELECT update_read_instance(:'username_1', :'book_27_title', FALSE, TRUE, FALSE);
 SELECT update_read_instance(:'username_1', :'book_28_title', FALSE, TRUE, FALSE);
 SELECT update_read_instance(:'username_1', :'book_29_title', FALSE, TRUE, FALSE);
--- UPDATE read_instance.is_reading to true
-SELECT update_read_instance(:'username_1', :'book_30_title', TRUE, FALSE, FALSE);
-SELECT update_read_instance(:'username_1', :'book_31_title', TRUE, FALSE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_30_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_31_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_32_title', FALSE, TRUE, FALSE);
+SELECT update_read_instance(:'username_1', :'book_33_title', FALSE, TRUE, FALSE);
 
 
 /* --------------------------------------------- UPDATE reader_book  --------------------------------------------- */
--- FUNCTION UPDATE reader_book
-CREATE OR REPLACE FUNCTION update_reader_book(arg_username VARCHAR, arg_book_title VARCHAR)
-RETURNS VOID AS $$
-DECLARE
-    var_reader_id INT = get_reader_id($1);
-    var_book_id INT = get_book_id($2);
-    var_reader_book_id INT = get_reader_book_id($1, $2);
-BEGIN
-    UPDATE  reader_book
-    SET     is_any_reading =     t2.is_any_reading,
-            is_any_finished =    t2.is_any_finished,
-            is_all_dnf =         t2.is_any_dnf
-    FROM (SELECT  bool_or(ri.is_reading) AS is_any_reading,
-                  bool_or(ri.is_finished) AS is_any_finished,
-                  bool_and(ri.is_dnf) AS is_any_dnf
-                  FROM read_instance AS ri
-                  INNER JOIN reader_book AS rb
-                  ON ri.reader_book_id = rb.id
-                  AND rb.id = var_reader_book_id) AS t2
-    WHERE reader_book.id = var_reader_book_id;
-END;
-$$ LANGUAGE plpgsql;
-
-
 SELECT update_reader_book(:'username_1', :'book_1_title');
 SELECT update_reader_book(:'username_1', :'book_2_title');
 SELECT update_reader_book(:'username_1', :'book_3_title');
@@ -1022,7 +830,5 @@ SELECT update_reader_book(:'username_1', :'book_28_title');
 SELECT update_reader_book(:'username_1', :'book_29_title');
 SELECT update_reader_book(:'username_1', :'book_30_title');
 SELECT update_reader_book(:'username_1', :'book_31_title');
-
-
-/* --------------------------------------------- DROP functions --------------------------------------------- */
-DROP FUNCTION get_reader_id, get_book_id, get_author_id, get_reader_book_id, get_read_instance_id, insert_reader, insert_book, insert_reader_book, insert_read_instance, insert_read_entry, insert_author, update_read_instance, update_reader_book;
+SELECT update_reader_book(:'username_1', :'book_32_title');
+SELECT update_reader_book(:'username_1', :'book_33_title');

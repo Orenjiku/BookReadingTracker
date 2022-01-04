@@ -2,6 +2,8 @@
 CREATE TABLE reader (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_reader PRIMARY KEY,
   username VARCHAR CONSTRAINT uq_reader_username UNIQUE NOT NULL,
+  user_password VARCHAR NOT NULL,
+  user_token VARCHAR,
   email VARCHAR CONSTRAINT uq_reader_email UNIQUE NOT NULL,
   first_name VARCHAR NOT NULL,
   middle_name VARCHAR DEFAULT '',
@@ -12,8 +14,8 @@ CREATE INDEX ix_reader_username ON reader (username);
 
 CREATE TABLE book (
   id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_book PRIMARY KEY,
-  title VARCHAR CONSTRAINT uq_book_title UNIQUE NOT NULL,
-  title_sort VARCHAR NOT NULL,
+  title VARCHAR NOT NULL,
+  title_sort VARCHAR CONSTRAINT uq_book_title_sort UNIQUE NOT NULL,
   book_format VARCHAR,
   total_pages INT DEFAULT 0,
   published_date DATE,
