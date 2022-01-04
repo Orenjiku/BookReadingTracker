@@ -330,6 +330,7 @@ SELECT insert_book(:'book_29_title', :'book_29_title_sort', :'book_29_published_
 SELECT insert_book(:'book_30_title', :'book_30_title_sort', :'book_30_published_date', :'book_30_edition_date', :'book_30_book_format', :'book_30_total_pages', :'book_30_blurb', :'book_30_book_cover_url');
 SELECT insert_book(:'book_31_title', :'book_31_title_sort', :'book_31_published_date', :'book_31_edition_date', :'book_31_book_format', :'book_31_total_pages', :'book_31_blurb', :'book_31_book_cover_url');
 SELECT insert_book(:'book_32_title', :'book_32_title_sort', :'book_32_published_date', :'book_32_edition_date', :'book_32_book_format', :'book_32_total_pages', :'book_32_blurb', :'book_32_book_cover_url');
+SELECT insert_book(:'book_33_title', :'book_33_title_sort', :'book_33_published_date', :'book_33_edition_date', :'book_33_book_format', :'book_33_total_pages', :'book_33_blurb', :'book_33_book_cover_url');
 
 
 /* --------------------------------------------------- INSERT reader_book --------------------------------------------------- */
