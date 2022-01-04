@@ -1,4 +1,4 @@
-const queryDailyReads = (reader_id: string) => {
+const queryDailyReads = () => {
     return `
         SELECT
             DATE(outer_re.date_read),
@@ -29,7 +29,7 @@ const queryDailyReads = (reader_id: string) => {
             INNER JOIN reader_book AS outer_rb ON outer_ri.reader_book_id = outer_rb.id
             INNER JOIN book AS outer_b ON outer_rb.book_id = outer_b.id
         WHERE
-            outer_rb.reader_id = ${reader_id}
+            outer_rb.reader_id = $1
         GROUP BY
             outer_re.date_read
         ORDER BY

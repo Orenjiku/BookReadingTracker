@@ -1,4 +1,4 @@
-const queryGetReading = (readerId: string, isReading: boolean) => {
+const queryGetReading = (category: 'isReading' | 'isFinished' | 'isDNF' | 'isCollection') => {
     return `
         SELECT
             COALESCE(json_agg(row_to_json(books_agg)), '[]'::json) AS books
@@ -7,6 +7,7 @@ const queryGetReading = (readerId: string, isReading: boolean) => {
                 SELECT
                     b.id AS b_id,
                     b.title,
+                    b.title_sort,
                     (
                         SELECT
                             COALESCE(array_agg(full_name ORDER BY a.last_name ASC), ARRAY[]::TEXT[]) AS author
@@ -86,10 +87,10 @@ const queryGetReading = (readerId: string, isReading: boolean) => {
                     INNER JOIN reader_book AS rb ON r.id = rb.reader_id
                     INNER JOIN book AS b ON rb.book_id = b.id
                 WHERE
-                    r.id = '${readerId}'
-                    ${isReading
-                        ? 'AND rb.is_any_reading = TRUE'
-                        : 'AND rb.is_any_reading = FALSE AND rb.is_any_finished = TRUE'}
+                    r.id = $1
+                    ${category === 'isReading' ? 'AND rb.is_any_reading = TRUE' : ''}
+                    ${category === 'isFinished' ? 'AND rb.is_any_reading = FALSE AND rb.is_any_finished = TRUE' : ''}
+                    ${category === 'isDNF' ? 'AND rb.is_all_dnf = TRUE' : ''}
                 ORDER BY
                     b.title_sort
                 ) AS books_agg;

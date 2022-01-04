@@ -3,31 +3,42 @@ import updateReadInstance from './helperQueries/updateReadInstance';
 
 const queryPostReadInstance = (readerBookId: number) => {
   return `
-    INSERT INTO read_instance (reader_book_id) VALUES (${readerBookId});
+    CREATE OR REPLACE PROCEDURE post_read_instance(arg_reader_book_id INT)
+    LANGUAGE plpgsql AS $$
+    BEGIN
+        INSERT INTO read_instance (is_reading, reader_book_id) VALUES (true, $1);
+    END;
+    $$;
+
+    CALL post_read_instance(${readerBookId});
+
+    DROP PROCEDURE post_read_instance;
 
     ${updateReaderBook(readerBookId)}
   `
 };
 
 const queryDeleteReadInstance = (readerBookId: number, readInstanceId: number) => {
-  //1. if the number of read_instances > 1, delete read_instance.
-  //2. if the number of read_instances === 1, delete read_entries of the read_instance.
-  //3. update read_instance based on read_entry data.
-  //4. update reader_book based on read_instance data.
+  //1. delete read_instance if read_instance count > 1, else delete all read_entry for the single read_instance.
+  //2. update read_instance based on read_entry data.
+  //3. update reader_book based on read_instance data.
   return `
-    WITH cte AS (
-            SELECT COUNT(id) AS count
-            FROM read_instance AS ri
-            WHERE ri.reader_book_id=${readerBookId}
-    )
-    DELETE FROM read_instance AS ri USING cte WHERE ri.id = ${readInstanceId} AND cte.count > 1;
+    CREATE OR REPLACE PROCEDURE delete_read_instance(reader_book_id INT, read_instance_id INT)
+    LANGUAGE plpgsql AS $$
+    DECLARE
+        var_read_instance_count INT = (SELECT COUNT(id) AS count FROM read_instance AS ri WHERE ri.reader_book_id=$1);
+    BEGIN
+        IF (var_read_instance_count > 1) THEN
+            DELETE FROM read_instance AS ri WHERE ri.id = $2;
+        ELSE
+            DELETE FROM read_entry AS re  WHERE re.read_instance_id = $2;
+        END IF;
+    END;
+    $$;
 
-    WITH cte AS (
-            SELECT COUNT(id) AS count
-            FROM read_instance AS ri
-            WHERE ri.reader_book_id=${readerBookId}
-    )
-    DELETE FROM read_entry AS re USING cte WHERE re.read_instance_id = ${readInstanceId} AND cte.count = 1;
+    CALL delete_read_instance(${readerBookId}, ${readInstanceId});
+
+    DROP PROCEDURE delete_read_instance;
 
     ${updateReadInstance(readerBookId, readInstanceId)}
 

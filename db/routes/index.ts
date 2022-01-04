@@ -20,6 +20,7 @@ router.put('/:id/book/edition_date', controller.putEditionDate);
 router.put('/:id/book/book_cover_url', controller.putBookCoverUrl);
 router.put('/:id/book/blurb', controller.putBlurb);
 
+router.delete('/:id/book', controller.deleteBook);
 router.delete('/:id/book/author', controller.deleteAuthor);
 router.delete('/:id/book/read_instance', controller.deleteReadInstance);
 router.delete('/:id/book/read_entry', controller.deleteReadEntry);
