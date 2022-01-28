@@ -2,6 +2,10 @@ import React from 'react';
 import tw, { styled, css } from 'twin.macro';
 
 
+const OuterBar = styled.div`
+  ${tw`h-2 w-full rounded-md flex items-center bg-coolGray-50`};
+`;
+
 const InnerBar = styled.div<{ isEdit: boolean, $editTimer: number; $currentPercent: number }>`
   ${tw`h-1/2 rounded-sm bg-teal-500`};
   --duration: ${({ $editTimer }) => `${$editTimer}ms`};
@@ -15,10 +19,10 @@ const InnerBar = styled.div<{ isEdit: boolean, $editTimer: number; $currentPerce
 
 const ProgressBar = ({ currentPercent, isEdit, editTimer }: { currentPercent: number, isEdit: boolean, editTimer: number }) => {
   return (
-    <div className='h-2 w-full rounded-sm flex items-center bg-coolGray-50'>
+    <OuterBar>
       <InnerBar $currentPercent={currentPercent} isEdit={isEdit} $editTimer={editTimer} />
-    </div>
+    </OuterBar>
   )
-}
+};
 
 export default ProgressBar;
