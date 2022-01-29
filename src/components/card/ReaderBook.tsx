@@ -3,7 +3,7 @@ import tw, { styled } from 'twin.macro';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { ReadInstanceITF } from '../../interfaces/interface';
 import usePrevious from '../../hooks/usePrevious';
-import ReadInstance from './ReadInstance';
+import ReadInstance from './readInstance/ReadInstance';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 
 

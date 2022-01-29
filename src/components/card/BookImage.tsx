@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import tw, { styled } from 'twin.macro';
 import { BookListCategory } from '../../interfaces/interface';
 import useHoldSubmit from '../../hooks/useHoldSubmit';
-import { StyledButton, HoldDownButton } from './styled';
+import { StyledButton, HoldDownButton } from './common/styled';
 import { CSSTransition } from 'react-transition-group';
 import { CgPushChevronDownR } from 'react-icons/cg';
 import { FiSlash } from 'react-icons/fi';
@@ -75,7 +75,7 @@ const BookImage = ({ bookId, bookCoverUrl, category, isEdit, editTimer, handleFl
   };
 
   //handle Save Button onMouseDown hold effect before submit. handleSubmitAll needs to be declared before useHoldSubmit.
-  const submitHoldTimer = 800;
+  const submitHoldTimer = 1200;
   const [ isStartSubmit, handleStartSubmit, handleStopSubmit ] = useHoldSubmit(submitHoldTimer, handleDeleteBook);
   //--
 

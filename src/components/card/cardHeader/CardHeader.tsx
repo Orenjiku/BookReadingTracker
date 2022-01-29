@@ -1,10 +1,9 @@
 import React, { useState, useRef } from 'react';
 import tw, { styled } from 'twin.macro';
-import { CSSTransition } from 'react-transition-group';
-import useIsXOverflow from '../../hooks/useIsXOverflow';
-import { StyledText } from './styled';
+import useIsXOverflow from '../../../hooks/useIsXOverflow';
+import { StyledText } from '../common/styled';
+import ArrowButton from './ArrowButton';
 import OverflowText from './OverflowText';
-import { LeftArrow } from '@styled-icons/boxicons-regular/LeftArrow';
 
 
 interface CardHeaderPropsITF {
@@ -26,47 +25,7 @@ const CardHeaderContainer = styled.div`
   }
 `;
 
-const StyledLeftArrow = styled(LeftArrow)<{ $slideShowTimer: number }>`
-  ${tw`min-w-min opacity-40 stroke-current text-coolGray-50 stroke-1 cursor-pointer`};
-  --arrow-shadow: drop-shadow(0px 2px 0px black);
-  filter: var(--arrow-shadow);
-  --duration: ${({ $slideShowTimer }) => `${$slideShowTimer}ms`};
-  --neon-light-center: #f9fafb;
-  --neon-light-color: #0d9488;
-  --light-effect: drop-shadow(0 0 4px var(--neon-light-center))
-                  drop-shadow(0 0 6px var(--neon-light-center))
-                  drop-shadow(0 0 8px var(--neon-light-center))
-                  drop-shadow(0 0 12px var(--neon-light-center))
-                  drop-shadow(0 0 16px var(--neon-light-color));
-  &:hover {
-    ${tw`opacity-60`};
-  }
-  &.arrow-enter-active {
-    filter: none;
-    transition: filter calc(var(--duration) * 0.4) linear;
-  }
-  &.arrow-enter-done {
-    opacity: 1;
-    color: var(--neon-light-center);
-    filter: var(--light-effect);
-    fill: none;
-    transition: filter calc(var(--duration) * 0.2) linear;
-  }
-  &.arrow-exit {
-    color: var(--neon-light-center);
-    filter: var(--light-effect);
-  }
-  &.arrow-exit-active {
-    filter: none;
-    transition: filter calc(var(--duration) * 0.2) linear;
-  }
-  &.arrow-exit-done {
-    transition: all calc(var(--duration) * 0.2) linear;
-  }
-`;
-
 const CardHeader = ({ title, author, isFlipped, flipTimer, isSlideShow, slideShowTimer, handleShowSlideShow }: CardHeaderPropsITF) => {
-  const cardHeaderRef = useRef(null);
   const titleRef = useRef<HTMLParagraphElement>(null);
   const authorRef = useRef<HTMLParagraphElement>(null);
 
@@ -80,26 +39,11 @@ const CardHeader = ({ title, author, isFlipped, flipTimer, isSlideShow, slideSho
   useIsXOverflow(titleRef, title, handleIsTitleOverflow);
   useIsXOverflow(authorRef, author, handleIsAuthorOverflow);
 
-  //handle arrow click and prevent click event during slideShow transition sequence.
-  const [ isArrowAnimating, setIsArrowAnimating ] = useState(false);
-
-  const handleArrowClick = () => {
-    handleShowSlideShow();
-    setIsArrowAnimating(true);
-  };
-
-  const handleStopArrowClick = () => {
-    setIsArrowAnimating(false);
-  };
-  //---
-
   return (
     <CardHeaderContainer>
 
       <div className='-mt-0.5 pl-2 mr-10 flex items-center justify-start'>
-        <CSSTransition in={isSlideShow} timeout={slideShowTimer} classNames='arrow' nodeRef={cardHeaderRef} onEntered={handleStopArrowClick} onExited={handleStopArrowClick}>
-          <StyledLeftArrow size={26} ref={cardHeaderRef} $slideShowTimer={slideShowTimer} onClick={() => !isArrowAnimating && handleArrowClick()} />
-        </CSSTransition>
+        <ArrowButton isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleShowSlideShow={handleShowSlideShow} />
 
         <div className='ml-2 overflow-hidden'>
           {!isTitleOverflow ? <StyledText $isTitle ref={titleRef}>{title}</StyledText> : <OverflowText isFlipped={isFlipped} flipTimer={flipTimer} handleIsOverflow={handleIsTitleOverflow} isTitle text={title} />}
@@ -114,6 +58,6 @@ const CardHeader = ({ title, author, isFlipped, flipTimer, isSlideShow, slideSho
 
     </CardHeaderContainer>
   )
-}
+};
 
 export default CardHeader;

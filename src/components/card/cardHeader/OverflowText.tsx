@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import useIsXOverflow from '../../hooks/useIsXOverflow';
-import useLeft from '../../hooks/useLeft';
-import useOffsetRight from '../../hooks/useOffsetRight';
-import { StyledOverflowText } from './styled';
+import useIsXOverflow from '../../../hooks/useIsXOverflow';
+import useLeft from '../../../hooks/useLeft';
+import useOffsetRight from '../../../hooks/useOffsetRight';
+import { StyledOverflowText } from '../common/styled';
 
 
 interface TextOverflowPropsITF {

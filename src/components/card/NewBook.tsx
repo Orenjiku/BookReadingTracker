@@ -4,10 +4,10 @@ import { CSSTransition } from 'react-transition-group';
 import { BookListCategory } from '../../interfaces/interface';
 import useYOverflow from '../../hooks/useYOverflow';
 import useHoldSubmit from '../../hooks/useHoldSubmit';
-import { StyledButton, HoldDownButton } from './styled';
-import { isValidDate, getTitleSort } from './utils';
-import FormLabel from './FormLabel';
-import AuthorTag from './AuthorTag';
+import { StyledButton, HoldDownButton } from './common/styled';
+import { isValidDate, getTitleSort } from './common/utils';
+import FormLabel from './common/FormLabel';
+import AuthorTag from './cardBack/AuthorTag';
 import { BsPlusSquare, BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { CgPushChevronDownR } from 'react-icons/cg';
 

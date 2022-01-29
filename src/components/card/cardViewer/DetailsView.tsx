@@ -1,7 +1,7 @@
 import React, { useState, cloneElement } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import usePrevious from '../../hooks/usePrevious';
+import usePrevious from '../../../hooks/usePrevious';
 import { BsChevronLeft, BsChevronRight, BsCircleFill } from 'react-icons/bs';
 
 

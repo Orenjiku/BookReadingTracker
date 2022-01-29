@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useHoldSubmit from '../../../hooks/useHoldSubmit';
 import ReadEntryDeleteButton from './ReadEntryDeleteButton';
-import SuccessIndicator from '../SuccessIndicator';
+import SuccessIndicator from '../common/SuccessIndicator';
 
 
 interface ReadEntryDeleteBarITF {

@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
-import tw, { styled, css } from 'twin.macro';
+import tw, { styled } from 'twin.macro';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { ReadInstanceITF } from '../../interfaces/interface';
-import useYOverflow from '../../hooks/useYOverflow';
-import ReadEntry from './ReadEntry';
-import { BsChevronDown, BsChevronUp, BsChevronExpand } from 'react-icons/bs';
-import { CgCalendarToday } from 'react-icons/cg';
+import { ReadInstanceITF } from '../../../interfaces/interface';
+import useYOverflow from '../../../hooks/useYOverflow';
+import ReadInstanceHeader from './ReadInstanceHeader';
+import ReadEntry from '../readEntry/ReadEntry';
+import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 
 
 interface ReadInstancePropsITF {
@@ -17,42 +17,6 @@ interface ReadInstancePropsITF {
   handleIsExpanded: Function;
   handleUpdateReaderBook: Function;
 }
-
-const ReadInstanceHeaderContainer = styled.div`
-  ${tw`relative h-6 pt-1 pb-1 flex justify-evenly items-center font-Charm-400 text-sm cursor-pointer`}
-`;
-
-const StyledChevronExpand = styled(BsChevronExpand)<{ $isExpanded: boolean; $expandTimer: number }>`
-  ${tw`absolute right-0 stroke-current`};
-  --duration: ${({ $expandTimer }) => `${$expandTimer}ms`};
-  transition: all var(--duration) linear;
-  ${({ $isExpanded }) => $isExpanded && css`
-      --neon-light-center: #f9fafb;
-      --neon-light-color: #0d9488;
-      --light-effect: drop-shadow(0 0 1px var(--neon-light-center))
-                      drop-shadow(0 0 3px var(--neon-light-center))
-                      drop-shadow(0 0 5px var(--neon-light-color));
-      opacity: 1;
-      color: var(--neon-light-center);
-      filter: var(--light-effect);
-  `}
-`;
-
-const AnimatedLine = styled.div<{ $isExpanded: boolean }>`
-  ${tw`absolute bottom-0 w-0 bg-trueGray-400`};
-  height: 0.5px;
-  transition: all 250ms ease-out;
-  ${ReadInstanceHeaderContainer}:hover & {
-    ${tw`absolute bottom-0 w-full bg-trueGray-400`};
-    height: 0.5px;
-    transition: all 250ms ease-in;
-  }
-  ${({ $isExpanded }) => $isExpanded && css`
-    ${tw`absolute bottom-0 w-full bg-trueGray-400`};
-    height: 0.5px;
-    transition: all 250ms ease-in;
-  `}
-`;
 
 const ReadEntryContainer = styled.div<{ $readEntryListAppendTimer: number }>`
   &:nth-child(2) {
@@ -108,25 +72,13 @@ const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer
 
       <div ref={scrollContainerRef} className='h-full overflow-y-scroll scrollbar-hide'>
 
-        <ReadInstanceHeaderContainer onClick={() => handleIsExpanded()}>
-          <div className='flex items-center'>
-            <p className='mr-0.5'>Read: {readInstance.days_read}</p>
-            <CgCalendarToday />
-          </div>
-          <div className='flex items-center'>
-            <p className='mr-0.5'>Total: {readInstance.days_total}</p>
-            <CgCalendarToday />
-          </div>
-
-          <StyledChevronExpand size={15} $isExpanded={isExpanded} $expandTimer={expandTimer} />
-          <AnimatedLine $isExpanded={isExpanded}/>
-        </ReadInstanceHeaderContainer>
+        <ReadInstanceHeader daysRead={readInstance.days_read} daysTotal={readInstance.days_total} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} />
 
         <TransitionGroup component={null}>
           {readEntryList.map(readEntry => (
             <CSSTransition key={`cssT-${readEntry.re_id}`} timeout={readEntryListAppendTimer} classNames='slideFade' /* nodeRef={bookReadRef} */ >
               <ReadEntryContainer $readEntryListAppendTimer={readEntryListAppendTimer} /* ref={bookReadRef} */>
-                <ReadEntry key={readEntry.re_id} readEntry={readEntry} readerBookId={readInstance.reader_book_id} readInstanceId={readInstance.ri_id} isEdit={isEdit} editTimer={editTimer} readEntrySelectTimer={readEntrySelectTimer} handleReadEntrySelectToggle={handleReadEntrySelectToggle} handleUpdateReaderBook={handleUpdateReaderBook}/>
+                <ReadEntry key={readEntry.re_id} readEntry={readEntry} readerBookId={readInstance.reader_book_id} readInstanceId={readInstance.ri_id} isEdit={isEdit} editTimer={editTimer} readEntrySelectTimer={readEntrySelectTimer} handleReadEntrySelectToggle={(handleReadEntrySelectToggle)} handleUpdateReaderBook={handleUpdateReaderBook}/>
               </ReadEntryContainer>
             </CSSTransition>
           ))}

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
-import { BookDetailsITF } from '../../interfaces/interface';
-import useYOverflow from '../../hooks/useYOverflow';
-import useHoldSubmit from '../../hooks/useHoldSubmit';
-import { StyledButton, HoldDownButton } from './styled';
-import { sortByLastName, isValidDate, getTitleSort } from './utils';
-import FormLabel from './FormLabel';
+import { BookDetailsITF } from '../../../interfaces/interface';
+import useYOverflow from '../../../hooks/useYOverflow';
+import useHoldSubmit from '../../../hooks/useHoldSubmit';
+import { StyledButton, HoldDownButton } from '../common/styled';
+import { sortByLastName, isValidDate, getTitleSort } from '../common/utils';
+import FormLabel from '../common/FormLabel';
 import AuthorTag from './AuthorTag';
 import { BsPlusSquare, BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { MdFlip } from 'react-icons/md';
@@ -102,6 +102,10 @@ const StyledBsPlusSquare = styled(BsPlusSquare)`
 `;
 
 const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, indicatorTransitionTimer, handleFlip, handleUpdateBookDetails, handleUpdateAuthorDetails, handleUpdateReaderBook }: CardBackPropsITF) => {
+
+
+  console.log('CardBack')
+
   const [ title, setTitle ] = useState(bookDetails.title);
   const [ authorList, setAuthorList ] = useState(author);
   const [ newAuthor, setNewAuthor ] = useState('');
@@ -525,4 +529,4 @@ const CardBack = ({ bookDetails, author, readerBookId, isFlipped, flipTimer, ind
   )
 }
 
-export default CardBack;
+export default React.memo(CardBack);

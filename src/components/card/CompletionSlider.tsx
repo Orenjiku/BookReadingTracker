@@ -141,7 +141,9 @@ const CompletionSlider = ({ readerBookId, readInstanceId, totalPages, isReading,
 
   //submit 100% completed read_entry when countdown hits 0.
   const handleSubmitComplete = async () => {
-    const dateString = `${new Date(Date.now()).toISOString().slice(0, 10)} ${new Date().toTimeString().slice(0, 8)}`;
+
+    // const dateString = `${new Date(Date.now()).toISOString().slice(0, 10)} ${new Date().toTimeString().slice(0, 8)}`;
+    const dateString = `${new Date(Date.now()).toLocaleDateString('zh-Hans-CN')} ${new Date().toTimeString().slice(0, 8)}`;
     try {
       const response = await fetch(`http://localhost:3000/1/book/read_entry`, {
         method: 'POST',

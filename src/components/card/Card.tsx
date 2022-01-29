@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import tw, { styled } from 'twin.macro';
 import { BookITF, ReaderBookITF } from '../../interfaces/interface';
-import { sortByLastName } from './utils';
+import { sortByLastName } from './common/utils';
 import CardFront from './CardFront';
-import CardBack from './CardBack';
+import CardBack from './cardBack/CardBack';
 
 
 interface CardPropsITF {
