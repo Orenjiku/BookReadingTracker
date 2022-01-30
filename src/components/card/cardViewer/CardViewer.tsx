@@ -6,7 +6,7 @@ import EditView from './EditView';
 import { BookDetailsITF, ReadInstanceITF } from '../../../interfaces/interface';
 
 
-interface CardViewerITF {
+interface CardViewerPropsITF {
   bookDetails: BookDetailsITF;
   readInstanceList: ReadInstanceITF[];
   readInstanceIdx: number;
@@ -71,7 +71,7 @@ const EditViewContainer = styled.div<{ $isExpanded: boolean; $editTimer: number;
 `;
 
 
-const CardViewer = ({ bookDetails, readInstanceList, readInstanceIdx, isExpanded, expandTimer, isEdit, editTimer, isFlipped, flipTimer, indicatorTransitionTimer, handleUpdateReaderBook }: CardViewerITF) => {
+const CardViewer = ({ bookDetails, readInstanceList, readInstanceIdx, isExpanded, expandTimer, isEdit, editTimer, isFlipped, flipTimer, indicatorTransitionTimer, handleUpdateReaderBook }: CardViewerPropsITF) => {
 
   const [ overallDaysRead, setOverallDaysRead ] = useState(0);
   const [ overallDaysTotal, setOverallDaysTotal ] = useState(0);

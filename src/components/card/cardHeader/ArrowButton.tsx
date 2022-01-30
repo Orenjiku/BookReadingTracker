@@ -4,12 +4,6 @@ import { CSSTransition } from 'react-transition-group';
 import { LeftArrow } from '@styled-icons/boxicons-regular/LeftArrow';
 
 
-interface ArrowButtonITF {
-  isSlideShow: boolean;
-  slideShowTimer: number;
-  handleShowSlideShow: Function;
-};
-
 const StyledLeftArrow = styled(LeftArrow)<{ $slideShowTimer: number }>`
   ${tw`min-w-min opacity-40 stroke-current text-coolGray-50 stroke-1 cursor-pointer`};
   --arrow-shadow: drop-shadow(0px 2px 0px black);
@@ -49,7 +43,7 @@ const StyledLeftArrow = styled(LeftArrow)<{ $slideShowTimer: number }>`
   }
 `;
 
-const ArrowButton = ({ isSlideShow, slideShowTimer, handleShowSlideShow}: ArrowButtonITF) => {
+const ArrowButton = ({ isSlideShow, slideShowTimer, handleShowSlideShow}: { isSlideShow: boolean; slideShowTimer: number; handleShowSlideShow: Function }) => {
   const arrowButtonRef = useRef(null);
 
   //handle arrow click and prevent click event during slideShow transition sequence.

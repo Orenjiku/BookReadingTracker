@@ -4,7 +4,7 @@ import ExpandChevron from './ExpandChevron';
 import { CgCalendarToday } from 'react-icons/cg';
 
 
-interface ReadInstanceHeaderITF {
+interface ReadInstanceHeaderPropITF {
   daysRead: number;
   daysTotal: number;
   isExpanded: boolean;
@@ -32,7 +32,7 @@ const AnimatedLine = styled.div<{ $isExpanded: boolean }>`
   `}
 `;
 
-const ReadInstanceHeader = ({ daysRead, daysTotal, isExpanded, expandTimer, handleIsExpanded }: ReadInstanceHeaderITF) => {
+const ReadInstanceHeader = ({ daysRead, daysTotal, isExpanded, expandTimer, handleIsExpanded }: ReadInstanceHeaderPropITF) => {
   return (
     <ReadInstanceHeaderContainer onClick={() => handleIsExpanded()}>
       <div className='flex items-center'>
