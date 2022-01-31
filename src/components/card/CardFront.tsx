@@ -7,7 +7,7 @@ import BookImage from './BookImage';
 import CardHeader from './cardHeader/CardHeader';
 import CardViewer from './cardViewer/CardViewer';
 import CardSlider from './cardSlider/CardSlider';
-import CompletionSlider from './CompletionSlider';
+import CompletionSlider from './completionSlider/CompletionSlider';
 import EditButton from './EditButton';
 import ReaderBook from './ReaderBook';
 import ReadInstance from './readInstance/ReadInstance';
@@ -53,7 +53,7 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, indi
   const expandTimer = 300;
   const slideShowTimer = 800;
 
-  //delay removing CardFront until flip is completed.
+  //delay removing front side of Card until flip is completed.
   const isShowDisplay = useDelayFalse(!isFlipped, flipTimer);
 
   useEffect(() => {
