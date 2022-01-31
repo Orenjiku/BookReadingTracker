@@ -4,12 +4,26 @@ import ProgressBar from './ProgressBar';
 import ReadEntryText from './ReadEntryText';
 
 
-const ReadEntryBar = ({ readEntry, isEdit, editTimer, handleEntrySelect, handleReadEntrySelectToggle}: { readEntry: ReadEntryITF; isEdit: boolean; editTimer: number; handleEntrySelect: Function; handleReadEntrySelectToggle: Function }) => {
+interface ReadEntryBarPropsITF {
+  readEntry: ReadEntryITF;
+  isEdit: boolean;
+  editTimer: number;
+  handleEntrySelect: Function;
+  handleReadEntrySelectToggle: Function
+};
+
+const ReadEntryBar = ({ readEntry, isEdit, editTimer, handleEntrySelect, handleReadEntrySelectToggle}: ReadEntryBarPropsITF) => {
 
   const currentPercent = Number(readEntry.current_percent.toFixed(0));
+  const handleClick = () => {
+    if (isEdit) {
+      handleEntrySelect();
+      handleReadEntrySelectToggle();
+    }
+  };
 
   return (
-    <div className={`px-1 pb-0.5 ${isEdit && 'cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30'}`} onClick={() => {handleEntrySelect(); handleReadEntrySelectToggle()}}>
+    <div className={`px-1 pb-0.5 ${isEdit && 'cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30'}`} onClick={handleClick}>
       <ReadEntryText dateRead={readEntry.date_read} currentPage={readEntry.current_page} pagesRead={readEntry.pages_read} currentPercent={currentPercent} isEdit={isEdit} />
       <ProgressBar isEdit={isEdit} editTimer={editTimer} currentPercent={currentPercent} />
     </div>
