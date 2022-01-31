@@ -15,7 +15,7 @@ interface ReadEntryPropsITF {
   readEntrySelectTimer: number;
   handleReadEntrySelectToggle: Function;
   handleUpdateReaderBook: Function;
-}
+};
 
 const DeleteBarContainer = styled.div<{ $readEntrySelectTimer: number }>`
   ${tw`flex justify-center p-0 mb-0 overflow-y-hidden`};
@@ -43,9 +43,7 @@ const ReadEntry = ({ readEntry, readerBookId, readInstanceId, isEdit, editTimer,
   const readEntryDeleteRef = useRef(null);
 
   useEffect(() => {
-    if (!isEdit) {
-      setIsEntrySelected(false);
-    }
+    !isEdit && setIsEntrySelected(false);
   }, [isEdit]);
 
   const handleEntrySelect = () => isEdit && setIsEntrySelected(isEntrySelected => !isEntrySelected);
