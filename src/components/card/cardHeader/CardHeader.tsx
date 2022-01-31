@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import tw, { styled } from 'twin.macro';
 import useIsXOverflow from '../../../hooks/useIsXOverflow';
-import { StyledText } from '../common/styled';
+import { StyledText } from './styled';
 import ArrowButton from './ArrowButton';
 import OverflowText from './OverflowText';
 
