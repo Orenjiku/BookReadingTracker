@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, memo } from 'react';
 import tw, { styled } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 import { ReadEntryITF } from '../../../interfaces/interface';
@@ -61,4 +61,4 @@ const ReadEntry = ({ readEntry, readerBookId, readInstanceId, isEdit, editTimer,
   )
 };
 
-export default ReadEntry;
+export default memo(ReadEntry);

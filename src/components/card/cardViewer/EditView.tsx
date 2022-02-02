@@ -19,7 +19,7 @@ interface EditViewPropsITF {
   flipTimer: number;
   indicatorTransitionTimer: number;
   handleUpdateReaderBook: Function;
-}
+};
 
 const ReadEntryAddContainer = styled.div<{ $slideTimer: number }>`
   ${tw`absolute h-full w-full grid grid-cols-12 grid-rows-1`};
@@ -108,7 +108,7 @@ const StyledChevronDown = styled(CgPushChevronDownR)`
     fill: none;
     transition: filter 200ms transform 200ms, linear;
   }
-`
+`;
 
 const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, editTimer, isFlipped, flipTimer, indicatorTransitionTimer, handleUpdateReaderBook }: EditViewPropsITF) => {
   const [ readEntryDate, setReadEntryDate ] = useState(new Date(Date.now()).toISOString().slice(0, 10));
@@ -163,7 +163,7 @@ const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, editTimer,
     setReadEntryCurrentPage('');
     resetSubmitDateStates();
     resetSubmitPageStates();
-  }
+  };
 
   useDelayReset(isEdit, false, editTimer, resetAllStates);
   useDelayReset(isFlipped, true, flipTimer / 2, resetAllStates);
@@ -266,7 +266,7 @@ const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, editTimer,
     } catch(err) {
       console.error(err);
     }
-  }
+  };
 
   const submitPostHoldTimer = 600;
   const submitDeleteHoldTimer = 1000;
@@ -318,6 +318,6 @@ const EditView = ({ readerBookId, readInstanceId, totalPages, isEdit, editTimer,
       </CSSTransition>
     </div>
   )
-}
+};
 
 export default EditView;

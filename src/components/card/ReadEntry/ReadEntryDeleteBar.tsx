@@ -11,7 +11,7 @@ interface ReadEntryDeleteBarITF {
   pagesRead: number;
   isEntrySelected: boolean;
   handleUpdateReaderBook: Function
-}
+};
 
 const ReadEntryDeleteBar = ({ readerBookId, readInstanceId, readEntryId, pagesRead, isEntrySelected, handleUpdateReaderBook }: ReadEntryDeleteBarITF) => {
 

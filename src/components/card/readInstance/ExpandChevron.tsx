@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { BsChevronExpand } from 'react-icons/bs';
 
-const StyledChevronExpand = styled(BsChevronExpand)<{ $isExpanded: boolean; $expandTimer: number }>`
+
+const StyledChevronExpand = styled(BsChevronExpand)<{ $isLit: boolean }>`
   ${tw`absolute right-0 stroke-current`};
-  --duration: ${({ $expandTimer }) => `${$expandTimer}ms`};
-  transition: all var(--duration) linear;
-  ${({ $isExpanded }) => $isExpanded && css`
+  ${({ $isLit }) => $isLit && css`
       --neon-light-center: #f9fafb;
       --neon-light-color: #0d9488;
       --light-effect: drop-shadow(0 0 1px var(--neon-light-center))
@@ -19,8 +18,20 @@ const StyledChevronExpand = styled(BsChevronExpand)<{ $isExpanded: boolean; $exp
 `;
 
 const ExpandChevron = ({ isExpanded, expandTimer }: { isExpanded: boolean; expandTimer: number }) => {
+
+  const [ isLit, setIsLit ] = useState(false);
+
+  let delayLight: ReturnType<typeof setTimeout>;
+  useEffect(() => {
+    delayLight = setTimeout(() => {
+      isExpanded ? setIsLit(true) : setIsLit(false);
+    }, expandTimer);
+
+    return () => clearTimeout(delayLight);
+  }, [isExpanded]);
+
   return (
-    <StyledChevronExpand size={15} $isExpanded={isExpanded} $expandTimer={expandTimer} />
+    <StyledChevronExpand size={15} $isLit={isLit} />
   )
 };
 

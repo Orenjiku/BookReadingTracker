@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { Edit } from '@styled-icons/boxicons-regular/Edit';
 
@@ -29,10 +29,8 @@ const StyledEditIcon = styled(Edit)<{ $isEdit: boolean, $editTimer: number }>`
   `}
 `;
 
-const EditButton = ({ isEdit, editTimer, handleIsEdit }: { isEdit: boolean; editTimer: number; handleIsEdit: Function}) => {
-  return (
-    <StyledEditIcon size={22} $isEdit={isEdit} $editTimer={editTimer} onClick={() => handleIsEdit()} />
-  )
-};
+const EditButton = ({ isEdit, editTimer, handleIsEdit }: { isEdit: boolean; editTimer: number; handleIsEdit: Function }) => (
+  <StyledEditIcon size={22} $isEdit={isEdit} $editTimer={editTimer} onClick={() => handleIsEdit()} />
+);
 
-export default EditButton;
+export default memo(EditButton);

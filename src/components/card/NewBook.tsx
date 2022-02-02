@@ -85,7 +85,7 @@ const StyledBsPlusSquare = styled(BsPlusSquare)`
   }
 `;
 
-const NewBook = ({category, handleCreate, handleUpdateBookList}: {category: BookListCategory, handleCreate: Function, handleUpdateBookList: Function}) => {
+const NewBook = ({category, handleCreate, handleUpdateBookList}: {category: BookListCategory; handleCreate: Function; handleUpdateBookList: Function}) => {
   const [ title, setTitle ] = useState('');
   const [ newAuthor, setNewAuthor ] = useState('');
   const [ newAuthorList, setNewAuthorList ] = useState<string[]>([]);

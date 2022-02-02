@@ -22,13 +22,8 @@ const TextContainer = styled.div<{ $isEdit: boolean; $before: string; $after: nu
   }
 `;
 
-const ReadEntryText = ({ dateRead, currentPage, pagesRead, currentPercent, isEdit }: { dateRead: Date; currentPage: number; pagesRead: number; currentPercent: number; isEdit: boolean }) => {
-
-  const formatDate = (date: Date) => new Date(date).toLocaleDateString();
-
-  return (
-    <TextContainer $isEdit={isEdit} $before={formatDate(dateRead)} $after={isEdit ? currentPage : pagesRead}>{`${currentPercent}%`}</TextContainer>
-  )
-};
+const ReadEntryText = ({ dateRead, currentPage, pagesRead, currentPercent, isEdit }: { dateRead: Date; currentPage: number; pagesRead: number; currentPercent: number; isEdit: boolean }) => (
+  <TextContainer $isEdit={isEdit} $before={new Date(dateRead).toLocaleDateString()} $after={isEdit ? currentPage : pagesRead}>{`${currentPercent}%`}</TextContainer>
+);
 
 export default ReadEntryText;

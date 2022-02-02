@@ -1,10 +1,8 @@
-import React, { useState, useRef } from 'react';
-import tw, { styled } from 'twin.macro';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import React, { useState, useRef, useCallback } from 'react';
 import { ReadInstanceITF } from '../../../interfaces/interface';
 import useYOverflow from '../../../hooks/useYOverflow';
 import ReadInstanceHeader from './ReadInstanceHeader';
-import ReadEntry from '../readEntry/ReadEntry';
+import ReadInstanceReadEntry from './ReadInstanceReadEntry';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 
 
@@ -16,35 +14,7 @@ interface ReadInstancePropsITF {
   expandTimer: number;
   handleIsExpanded: Function;
   handleUpdateReaderBook: Function;
-}
-
-const ReadEntryContainer = styled.div<{ $readEntryListAppendTimer: number }>`
-  &:nth-child(2) {
-    ${tw`mt-1`};
-  }
-  &:last-child {
-    ${tw`mb-2`};
-  }
-  --duration: ${({ $readEntryListAppendTimer }) => `${$readEntryListAppendTimer}ms`};
-  &.slideFade-enter {
-    opacity: 0;
-    max-height: 0;
-  }
-  &.slideFade-enter-active {
-    opacity: 1;
-    max-height: 52px;
-    transition: opacity calc(var(--duration) * 0.4) ease-out, max-height var(--duration) ease-out;
-  }
-  &.slideFade-exit {
-    opacity: 1;
-    max-height: 52px;
-  }
-  &.slideFade-exit-active {
-    opacity: 0;
-    max-height: 0;
-    transition: opacity calc(var(--duration) * 0.4) ease-out, max-height var(--duration) ease-out;
-  }
-`;
+};
 
 const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer, handleIsExpanded, handleUpdateReaderBook } : ReadInstancePropsITF) => {
   const readEntryList = readInstance.read_entry || [];
@@ -65,7 +35,7 @@ const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer
   };
   const { refYOverflowing, refYScrollBegin, refYScrollEnd } = useYOverflow({scrollContainerRef, overflowTriggers});
 
-  const handleReadEntrySelectToggle = () => setReadEntrySelectToggle(readEntrySelectToggle => !readEntrySelectToggle);
+  const handleReadEntrySelectToggle = useCallback(() => setReadEntrySelectToggle(readEntrySelectToggle => !readEntrySelectToggle), []);
 
   return (
     <div className='relative h-full w-full overflow-hidden'>
@@ -74,15 +44,7 @@ const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer
 
         <ReadInstanceHeader daysRead={readInstance.days_read} daysTotal={readInstance.days_total} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} />
 
-        <TransitionGroup component={null}>
-          {readEntryList.map(readEntry => (
-            <CSSTransition key={`cssT-${readEntry.re_id}`} timeout={readEntryListAppendTimer} classNames='slideFade' /* nodeRef={bookReadRef} */ >
-              <ReadEntryContainer $readEntryListAppendTimer={readEntryListAppendTimer} /* ref={bookReadRef} */>
-                <ReadEntry key={readEntry.re_id} readEntry={readEntry} readerBookId={readInstance.reader_book_id} readInstanceId={readInstance.ri_id} isEdit={isEdit} editTimer={editTimer} readEntrySelectTimer={readEntrySelectTimer} handleReadEntrySelectToggle={(handleReadEntrySelectToggle)} handleUpdateReaderBook={handleUpdateReaderBook}/>
-              </ReadEntryContainer>
-            </CSSTransition>
-          ))}
-        </TransitionGroup>
+        <ReadInstanceReadEntry readEntryList={readEntryList} readerBookId={readInstance.reader_book_id} readInstanceId={readInstance.ri_id} readEntryListAppendTimer={readEntryListAppendTimer} readEntrySelectTimer={readEntrySelectTimer } isEdit={isEdit} editTimer={editTimer} handleReadEntrySelectToggle={handleReadEntrySelectToggle} handleUpdateReaderBook={handleUpdateReaderBook} />
 
       </div>
 
@@ -91,6 +53,6 @@ const ReadInstance = ({ readInstance, isEdit, editTimer, isExpanded, expandTimer
 
     </div>
   )
-}
+};
 
 export default ReadInstance;

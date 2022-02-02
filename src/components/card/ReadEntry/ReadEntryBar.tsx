@@ -16,14 +16,12 @@ const ReadEntryBar = ({ readEntry, isEdit, editTimer, handleEntrySelect, handleR
 
   const currentPercent = Number(readEntry.current_percent.toFixed(0));
   const handleClick = () => {
-    if (isEdit) {
-      handleEntrySelect();
-      handleReadEntrySelectToggle();
-    }
+    handleEntrySelect();
+    handleReadEntrySelectToggle();
   };
 
   return (
-    <div className={`px-1 pb-0.5 ${isEdit && 'cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30'}`} onClick={handleClick}>
+    <div className={`px-1 pb-0.5 ${isEdit && 'cursor-pointer hover:bg-blueGray-400 hover:bg-opacity-30'}`} onClick={() => isEdit && handleClick()}>
       <ReadEntryText dateRead={readEntry.date_read} currentPage={readEntry.current_page} pagesRead={readEntry.pages_read} currentPercent={currentPercent} isEdit={isEdit} />
       <ProgressBar isEdit={isEdit} editTimer={editTimer} currentPercent={currentPercent} />
     </div>

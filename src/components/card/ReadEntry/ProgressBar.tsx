@@ -17,12 +17,10 @@ const InnerBar = styled.div<{ isEdit: boolean, $editTimer: number; $currentPerce
   `}
 `;
 
-const ProgressBar = ({ currentPercent, isEdit, editTimer }: { currentPercent: number, isEdit: boolean, editTimer: number }) => {
-  return (
-    <OuterBar>
-      <InnerBar $currentPercent={currentPercent} isEdit={isEdit} $editTimer={editTimer} />
-    </OuterBar>
-  )
-};
+const ProgressBar = ({ currentPercent, isEdit, editTimer }: { currentPercent: number, isEdit: boolean, editTimer: number }) => (
+  <OuterBar>
+    <InnerBar $currentPercent={currentPercent} isEdit={isEdit} $editTimer={editTimer} />
+  </OuterBar>
+);
 
 export default ProgressBar;

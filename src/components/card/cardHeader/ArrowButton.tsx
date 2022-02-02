@@ -44,19 +44,16 @@ const StyledLeftArrow = styled(LeftArrow)<{ $slideShowTimer: number }>`
 `;
 
 const ArrowButton = ({ isSlideShow, slideShowTimer, handleShowSlideShow}: { isSlideShow: boolean; slideShowTimer: number; handleShowSlideShow: Function }) => {
-  const arrowButtonRef = useRef(null);
 
-  //handle arrow click and prevent click event during slideShow transition sequence.
-  const [ isArrowAnimating, setIsArrowAnimating ] = useState(false);
+  const [ isArrowAnimating, setIsArrowAnimating ] = useState(false); //handle arrow click and prevent click event during slideShow transition sequence.
+  const arrowButtonRef = useRef(null);
 
   const handleArrowClick = () => {
     handleShowSlideShow();
     setIsArrowAnimating(true);
   };
 
-  const handleStopArrowClick = () => {
-    setIsArrowAnimating(false);
-  };
+  const handleStopArrowClick = () => setIsArrowAnimating(false);
 
   const handleClick = () => !isArrowAnimating && handleArrowClick();
 

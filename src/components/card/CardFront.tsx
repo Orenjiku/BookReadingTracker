@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { BookDetailsITF, ReaderBookITF } from '../../interfaces/interface';
-import useDelayFalse from '../../hooks/useDelayFalse';
 import usePrevious from '../../hooks/usePrevious';
 import BookImage from './BookImage';
 import CardHeader from './cardHeader/CardHeader';
@@ -9,7 +8,7 @@ import CardViewer from './cardViewer/CardViewer';
 import CardSlider from './cardSlider/CardSlider';
 import CompletionSlider from './completionSlider/CompletionSlider';
 import EditButton from './EditButton';
-import ReaderBook from './ReaderBook';
+import ReaderBook from './readerBook/ReaderBook';
 import ReadInstance from './readInstance/ReadInstance';
 
 
@@ -23,7 +22,7 @@ interface CardFrontPropsITF {
   handleFlip: Function;
   handleUpdateReaderBook: Function;
   handleUpdateBookList: Function;
-}
+};
 
 const CardFrontContainer = styled.div<{ $isFlipped: boolean; $flipTimer: number }>`
   ${tw`absolute h-full w-full rounded-2xl`};
@@ -52,9 +51,7 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, indi
   const editTimer = 300;
   const expandTimer = 300;
   const slideShowTimer = 800;
-
-  //delay removing front side of Card until flip is completed.
-  const isShowDisplay = useDelayFalse(!isFlipped, flipTimer);
+  const slideTimer = 300;
 
   useEffect(() => {
     //on first render, display most recent currently reading readInstance if any.
@@ -64,46 +61,42 @@ const CardFront = ({ bookDetails, author, readerBook, isFlipped, flipTimer, indi
 
   useEffect(() => {
     const readInstanceLen = readerBook.read_instance.length;
-    if (readInstanceLen !== prevReadInstanceLen) {
-      readInstanceLen < prevReadInstanceLen && readInstanceIdx > 0 ? setReadInstanceIdx(readInstanceIdx - 1) : 0;
-      readInstanceLen > prevReadInstanceLen && setReadInstanceIdx(0);
-    }
+    if (readInstanceLen < prevReadInstanceLen && readInstanceIdx > 0) setReadInstanceIdx(readInstanceIdx - 1);
+    else if (readInstanceLen > prevReadInstanceLen) setReadInstanceIdx(0);
     setReadInstanceList(readerBook.read_instance);
   }, [readerBook]);
 
-  const handleChangeReadInstanceIdx = (i: number) => setReadInstanceIdx(i);
-  const handleIsEdit = () => setIsEdit(isEdit => !isEdit);
-  const handleIsExpanded = () => setIsExpanded(isExpanded => !isExpanded);
-  const handleShowSlideShow = () => setIsSlideShow(isSlideShow => !isSlideShow);
+  const handleIsEdit = useCallback(() => setIsEdit(isEdit => !isEdit), []);
+  const handleIsExpanded = useCallback(() => setIsExpanded(isExpanded => !isExpanded), []);
+  const handleChangeReadInstanceIdx = useCallback((i: number) => setReadInstanceIdx(i), []);
+  const handleShowSlideShow = useCallback(() => setIsSlideShow(isSlideShow => !isSlideShow), []);
 
   return (
     <CardFrontContainer $isFlipped={isFlipped} $flipTimer={flipTimer}>
-      {isShowDisplay &&
-        <div className='h-full w-full grid grid-cols-2 grid-rows-21'>
-          <CardHeader title={bookDetails.title} author={author} isFlipped={isFlipped} flipTimer={flipTimer} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleShowSlideShow={handleShowSlideShow} />
+      <div className='h-full w-full grid grid-cols-2 grid-rows-21'>
+        <CardHeader title={bookDetails.title} author={author} isFlipped={isFlipped} flipTimer={flipTimer} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} handleShowSlideShow={handleShowSlideShow} />
 
-          <EditButton isEdit={isEdit} editTimer={editTimer} handleIsEdit={handleIsEdit} />
+        <EditButton isEdit={isEdit} editTimer={editTimer} handleIsEdit={handleIsEdit} />
 
-          <BookImage bookId={bookDetails.b_id} bookCoverUrl={bookDetails.book_cover_url} category={bookDetails.category} isEdit={isEdit} editTimer={editTimer} handleFlip={handleFlip} handleUpdateBookList={handleUpdateBookList} />
+        <BookImage bookId={bookDetails.b_id} bookCoverUrl={bookDetails.book_cover_url} category={bookDetails.category} isEdit={isEdit} editTimer={editTimer} handleFlip={handleFlip} handleUpdateBookList={handleUpdateBookList} />
 
-          <div className='col-start-2 col-end-3 row-start-4 row-end-20 flex flex-col overflow-hidden'>
-            <CardViewer bookDetails={bookDetails} readInstanceList={readInstanceList} readInstanceIdx={readInstanceIdx} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} isFlipped={isFlipped} flipTimer={flipTimer} indicatorTransitionTimer={indicatorTransitionTimer} handleUpdateReaderBook={handleUpdateReaderBook} />
+        <div className='col-start-2 col-end-3 row-start-4 row-end-20 flex flex-col overflow-hidden'>
+          <CardViewer readInstanceList={readInstanceList} readInstanceIdx={readInstanceIdx} totalPages={bookDetails.total_pages} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} isFlipped={isFlipped} flipTimer={flipTimer} indicatorTransitionTimer={indicatorTransitionTimer} handleUpdateReaderBook={handleUpdateReaderBook} />
 
-            {readInstanceList.length <= 1
-              ? <ReadInstance readInstance={readInstanceList[readInstanceIdx]} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} handleUpdateReaderBook={handleUpdateReaderBook}/>
-              : <ReaderBook readInstanceList={readInstanceList} readInstanceIdx={readInstanceIdx} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} handleChangeReadInstanceIdx={handleChangeReadInstanceIdx} handleUpdateReaderBook={handleUpdateReaderBook}/>
-            }
-          </div>
-
-          <div className='col-start-1 col-end-3 row-start-20 row-end-22'>
-            <CompletionSlider readerBookId={readerBook.rb_id} readInstanceId={readInstanceList[readInstanceIdx].ri_id} totalPages={bookDetails.total_pages} isReading={readInstanceList[readInstanceIdx].is_reading} handleUpdateReaderBook={handleUpdateReaderBook} />
-          </div>
-
-          <CardSlider blurb={bookDetails.blurb} bookCoverUrl={bookDetails.book_cover_url} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} />
+          {readInstanceList.length === 1
+            ? <ReadInstance readInstance={readInstanceList[readInstanceIdx]} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} handleUpdateReaderBook={handleUpdateReaderBook}/>
+            : <ReaderBook readInstanceList={readInstanceList} readInstanceIdx={readInstanceIdx} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} slideTimer={slideTimer} handleIsExpanded={handleIsExpanded} handleChangeReadInstanceIdx={handleChangeReadInstanceIdx} handleUpdateReaderBook={handleUpdateReaderBook}/>
+          }
         </div>
-      }
+
+        <div className='col-start-1 col-end-3 row-start-20 row-end-22'>
+          <CompletionSlider readerBookId={readerBook.rb_id} readInstanceId={readInstanceList[readInstanceIdx].ri_id} totalPages={bookDetails.total_pages} isReading={readInstanceList[readInstanceIdx].is_reading} slideTimer={slideTimer} handleUpdateReaderBook={handleUpdateReaderBook} />
+        </div>
+
+        <CardSlider blurb={bookDetails.blurb} bookCoverUrl={bookDetails.book_cover_url} isSlideShow={isSlideShow} slideShowTimer={slideShowTimer} />
+      </div>
     </CardFrontContainer>
   )
-}
+};
 
 export default CardFront;

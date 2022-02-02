@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import ExpandChevron from './ExpandChevron';
 import { CgCalendarToday } from 'react-icons/cg';
@@ -32,22 +32,20 @@ const AnimatedLine = styled.div<{ $isExpanded: boolean }>`
   `}
 `;
 
-const ReadInstanceHeader = ({ daysRead, daysTotal, isExpanded, expandTimer, handleIsExpanded }: ReadInstanceHeaderPropITF) => {
-  return (
-    <ReadInstanceHeaderContainer onClick={() => handleIsExpanded()}>
-      <div className='flex items-center'>
-        <p className='mr-0.5'>Read: {daysRead}</p>
-        <CgCalendarToday />
-      </div>
-      <div className='flex items-center'>
-        <p className='mr-0.5'>Total: {daysTotal}</p>
-        <CgCalendarToday />
-      </div>
+const ReadInstanceHeader = ({ daysRead, daysTotal, isExpanded, expandTimer, handleIsExpanded }: ReadInstanceHeaderPropITF) => (
+  <ReadInstanceHeaderContainer onClick={() => handleIsExpanded()}>
+    <div className='flex items-center'>
+      <p className='mr-0.5'>Read: {daysRead}</p>
+      <CgCalendarToday />
+    </div>
+    <div className='flex items-center'>
+      <p className='mr-0.5'>Total: {daysTotal}</p>
+      <CgCalendarToday />
+    </div>
 
-      <ExpandChevron isExpanded={isExpanded} expandTimer={expandTimer} />
-      <AnimatedLine $isExpanded={isExpanded} />
-    </ReadInstanceHeaderContainer>
-  )
-};
+    <ExpandChevron isExpanded={isExpanded} expandTimer={expandTimer} />
+    <AnimatedLine $isExpanded={isExpanded} />
+  </ReadInstanceHeaderContainer>
+);
 
-export default ReadInstanceHeader;
+export default memo(ReadInstanceHeader);

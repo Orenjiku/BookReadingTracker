@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, memo } from 'react';
 import tw, { styled } from 'twin.macro';
 import useIsXOverflow from '../../../hooks/useIsXOverflow';
 import { StyledText } from './styled';
@@ -14,7 +14,7 @@ interface CardHeaderPropsITF {
   isSlideShow: boolean;
   slideShowTimer: number;
   handleShowSlideShow: Function;
-}
+};
 
 const CardHeaderContainer = styled.div`
   ${tw`relative col-start-1 col-end-3 row-start-1 row-end-4 rounded-t-2xl overflow-hidden`};
@@ -60,4 +60,4 @@ const CardHeader = ({ title, author, isFlipped, flipTimer, isSlideShow, slideSho
   )
 };
 
-export default CardHeader;
+export default memo(CardHeader);

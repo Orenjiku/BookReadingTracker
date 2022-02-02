@@ -16,7 +16,7 @@ interface BookImagePropsITF {
   editTimer: number;
   handleFlip: Function;
   handleUpdateBookList: Function;
-}
+};
 
 const EditButton = styled(StyledButton)<{ $editTimer: number }>`
   ${tw`py-1 px-4 text-trueGray-50`};
@@ -52,7 +52,7 @@ const DeleteButton = styled(HoldDownButton)<{ $editTimer: number }>`
     opacity: 0;
     transition: opacity var(--editDuration) ease-in-out;
   }
-`
+`;
 
 const BookImage = ({ bookId, bookCoverUrl, category, isEdit, editTimer, handleFlip, handleUpdateBookList }: BookImagePropsITF) => {
   const editButtonRef = useRef(null);
@@ -107,6 +107,6 @@ const BookImage = ({ bookId, bookCoverUrl, category, isEdit, editTimer, handleFl
       </div>
     </div>
   )
-}
+};
 
 export default BookImage;

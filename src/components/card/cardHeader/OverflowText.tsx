@@ -12,7 +12,7 @@ interface TextOverflowPropsITF {
   isFlipped: boolean;
   flipTimer: number;
   handleIsOverflow: Function;
-}
+};
 
 const OverflowText = ({ isTitle, isAuthor, text, isFlipped, flipTimer, handleIsOverflow }: TextOverflowPropsITF) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -61,6 +61,6 @@ const OverflowText = ({ isTitle, isAuthor, text, isFlipped, flipTimer, handleIsO
       </StyledOverflowText>
     </div>
   )
-}
+};
 
 export default OverflowText;

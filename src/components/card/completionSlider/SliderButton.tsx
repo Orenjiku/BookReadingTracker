@@ -2,6 +2,7 @@ import React from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { ArrowRightSquare } from '@styled-icons/bootstrap/ArrowRightSquare';
 
+
 const StyledArrowRightSquare = styled(ArrowRightSquare)<{ $isLightUp: boolean; }>`
   ${tw`stroke-0 stroke-current text-gray-50`};
   transition: all 300ms linear;
@@ -20,12 +21,10 @@ const StyledArrowRightSquare = styled(ArrowRightSquare)<{ $isLightUp: boolean; }
   `}
 `;
 
-const SliderButton = ({ sliderButtonWidth, isLightUp }: { sliderButtonWidth: number; isLightUp: boolean }) => {
-  return (
-    <div style={{width: `${sliderButtonWidth * 100}%`}} className='z-10 flex justify-center items-center overflow-hidden rounded-b-2xl cursor-pointer'>
-      <StyledArrowRightSquare size={23} $isLightUp={isLightUp} />
-    </div>
-  )
-};
+const SliderButton = ({ sliderButtonWidth, isLightUp }: { sliderButtonWidth: number; isLightUp: boolean }) => (
+  <div style={{width: `${sliderButtonWidth * 100}%`}} className='z-10 flex justify-center items-center overflow-hidden rounded-b-2xl cursor-pointer'>
+    <StyledArrowRightSquare size={23} $isLightUp={isLightUp} />
+  </div>
+);
 
 export default SliderButton;

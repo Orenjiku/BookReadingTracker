@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import tw, { styled } from 'twin.macro';
 import { BookITF, ReaderBookITF } from '../../interfaces/interface';
 import { sortByLastName } from './common/utils';
@@ -9,7 +9,8 @@ import CardBack from './cardBack/CardBack';
 interface CardPropsITF {
   book: BookITF;
   handleUpdateBookList: Function;
-}
+};
+
 const CardContainer = styled.div`
   ${tw`relative m-5`};
   --card-width: 360px;
@@ -38,13 +39,13 @@ const Card = ({ book, handleUpdateBookList }: CardPropsITF) => {
   };
 
   const handleUpdateAuthorDetails = (updatedAuthorDetails: string[]) => {
-    const sortedUpdatedAuthorDetails = sortByLastName([...updatedAuthorDetails])
+    const sortedUpdatedAuthorDetails = sortByLastName([...updatedAuthorDetails]);
     setAuthorDetails(sortedUpdatedAuthorDetails);
   };
 
-  const handleUpdateReaderBook = (readerBookAPI: ReaderBookITF) => {
+  const handleUpdateReaderBook = useCallback((readerBookAPI: ReaderBookITF) => {
     setReaderBook(readerBookAPI);
-  };
+  }, []);
 
   return (
     <CardContainer>
@@ -52,6 +53,6 @@ const Card = ({ book, handleUpdateBookList }: CardPropsITF) => {
       <CardBack bookDetails={bookDetails} author={authorDetails} readerBookId={readerBook.rb_id} isFlipped={isFlipped} flipTimer={flipTimer} handleFlip={handleFlip} indicatorTransitionTimer={indicatorTransitionTimer} handleUpdateBookDetails={handleUpdateBookDetails} handleUpdateAuthorDetails={handleUpdateAuthorDetails} handleUpdateReaderBook={handleUpdateReaderBook} />
     </CardContainer>
   )
-}
+};
 
 export default Card;

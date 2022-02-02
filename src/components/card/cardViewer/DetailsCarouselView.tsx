@@ -5,11 +5,7 @@ import usePrevious from '../../../hooks/usePrevious';
 import { BsChevronLeft, BsChevronRight, BsCircleFill } from 'react-icons/bs';
 
 
-interface DetailsViewPropsITF {
-  viewDetails: Array<{ key: string; value: number }>;
-}
-
-const ViewHorizontalSlideContainer = styled.div`
+const CarouselValueContainer = styled.div`
   ${tw`absolute h-full w-full flex justify-center`};
   --transition: all 200ms linear;
   &.forward-enter {
@@ -128,25 +124,25 @@ const StyledBsCircleFill = styled(BsCircleFill)<{ $selected: boolean }>`
   }
 `;
 
-const DetailsView = ({ viewDetails }: DetailsViewPropsITF) => {
+const DetailsCarouselView = ({ viewDetails }: {viewDetails: Array<{ key: string; value: number }>}) => {
   const [ currIdx, setCurrIdx ] = useState(0);
   const prevIdx = usePrevious(currIdx);
   const length = viewDetails.length;
   const classNames = ((currIdx > prevIdx && currIdx !== prevIdx + (length - 1)) || currIdx === prevIdx - (length - 1)) ? 'forward' : 'backward';
-  // const detailsViewRef = useRef(null);
+    // const detailsCarouselViewRef = useRef(null);
 
   const nextSlide = () => setCurrIdx((currIdx + 1) % length);
   const prevSlide = () => setCurrIdx((currIdx + length - 1) % length);
 
+
   return (
     <div style={{height: '109.14px'}} className='relative w-full'>
-
       <TransitionGroup component={null} childFactory={child => cloneElement(child, {classNames})}>
-        <CSSTransition timeout={200} key={`view-${currIdx}`} unmountOnExit /* nodeRef={detailsViewRef} */>
-          <ViewHorizontalSlideContainer /* ref={detailsViewRef} */>
+        <CSSTransition timeout={200} key={`view-${currIdx}`} unmountOnExit /* nodeRef={detailsCarouselViewRef} */>
+          <CarouselValueContainer /* ref={detailsCarouselViewRef} */>
             <ValueDisplay $value={viewDetails[currIdx].value}>{viewDetails[currIdx].value}</ValueDisplay>
             <div className='absolute text-trueGray-50 text-xl font-AdventPro-400'>{viewDetails[currIdx].key}</div>
-          </ViewHorizontalSlideContainer>
+          </CarouselValueContainer>
         </CSSTransition>
       </TransitionGroup>
 
@@ -165,9 +161,8 @@ const DetailsView = ({ viewDetails }: DetailsViewPropsITF) => {
           <StyledBsCircleFill key={`BsCircleFill-${i}`} size={7} $selected={i === currIdx} {...(i !== currIdx && {onClick: () => setCurrIdx(i)})} />
           ))}
       </div>
-
     </div>
   )
-}
+};
 
-export default DetailsView;
+export default DetailsCarouselView;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, memo } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { CSSTransition } from 'react-transition-group';
 import useCountdown from '../../../hooks/useCountdown';
@@ -11,6 +11,7 @@ interface CompletionSliderPropsITF {
   readInstanceId: number;
   totalPages: number;
   isReading: boolean;
+  slideTimer: number;
   handleUpdateReaderBook: Function;
 };
 
@@ -51,7 +52,7 @@ const StyledSlider = styled.div<{ $slideTimer: number; $isDragging: boolean; $sl
   }
 `;
 
-const CompletionSlider = ({ readerBookId, readInstanceId, totalPages, isReading, handleUpdateReaderBook }: CompletionSliderPropsITF) => {
+const CompletionSlider = ({ readerBookId, readInstanceId, totalPages, isReading, slideTimer, handleUpdateReaderBook }: CompletionSliderPropsITF) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -65,8 +66,6 @@ const CompletionSlider = ({ readerBookId, readInstanceId, totalPages, isReading,
 
   const holdTimer = 1800;
   const countdownTimeRemaining = useCountdown(holdTimer, atEnd);
-
-  const slideTimer = 300; //match with ReaderBook CSSTransition timeout
 
   useEffect(() => {
     if (containerRef.current) {
@@ -148,4 +147,4 @@ const CompletionSlider = ({ readerBookId, readInstanceId, totalPages, isReading,
   )
 };
 
-export default CompletionSlider;
+export default memo(CompletionSlider);
