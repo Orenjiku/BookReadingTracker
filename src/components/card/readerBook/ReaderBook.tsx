@@ -68,7 +68,7 @@ const ReaderBook = ({ readInstanceList, readInstanceIdx, isEdit, editTimer, isEx
       <ReaderBookHeader readInstanceIdx={readInstanceIdx} readInstanceListLen={readInstanceList.length} handleChangeReadInstanceIdx={handleChangeReadInstanceIdx} />
 
       <TransitionGroup component={null} childFactory={child => cloneElement(child, {classNames})}>
-        <CSSTransition key={`readInstance-${readInstanceIdx}`} timeout={slideTimer} unmountOnExit /* nodeRef={readerBookRef} */>
+        <CSSTransition key={`readerBook-${readInstanceList[readInstanceIdx].ri_id}`} timeout={slideTimer} unmountOnExit /* nodeRef={readerBookRef} */>
           <ReadInstanceContainer /* ref={readerBookRef} */>
             <ReadInstance key={readInstanceList[readInstanceIdx].ri_id} readInstance={readInstanceList[readInstanceIdx]} isEdit={isEdit} editTimer={editTimer} isExpanded={isExpanded} expandTimer={expandTimer} handleIsExpanded={handleIsExpanded} handleUpdateReaderBook={handleUpdateReaderBook}/>
           </ReadInstanceContainer>
